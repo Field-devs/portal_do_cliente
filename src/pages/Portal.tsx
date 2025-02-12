@@ -82,6 +82,7 @@ export default function Portal() {
     : "https://storage.wiseapp360.com/typebot/public/workspaces/clwl6fdyf000511ohlamongyl/typebots/cm683siyl000dm4kxlrec9tb8/results/p3d7c6ik7c9873de0uh7k59j/blocks/flm69ulnpr4b67h01xj47t14/VerticalBlack.png";
 
   return (
+    
     <div className="min-h-screen bg-light-primary dark:bg-dark-primary flex">
       {/* Sidebar Navigation */}
       <div 

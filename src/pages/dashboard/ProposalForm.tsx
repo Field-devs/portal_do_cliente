@@ -174,7 +174,7 @@ export default function ProposalForm({ onSuccess, onCancel, plans, addons }: Pro
         .from('proposta_outr')
         .insert([{
           ...formData,
-          cliente_id: user?.id,
+          cliente_id: user?.pessoa_id,
           valor: total,
           status: 'pending',
           tipo_cliente: clientType

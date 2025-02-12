@@ -4,11 +4,19 @@ import { useNavigate } from 'react-router-dom';
 
 interface User {
   id: string;
+  aud: string;
+  role: string;
   email: string;
+  email_confirmed_at: string;
+  phone: string;
+  is_anonymous: boolean;
+  // Tabela Pessoa
+  pessoas_id: number;
   nome: string;
   cargo_id: number;
   telefone?: string;
   foto_perfil?: string | null;
+
 }
 
 type UserRole = 'super_admin' | 'admin' | 'ava_admin' | 'ava' | 'client';
@@ -33,6 +41,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // Check for existing session on mount
     const storedUser = localStorage.getItem('user');
+
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
       setUser(parsedUser);

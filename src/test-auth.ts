@@ -14,7 +14,6 @@ async function testAuth() {
 
     if (data.user) {
       console.log('Authentication successful!');
-      console.log('User ID:', data.user.id);
       return true;
     }
 

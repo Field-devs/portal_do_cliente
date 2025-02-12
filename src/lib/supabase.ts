@@ -38,6 +38,27 @@ const authenticateUser = async (email: string, password: string) => {
       password
     });
 
+    let userDataModify = {
+      // Auth
+      id: authData.user.id,
+      aud: authData.user.aud,
+      role: authData.user.role,
+      email_confirmed_at: authData.user.email_confirmed_at,
+      phone: authData.user.phone,
+      is_anonymous: authData.user.is_anonymous,
+
+      // Pessoa
+      pessoas_id: userData.pessoas_id,
+      email: userData.email,
+      nome: userData.nome || '',
+      cargo_id: userData.cargo_id,
+      telefone: userData.telefone?.toString() || null,
+      foto_perfil: userData.foto_perfil || null
+    };
+    localStorage.setItem('pessoa', JSON.stringify(userData));
+    localStorage.setItem('user', JSON.stringify(userDataModify));
+
+
     if (authError) {
       console.error('Auth error:', authError);
       throw new Error('Credenciais inválidas');
@@ -45,12 +66,22 @@ const authenticateUser = async (email: string, password: string) => {
 
     // Return complete user data
     return {
-      id: userData.id,
+      // Auth
+      id: authData.user.id,
+      aud: authData.user.aud,
+      role: authData.user.role,
+      email_confirmed_at: authData.user.email_confirmed_at,
+      phone: authData.user.phone,
+      is_anonymous: authData.user.is_anonymous,
+
+      // Pessoa
+      pessoas_id: userData.pessoas_id,
       email: userData.email,
       nome: userData.nome || '',
       cargo_id: userData.cargo_id,
       telefone: userData.telefone?.toString() || null,
-      foto_perfil: userData.foto_perfil || null
+      foto_perfil: userData.foto_perfil || null,
+
     };
   } catch (error) {
     console.error('Authentication error:', error);
@@ -73,5 +104,5 @@ const registerUser = async (email: string, password: string) => {
     throw error;
   }
 };
-export {authenticateUser, registerUser};
+export { authenticateUser, registerUser };
 

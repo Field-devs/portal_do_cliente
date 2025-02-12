@@ -49,7 +49,7 @@ export default function AddonForm({ onSuccess, onCancel, initialData }: AddonFor
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validateForm() || !user?.id) return;
+    if (!validateForm() || !user?.pessoas_id) return;
 
     setLoading(true);
     setError(null);
@@ -60,7 +60,7 @@ export default function AddonForm({ onSuccess, onCancel, initialData }: AddonFor
         descricao: formData.descricao,
         valor: formData.valor,
         status: true,
-        user_user_id: user.id
+        user_user_id: user.pessoa_id
       };
 
       if (initialData?.addon_id) {

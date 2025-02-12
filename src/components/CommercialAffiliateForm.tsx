@@ -133,7 +133,7 @@ export default function CommercialAffiliateForm({ initialData, onSuccess, onCanc
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validateForm() || !user?.id) return;
+    if (!validateForm() || !user?.pessoas_id) return;
 
     setLoading(true);
     setError(null);
@@ -171,7 +171,7 @@ export default function CommercialAffiliateForm({ initialData, onSuccess, onCanc
             comissao: Number(formData.comissao),
             vencimento: formData.vencimento,
             codigo_cupom: couponCode,
-            user_user_id: user.id,
+            user_user_id: user.pessoa_id,
             status: formData.status
           }]);
 

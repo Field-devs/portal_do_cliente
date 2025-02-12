@@ -33,7 +33,7 @@ export function usePlanos() {
   }
 
   async function createPlano(plano: Omit<Database['public']['Tables']['plano_outr']['Insert'], 'id' | 'dt_criacao' | 'status'>) {
-    if (!user?.id) {
+    if (!user?.pessoas_id) {
       throw new Error('Usuário não autenticado');
     }
 
@@ -43,7 +43,7 @@ export function usePlanos() {
         .insert([{ 
           ...plano,
           status: true,
-          user_user_id: user.id
+          user_user_id: user.pessoa_id
         }])
         .select()
         .single();

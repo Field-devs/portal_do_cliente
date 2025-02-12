@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../components/AuthProvider';
 import { supabase } from '../../lib/supabase';
-import { 
-  Users, 
-  Inbox, 
-  Bot, 
-  HeadphonesIcon, 
-  Layout, 
+import {
+  Users,
+  Inbox,
+  Bot,
+  HeadphonesIcon,
+  Layout,
   MessageSquare,
   AlertCircle,
   Loader2,
@@ -35,6 +35,7 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
 
   const [formData, setFormData] = useState({
     nome: initialData?.nome || '',
@@ -88,13 +89,14 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
       setError('Número de automações deve ser pelo menos 1');
       return false;
     }
-
     return true;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
+
     e.preventDefault();
-    if (!validateForm() || !user?.id) return;
+    console.log(user);
+    if (!validateForm() || !user?.pessoas_id) return;
 
     setLoading(true);
     setError(null);
@@ -120,6 +122,7 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
 
         if (error) throw error;
       } else {
+
         // Create new plan
         const { error } = await supabase
           .from('plano_outr')
@@ -134,7 +137,7 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
             kanban: formData.kanban,
             whatsapp_oficial: formData.whatsapp_oficial,
             status: true,
-            pessoas_user_id: pessoas.pessoas_id
+            pessoas_user_id: user.pessoas_id
           }]);
 
         if (error) throw error;
@@ -208,7 +211,7 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
       {/* Resource Limits */}
       <div className="space-y-4">
         <h3 className="text-lg font-medium text-gray-900 dark:text-white">Recursos</h3>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -269,7 +272,7 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
       {/* Features */}
       <div className="space-y-4">
         <h3 className="text-lg font-medium text-gray-900 dark:text-white">Recursos Adicionais</h3>
-        
+
         <div className="space-y-4">
           <label className="flex items-center space-x-3">
             <input
