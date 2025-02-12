@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../components/AuthProvider';
-import {
-  X,
-  AlertCircle,
-  Loader2,
-  Check,
-  Building2,
+import { 
+  X, 
+  AlertCircle, 
+  Loader2, 
+  Check, 
+  Building2, 
   Users,
   Plus,
   Minus,
@@ -36,7 +36,10 @@ interface ProposalFormProps {
   }>;
 }
 
-
+interface SelectedAddon {
+  id: string;
+  quantity: number;
+}
 
 export default function ProposalForm({ onSuccess, onCancel, plans, addons }: ProposalFormProps) {
   const { user } = useAuth();
@@ -60,13 +63,13 @@ export default function ProposalForm({ onSuccess, onCancel, plans, addons }: Pro
 
   const calculateTotal = () => {
     let total = 0;
-
+    
     // Add plan value
     const selectedPlanData = plans.find(p => p.id === formData.plano_outr_id);
     if (selectedPlanData) {
       total += selectedPlanData.valor;
     }
-
+    
     // Add addons value
     selectedAddons.forEach(addonId => {
       const addon = addons.find(a => a.id === addonId);
@@ -74,7 +77,7 @@ export default function ProposalForm({ onSuccess, onCancel, plans, addons }: Pro
         total += addon.valor;
       }
     });
-
+    
     return total;
   };
 
@@ -112,20 +115,22 @@ export default function ProposalForm({ onSuccess, onCancel, plans, addons }: Pro
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-2xl max-h-[80vh] max-w-[110vh] overflow-y-auto">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-            Nova Proposta
-          </h2>
-          <button
-            onClick={onCancel}
-            className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
-          >
-            <X className="h-6 w-6" />
-          </button>
+      <div className="bg-white dark:bg-gray-800 rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+        <div className="sticky top-0 bg-white dark:bg-gray-800 z-10 p-4">
+          <div className="flex justify-between items-center">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+              Nova Proposta
+            </h2>
+            <button 
+              onClick={onCancel}
+              className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+            >
+              <X className="h-6 w-6" />
+            </button>
+          </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6 p-6">
           <div className="space-y-4">
             <h3 className="text-lg font-medium text-gray-900 dark:text-white flex items-center">
               <Box className="h-5 w-5 mr-2" />
@@ -135,10 +140,11 @@ export default function ProposalForm({ onSuccess, onCancel, plans, addons }: Pro
               {plans.map((plan) => (
                 <div
                   key={plan.id}
-                  className={`relative flex-shrink-0 w-64 p-4 border rounded-lg cursor-pointer ${formData.plano_outr_id === plan.id
+                  className={`relative flex-shrink-0 w-64 p-4 border rounded-lg cursor-pointer ${
+                    formData.plano_outr_id === plan.id
                       ? 'border-brand bg-brand/5'
                       : 'border-gray-300 dark:border-gray-600'
-                    }`}
+                  }`}
                   onClick={() => setFormData(prev => ({ ...prev, plano_outr_id: plan.id }))}
                 >
                   <input
@@ -201,10 +207,11 @@ export default function ProposalForm({ onSuccess, onCancel, plans, addons }: Pro
               {addons.map((addon) => (
                 <div
                   key={addon.id}
-                  className={`relative flex items-center p-4 border rounded-lg cursor-pointer ${selectedAddons.includes(addon.id)
+                  className={`relative flex items-center p-4 border rounded-lg cursor-pointer ${
+                    selectedAddons.includes(addon.id)
                       ? 'border-brand bg-brand/5'
                       : 'border-gray-300 dark:border-gray-600'
-                    }`}
+                  }`}
                 >
                   <input
                     type="checkbox"
@@ -272,7 +279,7 @@ export default function ProposalForm({ onSuccess, onCancel, plans, addons }: Pro
             <button
               type="submit"
               className="px-4 py-2 bg-brand text-white rounded-md hover:bg-brand/90 flex items-center"
-            //disabled={loading || !formData.plano_outr_id}
+              //disabled={loading || !formData.plano_outr_id}
             >
               {loading ? (
                 <>
@@ -285,6 +292,19 @@ export default function ProposalForm({ onSuccess, onCancel, plans, addons }: Pro
             </button>
           </div>
         </form>
+
+        <div className="sticky bottom-0 bg-white dark:bg-gray-800 z-10 p-4 border-t">
+          <div className="flex justify-between items-center">
+            <p className="text-lg font-medium text-gray-900 dark:text-white">Valor Total:</p>
+            <p className="text-2xl font-bold text-gray-900 dark:text-white">
+              {new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+              }).format(calculateTotal())}
+              <span className="text-sm text-gray-500 dark:text-gray-400">/mês</span>
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );
