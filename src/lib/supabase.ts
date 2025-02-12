@@ -37,7 +37,7 @@ const authenticateUser = async (email: string, password: string) => {
       email,
       password
     });
-
+    
     let userDataModify = {
       // Auth
       id: authData.user.id,

@@ -128,7 +128,6 @@ export default function Profile() {
 
       setTimeout(() => setSuccess(false), 3000);
     } catch (err) {
-      console.error('Error updating password:', err);
       setError('Erro ao atualizar senha. Verifique sua senha atual e tente novamente.');
     } finally {
       setLoading(false);
