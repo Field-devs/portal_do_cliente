@@ -37,7 +37,7 @@ export interface Addon {
 export interface Proposal {
   ID: string;
   CLIENTE_ID: string;
-  PLANO_ID: string;
+  plano_outr_id: string;
   ADDONS: string[];
   VALOR_TOTAL: number;
   STATUS: string;

@@ -92,6 +92,7 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
+    console.log('Form submitted:', formData);
     e.preventDefault();
     if (!validateForm() || !user?.id) return;
 

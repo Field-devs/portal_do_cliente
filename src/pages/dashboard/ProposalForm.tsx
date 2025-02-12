@@ -49,7 +49,7 @@ export default function ProposalForm({ onSuccess, onCancel, plans, addons }: Pro
     email_empresa: '',
     email_empresarial: '',
     wallet_id: '',
-    plano_id: ''
+    plano_outr_id: ''
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -85,7 +85,7 @@ export default function ProposalForm({ onSuccess, onCancel, plans, addons }: Pro
   };
 
   const calculateTotal = () => {
-    const selectedPlan = plans.find(p => p.id === formData.plano_id);
+    const selectedPlan = plans.find(p => p.id === formData.plano_outr_id);
     if (!selectedPlan) return 0;
 
     const addonsTotal = selectedAddons.reduce((total, addonId) => {
@@ -139,7 +139,7 @@ export default function ProposalForm({ onSuccess, onCancel, plans, addons }: Pro
   };
 
   const validateStep2 = () => {
-    if (!formData.plano_id) {
+    if (!formData.plano_outr_id) {
       setError('Selecione um plano');
       return false;
     }
@@ -272,7 +272,7 @@ export default function ProposalForm({ onSuccess, onCancel, plans, addons }: Pro
             <div
               key={plan.id}
               className={`relative flex items-center p-4 border rounded-lg cursor-pointer ${
-                formData.plano_id === plan.id
+                formData.plano_outr_id === plan.id
                   ? 'border-brand bg-brand/5'
                   : 'border-gray-300 dark:border-gray-600'
               }`}
@@ -280,9 +280,9 @@ export default function ProposalForm({ onSuccess, onCancel, plans, addons }: Pro
               <input
                 type="radio"
                 id={`plan-${plan.id}`}
-                name="plano_id"
+                name="plano_outr_id"
                 value={plan.id}
-                checked={formData.plano_id === plan.id}
+                checked={formData.plano_outr_id === plan.id}
                 onChange={handleInputChange}
                 className="sr-only"
               />
@@ -318,7 +318,7 @@ export default function ProposalForm({ onSuccess, onCancel, plans, addons }: Pro
                   <span className="text-sm text-gray-500">/mês</span>
                 </p>
               </label>
-              {formData.plano_id === plan.id && (
+              {formData.plano_outr_id === plan.id && (
                 <Check className="h-5 w-5 text-brand" />
               )}
             </div>

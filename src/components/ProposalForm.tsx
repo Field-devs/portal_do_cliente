@@ -64,14 +64,14 @@ export default function ProposalForm({ onSuccess, onCancel, plans, addons }: Pro
     email_empresa: '',
     email_empresarial: '',
     wallet_id: '',
-    plano_id: ''
+    plano_outr_id: ''
   });
 
   const calculateTotal = () => {
     let total = 0;
     
     // Add plan value
-    const selectedPlanData = plans.find(p => p.id === formData.plano_id);
+    const selectedPlanData = plans.find(p => p.id === formData.plano_outr_id);
     if (selectedPlanData) {
       total += selectedPlanData.valor;
     }
@@ -89,7 +89,7 @@ export default function ProposalForm({ onSuccess, onCancel, plans, addons }: Pro
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.plano_id) {
+    if (!formData.plano_outr_id) {
       setError('Por favor, selecione um plano');
       return;
     }
@@ -103,7 +103,7 @@ export default function ProposalForm({ onSuccess, onCancel, plans, addons }: Pro
         .insert([{
           cliente_final_cliente_final_id: user?.id,
           ava_ava_id: user?.id,
-          plano_id: formData.plano_id,
+          plano_outr_id: formData.plano_outr_id,
           valor: calculateTotal(),
           status: 'pending',
           ...formData
@@ -145,18 +145,18 @@ export default function ProposalForm({ onSuccess, onCancel, plans, addons }: Pro
                 <div
                   key={plan.id}
                   className={`relative flex items-center p-4 border rounded-lg cursor-pointer ${
-                    formData.plano_id === plan.id
+                    formData.plano_outr_id === plan.id
                       ? 'border-brand bg-brand/5'
                       : 'border-gray-300 dark:border-gray-600'
                   }`}
-                  onClick={() => setFormData(prev => ({ ...prev, plano_id: plan.id }))}
+                  onClick={() => setFormData(prev => ({ ...prev, plano_outr_id: plan.id }))}
                 >
                   <input
                     type="radio"
-                    name="plano_id"
+                    name="plano_outr_id"
                     value={plan.id}
-                    checked={formData.plano_id === plan.id}
-                    onChange={(e) => setFormData(prev => ({ ...prev, plano_id: e.target.value }))}
+                    checked={formData.plano_outr_id === plan.id}
+                    onChange={(e) => setFormData(prev => ({ ...prev, plano_outr_id: e.target.value }))}
                     className="sr-only"
                   />
                   <div className="flex-1">
@@ -283,7 +283,7 @@ export default function ProposalForm({ onSuccess, onCancel, plans, addons }: Pro
             <button
               type="submit"
               className="px-4 py-2 bg-brand text-white rounded-md hover:bg-brand/90 flex items-center"
-              disabled={loading || !formData.plano_id}
+              disabled={loading || !formData.plano_outr_id}
             >
               {loading ? (
                 <>

@@ -18,7 +18,7 @@ interface Proposal {
   proposta_id: string;
   cliente_final_id: string;
   ava_ava_id: string;
-  plano_id: string;
+  plano_outr_id: string;
   valor: number;
   status: string;
   dt_inicio: string;
@@ -51,7 +51,7 @@ export default function ProposalsManagement() {
           proposta_id,
           cliente_final_id,
           ava_id,
-          plano_id,
+          plano_outr_id,
           valor,
           status,
           dt_inicio,
