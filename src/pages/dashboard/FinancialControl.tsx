@@ -72,8 +72,8 @@ export default function FinancialControl() {
   const fetchFinancialData = async () => {
     try {
       // Fetch proposals with user data for both client types
-      
-      const { data, error } = await supabase
+
+      const { data: proposalsData, error: proposalsError } = await supabase
         .from('proposta_outr')
         .select(`
           proposta_id,
@@ -88,12 +88,15 @@ export default function FinancialControl() {
         `);
 
 
-      if (proposalsError) throw proposalsError;
+      if (proposalsError) {
+        console.error("Erro ao buscar propostas:", proposalsError);
+        throw proposalsError; // Re-lança o erro para que o bloco catch possa lidar com ele
+      }
 
       const formattedInvoices = proposalsData?.map(invoice => ({
         proposta_id: invoice.proposta_id,
-        cliente_final_cliente_final_id: invoice.cliente_final_cliente_final_id,
-        ava_ava_id: invoice.ava_ava_id,
+        cliente_final_cliente_final_id: invoice.cliente_final_id, // Use cliente_final_id
+        ava_ava_id: invoice.ava_id, // Use ava_id
         cliente_nome: invoice.cliente_final?.nome || invoice.ava?.nome || 'Unknown',
         valor: invoice.valor,
         status: invoice.status,
@@ -105,15 +108,15 @@ export default function FinancialControl() {
 
       // Calculate metrics for both client types combined
       const totalReceivables = formattedInvoices.reduce((acc, curr) => acc + curr.valor, 0);
-      
+
       const totalOverdue = formattedInvoices
         .filter(inv => inv.status === 'overdue')
         .reduce((acc, curr) => acc + curr.valor, 0);
-      
+
       const totalPaid = formattedInvoices
         .filter(inv => inv.status === 'paid')
         .reduce((acc, curr) => acc + curr.valor, 0);
-      
+
       const defaultRate = totalReceivables > 0 ? (totalOverdue / totalReceivables) * 100 : 0;
 
       setMetrics({
@@ -155,18 +158,18 @@ export default function FinancialControl() {
     const matchesSearch = 
       invoice.cliente_nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
       invoice.proposta_id.toLowerCase().includes(searchTerm.toLowerCase());
-    
+
     const matchesStatus = statusFilter === 'all' || invoice.status === statusFilter;
-    
+
     const matchesDate = () => {
       if (dateFilter === 'all') return true;
-      
+
       const invoiceDate = new Date(invoice.dt_inicio);
       const today = new Date();
       const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
       const firstDayOfLastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
       const firstDayOfYear = new Date(today.getFullYear(), 0, 1);
-      
+
       switch (dateFilter) {
         case 'thisMonth':
           return invoiceDate >= firstDayOfMonth;
@@ -178,7 +181,7 @@ export default function FinancialControl() {
           return true;
       }
     };
-    
+
     return matchesSearch && matchesStatus && matchesDate();
   });
 
