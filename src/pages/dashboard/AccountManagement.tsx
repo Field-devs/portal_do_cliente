@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../components/AuthProvider';
-import { supabase } from '../../lib/supabase';
-import { 
-  Search, 
+import { supabase, registerUser } from '../../lib/supabase';
+import {
+  Search,
   Filter,
   Plus,
   Edit,
@@ -112,14 +112,14 @@ export default function AccountManagement() {
           prev.map(user =>
             user.user_id === editingUser.user_id
               ? {
-                  ...user,
-                  nome: formData.nome,
-                  email: formData.email,
-                  telefone: formData.telefone,
-                  cnpj: formData.cnpj,
-                  empresa: formData.empresa,
-                  cargo_id: formData.cargo
-                }
+                ...user,
+                nome: formData.nome,
+                email: formData.email,
+                telefone: formData.telefone,
+                cnpj: formData.cnpj,
+                empresa: formData.empresa,
+                cargo_id: formData.cargo
+              }
               : user
           )
         );
@@ -142,7 +142,7 @@ export default function AccountManagement() {
           const { error: insertError } = await supabase
             .from('pessoas')
             .insert([{
-              user_id: authData.user.id,
+              //user_id: authData.pessoa_id,
               email: formData.email,
               nome: formData.nome,
               telefone: formData.telefone,
@@ -152,9 +152,9 @@ export default function AccountManagement() {
               status: true
             }]);
 
-          if (insertError) throw insertError;
-
-          fetchUsers();
+          if (insertError) {
+            throw insertError;
+          } 
         }
       }
 
@@ -206,18 +206,18 @@ export default function AccountManagement() {
   };
 
   const filteredUsers = users.filter(user => {
-    const matchesSearch = 
+    const matchesSearch =
       user.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.cnpj?.toLowerCase().includes(searchTerm.toLowerCase());
-    
+
     const matchesRole = roleFilter === 'all' || user.cargo_id === roleFilter;
-    
-    const matchesStatus = 
-      statusFilter === 'all' || 
+
+    const matchesStatus =
+      statusFilter === 'all' ||
       (statusFilter === 'active' && user.status) ||
       (statusFilter === 'inactive' && !user.status);
-    
+
     return matchesSearch && matchesRole && matchesStatus;
   });
 
@@ -332,22 +332,21 @@ export default function AccountManagement() {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
                       {user.cargo_id === 1 ? 'Super Admin' :
-                       user.cargo_id === 2 ? 'Admin' :
-                       user.cargo_id === 3 ? 'AVA Admin' :
-                       user.cargo_id === 4 ? 'AVA' :
-                       user.cargo_id === 5 ? 'Cliente' :
-                       user.cargo_id === 6 ? 'Afiliado' : 'Desconhecido'}
+                        user.cargo_id === 2 ? 'Admin' :
+                          user.cargo_id === 3 ? 'AVA Admin' :
+                            user.cargo_id === 4 ? 'AVA' :
+                              user.cargo_id === 5 ? 'Cliente' :
+                                user.cargo_id === 6 ? 'Afiliado' : 'Desconhecido'}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                     {user.empresa || '-'}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                      user.status
-                        ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
-                        : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
-                    }`}>
+                    <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${user.status
+                      ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                      : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+                      }`}>
                       {user.status ? 'Ativo' : 'Inativo'}
                     </span>
                   </td>

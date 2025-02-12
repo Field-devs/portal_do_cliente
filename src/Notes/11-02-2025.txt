@@ -1,0 +1,1 @@
+1 - Deve se inserir um usuário no SUPABASE ou no codigo do REACT mas numca na base de dados

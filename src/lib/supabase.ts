@@ -12,8 +12,9 @@ export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey);
 
 export type UserRole = 'super_admin' | 'admin' | 'ava_admin' | 'ava' | 'client';
 
-export const authenticateUser = async (email: string, password: string) => {
+const authenticateUser = async (email: string, password: string) => {
   try {
+
     // Get user from database first to check if they exist
     const { data: userData, error: userError } = await supabase
       .from('pessoas')
@@ -56,3 +57,21 @@ export const authenticateUser = async (email: string, password: string) => {
     throw error;
   }
 };
+
+const registerUser = async (email: string, password: string) => {
+  try {
+    const { data: authData, error: authError } = await supabase.auth.signUp({
+      email,
+      password
+    });
+    if (authError) {
+      console.error('Sign up error:', authError);
+      throw new Error('Erro ao registrar usuário');
+    }
+  } catch (error) {
+    console.error('Registration error:', error);
+    throw error;
+  }
+};
+export {authenticateUser, registerUser};
+
