@@ -30,7 +30,7 @@ export default function Proposals() {
   const { planos, loading: planosLoading } = usePlanos();
   const { addons, loading: addonsLoading } = useAddons();
   const { user } = useAuth();
-  
+
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedProposalId, setSelectedProposalId] = useState<string | null>(null);
@@ -63,14 +63,14 @@ export default function Proposals() {
     if (selectedPlan) {
       total += selectedPlan.valor;
     }
-    
+
     selectedAddons.forEach(addonId => {
       const addon = addons.find(a => a.addon_id === addonId);
       if (addon) {
         total += addon.valor;
       }
     });
-    
+
     setTotalValue(total);
   }, [formData.planoId, selectedAddons, planos, addons]);
 
@@ -126,13 +126,13 @@ export default function Proposals() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
       const selectedPlan = planos.find(p => p.plano_outr_id === formData.planoId);
       if (!selectedPlan) throw new Error('Plano não selecionado');
 
       const proposal = {
-        cliente_final_cliente_final_id: user?.USER_ID,
+        cliente_final_cliente_final_id: user?.id,
         plano_outr_plano_outr_id: formData.planoId,
         email_empresa: formData.emailEmpresa,
         email_empresarial: formData.emailEmpresarial,
@@ -145,7 +145,7 @@ export default function Proposals() {
         valor: totalValue,
         addon_id: selectedAddons[0] || null, // For now, just use the first selected addon
         addon_outr_addon_outr_id: selectedAddons[0] || null,
-        ava_ava_id: user?.USER_ID // Temporary, should be properly set
+        ava_ava_id: user?.id // Temporary, should be properly set
       };
 
       const { data, error } = await supabase
@@ -188,7 +188,7 @@ export default function Proposals() {
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">Propostas</h1>
-        <button 
+        <button
           onClick={() => setIsFormOpen(true)}
           className="flex items-center px-4 py-2 bg-brand text-white rounded-md hover:bg-brand/90 transition-colors"
         >
@@ -246,11 +246,10 @@ export default function Proposals() {
                       }).format(proposal.valor)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                        proposal.status
+                      <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${proposal.status
                           ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
                           : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
-                      }`}>
+                        }`}>
                         {proposal.status ? 'Ativo' : 'Inativo'}
                       </span>
                     </td>
@@ -265,7 +264,7 @@ export default function Proposals() {
                         <button className="text-brand hover:text-brand/80">
                           <Edit className="h-5 w-5" />
                         </button>
-                        <button 
+                        <button
                           onClick={() => {
                             setSelectedProposalId(proposal.proposta_id);
                             setIsDeleteModalOpen(true);
@@ -290,7 +289,7 @@ export default function Proposals() {
           <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Nova Proposta</h2>
-              <button 
+              <button
                 onClick={() => setIsFormOpen(false)}
                 className="text-gray-500 hover:text-gray-700"
               >
