@@ -101,8 +101,8 @@ export default function ProposalForm({ onSuccess, onCancel, plans, addons }: Pro
       const { error: proposalError } = await supabase
         .from('proposta_outr')
         .insert([{
-          cliente_final_cliente_final_id: user?.pessoa_id,
-          ava_ava_id: user?.pessoa_id,
+          cliente_final_cliente_final_id: user?.pessoas_id,
+          ava_ava_id: user?.pessoas_id,
           plano_outr_id: formData.plano_outr_id,
           valor: calculateTotal(),
           status: 'pending',
@@ -283,7 +283,7 @@ export default function ProposalForm({ onSuccess, onCancel, plans, addons }: Pro
             <button
               type="submit"
               className="px-4 py-2 bg-brand text-white rounded-md hover:bg-brand/90 flex items-center"
-              disabled={loading || !formData.plano_outr_id}
+              //disabled={loading || !formData.plano_outr_id}
             >
               {loading ? (
                 <>

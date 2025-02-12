@@ -43,7 +43,7 @@ export function usePlanos() {
         .insert([{ 
           ...plano,
           status: true,
-          user_user_id: user.pessoa_id
+          user_user_id: user.pessoas_id
         }])
         .select()
         .single();

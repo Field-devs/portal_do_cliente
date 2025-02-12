@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Plus, 
-  Search, 
+import {
+  Plus,
+  Search,
   Filter,
   Trash2,
   Eye,
@@ -115,8 +115,8 @@ export default function PartnersManagement() {
 
         if (error) throw error;
 
-        setPartners(prev => prev.map(p => 
-          p.cliente_afiliado_id === selectedPartnerId 
+        setPartners(prev => prev.map(p =>
+          p.cliente_afiliado_id === selectedPartnerId
             ? { ...p, status: false }
             : p
         ));
@@ -128,8 +128,8 @@ export default function PartnersManagement() {
 
         if (error) throw error;
 
-        setUsers(prev => prev.map(u => 
-          u.user_id === selectedPartnerId 
+        setUsers(prev => prev.map(u =>
+          u.user_id === selectedPartnerId
             ? { ...u, status: false }
             : u
         ));
@@ -159,38 +159,38 @@ export default function PartnersManagement() {
 
   const formatPhoneNumber = (phone: number | string | null) => {
     if (!phone) return '-';
-    
+
     // Convert to string and ensure it has 11 digits
     const digits = phone.toString().padStart(11, '0');
-    
+
     // Format as (XX) XXXXX-XXXX
     return digits.replace(/^(\d{2})(\d{5})(\d{4})$/, '($1) $2-$3');
   };
 
-  const filteredItems = activeTab === 'commercial' 
+  const filteredItems = activeTab === 'commercial'
     ? partners.filter(partner => {
-        const matchesSearch = 
-          partner.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          partner.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          partner.codigo_cupom.toLowerCase().includes(searchTerm.toLowerCase());
-        
-        const matchesStatus = 
-          statusFilter === 'all' || 
-          (statusFilter === 'active' ? partner.status : !partner.status);
-        
-        return matchesSearch && matchesStatus;
-      })
+      const matchesSearch =
+        partner.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        partner.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        partner.codigo_cupom.toLowerCase().includes(searchTerm.toLowerCase());
+
+      const matchesStatus =
+        statusFilter === 'all' ||
+        (statusFilter === 'active' ? partner.status : !partner.status);
+
+      return matchesSearch && matchesStatus;
+    })
     : users.filter(user => {
-        const matchesSearch = 
-          user.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          user.email.toLowerCase().includes(searchTerm.toLowerCase());
-        
-        const matchesStatus = 
-          statusFilter === 'all' || 
-          (statusFilter === 'active' ? user.status : !user.status);
-        
-        return matchesSearch && matchesStatus;
-      });
+      const matchesSearch =
+        user.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchTerm.toLowerCase());
+
+      const matchesStatus =
+        statusFilter === 'all' ||
+        (statusFilter === 'active' ? user.status : !user.status);
+
+      return matchesSearch && matchesStatus;
+    });
 
   const EditButton = ({ onClick }: { onClick: () => void }) => (
     <button
@@ -217,33 +217,30 @@ export default function PartnersManagement() {
         <div className="flex space-x-8">
           <button
             onClick={() => setActiveTab('cf')}
-            className={`flex items-center pb-4 px-1 ${
-              activeTab === 'cf'
+            className={`flex items-center pb-4 px-1 ${activeTab === 'cf'
                 ? 'border-b-2 border-brand text-brand dark:text-white'
                 : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
-            }`}
+              }`}
           >
             <Users className="h-5 w-5 mr-2" />
             Clientes Finais
           </button>
           <button
             onClick={() => setActiveTab('ava')}
-            className={`flex items-center pb-4 px-1 ${
-              activeTab === 'ava'
+            className={`flex items-center pb-4 px-1 ${activeTab === 'ava'
                 ? 'border-b-2 border-brand text-brand dark:text-white'
                 : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
-            }`}
+              }`}
           >
             <Building2 className="h-5 w-5 mr-2" />
             AVAs
           </button>
           <button
             onClick={() => setActiveTab('commercial')}
-            className={`flex items-center pb-4 px-1 ${
-              activeTab === 'commercial'
+            className={`flex items-center pb-4 px-1 ${activeTab === 'commercial'
                 ? 'border-b-2 border-brand text-brand dark:text-white'
                 : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
-            }`}
+              }`}
           >
             <UserCheck className="h-5 w-5 mr-2" />
             Afiliados Comerciais
@@ -254,8 +251,8 @@ export default function PartnersManagement() {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">
           {activeTab === 'cf' ? 'Clientes Finais' :
-           activeTab === 'ava' ? 'AVAs' :
-           'Afiliados Comerciais'}
+            activeTab === 'ava' ? 'AVAs' :
+              'Afiliados Comerciais'}
         </h1>
         {activeTab === 'commercial' && (
           <button
@@ -397,11 +394,10 @@ export default function PartnersManagement() {
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                        partner.status
+                      <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${partner.status
                           ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
                           : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
-                      }`}>
+                        }`}>
                         {partner.status ? 'Ativo' : 'Inativo'}
                       </span>
                     </td>
@@ -446,11 +442,10 @@ export default function PartnersManagement() {
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                        user.status
+                      <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${user.status
                           ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
                           : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
-                      }`}>
+                        }`}>
                         {user.status ? 'Ativo' : 'Inativo'}
                       </span>
                     </td>

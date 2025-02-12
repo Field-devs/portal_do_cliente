@@ -60,7 +60,7 @@ export default function AddonForm({ onSuccess, onCancel, initialData }: AddonFor
         descricao: formData.descricao,
         valor: formData.valor,
         status: true,
-        user_user_id: user.pessoa_id
+        pessoas_user_id: user.pessoas_id
       };
 
       if (initialData?.addon_id) {

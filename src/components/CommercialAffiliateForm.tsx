@@ -171,7 +171,7 @@ export default function CommercialAffiliateForm({ initialData, onSuccess, onCanc
             comissao: Number(formData.comissao),
             vencimento: formData.vencimento,
             codigo_cupom: couponCode,
-            user_user_id: user.pessoa_id,
+            pessoas_user_id: user.pessoas_id,
             status: formData.status
           }]);
 

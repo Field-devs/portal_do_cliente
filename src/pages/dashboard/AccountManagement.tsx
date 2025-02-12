@@ -142,7 +142,7 @@ export default function AccountManagement() {
           const { error: insertError } = await supabase
             .from('pessoas')
             .insert([{
-              //user_id: authData.pessoa_id,
+              //user_id: authData.pessoas_id,
               email: formData.email,
               nome: formData.nome,
               telefone: formData.telefone,
