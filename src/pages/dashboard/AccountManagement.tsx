@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../components/AuthProvider';
 import { supabase, registerUser } from '../../lib/supabase';
+import { User } from '../../components/Interfaces/Uses';
+
 import {
   Search,
   Filter,
@@ -30,17 +32,7 @@ const selectClasses = `pl-10 block w-full rounded-md shadow-sm focus:ring-brand 
   bg-white dark:bg-gray-700 
   text-gray-900 dark:text-gray-100`;
 
-interface User {
-  user_id: string;
-  email: string;
-  nome: string;
-  cargo_id: number;
-  dt_criacao: string;
-  status: boolean;
-  telefone?: string;
-  cnpj?: string;
-  empresa?: string;
-}
+
 
 export default function AccountManagement() {
   const [users, setUsers] = useState<User[]>([]);
@@ -86,7 +78,6 @@ export default function AccountManagement() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     if (formData.senha !== formData.confirmarSenha) {
       alert('As senhas não coincidem');
       return;
@@ -104,13 +95,13 @@ export default function AccountManagement() {
             empresa: formData.empresa,
             cargo_id: formData.cargo
           })
-          .eq('pessoas_id', editingUser.user_id);
+          .eq('pessoas_id', editingUser.id);
 
         if (error) throw error;
 
         setUsers(prev =>
           prev.map(user =>
-            user.user_id === editingUser.user_id
+            user.id === editingUser.id
               ? {
                 ...user,
                 nome: formData.nome,
@@ -154,7 +145,7 @@ export default function AccountManagement() {
 
           if (insertError) {
             throw insertError;
-          } 
+          }
         }
       }
 
@@ -167,7 +158,9 @@ export default function AccountManagement() {
   };
 
   const handleDelete = async () => {
+    console.log(selectedUserId);
     if (!selectedUserId) return;
+    console.log("ok");
 
     try {
       const { error } = await supabase
@@ -179,7 +172,7 @@ export default function AccountManagement() {
 
       setUsers(prev =>
         prev.map(user =>
-          user.user_id === selectedUserId
+          user.id === selectedUserId
             ? { ...user, status: false }
             : user
         )
@@ -318,7 +311,7 @@ export default function AccountManagement() {
             </thead>
             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
               {filteredUsers.map((user) => (
-                <tr key={user.user_id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                <tr key={user.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div>
                       <div className="text-sm font-medium text-gray-900 dark:text-white">
@@ -377,7 +370,7 @@ export default function AccountManagement() {
                       {user.status && (
                         <button
                           onClick={() => {
-                            setSelectedUserId(user.user_id);
+                            setSelectedUserId(user.pessoas_id);
                             setIsDeleteModalOpen(true);
                           }}
                           className="text-red-600 hover:text-red-800"
@@ -578,10 +571,10 @@ export default function AccountManagement() {
           <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4">
             <div className="flex items-center text-red-600 mb-4">
               <AlertCircle className="h-6 w-6 mr-2" />
-              <h3 className="text-lg font-medium">Confirmar desativação</h3>
+              <h3 className="text-lg font-medium">Confirmar a INATIVAÇÃO</h3>
             </div>
             <p className="text-gray-600 dark:text-gray-400 mb-4">
-              Tem certeza que deseja desativar esta conta? Esta ação pode ser revertida posteriormente.
+              Tem certeza que deseja INATIVAR esta conta? Esta ação pode ser revertida posteriormente.
             </p>
             <div className="flex justify-end space-x-3">
               <button

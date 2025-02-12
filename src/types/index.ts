@@ -1,12 +1,12 @@
-export interface User {
-  USER_ID: string;
-  EMAIL: string;
-  NOME: string;
-  CARGO_ID: number;
-  DT_CRIACAO: string;
-  STATUS: boolean;
-  FOTO_PERFIL?: string;
-}
+// export interface User {
+//   USER_ID: string;
+//   EMAIL: string;
+//   NOME: string;
+//   CARGO_ID: number;
+//   DT_CRIACAO: string;
+//   STATUS: boolean;
+//   FOTO_PERFIL?: string;
+// }
 
 export interface Address {
   LOGRADOURO: string;

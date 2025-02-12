@@ -39,16 +39,6 @@ interface Partner {
   datacriacao: string;
 }
 
-interface User {
-  user_id: string;
-  nome: string;
-  email: string;
-  telefone: string;
-  cargo_id: number;
-  status: boolean;
-  dt_criacao: string;
-}
-
 export default function PartnersManagement() {
   const [activeTab, setActiveTab] = useState<PartnerType>('cf');
   const [partners, setPartners] = useState<Partner[]>([]);
@@ -425,7 +415,7 @@ export default function PartnersManagement() {
                 ))
               ) : (
                 filteredItems.map((user) => (
-                  <tr key={user.user_id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                  <tr key={user.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm font-medium text-gray-900 dark:text-white">
                         {user.nome}
@@ -460,7 +450,7 @@ export default function PartnersManagement() {
                         {user.status && (
                           <button
                             onClick={() => {
-                              setSelectedPartnerId(user.user_id);
+                              setSelectedPartnerId(user.id);
                               setIsDeleteModalOpen(true);
                             }}
                             className="text-red-600 hover:text-red-800"

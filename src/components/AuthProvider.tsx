@@ -1,23 +1,7 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { authenticateUser } from '../lib/supabase';
 import { useNavigate } from 'react-router-dom';
-
-interface User {
-  id: string;
-  aud: string;
-  role: string;
-  email: string;
-  email_confirmed_at: string;
-  phone: string;
-  is_anonymous: boolean;
-  // Tabela Pessoa
-  pessoas_id: number;
-  nome: string;
-  cargo_id: number;
-  telefone?: string;
-  foto_perfil?: string | null;
-
-}
+import { User } from './Interfaces/Uses';
 
 type UserRole = 'super_admin' | 'admin' | 'ava_admin' | 'ava' | 'client';
 

@@ -20,17 +20,6 @@ import {
 } from 'lucide-react';
 import { format } from 'date-fns';
 
-interface User {
-  user_id: string;
-  nome: string;
-  email: string;
-  telefone: string | null;
-  cnpj: string | null;
-  empresa: string | null;
-  cargo_id: number;
-  status: boolean;
-  dt_criacao: string;
-}
 
 const userTypes = [
   { id: 5, label: 'Cliente Final' },
@@ -259,7 +248,7 @@ export default function AccountsManagement() {
 
       setUsers(prev =>
         prev.map(user =>
-          user.user_id === selectedUserId
+          user.id === selectedUserId
             ? { ...user, status: false }
             : user
         )
@@ -397,7 +386,7 @@ export default function AccountsManagement() {
             </thead>
             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
               {filteredUsers.map((user) => (
-                <tr key={user.user_id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                <tr key={user.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div>
                       <div className="text-sm font-medium text-gray-900 dark:text-white">
@@ -441,7 +430,7 @@ export default function AccountsManagement() {
                       {user.status && (
                         <button
                           onClick={() => {
-                            setSelectedUserId(user.user_id);
+                            setSelectedUserId(user.id);
                             setIsDeleteModalOpen(true);
                           }}
                           className="text-red-600 hover:text-red-800"

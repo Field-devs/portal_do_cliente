@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { User } from '../../types';
 import { Plus, Edit, Trash2 } from 'lucide-react';
+import { User } from '../../components/Interfaces/Uses';
 
 interface UserManagementProps {
   userType: string;
@@ -46,7 +46,7 @@ export default function UserManagement({ userType }: UserManagementProps) {
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {users.map((user) => (
-              <tr key={user.USER_ID}>
+              <tr key={user.id}>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center">
                     {user.FOTO_PERFIL ? (
