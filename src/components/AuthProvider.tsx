@@ -93,7 +93,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const updateUser = async (updates: Partial<User>) => {
     if (!user) throw new Error('No user logged in');
-
     try {
       // Get current user data
       const storedUser = JSON.parse(localStorage.getItem('user') || '{}');

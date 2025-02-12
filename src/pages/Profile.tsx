@@ -1,12 +1,13 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '../components/AuthProvider';
-import { 
-  Mail, 
-  Phone, 
-  User, 
-  Camera, 
+
+
+import {
+  Mail,
+  Phone,
+  User,
+  Camera,
   Loader2,
-  ChevronRight,
   Edit2,
   AlertCircle,
   CheckCircle,
@@ -15,6 +16,7 @@ import {
   Building2,
   CreditCard
 } from 'lucide-react';
+import { supabase } from '../lib/supabase';
 
 const DEFAULT_AVATARS = [
   'https://storage.wiseapp360.com/typebot/public/workspaces/clwl6fdyf000511ohlamongyl/typebots/cm683siyl000dm4kxlrec9tb8/results/f0ox8dmw82jbx0s2w686ioyk/blocks/flm69ulnpr4b67h01xj47t14/DALL·E 2025-02-07 11.13.12 - A vibrant nature scene inspired by Brazilian modernism. The landscape features rolling green hills, oversized tropical plants, and a bright blue sky. _resultado.png',
@@ -33,7 +35,7 @@ export default function Profile() {
   const [isChangingPassword, setIsChangingPassword] = useState(false);
   const [showPhotoSelector, setShowPhotoSelector] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState<string | null>(user?.foto_perfil || null);
-  
+
   const [formData, setFormData] = useState({
     firstName: user?.nome?.split(' ')[0] || '',
     lastName: user?.nome?.split(' ').slice(1).join(' ') || '',
@@ -123,7 +125,7 @@ export default function Profile() {
         newPassword: '',
         confirmPassword: ''
       });
-      
+
       setTimeout(() => setSuccess(false), 3000);
     } catch (err) {
       console.error('Error updating password:', err);
@@ -138,15 +140,27 @@ export default function Profile() {
     setLoading(true);
     setError(null);
     setSuccess(false);
-
+    console.log(formData);
     try {
+      // Atualizar na Tabela de auth.users
       await updateUser({
+        nome: `${formData.firstName} ${formData.lastName}`.trim(),
+        email: formData.email,
+        phone: formData.phone || null
+        //cnpj: formData.cnpj || null,
+        //empresa: formData.empresa || null
+      });
+
+      // Atualizar em Pessoas
+      let PessoaData = {
         nome: `${formData.firstName} ${formData.lastName}`.trim(),
         email: formData.email,
         telefone: formData.phone || null,
         cnpj: formData.cnpj || null,
         empresa: formData.empresa || null
-      });
+      };
+      // Atualiza na base SupaBase
+      await supabase.from('pessoas').update(PessoaData).eq('pessoas_id', user?.pessoas_id);
 
       setSuccess(true);
       setIsEditing(false);
@@ -225,9 +239,8 @@ export default function Profile() {
                     <button
                       key={index}
                       onClick={() => handlePhotoSelect(avatar)}
-                      className={`relative rounded-lg overflow-hidden hover:ring-2 hover:ring-brand dark:hover:ring-dark-button-edit transition-all ${
-                        selectedPhoto === avatar ? 'ring-2 ring-brand dark:ring-dark-button-edit' : ''
-                      }`}
+                      className={`relative rounded-lg overflow-hidden hover:ring-2 hover:ring-brand dark:hover:ring-dark-button-edit transition-all ${selectedPhoto === avatar ? 'ring-2 ring-brand dark:ring-dark-button-edit' : ''
+                        }`}
                     >
                       <img
                         src={avatar}

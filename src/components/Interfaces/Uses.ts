@@ -9,6 +9,8 @@ interface User {
   // Tabela Pessoa
   pessoas_id: number;
   nome: string;
+  cnpj: string;
+  empresa: string;
   cargo_id: number;
   telefone?: string;
   foto_perfil?: string | null;

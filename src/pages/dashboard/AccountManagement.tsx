@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../../components/AuthProvider';
-import { supabase, registerUser } from '../../lib/supabase';
+import { supabase } from '../../lib/supabase';
 import { User } from '../../components/Interfaces/Uses';
 
 import {
@@ -11,12 +10,10 @@ import {
   Trash2,
   AlertCircle,
   X,
-  Check,
   Shield,
   Mail,
   Phone,
   Building2,
-  Calendar,
   Lock,
   User as UserIcon
 } from 'lucide-react';
@@ -160,7 +157,6 @@ export default function AccountManagement() {
   const handleDelete = async () => {
     console.log(selectedUserId);
     if (!selectedUserId) return;
-    console.log("ok");
 
     try {
       const { error } = await supabase
@@ -576,6 +572,7 @@ export default function AccountManagement() {
             <p className="text-gray-600 dark:text-gray-400 mb-4">
               Tem certeza que deseja INATIVAR esta conta? Esta ação pode ser revertida posteriormente.
             </p>
+
             <div className="flex justify-end space-x-3">
               <button
                 onClick={() => {
@@ -586,12 +583,15 @@ export default function AccountManagement() {
               >
                 Cancelar
               </button>
+
               <button
                 onClick={handleDelete}
                 className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
               >
                 Desativar
               </button>
+
+
             </div>
           </div>
         </div>
