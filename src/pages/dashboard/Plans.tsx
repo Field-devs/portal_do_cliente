@@ -62,7 +62,7 @@ const defaultPlans: Plan[] = [
 ];
 
 type Addon = {
-  id: string;
+  addon_id: string;
   name: string;
   description: string;
   type: 'inbox' | 'agent' | 'automation' | 'kanban';
@@ -149,7 +149,7 @@ export default function Plans() {
 
   const handleSaveAddon = () => {
     if (editingAddon) {
-      setAddons(addons.map(a => a.id === editingAddon.id ? editingAddon : a));
+      setAddons(addons.map(a => a.id === editingAddon.addon_id ? editingAddon : a));
       setEditingAddon(null);
     }
   };
@@ -381,11 +381,11 @@ export default function Plans() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {addons.map((addon) => (
             <div
-              key={addon.id}
+              key={addon.addon_id}
               className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden"
             >
               <div className="p-6 bg-brand text-white">
-                {editingAddon?.id === addon.id ? (
+                {editingAddon?.id === addon.addon_id ? (
                   <>
                     <input
                       type="text"
@@ -417,7 +417,7 @@ export default function Plans() {
               </div>
 
               <div className="p-6">
-                {editingAddon?.id === addon.id ? (
+                {editingAddon?.id === addon.addon_id ? (
                   <div className="space-y-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">

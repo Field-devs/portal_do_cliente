@@ -251,7 +251,7 @@ export default function ProposalsManagement() {
           }}
           onCancel={() => setIsFormOpen(false)}
           plans={planos.map(plan => ({
-            id: plan.id,
+            plano_outr_id: plan.plano_outr_id,
             nome: plan.nome,
             descricao: plan.descricao || '',
             valor: plan.valor,
@@ -262,7 +262,7 @@ export default function ProposalsManagement() {
             whatsapp_oficial: plan.whatsapp_oficial
           }))}
           addons={addons.map(addon => ({
-            id: addon.id,
+            addon_id: addon.addon_id,
             nome: addon.nome,
             descricao: addon.descricao || '',
             valor: addon.valor

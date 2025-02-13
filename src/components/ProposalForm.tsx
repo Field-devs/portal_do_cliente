@@ -1,15 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '../components/AuthProvider';
 import { 
   X, 
   AlertCircle, 
   Loader2, 
-  Check, 
-  Building2, 
-  Users,
   Plus,
-  Minus,
-  Calculator,
   Box
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
@@ -18,7 +13,7 @@ interface ProposalFormProps {
   onSuccess: () => void;
   onCancel: () => void;
   plans: Array<{
-    id: string;
+    plano_outr_id: string;
     nome: string;
     descricao?: string;
     valor: number;
@@ -29,17 +24,13 @@ interface ProposalFormProps {
     whatsapp_oficial: boolean;
   }>;
   addons: Array<{
-    id: string;
+    addon_id: string;
     nome: string;
     descricao?: string;
     valor: number;
   }>;
 }
 
-interface SelectedAddon {
-  id: string;
-  quantity: number;
-}
 
 export default function ProposalForm({ onSuccess, onCancel, plans, addons }: ProposalFormProps) {
   const { user } = useAuth();
@@ -65,14 +56,14 @@ export default function ProposalForm({ onSuccess, onCancel, plans, addons }: Pro
     let total = 0;
     
     // Add plan value
-    const selectedPlanData = plans.find(p => p.id === formData.plano_outr_id);
+    const selectedPlanData = plans.find(p => p.plano_outr_id === formData.plano_outr_id);
     if (selectedPlanData) {
       total += selectedPlanData.valor;
     }
     
     // Add addons value
     selectedAddons.forEach(addonId => {
-      const addon = addons.find(a => a.id === addonId);
+      const addon = addons.find(a => a.addon_id === addonId);
       if (addon) {
         total += addon.valor;
       }
@@ -115,7 +106,7 @@ export default function ProposalForm({ onSuccess, onCancel, plans, addons }: Pro
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-white dark:bg-gray-800 rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+      <div className="bg-white dark:bg-gray-800 rounded-lg w-full max-w-2xl max-h-[80vh] max-w-[100vh]  overflow-y-auto">
         <div className="sticky top-0 bg-white dark:bg-gray-800 z-10 p-4">
           <div className="flex justify-between items-center">
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
@@ -131,6 +122,7 @@ export default function ProposalForm({ onSuccess, onCancel, plans, addons }: Pro
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6 p-6">
+
           <div className="space-y-4">
             <h3 className="text-lg font-medium text-gray-900 dark:text-white flex items-center">
               <Box className="h-5 w-5 mr-2" />
@@ -139,21 +131,24 @@ export default function ProposalForm({ onSuccess, onCancel, plans, addons }: Pro
             <div className="flex space-x-4 overflow-x-auto">
               {plans.map((plan) => (
                 <div
-                  key={plan.id}
-                  className={`relative flex-shrink-0 w-64 p-4 border rounded-lg cursor-pointer ${
-                    formData.plano_outr_id === plan.id
+                  key={plan.plano_outr_id}
+                  className={`relative flex-shrink-0 w-60 p-4 border rounded-lg cursor-pointer ${
+                    formData.plano_outr_id === plan.plano_outr_id
                       ? 'border-brand bg-brand/5'
                       : 'border-gray-300 dark:border-gray-600'
                   }`}
-                  onClick={() => setFormData(prev => ({ ...prev, plano_outr_id: plan.id }))}
+                  onClick={() => setFormData(prev => ({ ...prev, plano_outr_id: plan.plano_outr_id }))}
                 >
+                  <label htmlFor={`plan-${plan.plano_outr_id}`} className="sr-only">Selecionar plano {plan.nome}</label>
                   <input
+                    id={`plan-${plan.plano_outr_id}`}
                     type="radio"
                     name="plano_outr_id"
-                    value={plan.id}
-                    checked={formData.plano_outr_id === plan.id}
+                    value={plan.plano_outr_id}
+                    checked={formData.plano_outr_id === plan.plano_outr_id}
                     onChange={(e) => setFormData(prev => ({ ...prev, plano_outr_id: e.target.value }))}
                     className="sr-only"
+                    aria-label={`Selecionar plano ${plan.nome}`}
                   />
                   <div className="flex-1">
                     <h3 className="text-lg font-medium text-gray-900 dark:text-white">
@@ -205,25 +200,28 @@ export default function ProposalForm({ onSuccess, onCancel, plans, addons }: Pro
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {addons.map((addon) => (
-                <div
-                  key={addon.id}
+
+                <label
+                  key={addon.addon_id}
                   className={`relative flex items-center p-4 border rounded-lg cursor-pointer ${
-                    selectedAddons.includes(addon.id)
+                    selectedAddons.includes(addon.addon_id)
                       ? 'border-brand bg-brand/5'
                       : 'border-gray-300 dark:border-gray-600'
                   }`}
                 >
                   <input
                     type="checkbox"
-                    checked={selectedAddons.includes(addon.id)}
+                    checked={selectedAddons.includes(addon.addon_id)}
                     onChange={(e) => {
                       if (e.target.checked) {
-                        setSelectedAddons(prev => [...prev, addon.id]);
+                        console.log(addon);
+                        setSelectedAddons(prev => [...prev, addon.addon_id]);
                       } else {
-                        setSelectedAddons(prev => prev.filter(id => id !== addon.id));
+                        setSelectedAddons(prev => prev.filter(id => id !== addon.addon_id));
                       }
                     }}
                     className="sr-only"
+                    title={`Selecionar add-on ${addon.nome}`}
                   />
                   <div className="flex-1">
                     <h3 className="text-lg font-medium text-gray-900 dark:text-white">
@@ -242,21 +240,8 @@ export default function ProposalForm({ onSuccess, onCancel, plans, addons }: Pro
                       <span className="text-sm text-gray-500 dark:text-gray-400">/mês</span>
                     </p>
                   </div>
-                </div>
+                </label>
               ))}
-            </div>
-          </div>
-
-          <div className="border-t pt-4 mt-6">
-            <div className="flex justify-between items-center">
-              <p className="text-lg font-medium text-gray-900 dark:text-white">Valor Total:</p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                {new Intl.NumberFormat('pt-BR', {
-                  style: 'currency',
-                  currency: 'BRL'
-                }).format(calculateTotal())}
-                <span className="text-sm text-gray-500 dark:text-gray-400">/mês</span>
-              </p>
             </div>
           </div>
 
@@ -266,6 +251,20 @@ export default function ProposalForm({ onSuccess, onCancel, plans, addons }: Pro
               {error}
             </div>
           )}
+
+        </form>
+
+        <div className="sticky bottom-0 bg-white dark:bg-gray-800 z-10 p-4 border-t">
+          <div className="flex justify-between items-center">
+            <p className="text-lg font-medium text-gray-900 dark:text-white">Valor Total:</p>
+            <p className="text-2xl font-bold text-gray-900 dark:text-white">
+              {new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+              }).format(calculateTotal())}
+              <span className="text-sm text-gray-500 dark:text-gray-400">/mês</span>
+            </p>
+          </div>
 
           <div className="flex justify-end space-x-3 pt-4">
             <button
@@ -291,19 +290,8 @@ export default function ProposalForm({ onSuccess, onCancel, plans, addons }: Pro
               )}
             </button>
           </div>
-        </form>
 
-        <div className="sticky bottom-0 bg-white dark:bg-gray-800 z-10 p-4 border-t">
-          <div className="flex justify-between items-center">
-            <p className="text-lg font-medium text-gray-900 dark:text-white">Valor Total:</p>
-            <p className="text-2xl font-bold text-gray-900 dark:text-white">
-              {new Intl.NumberFormat('pt-BR', {
-                style: 'currency',
-                currency: 'BRL'
-              }).format(calculateTotal())}
-              <span className="text-sm text-gray-500 dark:text-gray-400">/mês</span>
-            </p>
-          </div>
+
         </div>
       </div>
     </div>
