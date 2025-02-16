@@ -6,14 +6,15 @@ interface User {
   email_confirmed_at: string;
   phone: string;
   is_anonymous: boolean;
-  // Tabela Pessoa
-  pessoas_id: number;
+
+  // Tabela Users - Public
+  user_id: number;
   nome: string;
-  cnpj: string;
   empresa: string;
-  cargo_id: number;
-  telefone?: string;
-  foto_perfil?: string | null;
+  cnpj: string;
+  perfil_id: number;
+  fone?: string;
+  foto?: string | null;
 }
 
 export { User };

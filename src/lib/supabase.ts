@@ -17,10 +17,10 @@ const authenticateUser = async (email: string, password: string) => {
 
     // Get user from database first to check if they exist
     const { data: userData, error: userError } = await supabase
-      .from('pessoas')
+      .from('users')
       .select('*')
       .eq('email', email)
-      .eq('status', true)
+      .eq('active', true)
       .single();
 
     if (userError) {
@@ -40,22 +40,20 @@ const authenticateUser = async (email: string, password: string) => {
     
     let userDataModify = {
       // Auth
-      id: authData.user.id,
-      aud: authData.user.aud,
-      role: authData.user.role,
-      email_confirmed_at: authData.user.email_confirmed_at,
-      phone: authData.user.phone,
-      is_anonymous: authData.user.is_anonymous,
+      id: authData.user?.id,
+      aud: authData.user?.aud,
+      role: authData.user?.role,
+      email_confirmed_at: authData.user?.email_confirmed_at,
+      phone: authData.user?.phone,
+      is_anonymous: authData.user?.is_anonymous,
 
-      // Pessoa
-      pessoas_id: userData.pessoas_id,
+      // Usuario
       email: userData.email,
       nome: userData.nome || '',
       cargo_id: userData.cargo_id,
       telefone: userData.telefone?.toString() || null,
       foto_perfil: userData.foto_perfil || null
     };
-    localStorage.setItem('pessoa', JSON.stringify(userData));
     localStorage.setItem('user', JSON.stringify(userDataModify));
 
 
