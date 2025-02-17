@@ -87,12 +87,12 @@ export default function AdminDashboard() {
       // Fetch clients metrics
       const { data: clientsData } = await supabase
         .from('pessoas')
-        .select('cargo_id')
+        .select('perfil_id')
         .eq('status', true);
 
       const clients = clientsData?.reduce((acc, curr) => {
-        if (curr.cargo_id === 5) acc.cf++;
-        else if (curr.cargo_id === 4) acc.ava++;
+        if (curr.perfil_id === 5) acc.cf++;
+        else if (curr.perfil_id === 4) acc.ava++;
         return acc;
       }, { cf: 0, ava: 0 }) || { cf: 0, ava: 0 };
 
@@ -108,7 +108,7 @@ export default function AdminDashboard() {
       const { count: activeAffiliates } = await supabase
         .from('pessoas')
         .select('*', { count: 'exact' })
-        .eq('cargo_id', 6)
+        .eq('perfil_id', 6)
         .eq('status', true);
 
       setMetrics({
@@ -142,8 +142,8 @@ export default function AdminDashboard() {
       // Fetch client acquisition data
       const { data: acquisitionTimelineData } = await supabase
         .from('pessoas')
-        .select('dt_criacao, cargo_id')
-        .in('cargo_id', [4, 5])
+        .select('dt_criacao, perfil_id')
+        .in('perfil_id', [4, 5])
         .order('dt_criacao', { ascending: true });
 
       if (acquisitionTimelineData) {
@@ -151,13 +151,13 @@ export default function AdminDashboard() {
           const month = new Date(curr.dt_criacao).toLocaleDateString('pt-BR', { month: 'short', year: 'numeric' });
           const existingEntry = acc.find(item => item.month === month);
           if (existingEntry) {
-            if (curr.cargo_id === 5) existingEntry.cf++;
-            else if (curr.cargo_id === 4) existingEntry.ava++;
+            if (curr.perfil_id === 5) existingEntry.cf++;
+            else if (curr.perfil_id === 4) existingEntry.ava++;
           } else {
             acc.push({
               month,
-              cf: curr.cargo_id === 5 ? 1 : 0,
-              ava: curr.cargo_id === 4 ? 1 : 0
+              cf: curr.perfil_id === 5 ? 1 : 0,
+              ava: curr.perfil_id === 4 ? 1 : 0
             });
           }
           return acc;

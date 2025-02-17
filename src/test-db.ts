@@ -12,8 +12,6 @@ async function testConnection() {
       return false;
     }
 
-    console.log('Connection successful!');
-    console.log('Number of users:', data);
     return true;
   } catch (err) {
     console.error('Error testing connection:', err);

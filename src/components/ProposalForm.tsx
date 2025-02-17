@@ -214,7 +214,6 @@ export default function ProposalForm({ onSuccess, onCancel, plans, addons }: Pro
                     checked={selectedAddons.includes(addon.addon_id)}
                     onChange={(e) => {
                       if (e.target.checked) {
-                        console.log(addon);
                         setSelectedAddons(prev => [...prev, addon.addon_id]);
                       } else {
                         setSelectedAddons(prev => prev.filter(id => id !== addon.addon_id));

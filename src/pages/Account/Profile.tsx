@@ -34,13 +34,13 @@ export default function Profile() {
   const [isEditing, setIsEditing] = useState(false);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
   const [showPhotoSelector, setShowPhotoSelector] = useState(false);
-  const [selectedPhoto, setSelectedPhoto] = useState<string | null>(user?.foto_perfil || null);
+  const [selectedPhoto, setSelectedPhoto] = useState<string | null>(user?.foto || null);
 
   const [formData, setFormData] = useState({
     firstName: user?.nome?.split(' ')[0] || '',
     lastName: user?.nome?.split(' ').slice(1).join(' ') || '',
     email: user?.email || '',
-    phone: user?.telefone || '',
+    phone: user?.fone || '',
     cnpj: user?.cnpj || '',
     empresa: user?.empresa || ''
   });
@@ -58,7 +58,7 @@ export default function Profile() {
     try {
       await updateUser({
         ...user,
-        foto_perfil: photoUrl
+        foto: photoUrl
       });
       setSuccess(true);
       setTimeout(() => setSuccess(false), 2000);
@@ -139,7 +139,6 @@ export default function Profile() {
     setLoading(true);
     setError(null);
     setSuccess(false);
-    console.log(formData);
     try {
       // Atualizar na Tabela de auth.users
       await updateUser({

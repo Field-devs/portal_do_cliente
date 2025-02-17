@@ -112,7 +112,6 @@ export default function UserRegistration() {
     if (!validateForm()) return;
 
     setIsSubmitting(true);
-    console.log("ok");
     try {
       // Verifyy if user already exists in auth
       const { data, error } = await supabase
@@ -120,7 +119,6 @@ export default function UserRegistration() {
       .select('id')
       .eq('email', formData.email)
       .single();
-      console.log("data", data);
       if (error) {
         console.error("Usuário já existe", error);
         throw error;

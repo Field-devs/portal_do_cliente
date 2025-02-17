@@ -11,7 +11,7 @@ export interface Database {
           foto_perfil: string | null
           dt_criacao: string | null
           status: boolean | null
-          cargo_id: number
+          perfil_id: number
         }
         Insert: {
           id?: number
@@ -22,7 +22,7 @@ export interface Database {
           foto_perfil?: string | null
           dt_criacao?: string | null
           status?: boolean | null
-          cargo_id: number
+          perfil_id: number
         }
         Update: {
           id?: number
@@ -33,12 +33,12 @@ export interface Database {
           foto_perfil?: string | null
           dt_criacao?: string | null
           status?: boolean | null
-          cargo_id?: number
+          perfil_id?: number
         }
       }
       cargo: {
         Row: {
-          cargo_id: number
+          perfil_id: number
           cargo: string
         }
       }

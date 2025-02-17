@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
 import { User } from '../../components/Interfaces/Uses';
+import { useAuth } from '../../components/AuthProvider';
 
 import {
   Search,
@@ -33,6 +34,7 @@ const selectClasses = `pl-10 block w-full rounded-md shadow-sm focus:ring-brand 
 
 export default function AccountManagement() {
   const [users, setUsers] = useState<User[]>([]);
+  const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [roleFilter, setRoleFilter] = useState<number | 'all'>('all');
@@ -44,7 +46,7 @@ export default function AccountManagement() {
 
   const [formData, setFormData] = useState({
     nome: 'NEY DIXON',
-    email: 'admin@gmail.com',
+    email: 'admin1@gmail.com',
     fone: '99982342254',
     cnpj: '12344444478598',
     empresa: 'IMPERSOFT',
@@ -81,7 +83,7 @@ export default function AccountManagement() {
       alert('As senhas não coincidem');
       return;
     }
-
+    
     try {
       if (editingUser) {
         const { error } = await supabase
@@ -113,22 +115,19 @@ export default function AccountManagement() {
           )
         );
       } else {
-        console.log('Form Data:', formData);
-
         // Verifyy if user already exists in auth
-        console.log(formData);
-        const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-          email: formData.email,
-          password: "5000000"
-        })
-          console.log("error1", authError?.code);
-        if (authError?.code?.includes("invalid_credentials"))
-        {
-          throw "Usuário existente";
-        }
+        // const { authData, authError } = await supabase.rpc('fn_user_exists', {
+        //   p_mail: formData.email
+        // });
+
+        // if (authError?.code?.includes("invalid_credentials"))
+        // {
+        //   alert("Usuário existente");
+        //   return;
+        // }
 
 
-        // Create auth user first
+        //Create auth user first
         // const { data: authData, error: authError } = await supabase.auth.signUp({
         //   email: formData.email,
         //   password: formData.senha,
@@ -139,27 +138,29 @@ export default function AccountManagement() {
         //   }
         // });
 
-        if (authError) throw authError;
+        // if (authError) throw authError;
 
-        if (authData.user) {
+        //if (authData.user) {
           // Create user profile
+          console.log(user?.id);
           const { error: insertError } = await supabase
             .from('users')
             .insert([{
               email: formData.email,
-              user_id: authData.user.id, // Pega o Id do usuario e associa ao user_id
+              user_id: '9dcba8d4-4f0c-4e40-9527-6a3fd5c1ea3f', // Pega o Id do usuario e associa ao user_id
               nome: formData.nome,
-              telefone: formData.fone,
+              fone: formData.fone,
               cnpj: formData.cnpj,
               empresa: formData.empresa,
               perfil_id: formData.perfil_id,
-              status: true
+              user_ref_id: user?.id,  
+              active: true
             }]);
 
           if (insertError) {
             throw insertError;
           }
-        }
+        //}
       }
 
       setIsFormOpen(false);
@@ -171,7 +172,6 @@ export default function AccountManagement() {
   };
 
   const handleDelete = async () => {
-    console.log(selectedUserId);
     if (!selectedUserId) return;
 
     try {
@@ -185,7 +185,7 @@ export default function AccountManagement() {
       setUsers(prev =>
         prev.map(user =>
           user.id === selectedUserId
-            ? { ...user, status: false }
+            ? { ...user, active: false }
             : user
         )
       );
@@ -215,7 +215,7 @@ export default function AccountManagement() {
   const filteredUsers = users.filter(user => {
     const matchesSearch =
       user.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.cnpj?.toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesRole = roleFilter === 'all' || user.perfil_id === roleFilter;

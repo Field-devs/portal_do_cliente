@@ -2,7 +2,7 @@
 //   USER_ID: string;
 //   EMAIL: string;
 //   NOME: string;
-//   CARGO_ID: number;
+//   perfil_id: number;
 //   DT_CRIACAO: string;
 //   STATUS: boolean;
 //   FOTO_PERFIL?: string;

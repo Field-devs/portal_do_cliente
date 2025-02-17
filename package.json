@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.39.7",
+    "alertifyjs": "^1.14.0",
     "date-fns": "^3.3.1",
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.8.2",

@@ -25,12 +25,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // Check for existing session on mount
     const storedUser = localStorage.getItem('user');
+    console.log('Stored user:', storedUser);
 
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
       setUser(parsedUser);
       
-      // Map cargo_id to role
+      // Map perfil_id to role
       const roleMap: Record<number, UserRole> = {
         1: 'super_admin',
         2: 'admin',
@@ -39,7 +40,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         5: 'client'
       };
       
-      setRole(roleMap[parsedUser.cargo_id] || null);
+      setRole(roleMap[parsedUser.perfil_id] || null);
       
       // If we're on the login page and have a valid session, redirect to portal
       if (window.location.pathname === '/login') {
@@ -59,7 +60,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const userData = await authenticateUser(email, password);
       setUser(userData);
 
-      // Map cargo_id to role
+      // Map perfil_id to role
       const roleMap: Record<number, UserRole> = {
         1: 'super_admin',
         2: 'admin',
@@ -68,8 +69,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         5: 'client'
       };
       
-      setRole(roleMap[userData.cargo_id] || null);
-
+      setRole(roleMap[userData.perfil_id] || null);
+      console.log('User role:', role);
       // Store complete user data including profile photo
       localStorage.setItem('user', JSON.stringify(userData));
       navigate('/portal');

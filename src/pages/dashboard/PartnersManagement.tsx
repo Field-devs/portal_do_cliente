@@ -81,7 +81,7 @@ export default function PartnersManagement() {
       const { data, error } = await supabase
         .from('pessoas')
         .select('*')
-        .eq('cargo_id', activeTab === 'cf' ? 5 : 4) // 5 for CF, 4 for AVA
+        .eq('perfil_id', activeTab === 'cf' ? 5 : 4) // 5 for CF, 4 for AVA
         .order('dt_criacao', { ascending: false });
 
       if (error) throw error;

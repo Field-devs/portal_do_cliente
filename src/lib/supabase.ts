@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { Database } from './database.types';
-
+import { User } from '../components/Interfaces/Uses';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
@@ -38,9 +38,9 @@ const authenticateUser = async (email: string, password: string) => {
       password
     });
     
-    let userDataModify = {
+    let userDataModify : User = {
       // Auth
-      id: authData.user?.id,
+      user_id: authData.user?.id,
       aud: authData.user?.aud,
       role: authData.user?.role,
       email_confirmed_at: authData.user?.email_confirmed_at,
@@ -48,14 +48,21 @@ const authenticateUser = async (email: string, password: string) => {
       is_anonymous: authData.user?.is_anonymous,
 
       // Usuario
+      id: userData.id,
       email: userData.email,
       nome: userData.nome || '',
+      empresa: userData.empresa || '',
+      cnpj: userData.cnpj || '',
       perfil_id: userData.perfil_id,
       perfil_nome: userData.perfil_nome,
-      telefone: userData.telefone?.toString() || null,
-      foto_perfil: userData.foto_perfil || null
+      fone: userData.telefone?.toString() || null,
+      foto: userData.foto_perfil || null,
+      status: userData.f_status,
+      active: userData.active
     };
+
     localStorage.setItem('user', JSON.stringify(userDataModify));
+    //console.log('Stored User:', userDataModify);
 
 
     if (authError) {
@@ -64,25 +71,7 @@ const authenticateUser = async (email: string, password: string) => {
     }
 
     // Return complete user data
-    return {
-      // Auth
-      id: authData.user.id,
-      aud: authData.user.aud,
-      role: authData.user.role,
-      email_confirmed_at: authData.user.email_confirmed_at,
-      phone: authData.user.phone,
-      is_anonymous: authData.user.is_anonymous,
-
-      // Pessoa
-      pessoas_id: userData.pessoas_id,
-      email: userData.email,
-      nome: userData.nome || '',
-      perfil_id: userData.perfil_id,
-      status: userData.f_status,
-      telefone: userData.telefone?.toString() || null,
-      foto: userData.foto || null,
-
-    };
+    return userDataModify;
   } catch (error) {
     console.error('Authentication error:', error);
     throw error;
