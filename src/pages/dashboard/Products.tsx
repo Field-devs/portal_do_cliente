@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { 
+import {
   Plus,
   Search,
   Filter,
@@ -14,35 +14,23 @@ import {
 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { format } from 'date-fns';
-import PlanForm from './PlanForm';
+import PlanForm from '../../components/PlanForm';
 import AddonForm from './AddonForm';
+import Plan  from '../../components/Interfaces/Plan';
+import PlanAddon  from '../../components/Interfaces/Plan.Addon';
 
 type ContentType = 'plans' | 'addons';
 
-interface Plan {
-  plano_outr_id: string;
-  nome: string;
-  descricao: string;
-  valor: number;
-  caixas_entrada: number;
-  atendentes: number;
-  automacoes: number;
-  suporte_humano: number;
-  kanban: boolean;
-  whatsapp_oficial: boolean;
-  dt_criacao: string;
-}
 
-interface Addon {
-  addon_id: string;
-  nome: string;
-  valor: number;
-  dt_criacao: string;
-}
+
 
 export default function Products() {
   const [plans, setPlans] = useState<Plan[]>([]);
-  const [addons, setAddons] = useState<Addon[]>([]);
+  const [editingPlan, setEditingPlan] = useState<Plan | null>(null);
+
+  const [addons, setAddons] = useState<PlanAddon[]>([]);
+  const [editingAddon, seteditingAddon] = useState<PlanAddon | null>(null);
+  
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -51,8 +39,8 @@ export default function Products() {
   const [selectedItem, setSelectedItem] = useState<{ id: string; nome: string; type: ContentType } | null>(null);
   const [activeForm, setActiveForm] = useState<'plan' | 'addon'>('plan');
   const [activeTab, setActiveTab] = useState<ContentType>('plans');
-  const [editingItem, setEditingItem] = useState<Plan | null>(null);
-
+  
+  
   useEffect(() => {
     fetchData();
   }, []);
@@ -63,19 +51,19 @@ export default function Products() {
 
       // Fetch plans
       const { data: plansData, error: plansError } = await supabase
-        .from('plano_outr')
+        .from('plano')
         .select('*')
-        .eq('status', true)
-        .order('dt_criacao', { ascending: false });
+        .eq('active', true)
+        .order('dt_add', { ascending: false });
 
       if (plansError) throw plansError;
 
       // Fetch addons
       const { data: addonsData, error: addonsError } = await supabase
-        .from('addon')
+        .from('plano_addon')
         .select('*')
-        .eq('status', true)
-        .order('dt_criacao', { ascending: false });
+        .eq('active', true)
+        .order('dt_add', { ascending: false });
 
       if (addonsError) throw addonsError;
 
@@ -90,7 +78,7 @@ export default function Products() {
   };
 
   const handleEdit = (plan: Plan) => {
-    setEditingItem(plan);
+    setEditingPlan(plan);
     setActiveForm('plan');
     setIsFormOpen(true);
   };
@@ -110,7 +98,7 @@ export default function Products() {
       if (error) throw error;
 
       if (selectedItem.type === 'plans') {
-        setPlans(prev => prev.filter(p => p.plano_outr_id !== selectedItem.id));
+        setPlans(prev => prev.filter(p => p.id !== selectedItem.id));
       } else {
         setAddons(prev => prev.filter(a => a.addon_id !== selectedItem.id));
       }
@@ -148,7 +136,7 @@ export default function Products() {
           <button
             onClick={() => {
               setActiveForm('plan');
-              setEditingItem(null);
+              setEditingPlan(null);
               setIsFormOpen(true);
             }}
             className="flex items-center px-4 py-2 bg-brand text-white rounded-md hover:bg-brand/90 transition-colors"
@@ -159,7 +147,7 @@ export default function Products() {
           <button
             onClick={() => {
               setActiveForm('addon');
-              setEditingItem(null);
+              setEditingPlan(null);
               setIsFormOpen(true);
             }}
             className="flex items-center px-4 py-2 bg-brand text-white rounded-md hover:bg-brand/90 transition-colors"
@@ -189,22 +177,20 @@ export default function Products() {
         <div className="flex space-x-8">
           <button
             onClick={() => setActiveTab('plans')}
-            className={`flex items-center pb-4 px-1 ${
-              activeTab === 'plans'
+            className={`flex items-center pb-4 px-1 ${activeTab === 'plans'
                 ? 'border-b-2 border-brand text-brand dark:text-white'
                 : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
-            }`}
+              }`}
           >
             <Package className="h-5 w-5 mr-2" />
             Planos
           </button>
           <button
             onClick={() => setActiveTab('addons')}
-            className={`flex items-center pb-4 px-1 ${
-              activeTab === 'addons'
+            className={`flex items-center pb-4 px-1 ${activeTab === 'addons'
                 ? 'border-b-2 border-brand text-brand dark:text-white'
                 : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
-            }`}
+              }`}
           >
             <PlusSquare className="h-5 w-5 mr-2" />
             Add-ons
@@ -235,7 +221,7 @@ export default function Products() {
             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
               {activeTab === 'plans' ? (
                 filteredPlans.map((plan) => (
-                  <tr key={plan.plano_outr_id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                  <tr key={plan.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm font-medium text-gray-900 dark:text-dark-text-primary">
                         {plan.nome}
@@ -251,7 +237,7 @@ export default function Products() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm text-gray-500 dark:text-dark-text-muted">
-                        {format(new Date(plan.dt_criacao), 'dd/MM/yyyy')}
+                        {format(new Date(plan.dt_add), 'dd/MM/yyyy')}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
@@ -264,7 +250,7 @@ export default function Products() {
                         </button>
                         <button
                           onClick={() => {
-                            setSelectedItem({ id: plan.plano_outr_id, nome: plan.nome, type: 'plans' });
+                            setSelectedItem({ id: plan.id, nome: plan.nome, type: 'plans' });
                             setIsDeleteModalOpen(true);
                           }}
                           className="text-red-600 hover:text-red-800"
@@ -277,7 +263,7 @@ export default function Products() {
                 ))
               ) : (
                 filteredAddons.map((addon) => (
-                  <tr key={addon.addon_id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                  <tr key={addon.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm font-medium text-gray-900 dark:text-dark-text-primary">
                         {addon.nome}
@@ -293,7 +279,7 @@ export default function Products() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm text-gray-500 dark:text-dark-text-muted">
-                        {format(new Date(addon.dt_criacao), 'dd/MM/yyyy')}
+                        {format(new Date(addon.dt_add), 'dd/MM/yyyy')}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
@@ -301,7 +287,7 @@ export default function Products() {
                         <button
                           className="group p-2 rounded-lg transition-all duration-200 hover:bg-orange-100 dark:hover:bg-orange-900/20 focus:outline-none focus:ring-2 focus:ring-orange-500 dark:focus:ring-orange-500/60 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
                           onClick={() => {
-                            setEditingItem(addon);
+                            setEditingPlan(addon);
                             setActiveForm('addon');
                             setIsFormOpen(true);
                           }}
@@ -310,7 +296,7 @@ export default function Products() {
                         </button>
                         <button
                           onClick={() => {
-                            setSelectedItem({ id: addon.addon_id, nome: addon.nome, type: 'addons' });
+                            setSelectedItem({ id: addon.id, nome: addon.nome, type: 'addons' });
                             setIsDeleteModalOpen(true);
                           }}
                           className="text-red-600 hover:text-red-800"
@@ -333,12 +319,12 @@ export default function Products() {
           <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-semibold text-gray-900 dark:text-dark-text-primary">
-                {editingItem ? 'Editar Plano' : activeForm === 'plan' ? 'Novo Plano' : 'Novo Add-on'}
+                {editingPlan ? 'Editar Plano' : activeForm === 'plan' ? 'Novo Plano' : 'Novo Add-on'}
               </h2>
               <button
                 onClick={() => {
                   setIsFormOpen(false);
-                  setEditingItem(null);
+                  setEditingPlan(null);
                 }}
                 className="text-gray-500 hover:text-gray-700"
               >
@@ -350,14 +336,14 @@ export default function Products() {
               <PlanForm
                 onSuccess={() => {
                   setIsFormOpen(false);
-                  setEditingItem(null);
+                  setEditingPlan(null);
                   fetchData();
                 }}
                 onCancel={() => {
                   setIsFormOpen(false);
-                  setEditingItem(null);
+                  setEditingPlan(null);
                 }}
-                initialData={editingItem}
+                initialData={editingPlan}
               />
             ) : (
               <AddonForm

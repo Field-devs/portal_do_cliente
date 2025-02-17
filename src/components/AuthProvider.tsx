@@ -25,7 +25,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // Check for existing session on mount
     const storedUser = localStorage.getItem('user');
-    console.log('Stored user:', storedUser);
 
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);

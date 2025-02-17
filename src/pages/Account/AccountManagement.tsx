@@ -128,17 +128,17 @@ export default function AccountManagement() {
 
 
         //Create auth user first
-        // const { data: authData, error: authError } = await supabase.auth.signUp({
-        //   email: formData.email,
-        //   password: formData.senha,
-        //   options: {
-        //     data: {
-        //       full_name: formData.nome
-        //     }
-        //   }
-        // });
+        const { data: authData, error: authError } = await supabase.auth.signUp({
+          email: formData.email,
+          password: formData.senha,
+          options: {
+            data: {
+              full_name: formData.nome
+            }
+          }
+        });
 
-        // if (authError) throw authError;
+        if (authError) throw authError;
 
         //if (authData.user) {
           // Create user profile
@@ -147,7 +147,7 @@ export default function AccountManagement() {
             .from('users')
             .insert([{
               email: formData.email,
-              user_id: '9dcba8d4-4f0c-4e40-9527-6a3fd5c1ea3f', // Pega o Id do usuario e associa ao user_id
+              user_id: authData.user?.id,
               nome: formData.nome,
               fone: formData.fone,
               cnpj: formData.cnpj,
@@ -222,8 +222,8 @@ export default function AccountManagement() {
 
     const matchesStatus =
       statusFilter === 'all' ||
-      (statusFilter === 'active' && user.status) ||
-      (statusFilter === 'inactive' && !user.status);
+      (statusFilter === 'active' && user.f_status) ||
+      (statusFilter === 'inactive' && !user.f_status);
 
     return matchesSearch && matchesRole && matchesStatus;
   });
@@ -313,13 +313,12 @@ export default function AccountManagement() {
                   Empresa
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                  Status
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                   Data de Criação
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                  Ações
+                  Status
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                 </th>
               </tr>
             </thead>
@@ -344,15 +343,15 @@ export default function AccountManagement() {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                     {user.empresa || '-'}
                   </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                    {new Date(user.dt_add).toLocaleDateString('pt-BR')}
+                  </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${user.status
+                    <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${user.f_status
                       ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
                       : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
                       }`}>
                       {user.f_status}</span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                    {new Date(user.dt_add).toLocaleDateString('pt-BR')}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <div className="flex space-x-3">
@@ -377,7 +376,7 @@ export default function AccountManagement() {
                       >
                         <Edit className="h-5 w-5 text-orange-500 dark:text-orange-400 group-hover:text-orange-600 dark:group-hover:text-orange-300 transition-colors" />
                       </button>
-                      {user.status && (
+                      {user.f_status && (
                         <button
                           onClick={() => {
                             setSelectedUserId(user.id);

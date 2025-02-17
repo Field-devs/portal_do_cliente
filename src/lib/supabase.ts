@@ -57,12 +57,12 @@ const authenticateUser = async (email: string, password: string) => {
       perfil_nome: userData.perfil_nome,
       fone: userData.telefone?.toString() || null,
       foto: userData.foto_perfil || null,
-      status: userData.f_status,
+      f_status: userData.f_status,
+      DateCreate: userData.dt_add,
       active: userData.active
     };
 
     localStorage.setItem('user', JSON.stringify(userDataModify));
-    //console.log('Stored User:', userDataModify);
 
 
     if (authError) {

@@ -16,7 +16,8 @@ interface User {
   perfil_nome: string;
   fone?: string;
   active: boolean;
-  status: string;
+  f_status: string;
+  dt_add: string;
   foto?: string | null;
 }
 

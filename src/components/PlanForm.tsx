@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useAuth } from '../../components/AuthProvider';
-import { supabase } from '../../lib/supabase';
+import { useAuth } from './AuthProvider';
+import { supabase } from '../lib/supabase';
 import {
   Users,
   Inbox,
@@ -13,22 +13,12 @@ import {
   Save,
   Phone
 } from 'lucide-react';
+import Plan from './Interfaces/Plan';
 
 interface PlanFormProps {
   onSuccess: () => void;
   onCancel: () => void;
-  initialData?: {
-    plano_outr_id: string;
-    nome: string;
-    descricao: string;
-    valor: number;
-    caixas_entrada: number;
-    atendentes: number;
-    automacoes: number;
-    suporte_humano: number;
-    kanban: boolean;
-    whatsapp_oficial: boolean;
-  };
+  initialData?: Plan;
 }
 
 export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormProps) {
@@ -36,15 +26,15 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-
+  
   const [formData, setFormData] = useState({
     nome: initialData?.nome || '',
     descricao: '',
-    valor: initialData?.valor || 0,
+    valor: initialData?.valor || 1,
     caixas_entrada: initialData?.caixas_entrada || 1,
     atendentes: initialData?.atendentes || 1,
     automacoes: initialData?.automacoes || 1,
-    suporte_humano: initialData?.suporte_humano || 0,
+    suporte_humano: initialData?.suporte_humano || false,
     kanban: initialData?.kanban || false,
     whatsapp_oficial: initialData?.whatsapp_oficial || false
   });
@@ -96,16 +86,16 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
 
     e.preventDefault();
     console.log(user);
-    if (!validateForm() || !user?.pessoas_id) return;
+    if (!validateForm() || !user?.id) return;
 
     setLoading(true);
     setError(null);
 
     try {
-      if (initialData?.plano_outr_id) {
+      if (initialData?.id) {
         // Update existing plan
         const { error } = await supabase
-          .from('plano_outr')
+          .from('plano')
           .update({
             nome: formData.nome,
             descricao: formData.descricao,
@@ -118,14 +108,15 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
             whatsapp_oficial: formData.whatsapp_oficial,
             status: true
           })
-          .eq('plano_outr_id', initialData.plano_outr_id);
+          .eq('id', initialData.id);
 
         if (error) throw error;
-      } else {
+      }
+      else {
 
         // Create new plan
         const { error } = await supabase
-          .from('plano_outr')
+          .from('plano')
           .insert([{
             nome: formData.nome,
             descricao: formData.descricao,
@@ -136,8 +127,7 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
             suporte_humano: formData.suporte_humano ? 1 : 0,
             kanban: formData.kanban,
             whatsapp_oficial: formData.whatsapp_oficial,
-            status: true,
-            pessoas_user_id: user.pessoas_id
+            active: true
           }]);
 
         if (error) throw error;

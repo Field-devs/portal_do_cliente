@@ -7,12 +7,15 @@ import ForgotPassword from './pages/Auth/ForgotPassword';
 import ResetPassword from './pages/Auth/ResetPassword';
 import Portal from './pages/Portal';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import { PermissionsProvider } from './components/Interfaces/PermissionsProvider';
 
 function App() {
   return (
     <BrowserRouter>
       <ThemeProvider>
         <AuthProvider>
+        <PermissionsProvider>
+          
           <Routes>
             {/* Public routes */}
             <Route path="/login" element={<Login />} />
@@ -48,7 +51,10 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            
           </Routes>
+
+        </PermissionsProvider>
         </AuthProvider>
       </ThemeProvider>
     </BrowserRouter>

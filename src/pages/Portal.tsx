@@ -203,7 +203,8 @@ export default function Portal() {
         {/* Page Content */}
         <div className="p-6">
           <Routes>
-            <Route index element={<AdminDashboard />} />
+            {/* <Route index element={<AdminDashboard />} /> */}
+            <Route index element={<Products />} />
             <Route path="products" element={<Products />} />
             <Route path="proposals" element={<ProposalsManagement />} />
             <Route path="partners" element={<PartnersManagement />} />

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useAuth } from '../components/AuthProvider';
+import  { useAuth } from './AuthProvider';
 import { supabase } from '../lib/supabase';
 import { AlertCircle, Loader2, Save } from 'lucide-react';
 
@@ -23,7 +23,7 @@ export default function AddonForm({ onSuccess, onCancel, initialData }: AddonFor
         {/* Nome do Add-on */}
         <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-            Nome do Add-on
+            Nome do Add-on2
           </label>
           <input
             type="text"

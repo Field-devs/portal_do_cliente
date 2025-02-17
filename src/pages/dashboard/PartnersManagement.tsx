@@ -79,9 +79,9 @@ export default function PartnersManagement() {
   const fetchUsers = async () => {
     try {
       const { data, error } = await supabase
-        .from('pessoas')
+        .from('users')
         .select('*')
-        .eq('perfil_id', activeTab === 'cf' ? 5 : 4) // 5 for CF, 4 for AVA
+        .eq('profile_id', activeTab === 'cf' ? 5 : 4) // 5 for CF, 4 for AVA
         .order('dt_criacao', { ascending: false });
 
       if (error) throw error;
@@ -237,7 +237,7 @@ export default function PartnersManagement() {
           </button>
         </div>
       </div>
-
+      
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">
           {activeTab === 'cf' ? 'Clientes Finais' :

@@ -49,7 +49,7 @@ export default function AddonForm({ onSuccess, onCancel, initialData }: AddonFor
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validateForm() || !user?.pessoas_id) return;
+    if (!validateForm() || !user?.id) return;
 
     setLoading(true);
     setError(null);
@@ -59,22 +59,21 @@ export default function AddonForm({ onSuccess, onCancel, initialData }: AddonFor
         nome: formData.nome,
         descricao: formData.descricao,
         valor: formData.valor,
-        status: true,
-        pessoas_user_id: user.pessoas_id
+        active: true,
       };
 
       if (initialData?.addon_id) {
         // Update existing addon
         const { error } = await supabase
-          .from('addon')
+          .from('plano_addon')
           .update(addonData)
-          .eq('addon_id', initialData.addon_id);
+          .eq('id', initialData.addon_id);
 
         if (error) throw error;
       } else {
         // Create new addon
         const { error } = await supabase
-          .from('addon')
+          .from('plano_addon')
           .insert([addonData]);
 
         if (error) throw error;
