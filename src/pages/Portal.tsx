@@ -23,10 +23,10 @@ import {
 import AdminDashboard from './dashboard/AdminDashboard';
 import ProposalsManagement from './dashboard/ProposalsManagement';
 import PartnersManagement from './dashboard/PartnersManagement';
-import AccountManagement from './dashboard/AccountManagement';
+import AccountManagement from './Account/AccountManagement';
 import FinancialControl from './dashboard/FinancialControl';
 import Products from './dashboard/Products';
-import Profile from './Profile';
+import Profile from './Account/Profile';
 
 const getRoleBadgeStyles = (role: string | null) => {
   switch (role) {

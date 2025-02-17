@@ -2,7 +2,7 @@ import React from 'react';
 import { Routes, Route, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../components/AuthProvider';
 import { LogOut, User, Settings, Home, Users, FileText, CreditCard, Gift } from 'lucide-react';
-import UserManagement from './dashboard/UserManagement';
+import UserManagement from './Account/UserManagement';
 import PlanManagement from './dashboard/PlanManagement';
 import ProposalManagement from './dashboard/ProposalManagement';
 import PaymentManagement from './dashboard/PaymentManagement';

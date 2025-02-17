@@ -17,7 +17,7 @@ const authenticateUser = async (email: string, password: string) => {
 
     // Get user from database first to check if they exist
     const { data: userData, error: userError } = await supabase
-      .from('users')
+      .from('v_users')
       .select('*')
       .eq('email', email)
       .eq('active', true)
@@ -50,7 +50,8 @@ const authenticateUser = async (email: string, password: string) => {
       // Usuario
       email: userData.email,
       nome: userData.nome || '',
-      cargo_id: userData.cargo_id,
+      perfil_id: userData.perfil_id,
+      perfil_nome: userData.perfil_nome,
       telefone: userData.telefone?.toString() || null,
       foto_perfil: userData.foto_perfil || null
     };
@@ -76,9 +77,10 @@ const authenticateUser = async (email: string, password: string) => {
       pessoas_id: userData.pessoas_id,
       email: userData.email,
       nome: userData.nome || '',
-      cargo_id: userData.cargo_id,
+      perfil_id: userData.perfil_id,
+      status: userData.f_status,
       telefone: userData.telefone?.toString() || null,
-      foto_perfil: userData.foto_perfil || null,
+      foto: userData.foto || null,
 
     };
   } catch (error) {

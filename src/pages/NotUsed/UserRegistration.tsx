@@ -1,21 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../lib/supabase';
-import { 
-  User, 
-  Mail, 
-  Lock,
+import { supabase } from '../../lib/supabase';
+import {
   AlertCircle,
   ArrowLeft,
-  CheckCircle 
+  CheckCircle
 } from 'lucide-react';
 
-interface FormData {
+interface FormDataRegister {
   firstName: string;
   lastName: string;
   email: string;
   accountType: 'super_admin' | 'admin';
   password: string;
+  perfil_id: number;
 }
 
 interface ValidationErrors {
@@ -28,12 +26,13 @@ interface ValidationErrors {
 
 export default function UserRegistration() {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<FormDataRegister>({
     firstName: '',
     lastName: '',
     email: '',
     accountType: 'admin',
-    password: ''
+    password: '',
+    perfil_id: 1,
   });
 
   const [errors, setErrors] = useState<ValidationErrors>({});
@@ -109,12 +108,25 @@ export default function UserRegistration() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!validateForm()) return;
-    
-    setIsSubmitting(true);
 
+    if (!validateForm()) return;
+
+    setIsSubmitting(true);
+    console.log("ok");
     try {
+      // Verifyy if user already exists in auth
+      const { data, error } = await supabase
+      .from('auth.users')
+      .select('id')
+      .eq('email', formData.email)
+      .single();
+      console.log("data", data);
+      if (error) {
+        console.error("Usuário já existe", error);
+        throw error;
+      }
+      
+
       // Create user in Supabase Auth
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: formData.email,
@@ -126,18 +138,19 @@ export default function UserRegistration() {
         }
       });
 
-      if (authError) throw authError;
+      // if (authError) throw authError;
 
       if (authData.user) {
         // Create user profile in database
         const { error: profileError } = await supabase
-          .from('USER')
+          .from('users')
           .insert([{
-            id: authData.user.id,
+            //user_id: authData.user.id,
+            user_id: '9dcba8d4-4f0c-4e40-9527-6a3fd5c1ea3f',
             email: formData.email,
             nome: `${formData.firstName} ${formData.lastName}`,
-            cargo_id: formData.accountType === 'super_admin' ? 1 : 2,
-            status: true
+            perfil_id: formData.
+            active: true
           }]);
 
         if (profileError) throw profileError;
@@ -203,9 +216,8 @@ export default function UserRegistration() {
                     maxLength={50}
                     value={formData.firstName}
                     onChange={handleInputChange}
-                    className={`appearance-none block w-full px-3 py-2 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-brand focus:border-brand sm:text-sm ${
-                      errors.firstName ? 'border-red-300' : 'border-gray-300 dark:border-gray-600'
-                    }`}
+                    className={`appearance-none block w-full px-3 py-2 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-brand focus:border-brand sm:text-sm ${errors.firstName ? 'border-red-300' : 'border-gray-300 dark:border-gray-600'
+                      }`}
                     aria-invalid={errors.firstName ? 'true' : 'false'}
                     aria-describedby={errors.firstName ? 'firstName-error' : undefined}
                   />
@@ -236,9 +248,8 @@ export default function UserRegistration() {
                     maxLength={50}
                     value={formData.lastName}
                     onChange={handleInputChange}
-                    className={`appearance-none block w-full px-3 py-2 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-brand focus:border-brand sm:text-sm ${
-                      errors.lastName ? 'border-red-300' : 'border-gray-300 dark:border-gray-600'
-                    }`}
+                    className={`appearance-none block w-full px-3 py-2 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-brand focus:border-brand sm:text-sm ${errors.lastName ? 'border-red-300' : 'border-gray-300 dark:border-gray-600'
+                      }`}
                     aria-invalid={errors.lastName ? 'true' : 'false'}
                     aria-describedby={errors.lastName ? 'lastName-error' : undefined}
                   />
@@ -269,9 +280,8 @@ export default function UserRegistration() {
                     required
                     value={formData.email}
                     onChange={handleInputChange}
-                    className={`appearance-none block w-full px-3 py-2 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-brand focus:border-brand sm:text-sm ${
-                      errors.email ? 'border-red-300' : 'border-gray-300 dark:border-gray-600'
-                    }`}
+                    className={`appearance-none block w-full px-3 py-2 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-brand focus:border-brand sm:text-sm ${errors.email ? 'border-red-300' : 'border-gray-300 dark:border-gray-600'
+                      }`}
                     aria-invalid={errors.email ? 'true' : 'false'}
                     aria-describedby={errors.email ? 'email-error' : undefined}
                   />
@@ -322,9 +332,8 @@ export default function UserRegistration() {
                     required
                     value={formData.password}
                     onChange={handleInputChange}
-                    className={`appearance-none block w-full px-3 py-2 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-brand focus:border-brand sm:text-sm ${
-                      errors.password ? 'border-red-300' : 'border-gray-300 dark:border-gray-600'
-                    }`}
+                    className={`appearance-none block w-full px-3 py-2 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-brand focus:border-brand sm:text-sm ${errors.password ? 'border-red-300' : 'border-gray-300 dark:border-gray-600'
+                      }`}
                     aria-invalid={errors.password ? 'true' : 'false'}
                     aria-describedby={errors.password ? 'password-error' : undefined}
                   />

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useAuth } from '../components/AuthProvider';
+import { useAuth } from '../../components/AuthProvider';
 
 
 import {
@@ -16,7 +16,7 @@ import {
   Building2,
   CreditCard
 } from 'lucide-react';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../../lib/supabase';
 
 const DEFAULT_AVATARS = [
   'https://storage.wiseapp360.com/typebot/public/workspaces/clwl6fdyf000511ohlamongyl/typebots/cm683siyl000dm4kxlrec9tb8/results/f0ox8dmw82jbx0s2w686ioyk/blocks/flm69ulnpr4b67h01xj47t14/DALL·E 2025-02-07 11.13.12 - A vibrant nature scene inspired by Brazilian modernism. The landscape features rolling green hills, oversized tropical plants, and a bright blue sky. _resultado.png',

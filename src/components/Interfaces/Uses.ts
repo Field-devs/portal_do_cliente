@@ -13,7 +13,9 @@ interface User {
   empresa: string;
   cnpj: string;
   perfil_id: number;
+  perfil_nome: string;
   fone?: string;
+  status: boolean;
   foto?: string | null;
 }
 

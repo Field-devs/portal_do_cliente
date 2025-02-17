@@ -43,14 +43,16 @@ export default function AccountManagement() {
   const [editingUser, setEditingUser] = useState<User | null>(null);
 
   const [formData, setFormData] = useState({
-    nome: '',
-    email: '',
-    telefone: '',
-    cnpj: '',
-    empresa: '',
-    cargo: 5,
-    senha: '',
-    confirmarSenha: ''
+    nome: 'NEY DIXON',
+    email: 'admin@gmail.com',
+    fone: '99982342254',
+    cnpj: '12344444478598',
+    empresa: 'IMPERSOFT',
+    perfil_id: 1,
+    perfil_nome: '',
+    senha: '102030',
+    confirmarSenha: '102030',
+    user_id: ''
   });
 
   useEffect(() => {
@@ -60,9 +62,9 @@ export default function AccountManagement() {
   const fetchUsers = async () => {
     try {
       const { data, error } = await supabase
-        .from('pessoas')
+        .from('v_users')
         .select('*')
-        .order('dt_criacao', { ascending: false });
+        .order('dt_add', { ascending: false });
 
       if (error) throw error;
       setUsers(data || []);
@@ -83,17 +85,15 @@ export default function AccountManagement() {
     try {
       if (editingUser) {
         const { error } = await supabase
-          .from('pessoas')
+          .from('users')
           .update({
             nome: formData.nome,
             email: formData.email,
-            telefone: formData.telefone,
+            fone: formData.fone,
             cnpj: formData.cnpj,
             empresa: formData.empresa,
-            cargo_id: formData.cargo
           })
-          .eq('pessoas_id', editingUser.id);
-
+          .eq('id', editingUser.id);
         if (error) throw error;
 
         setUsers(prev =>
@@ -103,40 +103,56 @@ export default function AccountManagement() {
                 ...user,
                 nome: formData.nome,
                 email: formData.email,
-                telefone: formData.telefone,
+                telefone: formData.fone,
                 cnpj: formData.cnpj,
                 empresa: formData.empresa,
-                cargo_id: formData.cargo
+                perfil_id: formData.perfil_id,
+                perfil_nome: formData.perfil_nome
               }
               : user
           )
         );
       } else {
-        // Create auth user first
-        const { data: authData, error: authError } = await supabase.auth.signUp({
+        console.log('Form Data:', formData);
+
+        // Verifyy if user already exists in auth
+        console.log(formData);
+        const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
           email: formData.email,
-          password: formData.senha,
-          options: {
-            data: {
-              full_name: formData.nome
-            }
-          }
-        });
+          password: "5000000"
+        })
+          console.log("error1", authError?.code);
+        if (authError?.code?.includes("invalid_credentials"))
+        {
+          throw "Usuário existente";
+        }
+
+
+        // Create auth user first
+        // const { data: authData, error: authError } = await supabase.auth.signUp({
+        //   email: formData.email,
+        //   password: formData.senha,
+        //   options: {
+        //     data: {
+        //       full_name: formData.nome
+        //     }
+        //   }
+        // });
 
         if (authError) throw authError;
 
         if (authData.user) {
           // Create user profile
           const { error: insertError } = await supabase
-            .from('pessoas')
+            .from('users')
             .insert([{
-              //user_id: authData.pessoas_id,
               email: formData.email,
+              user_id: authData.user.id, // Pega o Id do usuario e associa ao user_id
               nome: formData.nome,
-              telefone: formData.telefone,
+              telefone: formData.fone,
               cnpj: formData.cnpj,
               empresa: formData.empresa,
-              cargo_id: formData.cargo,
+              perfil_id: formData.perfil_id,
               status: true
             }]);
 
@@ -160,7 +176,7 @@ export default function AccountManagement() {
 
     try {
       const { error } = await supabase
-        .from('pessoas')
+        .from('users')
         .update({ status: false })
         .eq('pessoas_id', selectedUserId);
 
@@ -184,12 +200,14 @@ export default function AccountManagement() {
     setFormData({
       nome: '',
       email: '',
-      telefone: '',
+      fone: '',
       cnpj: '',
       empresa: '',
-      cargo: 5,
+      perfil_id: 5,
+      perfil_nome: '',
       senha: '',
-      confirmarSenha: ''
+      confirmarSenha: '',
+      user_id: ''
     });
     setEditingUser(null);
   };
@@ -200,7 +218,7 @@ export default function AccountManagement() {
       user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.cnpj?.toLowerCase().includes(searchTerm.toLowerCase());
 
-    const matchesRole = roleFilter === 'all' || user.cargo_id === roleFilter;
+    const matchesRole = roleFilter === 'all' || user.perfil_id === roleFilter;
 
     const matchesStatus =
       statusFilter === 'all' ||
@@ -254,7 +272,7 @@ export default function AccountManagement() {
                 onChange={(e) => setRoleFilter(e.target.value === 'all' ? 'all' : Number(e.target.value))}
                 className={selectClasses}
               >
-                <option value="all">Todos os Cargos</option>
+                <option value="all">Todos os Perfis</option>
                 <option value="1">Super Admin</option>
                 <option value="2">Admin</option>
                 <option value="3">AVA Admin</option>
@@ -289,7 +307,7 @@ export default function AccountManagement() {
                   Usuário
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                  Cargo
+                  Perfil
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                   Empresa
@@ -320,12 +338,7 @@ export default function AccountManagement() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
-                      {user.cargo_id === 1 ? 'Super Admin' :
-                        user.cargo_id === 2 ? 'Admin' :
-                          user.cargo_id === 3 ? 'AVA Admin' :
-                            user.cargo_id === 4 ? 'AVA' :
-                              user.cargo_id === 5 ? 'Cliente' :
-                                user.cargo_id === 6 ? 'Afiliado' : 'Desconhecido'}
+                      {user.perfil_nome}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
@@ -336,11 +349,10 @@ export default function AccountManagement() {
                       ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
                       : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
                       }`}>
-                      {user.status ? 'Ativo' : 'Inativo'}
-                    </span>
+                      {user.f_status}</span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                    {new Date(user.dt_criacao).toLocaleDateString('pt-BR')}
+                    {new Date(user.dt_add).toLocaleDateString('pt-BR')}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <div className="flex space-x-3">
@@ -350,10 +362,12 @@ export default function AccountManagement() {
                           setFormData({
                             nome: user.nome,
                             email: user.email,
-                            telefone: user.telefone || '',
+                            fone: user.fone || '',
                             cnpj: user.cnpj || '',
                             empresa: user.empresa || '',
-                            cargo: user.cargo_id,
+                            perfil_id: user.perfil_id,
+                            perfil_nome: user.perfil_nome || '',
+                            user_id: user.id,
                             senha: '',
                             confirmarSenha: ''
                           });
@@ -366,7 +380,7 @@ export default function AccountManagement() {
                       {user.status && (
                         <button
                           onClick={() => {
-                            setSelectedUserId(user.pessoas_id);
+                            setSelectedUserId(user.id);
                             setIsDeleteModalOpen(true);
                           }}
                           className="text-red-600 hover:text-red-800"
@@ -443,8 +457,8 @@ export default function AccountManagement() {
                     <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                     <input
                       type="tel"
-                      value={formData.telefone}
-                      onChange={(e) => setFormData({ ...formData, telefone: e.target.value })}
+                      value={formData.fone}
+                      onChange={(e) => setFormData({ ...formData, fone: e.target.value })}
                       className={inputClasses}
                     />
                   </div>
@@ -479,13 +493,14 @@ export default function AccountManagement() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Cargo
+                    Perfil
                   </label>
                   <div className="mt-1 relative">
                     <Shield className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                     <select
-                      value={formData.cargo}
-                      onChange={(e) => setFormData({ ...formData, cargo: Number(e.target.value) })}
+                      value={formData.perfil_id}
+                      disabled={editingUser}
+                      onChange={(e) => setFormData({ ...formData, perfil_id: Number(e.target.value) })}
                       className={selectClasses}
                       required
                     >
