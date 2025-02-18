@@ -10,7 +10,7 @@ import {
   Edit
 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
-import ProposalForm from '../../components/ProposalForm';
+import {ProposalForm} from '../../components/ProposalForm';
 import { usePlanos } from '../../hooks/usePlanos';
 import { useAddons } from '../../hooks/useAddons';
 

@@ -144,17 +144,18 @@ export default function CommercialAffiliateForm({ initialData, onSuccess, onCanc
       if (initialData) {
         // Update existing affiliate
         const { error: updateError } = await supabase
-          .from('cliente_afiliado')
+          .from('cliente')
           .update({
+            tipo : 'AF',
             email: formData.email,
             nome: formData.nome,
-            telefone: phoneNumber,
+            fone: phoneNumber,
             desconto: Number(formData.desconto),
             comissao: Number(formData.comissao),
             vencimento: formData.vencimento,
-            status: formData.status
+            active: formData.status
           })
-          .eq('cliente_afiliado_id', initialData.cliente_afiliado_id);
+          .eq('id', initialData.cliente_afiliado_id);
 
         if (updateError) throw updateError;
       } else {
@@ -162,7 +163,7 @@ export default function CommercialAffiliateForm({ initialData, onSuccess, onCanc
         const couponCode = generateCouponCode();
         
         const { error: insertError } = await supabase
-          .from('cliente_afiliado')
+          .from('cliente')
           .insert([{
             email: formData.email,
             nome: formData.nome,

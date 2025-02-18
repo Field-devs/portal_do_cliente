@@ -36,7 +36,8 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
     automacoes: initialData?.automacoes || 1,
     suporte_humano: initialData?.suporte_humano || false,
     kanban: initialData?.kanban || false,
-    whatsapp_oficial: initialData?.whatsapp_oficial || false
+    whatsapp_oficial: initialData?.whatsapp_oficial || false,
+    active: initialData?.active || true
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -106,7 +107,7 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
             suporte_humano: formData.suporte_humano ? 1 : 0,
             kanban: formData.kanban,
             whatsapp_oficial: formData.whatsapp_oficial,
-            status: true
+            active: true
           })
           .eq('id', initialData.id);
 
