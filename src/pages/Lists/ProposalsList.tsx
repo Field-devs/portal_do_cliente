@@ -243,63 +243,6 @@ export default function ProposalsList() {
         </div>
       </div>
 
-      {isFormOpen && (
-        <ProposalForm
-          onSuccess={() => {
-            setIsFormOpen(false);
-            fetchProposals();
-          }}
-          onCancel={() => setIsFormOpen(false)}
-          plans={planos.map(plan => ({
-            plano_outr_id: plan.plano_outr_id,
-            nome: plan.nome,
-            descricao: plan.descricao || '',
-            valor: plan.valor,
-            caixas_entrada: plan.caixas_entrada,
-            automacoes: plan.automacoes,
-            atendentes: plan.atendentes,
-            kanban: plan.kanban,
-            whatsapp_oficial: plan.whatsapp_oficial
-          }))}
-          addons={addons.map(addon => ({
-            addon_id: addon.addon_id,
-            nome: addon.nome,
-            descricao: addon.descricao || '',
-            valor: addon.valor
-          }))}
-        />
-      )}
-
-      {isDeleteModalOpen && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4">
-            <div className="flex items-center text-red-600 mb-4">
-              <AlertCircle className="h-6 w-6 mr-2" />
-              <h3 className="text-lg font-medium">Confirmar exclusão</h3>
-            </div>
-            <p className="text-gray-600 dark:text-gray-400 mb-4">
-              Tem certeza que deseja excluir esta proposta? Esta ação não pode ser desfeita.
-            </p>
-            <div className="flex justify-end space-x-3">
-              <button
-                onClick={() => {
-                  setIsDeleteModalOpen(false);
-                  setSelectedProposalId(null);
-                }}
-                className="px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
-              >
-                Cancelar
-              </button>
-              <button
-                onClick={handleDelete}
-                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
-              >
-                Excluir
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Eye, Edit, Trash2, X, AlertTriangle, Loader2, Check } from 'lucide-react';
-import { usePlanos } from '../hooks/usePlanos';
-import { useAddons } from '../hooks/useAddons';
-import { supabase } from '../lib/supabase';
-import { useAuth } from '../components/AuthProvider';
+import { usePlanos } from '../../hooks/usePlanos';
+import { useAddons } from '../../hooks/useAddons';
+import { supabase } from '../../lib/supabase';
+import { useAuth } from '../../components/AuthProvider';
 
 interface Proposta {
   proposta_id: string;
@@ -50,7 +50,7 @@ export default function Proposals() {
     atendentes: 1,
     automacoes: 1,
 
-    planoId: 0,
+    planoId: '0',
     walletId: '',
     selectedAddons: [] as string[]
   });
@@ -62,13 +62,13 @@ export default function Proposals() {
   // Calculate total value when plan or addons change
   useEffect(() => {
     let total = 0;
-    const selectedPlan = planos.find(p => p.plano_outr_id === formData.planoId);
+    const selectedPlan = planos.find(p => p.id === formData.planoId);
     if (selectedPlan) {
       total += selectedPlan.valor;
     }
 
     selectedAddons.forEach(addonId => {
-      const addon = addons.find(a => a.addon_id === addonId);
+      const addon = addons.find(a => a.id === addonId);
       if (addon) {
         total += addon.valor;
       }
@@ -82,7 +82,8 @@ export default function Proposals() {
       const { data, error } = await supabase
         .from('proposta')
         .select('*')
-        .eq('user_id', user?.id)
+        //.eq('user_id', user?.id)
+        .eq('user_id', 1)
         .order('datetime', { ascending: false });
 
       if (error) throw error;
