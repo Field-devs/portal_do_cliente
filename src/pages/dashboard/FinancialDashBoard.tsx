@@ -51,7 +51,7 @@ interface RevenueData {
   projected: number;
 }
 
-export default function FinancialControl() {
+export default function FinancialDashBoard() {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [metrics, setMetrics] = useState<FinancialMetrics>({
     totalReceivables: 0,

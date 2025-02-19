@@ -16,21 +16,18 @@ import { supabase } from '../../lib/supabase';
 import { format } from 'date-fns';
 import PlanForm from '../../components/PlanForm';
 import AddonForm from '../Forms/AddonForm';
-import Plan  from '../../Models/Plan';
-import PlanAddon  from '../../Models/Plan.Addon';
+import Plan from '../../Models/Plan';
+import PlanAddon from '../../Models/Plan.Addon';
 
 type ContentType = 'plans' | 'addons';
 
-
-
-
-export default function Products() {
+export default function PlanList() {
   const [plans, setPlans] = useState<Plan[]>([]);
   const [editingPlan, setEditingPlan] = useState<Plan | null>(null);
 
   const [addons, setAddons] = useState<PlanAddon[]>([]);
   const [editingAddon, seteditingAddon] = useState<PlanAddon | null>(null);
-  
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -39,8 +36,8 @@ export default function Products() {
   const [selectedItem, setSelectedItem] = useState<{ id: string; nome: string; type: ContentType } | null>(null);
   const [activeForm, setActiveForm] = useState<'plan' | 'addon'>('plan');
   const [activeTab, setActiveTab] = useState<ContentType>('plans');
-  
-  
+
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -178,8 +175,8 @@ export default function Products() {
           <button
             onClick={() => setActiveTab('plans')}
             className={`flex items-center pb-4 px-1 ${activeTab === 'plans'
-                ? 'border-b-2 border-brand text-brand dark:text-white'
-                : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+              ? 'border-b-2 border-brand text-brand dark:text-white'
+              : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
               }`}
           >
             <Package className="h-5 w-5 mr-2" />
@@ -188,8 +185,8 @@ export default function Products() {
           <button
             onClick={() => setActiveTab('addons')}
             className={`flex items-center pb-4 px-1 ${activeTab === 'addons'
-                ? 'border-b-2 border-brand text-brand dark:text-white'
-                : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+              ? 'border-b-2 border-brand text-brand dark:text-white'
+              : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
               }`}
           >
             <PlusSquare className="h-5 w-5 mr-2" />

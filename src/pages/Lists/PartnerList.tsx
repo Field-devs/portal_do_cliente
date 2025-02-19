@@ -39,7 +39,7 @@ interface Partner {
   datacriacao: string;
 }
 
-export default function PartnersManagement() {
+export default function PartnerList() {
   const [activeTab, setActiveTab] = useState<PartnerType>('cf');
   const [partners, setPartners] = useState<Partner[]>([]);
   const [users, setUsers] = useState<User[]>([]);

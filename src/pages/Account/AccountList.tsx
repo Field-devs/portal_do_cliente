@@ -32,7 +32,7 @@ const selectClasses = `pl-10 block w-full rounded-md shadow-sm focus:ring-brand 
 
 
 
-export default function AccountManagement() {
+export default function AccountList() {
   const [users, setUsers] = useState<User[]>([]);
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);

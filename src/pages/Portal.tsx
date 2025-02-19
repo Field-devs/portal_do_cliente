@@ -21,11 +21,11 @@ import {
   UserCircle
 } from 'lucide-react';
 import AdminDashboard from './dashboard/AdminDashboard';
-import ProposalsManagement from './dashboard/ProposalsManagement';
-import PartnersManagement from './dashboard/PartnersManagement';
-import AccountManagement from './Account/AccountManagement';
-import FinancialControl from './dashboard/FinancialControl';
-import Products from './dashboard/Products';
+import ProposalsList from './Lists/ProposalsList';
+import PartnerList from './Lists/PartnerList';
+import AccountList from './Account/AccountList';
+import FinancialDashBoard from './dashboard/FinancialDashBoard';
+import PlanList from './Lists/PlanList';
 import Profile from './Account/Profile';
 
 const getRoleBadgeStyles = (role: string | null) => {
@@ -70,7 +70,7 @@ export default function Portal() {
 
   const navigation = [
     { name: 'Dashboard', icon: BarChart2, path: '/portal' },
-    { name: 'Produtos', icon: Package, path: '/portal/products' },
+    { name: 'Planos', icon: Package, path: '/portal/plans' },
     { name: 'Propostas', icon: FileText, path: '/portal/proposals' },
     { name: 'Negócios', icon: Briefcase, path: '/portal/partners' },
     { name: 'Usuários', icon: Users, path: '/portal/accounts' },
@@ -204,12 +204,12 @@ export default function Portal() {
         <div className="p-6">
           <Routes>
             {/* <Route index element={<AdminDashboard />} /> */}
-            <Route index element={<Products />} />
-            <Route path="products" element={<Products />} />
-            <Route path="proposals" element={<ProposalsManagement />} />
-            <Route path="partners" element={<PartnersManagement />} />
-            <Route path="accounts" element={<AccountManagement />} />
-            <Route path="financial" element={<FinancialControl />} />
+            <Route index element={<PlanList />} />
+            <Route path="plans" element={<PlanList />} />
+            <Route path="proposals" element={<ProposalsList />} />
+            <Route path="partners" element={<PartnerList />} />
+            <Route path="accounts" element={<AccountList />} />
+            <Route path="financial" element={<FinancialDashBoard />} />
             <Route path="profile" element={<Profile />} />
           </Routes>
         </div>

@@ -27,7 +27,7 @@ interface Proposal {
   cnpj: string;
 }
 
-export default function ProposalsManagement() {
+export default function ProposalsList() {
   const [proposals, setProposals] = useState<Proposal[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
