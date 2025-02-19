@@ -3,7 +3,7 @@ import { Plus, Edit2, FileText, FileSignature } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { formatCNPJ, formatPhone, formatCurrency } from '../utils/formatters';
 import { Link } from 'react-router-dom';
-import { Modal } from '../components/Modal/Modal';
+import { ModalForm } from '../components/Modal/Modal';
 
 interface Plan {
   id: string;
@@ -511,7 +511,7 @@ export function ProposalForm() {
       </div>
 
       {isModalOpen && (
-        <Modal
+        <ModalForm
           isOpen={isModalOpen}
           onClose={() => {
             setIsModalOpen(false);
@@ -838,7 +838,7 @@ export function ProposalForm() {
                 </button>
               </div>
             </form>
-        </Modal>
+        </ModalForm>
       )}
     </div>
   );
