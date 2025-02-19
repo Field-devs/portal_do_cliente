@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Plus, Edit, Trash2 } from 'lucide-react';
-import { User } from '../../components/Interfaces/Uses';
+import { User } from '../../Models/Uses';
 
 interface UserManagementProps {
   userType: string;

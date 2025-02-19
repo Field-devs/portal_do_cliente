@@ -5,7 +5,7 @@ import { useAddons } from '../hooks/useAddons';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../components/AuthProvider';
 
-interface Proposal {
+interface Proposta {
   proposta_id: string;
   dt_inicio: string;
   dt_fim: string | null;
@@ -29,26 +29,29 @@ interface Proposal {
 export default function Proposals() {
   const { planos, loading: planosLoading } = usePlanos();
   const { addons, loading: addonsLoading } = useAddons();
-  const { user } = useAuth();
 
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedProposalId, setSelectedProposalId] = useState<string | null>(null);
-  const [proposals, setProposals] = useState<Proposal[]>([]);
+  const [proposals, setProposals] = useState<Proposta[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedAddons, setSelectedAddons] = useState<string[]>([]);
   const [totalValue, setTotalValue] = useState(0);
 
   const [formData, setFormData] = useState({
-    nomeEmpresa: '',
-    emailEmpresa: '',
-    emailEmpresarial: '',
-    walletId: '',
+    nome: '',
+    email: '',
     cnpj: '',
     responsavel: '',
-    cpf: '',
-    telefone: '',
-    planoId: '',
+    cnpjcpf: '',
+    fone: '',
+
+    caixas_entrada: 1,
+    atendentes: 1,
+    automacoes: 1,
+
+    planoId: 0,
+    walletId: '',
     selectedAddons: [] as string[]
   });
 
@@ -77,9 +80,10 @@ export default function Proposals() {
   const fetchProposals = async () => {
     try {
       const { data, error } = await supabase
-        .from('PROPOSTA_OUTR')
+        .from('proposta')
         .select('*')
-        .order('dt_inicio', { ascending: false });
+        .eq('user_id', user?.id)
+        .order('datetime', { ascending: false });
 
       if (error) throw error;
       setProposals(data || []);
@@ -134,10 +138,10 @@ export default function Proposals() {
       const proposal = {
         cliente_final_cliente_final_id: user?.id,
         plano_outr_plano_outr_id: formData.planoId,
-        email_empresa: formData.emailEmpresa,
+        email_empresa: formData.email,
         email_empresarial: formData.emailEmpresarial,
         wallet_id: formData.walletId,
-        nome_empresa: formData.nomeEmpresa,
+        nome_empresa: formData.nome,
         cnpj: formData.cnpj,
         responsavel: formData.responsavel,
         cpf: formData.cpf,
@@ -159,8 +163,8 @@ export default function Proposals() {
       setProposals(prev => [data, ...prev]);
       setIsFormOpen(false);
       setFormData({
-        nomeEmpresa: '',
-        emailEmpresa: '',
+        nome: '',
+        email: '',
         emailEmpresarial: '',
         walletId: '',
         cnpj: '',
@@ -309,7 +313,7 @@ export default function Proposals() {
                     <input
                       type="text"
                       name="nomeEmpresa"
-                      value={formData.nomeEmpresa}
+                      value={formData.nome}
                       onChange={handleInputChange}
                       className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand dark:bg-gray-700 dark:border-gray-600"
                       required
@@ -335,7 +339,7 @@ export default function Proposals() {
                     <input
                       type="email"
                       name="emailEmpresa"
-                      value={formData.emailEmpresa}
+                      value={formData.email}
                       onChange={handleInputChange}
                       className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand dark:bg-gray-700 dark:border-gray-600"
                       required

@@ -13,7 +13,7 @@ import {
   Save,
   Phone
 } from 'lucide-react';
-import Plan from './Interfaces/Plan';
+import Plan from '../Models/Plan';
 
 interface PlanFormProps {
   onSuccess: () => void;

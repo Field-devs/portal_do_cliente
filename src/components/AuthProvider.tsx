@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { authenticateUser } from '../lib/supabase';
 import { useNavigate } from 'react-router-dom';
-import { User } from './Interfaces/Uses';
+import { User } from '../Models/Uses';
 
 type UserRole = 'super_admin' | 'admin' | 'ava_admin' | 'ava' | 'client';
 

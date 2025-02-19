@@ -15,9 +15,9 @@ import {
 import { supabase } from '../../lib/supabase';
 import { format } from 'date-fns';
 import PlanForm from '../../components/PlanForm';
-import AddonForm from './AddonForm';
-import Plan  from '../../components/Interfaces/Plan';
-import PlanAddon  from '../../components/Interfaces/Plan.Addon';
+import AddonForm from '../Forms/AddonForm';
+import Plan  from '../../Models/Plan';
+import PlanAddon  from '../../Models/Plan.Addon';
 
 type ContentType = 'plans' | 'addons';
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
-import { User } from '../../components/Interfaces/Uses';
+import { User } from '../../Models/Uses';
 import { useAuth } from '../../components/AuthProvider';
 
 import {
