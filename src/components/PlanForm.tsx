@@ -4,6 +4,7 @@ import { supabase } from '../lib/supabase';
 import {
   Users,
   Inbox,
+  DollarSign,
   Bot,
   HeadphonesIcon,
   Layout,
@@ -26,7 +27,7 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  
+
   const [formData, setFormData] = useState({
     nome: initialData?.nome || '',
     descricao: '',
@@ -220,6 +221,8 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
                 required
               />
             </div>
+
+
           </div>
 
           <div>
@@ -238,6 +241,10 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
                 required
               />
             </div>
+
+   
+
+
           </div>
 
           <div>
@@ -256,6 +263,7 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
                 required
               />
             </div>
+
           </div>
         </div>
       </div>
