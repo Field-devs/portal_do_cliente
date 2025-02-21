@@ -6,6 +6,7 @@ interface Proposta {
   valor: number;
   nome: string;
   email: string;
+  fone: string;
   cnpj: string;
   dt: string;
   status: string;

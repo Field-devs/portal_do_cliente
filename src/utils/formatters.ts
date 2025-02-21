@@ -12,6 +12,18 @@ export function formatCPF(value: string | undefined | null) {
   return numbers.replace(/^(\d{3})(\d{3})(\d{3})(\d{2}).*/, '$1.$2.$3-$4');
 }
 
+export function formatCNPJCPF(value: string | undefined | null) {
+  //if value == 11 digits return formatCPF
+  if (!value) return '';
+  if (value.length === 11) {
+    return formatCPF(value);
+  }
+  if (value.length === 14) {
+    return formatCNPJ(value);
+  }
+}
+
+
 // Format phone: (XX) XXXXX-XXXX
 export function formatPhone(value: string | undefined | null) {
   if (!value) return '';

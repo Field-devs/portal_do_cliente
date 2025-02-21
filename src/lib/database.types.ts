@@ -9,7 +9,7 @@ export interface Database {
           nome: string | null
           telefone: string | null
           foto_perfil: string | null
-          dt_criacao: string | null
+          dt_add: string | null
           status: boolean | null
           perfil_id: number
         }
@@ -20,7 +20,7 @@ export interface Database {
           nome?: string | null
           telefone?: string | null
           foto_perfil?: string | null
-          dt_criacao?: string | null
+          dt_add?: string | null
           status?: boolean | null
           perfil_id: number
         }
@@ -31,7 +31,7 @@ export interface Database {
           nome?: string | null
           telefone?: string | null
           foto_perfil?: string | null
-          dt_criacao?: string | null
+          dt_add?: string | null
           status?: boolean | null
           perfil_id?: number
         }

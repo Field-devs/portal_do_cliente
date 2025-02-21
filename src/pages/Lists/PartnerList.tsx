@@ -65,7 +65,7 @@ export default function PartnerList() {
       const { data, error } = await supabase
         .from('cliente_afiliado')
         .select('*')
-        .order('dt_criacao', { ascending: false });
+        .order('dt_add', { ascending: false });
 
       if (error) throw error;
       setPartners(data || []);
@@ -81,8 +81,8 @@ export default function PartnerList() {
       const { data, error } = await supabase
         .from('users')
         .select('*')
-        .eq('profile_id', activeTab === 'cf' ? 5 : 4) // 5 for CF, 4 for AVA
-        .order('dt_criacao', { ascending: false });
+        .eq('perfil_id', activeTab === 'cf' ? 5 : 4) // 5 for CF, 4 for AVA
+        .order('dt_add', { ascending: false });
 
       if (error) throw error;
       setUsers(data || []);
@@ -440,7 +440,7 @@ export default function PartnerList() {
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                      {format(new Date(user.dt_criacao), 'dd/MM/yyyy')}
+                      {format(new Date(user.dt_add), 'dd/MM/yyyy')}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <div className="flex space-x-3">

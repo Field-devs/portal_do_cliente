@@ -11,7 +11,7 @@ enum Modules {
 
 interface Permission {
     Module: Modules;
-    profile_id: number;
+    perfil_id: number;
     canCreate: boolean;
     canEdit: boolean;
     canDelete: boolean;
@@ -29,7 +29,7 @@ export function PermissionsProvider({ children }: { children: React.ReactNode })
     
     const PermissionsData: Permission[] = [
         {
-            profile_id: 1,
+            perfil_id: 1,
             canCreate: true,
             canEdit: true,
             canDelete: true,
@@ -37,7 +37,7 @@ export function PermissionsProvider({ children }: { children: React.ReactNode })
             Module: Modules.All
         },
         {
-            profile_id: 1,
+            perfil_id: 1,
             canCreate: true,
             canEdit: true,
             canDelete: true,

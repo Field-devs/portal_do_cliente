@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import Proposta from '../../Models/Propostas';
-
+import { formatPhone, formatCNPJCPF } from '../../utils/formatters';
 import {
   Plus,
   Search,
@@ -142,12 +142,22 @@ export default function ProposalsList() {
                   <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider w-[100px]">
                     Data
                   </th>
+
                   <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider w-[100px]">
                     CNPJ/CPF
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                     Cliente
                   </th>
+
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider w-[50px]">
+                    Email
+                  </th>
+
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider w-[50px]">
+                    Fone
+                  </th>
+                  
                   <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider w-[50px]">
                     Valor
                   </th>
@@ -158,6 +168,8 @@ export default function ProposalsList() {
                   </th>
                 </tr>
               </thead>
+
+
               <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                 {filteredProposals.map((proposta) => (
                   <tr key={proposta.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
@@ -166,29 +178,32 @@ export default function ProposalsList() {
                       {new Date(proposta.dt).toLocaleDateString('pt-BR')}
                     </td>
 
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div>
-                        <div className="text-sm font-medium text-gray-900 dark:text-white">
-                          {proposta.nome}
-                        </div>
-                        <div className="text-sm text-gray-500 dark:text-gray-400">
-                          {proposta.email}
-                        </div>
-                      </div>
-                    </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                      {proposta.cnpj}
+                      {formatCNPJCPF(proposta.cnpj)}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
 
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                      {proposta.nome}
+                    </td>
+
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                      {proposta.email}
+                    </td>
+
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                      {formatPhone(proposta.fone)}
+                    </td>
+
+                    <td className="px-6 py-4 whitespace-nowrap">
                       <span className="text-sm text-gray-900 dark:text-white font-medium">
                         {new Intl.NumberFormat('pt-BR', {
                           style: 'currency',
                           currency: 'BRL'
                         }).format(proposta.valor)}
                       </span>
-
                     </td>
+
+
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className=
                         {

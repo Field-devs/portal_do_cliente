@@ -30,7 +30,7 @@ export function useAddons() {
     }
   }
 
-  async function createAddon(addon: Omit<Database['public']['Tables']['addon']['Insert'], 'id' | 'dt_criacao' | 'status'>) {
+  async function createAddon(addon: Omit<Database['public']['Tables']['addon']['Insert'], 'id' | 'dt_add' | 'status'>) {
     try {
       const { data, error } = await supabase
         .from('addon')

@@ -3,7 +3,7 @@
 //   EMAIL: string;
 //   NOME: string;
 //   perfil_id: number;
-//   DT_CRIACAO: string;
+//   dt_add: string;
 //   STATUS: boolean;
 //   FOTO_PERFIL?: string;
 // }
@@ -41,7 +41,7 @@ export interface Proposal {
   ADDONS: string[];
   VALOR_TOTAL: number;
   STATUS: string;
-  DT_CRIACAO: string;
+  dt_add: string;
 }
 
 export interface Payment {

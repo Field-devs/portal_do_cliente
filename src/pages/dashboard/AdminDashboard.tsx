@@ -142,13 +142,13 @@ export default function AdminDashboard() {
       // Fetch client acquisition data
       const { data: acquisitionTimelineData } = await supabase
         .from('pessoas')
-        .select('dt_criacao, perfil_id')
+        .select('dt_add, perfil_id')
         .in('perfil_id', [4, 5])
-        .order('dt_criacao', { ascending: true });
+        .order('dt_add', { ascending: true });
 
       if (acquisitionTimelineData) {
         const aggregatedAcquisitionData = acquisitionTimelineData.reduce((acc: ClientAcquisitionData[], curr) => {
-          const month = new Date(curr.dt_criacao).toLocaleDateString('pt-BR', { month: 'short', year: 'numeric' });
+          const month = new Date(curr.dt_add).toLocaleDateString('pt-BR', { month: 'short', year: 'numeric' });
           const existingEntry = acc.find(item => item.month === month);
           if (existingEntry) {
             if (curr.perfil_id === 5) existingEntry.cf++;

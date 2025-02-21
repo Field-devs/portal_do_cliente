@@ -72,7 +72,7 @@ export default function Portal() {
     { name: 'Dashboard', icon: BarChart2, path: '/portal' },
     { name: 'Planos', icon: Package, path: '/portal/plans' },
     { name: 'Propostas', icon: FileText, path: '/portal/proposals' },
-    { name: 'Negócios', icon: Briefcase, path: '/portal/partners' },
+    { name: 'Clientes', icon: Briefcase, path: '/portal/partners' },
     { name: 'Usuários', icon: Users, path: '/portal/accounts' },
     { name: 'Financeiro', icon: Wallet, path: '/portal/financial' }
   ];
