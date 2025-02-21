@@ -1,36 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import Proposta from '../../Models/Propostas';
+
 import {
   Plus,
   Search,
   Filter,
   Trash2,
-  AlertCircle,
-  X,
-  Check,
   Edit
 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
-import { ProposalForm } from '../../components/ProposalForm';
 import { usePlanos } from '../../hooks/usePlanos';
 import { useAddons } from '../../hooks/useAddons';
-import { ModalForm } from '../../components/Modal/Modal';
 
-interface Proposal {
-  proposta_id: string;
-  cliente_final_id: string;
-  ava_ava_id: string;
-  plano_outr_id: string;
-  valor: number;
-  status: string;
-  dt_inicio: string;
-  nome_empresa: string;
-  email_empresa: string;
-  cnpj: string;
-}
 
 export default function ProposalsList() {
   const [openForm, setOpenForm] = useState(false);
-  const [proposals, setProposals] = useState<Proposal[]>([]);
+  const [propostas, setPropostas] = useState<Proposta[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'accepted' | 'rejected'>('all');
@@ -49,23 +34,12 @@ export default function ProposalsList() {
   const fetchProposals = async () => {
     try {
       const { data, error } = await supabase
-        .from('proposta_outr')
-        .select(`
-          proposta_id,
-          cliente_final_id,
-          ava_id,
-          plano_outr_id,
-          valor,
-          status,
-          dt_inicio,
-          nome_empresa,
-          email_empresa,
-          cnpj
-        `)
-        .order('dt_inicio', { ascending: false });
+        .from('v_proposta')
+        .select('*')
+        .order('dt', { ascending: false });
 
       if (error) throw error;
-      setProposals(data || []);
+      setPropostas(data || []);
     } catch (error) {
       console.error('Error fetching proposals:', error);
     } finally {
@@ -84,7 +58,7 @@ export default function ProposalsList() {
 
       if (error) throw error;
 
-      setProposals(prev => prev.filter(p => p.proposta_id !== selectedProposalId));
+      setPropostas(prev => prev.filter(p => p.id !== selectedProposalId));
       setIsDeleteModalOpen(false);
       setSelectedProposalId(null);
     } catch (error) {
@@ -93,19 +67,17 @@ export default function ProposalsList() {
   };
 
 
-
   const HandleOpenProposal = () => {
   };
 
-  const filteredProposals = proposals.filter(proposal => {
-    const matchesSearch =
-      proposal.nome_empresa.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      proposal.email_empresa.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      proposal.cnpj.includes(searchTerm);
-
-    const matchesStatus = statusFilter === 'all' || proposal.status === statusFilter;
-
-    return matchesSearch && matchesStatus;
+  const filteredProposals = propostas.filter(proposal => {
+    //const matchesSearch =
+    //  proposal.nome.includes(searchTerm.toLowerCase()) ||
+    //  proposal.email.includes(searchTerm.toLowerCase()) ||
+    //  proposal.cnpj.includes(searchTerm);
+    //const matchesStatus = statusFilter === 'all' || proposal.status === statusFilter;
+    //return matchesSearch && matchesStatus;
+    return propostas;
   });
 
   if (loading || planosLoading || addonsLoading) {
@@ -167,74 +139,78 @@ export default function ProposalsList() {
             <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
               <thead className="bg-gray-50 dark:bg-gray-700">
                 <tr>
+                  <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider w-[100px]">
+                    Data
+                  </th>
+                  <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider w-[100px]">
+                    CNPJ/CPF
+                  </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                     Cliente
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    CNPJ
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider w-[50px]">
                     Valor
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider  w-[50px]">
                     Status
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Data
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Ações
+                  <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider w-[50px]">
                   </th>
                 </tr>
               </thead>
               <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                {filteredProposals.map((proposal) => (
-                  <tr key={proposal.proposta_id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                {filteredProposals.map((proposta) => (
+                  <tr key={proposta.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                      {new Date(proposta.dt).toLocaleDateString('pt-BR')}
+                    </td>
+
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div>
                         <div className="text-sm font-medium text-gray-900 dark:text-white">
-                          {proposal.nome_empresa}
+                          {proposta.nome}
                         </div>
                         <div className="text-sm text-gray-500 dark:text-gray-400">
-                          {proposal.email_empresa}
+                          {proposta.email}
                         </div>
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                      {proposal.cnpj}
+                      {proposta.cnpj}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
+
                       <span className="text-sm text-gray-900 dark:text-white font-medium">
                         {new Intl.NumberFormat('pt-BR', {
                           style: 'currency',
                           currency: 'BRL'
-                        }).format(proposal.valor)}
+                        }).format(proposta.valor)}
                       </span>
+
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${proposal.status === 'pending'
-                          ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
-                          : proposal.status === 'accepted'
-                            ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
-                            : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
-                        }`}>
-                        {proposal.status === 'pending' && 'Pendente'}
-                        {proposal.status === 'accepted' && 'Aceita'}
-                        {proposal.status === 'rejected' && 'Recusada'}
+                      <span className=
+                        {
+                          `px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${proposta.status === 'PE'
+                            ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
+                            : proposta.status === 'AC'
+                              ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                              : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+                          }`}>
+                        {proposta.status_title}
                       </span>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                      {new Date(proposal.dt_inicio).toLocaleDateString('pt-BR')}
-                    </td>
+       
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <div className="flex space-x-3">
                         <button className="group p-2 rounded-lg transition-all duration-200 hover:bg-orange-100 dark:hover:bg-orange-900/20 focus:outline-none focus:ring-2 focus:ring-orange-500 dark:focus:ring-orange-500/60 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
                           <Edit className="h-5 w-5 text-orange-500 dark:text-orange-400 group-hover:text-orange-600 dark:group-hover:text-orange-300 transition-colors" />
                         </button>
-                        {proposal.status === 'pending' && (
+                        {proposta.status === 'PE' && (
                           <button
                             onClick={() => {
-                              setSelectedProposalId(proposal.proposta_id);
+                              setSelectedProposalId(proposta.id);
                               setIsDeleteModalOpen(true);
                             }}
                             className="text-red-600 hover:text-red-800"
