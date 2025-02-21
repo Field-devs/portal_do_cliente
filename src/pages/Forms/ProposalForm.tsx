@@ -1,7 +1,40 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import Plan from '../../Models/Plan';
+import { supabase } from '../../lib/supabase';
 
 export default function ProposalForm() {
-    const [isFormOpen, setIsFormOpen] = useState(false);
+    const [isFormOpen, setIsFormOpen] = useState(true);
+    const [planos, setPlanos] = useState<Plan[]>([]);
+    const [addons, setAddons] = useState([]);
+    const [totalValue, setTotalValue] = useState(0);
+
+    const [formData, setFormData] = useState({
+        nome: '',
+        email: '',
+        fone: '',
+        cnpj: '',
+        plano_id: ''
+    });
+
+    useEffect(() => {
+      const fetchPlanos = async () => {
+          const { data: responseData, error: responseError } = await supabase
+              .from('plano')
+              .select('*');
+
+          if (responseError) {
+              console.error("Erro ao buscar planos:", responseError);
+              return;
+          }
+
+          if (responseData) {
+              setPlanos(responseData as Plan[]);
+          }
+      };
+
+      fetchPlanos();
+  }, []);
+
 
     const handleSubmit = (event) => {
     }
@@ -17,7 +50,7 @@ export default function ProposalForm() {
                 onClick={() => setIsFormOpen(false)}
                 className="text-gray-500 hover:text-gray-700"
               >
-                <X className="h-6 w-6" />
+                {/* <X className="h-6 w-6" /> */}
               </button>
             </div>
 
@@ -28,39 +61,26 @@ export default function ProposalForm() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                      Nome da Empresa
+                      Nome
                     </label>
                     <input
                       type="text"
                       name="nomeEmpresa"
                       value={formData.nome}
-                      onChange={handleInputChange}
+                      // onChange={handleInputChange}
                       className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand dark:bg-gray-700 dark:border-gray-600"
                       required
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                      CNPJ
+                      CNPJ/CPF
                     </label>
                     <input
                       type="text"
                       name="cnpj"
                       value={formData.cnpj}
-                      onChange={handleInputChange}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand dark:bg-gray-700 dark:border-gray-600"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                      Email da Empresa
-                    </label>
-                    <input
-                      type="email"
-                      name="emailEmpresa"
-                      value={formData.email}
-                      onChange={handleInputChange}
+                      // onChange={handleInputChange}
                       className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand dark:bg-gray-700 dark:border-gray-600"
                       required
                     />
@@ -73,7 +93,7 @@ export default function ProposalForm() {
                       type="email"
                       name="emailEmpresarial"
                       value={formData.emailEmpresarial}
-                      onChange={handleInputChange}
+                      //onChange={handleInputChange}
                       className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand dark:bg-gray-700 dark:border-gray-600"
                       required
                     />
@@ -86,7 +106,7 @@ export default function ProposalForm() {
                       type="text"
                       name="walletId"
                       value={formData.walletId}
-                      onChange={handleInputChange}
+                      //onChange={handleInputChange}
                       className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand dark:bg-gray-700 dark:border-gray-600"
                       required
                     />
@@ -106,7 +126,7 @@ export default function ProposalForm() {
                       type="text"
                       name="responsavel"
                       value={formData.responsavel}
-                      onChange={handleInputChange}
+                      //onChange={handleInputChange}
                       className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand dark:bg-gray-700 dark:border-gray-600"
                       required
                     />
@@ -119,7 +139,7 @@ export default function ProposalForm() {
                       type="text"
                       name="cpf"
                       value={formData.cpf}
-                      onChange={handleInputChange}
+                      //onChange={handleInputChange}
                       className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand dark:bg-gray-700 dark:border-gray-600"
                       required
                     />
@@ -132,7 +152,7 @@ export default function ProposalForm() {
                       type="tel"
                       name="telefone"
                       value={formData.telefone}
-                      onChange={handleInputChange}
+                      //onChange={handleInputChange}
                       className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand dark:bg-gray-700 dark:border-gray-600"
                       required
                     />
@@ -151,7 +171,7 @@ export default function ProposalForm() {
                           type="radio"
                           name="planoId"
                           value={plano.plano_outr_id}
-                          onChange={handleInputChange}
+                          //onChange={handleInputChange}
                           className="h-4 w-4 text-brand focus:ring-brand"
                         />
                         <div className="flex-1">
@@ -197,7 +217,7 @@ export default function ProposalForm() {
                         <input
                           type="checkbox"
                           checked={selectedAddons.includes(addon.addon_id)}
-                          onChange={() => handleAddonToggle(addon.addon_id)}
+                          //onChange={() => handleAddonToggle(addon.addon_id)}
                           className="h-4 w-4 text-brand focus:ring-brand rounded"
                         />
                         <div className="flex-1">

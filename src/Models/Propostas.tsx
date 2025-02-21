@@ -9,6 +9,7 @@ interface Proposta {
   fone: string;
   cnpj: string;
   dt: string;
+  validade_dias: number;
   status: string;
   status_title: string;
 }

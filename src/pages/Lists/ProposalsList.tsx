@@ -11,6 +11,8 @@ import {
 import { supabase } from '../../lib/supabase';
 import { usePlanos } from '../../hooks/usePlanos';
 import { useAddons } from '../../hooks/useAddons';
+import { ModalForm } from '../../components/Modal/Modal';
+import ProposalForm from '../Forms/ProposalForm';
 
 
 export default function ProposalsList() {
@@ -21,7 +23,7 @@ export default function ProposalsList() {
   const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'accepted' | 'rejected'>('all');
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedProposalId, setSelectedProposalId] = useState<string | null>(null);
-
+  const [OpenProposal, setOpenProposal] = useState(false);
 
   const { planos, loading: planosLoading } = usePlanos();
   const { addons, loading: addonsLoading } = useAddons();
@@ -68,6 +70,7 @@ export default function ProposalsList() {
 
 
   const HandleOpenProposal = () => {
+    setOpenProposal(true);
   };
 
   const filteredProposals = propostas.filter(proposal => {
@@ -88,8 +91,20 @@ export default function ProposalsList() {
     );
   }
 
+
+
   return (
     <>
+
+      <ModalForm
+        isOpen={OpenProposal}
+        onClose={() => setOpenProposal(false)}
+        title="Propostas"
+        maxWidth='lg'
+        
+        children={<ProposalForm />}
+      />
+
       <div className="p-6">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">Propostas</h1>
@@ -157,7 +172,9 @@ export default function ProposalsList() {
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider w-[50px]">
                     Fone
                   </th>
-                  
+                  <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider w-[50px]">
+                    Validade
+                  </th>
                   <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider w-[50px]">
                     Valor
                   </th>
@@ -194,6 +211,12 @@ export default function ProposalsList() {
                       {formatPhone(proposta.fone)}
                     </td>
 
+                    <td className="px-6 py-4 whitespace-nowrap text-center">
+                      <span className="text-sm text-gray-900 dark:text-white font-medium">
+                        {proposta.validade_dias} {proposta.validade_dias === 1 ? 'Dia' : 'Dias'}
+                      </span>
+                    </td>
+
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className="text-sm text-gray-900 dark:text-white font-medium">
                         {new Intl.NumberFormat('pt-BR', {
@@ -216,7 +239,7 @@ export default function ProposalsList() {
                         {proposta.status_title}
                       </span>
                     </td>
-       
+
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <div className="flex space-x-3">
                         <button className="group p-2 rounded-lg transition-all duration-200 hover:bg-orange-100 dark:hover:bg-orange-900/20 focus:outline-none focus:ring-2 focus:ring-orange-500 dark:focus:ring-orange-500/60 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
