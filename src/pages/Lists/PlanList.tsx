@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useAuth } from '../../components/AuthProvider';
 import {
   Plus,
   Search,
@@ -10,7 +11,8 @@ import {
   X,
   Check,
   Calendar,
-  Edit
+  Edit,
+  User
 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { format } from 'date-fns';
@@ -22,6 +24,7 @@ import PlanAddon from '../../Models/Plan.Addon';
 type ContentType = 'plans' | 'addons';
 
 export default function PlanList() {
+  const { user } = useAuth();
   const [plans, setPlans] = useState<Plan[]>([]);
   const [editingPlan, setEditingPlan] = useState<Plan | null>(null);
 
@@ -51,6 +54,7 @@ export default function PlanList() {
         .from('plano')
         .select('*')
         .eq('active', true)
+        .eq('user_id', user?.id)
         .order('dt_add', { ascending: false });
 
       if (plansError) throw plansError;

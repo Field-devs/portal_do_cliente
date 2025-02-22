@@ -31,18 +31,23 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
   const [formData, setFormData] = useState({
     nome: initialData?.nome || '',
     descricao: '',
+    caixas_entrada_add: initialData?.caixas_entrada_add || 0,
+    automacoes_add: initialData?.automacoes_add || 0,
+    atendentes_add: initialData?.atendentes_add || 0,
     valor: initialData?.valor || 1,
     caixas_entrada: initialData?.caixas_entrada || 1,
     atendentes: initialData?.atendentes || 1,
     automacoes: initialData?.automacoes || 1,
     suporte_humano: initialData?.suporte_humano || false,
-    kanban: initialData?.kanban || false,
+    kanban: initialData?.kanban || true,
     whatsapp_oficial: initialData?.whatsapp_oficial || false,
-    active: initialData?.active || true
+    active: initialData?.active || true,
+    user_id: user?.id || ''
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;
+    console.log(name, value, type);
     setFormData(prev => ({
       ...prev,
       [name]: type === 'number' ? Number(value) : value
@@ -101,13 +106,17 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
           .update({
             nome: formData.nome,
             descricao: formData.descricao,
-            valor: formData.valor,
             caixas_entrada: formData.caixas_entrada,
             atendentes: formData.atendentes,
             automacoes: formData.automacoes,
             suporte_humano: formData.suporte_humano ? 1 : 0,
             kanban: formData.kanban,
             whatsapp_oficial: formData.whatsapp_oficial,
+            valor: formData.valor,
+            caixas_entrada_add: formData.caixas_entrada_add,
+            automacoes_add: formData.automacoes_add,
+            atendentes_add: formData.atendentes_add,
+
             active: true
           })
           .eq('id', initialData.id);
@@ -123,13 +132,18 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
             nome: formData.nome,
             descricao: formData.descricao,
             valor: formData.valor,
+            caixas_entrada_add: formData.caixas_entrada_add,
+            automacoes_add: formData.automacoes_add,
+            atendentes_add: formData.atendentes_add,
+
             caixas_entrada: formData.caixas_entrada,
             atendentes: formData.atendentes,
             automacoes: formData.automacoes,
             suporte_humano: formData.suporte_humano ? 1 : 0,
             kanban: formData.kanban,
             whatsapp_oficial: formData.whatsapp_oficial,
-            active: true
+            active: true,
+            user_id: user?.id
           }]);
 
         if (error) throw error;
@@ -196,12 +210,12 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
               required
             />
           </div>
-          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Valor por unidade</p>
+          {/* <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Valor por unidade</p> */}
         </div>
       </div>
 
       {/* Resource Limits */}
-      <div className="space-y-4">
+      <div className="space-y-0">
         <h3 className="text-lg font-medium text-gray-900 dark:text-white">Recursos</h3>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -242,7 +256,7 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
               />
             </div>
 
-   
+
 
 
           </div>
@@ -268,6 +282,74 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
         </div>
       </div>
 
+      {/* Resource Limits */}
+      <div className="space-y-0">
+        <h3 className="text-lg font-medium text-gray-900 dark:text-white">Valor Adicional Por</h3>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              Caixas de Entrada
+            </label>
+            <div className="mt-1 relative">
+              <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <input
+                type="number"
+                name="caixas_entrada_add"
+                value={formData.caixas_entrada_add}
+                onChange={handleInputChange}
+                className="pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 text-gray-900 placeholder-gray-400 dark:placeholder-gray-500"
+                required
+                title="Valor Adicional por Caixa de Entrada"
+              />
+
+            </div>
+
+
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              Atendente
+            </label>
+            <div className="mt-1 relative">
+              <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <input
+                type="number"
+                name="atendentes_add"
+                value={formData.atendentes_add}
+                onChange={handleInputChange}
+                className="pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 text-gray-900 placeholder-gray-400 dark:placeholder-gray-500"
+                required
+                title="Valor Adicional por Atendente"
+              />
+            </div>
+
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              Automação
+            </label>
+            <div className="mt-1 relative">
+              <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <input
+                type="number"
+                name="automacoes_add"
+                value={formData.automacoes_add}
+                onChange={handleInputChange}
+                min="1"
+                className="pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 text-gray-900 placeholder-gray-400 dark:placeholder-gray-500"
+                required
+                title="Valor Adicional por Automação"
+              />
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+
       {/* Features */}
       <div className="space-y-4">
         <h3 className="text-lg font-medium text-gray-900 dark:text-white">Recursos Adicionais</h3>
@@ -288,6 +370,7 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
 
           <label className="flex items-center space-x-3">
             <input
+              disabled={true}
               type="checkbox"
               checked={formData.kanban}
               onChange={() => handleToggleChange('kanban')}

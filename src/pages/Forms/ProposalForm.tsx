@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import Plan from '../../Models/Plan';
 import { supabase } from '../../lib/supabase';
+import { HorizontalSelects } from './ProposalForm.Filter';
 
 export default function ProposalForm() {
   const [isFormOpen, setIsFormOpen] = useState(true);
@@ -91,9 +92,16 @@ export default function ProposalForm() {
                 </div>
               </div>
 
+
+
               {/* Plan Selection */}
-              <div className="space-y-4">
-                <h3 className="text-lg font-medium text-gray-900 dark:text-white">Plano</h3>
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Informação do Plano</h2>
+              <div className="grid grid-cols-1 gap-4">
+                <div className="border rounded-lg p-4 dark:border-gray-600">
+
+                </div>
+              </div>
+
                 <div className="grid grid-cols-1 gap-4">
                   {planos.map(plano => (
                     <div key={plano.id} className="border rounded-lg p-4 dark:border-gray-600">
@@ -151,7 +159,7 @@ export default function ProposalForm() {
                               </div>
 
                               <div>
-                              Atendentes
+                                Atendentes
                               </div>
                             </p>
 
@@ -172,7 +180,7 @@ export default function ProposalForm() {
                               </div>
 
                               <div>
-                              Automações
+                                Automações
                               </div>
                             </p>
 
@@ -194,7 +202,6 @@ export default function ProposalForm() {
                     </div>
                   ))}
                 </div>
-              </div>
 
               {/* Total Value */}
               <div className="border-t pt-4 mt-6">

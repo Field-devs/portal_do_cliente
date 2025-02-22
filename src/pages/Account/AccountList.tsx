@@ -78,6 +78,7 @@ export default function AccountList() {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
+    console.log('ENVIANDO');
     e.preventDefault();
     if (formData.senha !== formData.confirmarSenha) {
       alert('As senhas não coincidem');
@@ -115,6 +116,7 @@ export default function AccountList() {
           )
         );
       } else {
+
         // Verifyy if user already exists in auth
         // const { authData, authError } = await supabase.rpc('fn_user_exists', {
         //   p_mail: formData.email
@@ -126,34 +128,31 @@ export default function AccountList() {
         //   return;
         // }
 
-
         //Create auth user first
-        const { data: authData, error: authError } = await supabase.auth.signUp({
+        const { error: authError } = await supabase.auth.signUp({
           email: formData.email,
-          password: formData.senha,
-          options: {
-            data: {
-              full_name: formData.nome
-            }
-          }
+          password: formData.senha
         });
+ 
 
-        if (authError) throw authError;
+        //if (authError) throw authError;
+        if (!authError) 
+          throw authError;
 
         //if (authData.user) {
           // Create user profile
-          console.log(user?.id);
+          console.log("user", user);
           const { error: insertError } = await supabase
             .from('users')
             .insert([{
               email: formData.email,
-              user_id: authData.user?.id,
+              user_ref_id: user?.id,  
+              user_id: user?.id,
               nome: formData.nome,
               fone: formData.fone,
               cnpj: formData.cnpj,
               empresa: formData.empresa,
               perfil_id: formData.perfil_id,
-              user_ref_id: user?.id,  
               active: true
             }]);
 
@@ -166,7 +165,7 @@ export default function AccountList() {
       setIsFormOpen(false);
       resetForm();
     } catch (error) {
-      console.error('Error managing user:', error);
+      console.error('Error managing user 2:', error);
       alert('Erro ao gerenciar usuário. Por favor, tente novamente.');
     }
   };
