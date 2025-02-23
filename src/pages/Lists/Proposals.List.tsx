@@ -122,8 +122,10 @@ export default function ProposalsList() {
                 >
                   <option value="all">Todos os Status</option>
                   <option value="pending">Pendentes</option>
-                  <option value="accepted">Aceitas</option>
+                  <option value="accepted">Aceitas (Não Pagas)</option>
+                  <option value="aproved">Aprovadas (Pagas)</option>
                   <option value="rejected">Recusadas</option>
+                  <option value="expired">Expiradas</option>
                 </select>
               </div>
             </div>
@@ -194,7 +196,7 @@ export default function ProposalsList() {
 
                     <td className="px-6 py-4 whitespace-nowrap text-center">
                       <span className="text-sm text-gray-900 dark:text-white font-medium">
-                        {proposta.validade_dias} {proposta.validade_dias === 1 ? 'Dia' : 'Dias'}
+                        {proposta.validade} {proposta.validade === 1 ? 'Dia' : 'Dias'}
                       </span>
                     </td>
 
@@ -203,19 +205,19 @@ export default function ProposalsList() {
                         {new Intl.NumberFormat('pt-BR', {
                           style: 'currency',
                           currency: 'BRL'
-                        }).format(proposta.valor)}
+                        }).format(proposta.total)}
                       </span>
                     </td>
 
 
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-8 py-4 whitespace-nowrap">
                       <span className=
                         {
                           `px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${proposta.status === 'PE'
-                            ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
+                            ? 'justify-center bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200 w-[100%]'
                             : proposta.status === 'AC'
-                              ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
-                              : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+                              ? 'justify-center bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 w-[100%]'
+                              : 'justify-center bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 w-[100%]'
                           }`}>
                         {proposta.status_title}
                       </span>
