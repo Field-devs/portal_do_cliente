@@ -7,10 +7,10 @@ interface Proposta {
   plano_nome: string;
 
   // Dados do Plano
-  caixas_entrada: number;
-  atendentes: number; 
-  automacoes: number; 
-  valor: number; 
+  caixas_entrada_qtde: number;
+  atendentes_qtde: number; 
+  automacoes_qtde: number; 
+  subtotal: number; 
 
   // Opções
   kanban: boolean; 
@@ -18,12 +18,12 @@ interface Proposta {
   whatsapp_oficial: boolean; 
 
   // Valores Adicionais Customizados
-  caixas_entrada_qtde: number; 
-  caixas_entrada_unit: number; 
-  atendentes_qtde: number; 
-  atendentes_unit: number; 
-  automacoes_qtde: number; 
-  automacoes_unit: number; 
+  caixas_entrada_add_qtde: number; 
+  caixas_entrada_add_unit: number; 
+  atendentes_add_qtde: number; 
+  atendentes_add_unit: number; 
+  automacoes_add_qtde: number; 
+  automacoes_add_unit: number; 
 
   total: number;
 

@@ -4,10 +4,16 @@ import { supabase } from '../../lib/supabase';
 import { getInitialArray } from '../../utils/Utils';
 import Proposta from '../../Models/Propostas';
 
+import {
+  HeadphonesIcon,
+  Layout,
+  Phone
+} from 'lucide-react';
+
+
 export default function ProposalForm() {
   const [isFormOpen, setIsFormOpen] = useState(true);
   const [planos, setPlanos] = useState<Plan[]>([]);
-  const [totalValue, setTotalValue] = useState(0);
   const [etapa, setEtapa] = useState(0);
 
   const [formData, setFormData] = useState<Proposta>({
@@ -16,19 +22,19 @@ export default function ProposalForm() {
     cliente_id: 0,
     plano_id: 0,
     plano_nome: '',
-    caixas_entrada: 0,
-    atendentes: 0,
-    automacoes: 0,
-    valor: 0,
+    caixas_entrada_qtde: 0,
+    atendentes_qtde: 0,
+    automacoes_qtde: 0,
+    subtotal: 0,
     kanban: true,
     suporte_humano: false,
     whatsapp_oficial: false,
-    caixas_entrada_qtde: 0,
-    caixas_entrada_unit: 0,
-    atendentes_qtde: 0,
-    atendentes_unit: 0,
-    automacoes_qtde: 0,
-    automacoes_unit: 0,
+    caixas_entrada_add_qtde: 0,
+    caixas_entrada_add_unit: 0,
+    atendentes_add_qtde: 0,
+    atendentes_add_unit: 0,
+    automacoes_add_qtde: 0,
+    automacoes_add_unit: 0,
     total: 0,
     validade: 1,
     mail_send: false,
@@ -42,6 +48,7 @@ export default function ProposalForm() {
   });
 
   useEffect(() => {
+    
     const fetchPlanos = async () => {
       const { data: responseData, error: responseError } = await supabase
         .from('plano')
@@ -74,10 +81,22 @@ export default function ProposalForm() {
   }
 
   const setFieldValue = (field: string, value: any) => {
+    console.log(formData.caixas_entrada_add_qtde);
     setFormData(prevFormData => ({
       ...prevFormData,
       [field]: value
     }));
+    console.log(formData.caixas_entrada_add_qtde);
+    console.log(formData.caixas_entrada_add_unit);
+  };
+
+  const CalcTotal = () => {
+    setFieldValue('caixas_entrada_add_qtde',  formData.caixas_entrada_add_qtde + 1);
+    console.log('caixas_entrada_add_qtde', formData.caixas_entrada_add_qtde);
+    setFieldValue('total',  
+      formData.total = formData.subtotal + 
+      (formData.caixas_entrada_add_qtde * formData.caixas_entrada_add_unit)
+    );
   };
 
   return (
@@ -96,6 +115,143 @@ export default function ProposalForm() {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
+
+              {etapa === 0 && (
+                <div>
+                  {/* Plan Selection */}
+                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Informação do Plano</h2>
+                  <div className="grid grid-cols-1 gap-4">
+                    <div className="border rounded-lg p-4 dark:border-gray-600">
+
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-4">
+                    {planos.map(plano => (
+                      <div key={plano.id} className="border rounded-lg p-4 dark:border-gray-600">
+                        <div className="flex items-center space-x-4">
+                          <input
+                            type="radio"
+                            name="id"
+                            value={plano.id}
+                            //onChange={handleInputChange}
+                            onChange={ () => {
+                              setFieldValue('plano_id', plano.id);
+                              setFieldValue('plano_nome', plano.nome);
+                              setFieldValue('subtotal', plano.valor);
+
+                              setFieldValue('caixas_entrada_add_unit', plano.caixas_entrada_add);
+                              setFieldValue('atendentes_add_unit', plano.atendentes_add);
+                              setFieldValue('automacoes_add_unit', plano.automacoes_add);
+                            }}
+                            className="h-4 w-4 text-brand focus:ring-brand"
+                          />
+                          <div className="flex-1">
+                            <p className="font-medium text-gray-900 dark:text-white">{plano.nome}</p>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">{plano.descricao}</p>
+                            <div className="mt-2 space-y-1">
+
+                              <p className="text-sm text-gray-600 dark:text-gray-400 flex items-center">
+
+                                <div className="mr-2">
+                                  <select
+                                    name='caixas_entrada_add_qtde'
+                                    value={formData.caixas_entrada_add_qtde}
+                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand dark:bg-gray-700 dark:border-gray-600 text-left"
+                                    onChange={(e) => {
+                                      setFieldValue('caixas_entrada_add_qtde', e.target.value); // Assuming you're using Formik or similar
+                                      CalcTotal();
+                                    }}
+                                  >
+                                    {getSelectOptions('Caixa de Entrada', plano.caixas_entrada, 10)}
+                                  </select>
+                                </div>
+                              </p>
+
+
+                              <p className="text-sm text-gray-600 dark:text-gray-400 flex items-center">
+                                <div className="mr-2">
+                                  <select
+                                    value={formData.atendentes_add_qtde}
+                                    name='atendentes_add_qtde'
+                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand dark:bg-gray-700 dark:border-gray-600 w-[65px] text-left"
+                                    onChange={(e) => {
+                                      console.log('atendentes_add_qtde', e.target.value);
+                                      setFieldValue('atendentes_add_qtde', e); // Assuming you're using Formik or similar
+                                    }}
+                                  >
+                                    {getSelectOptions('Atendente', plano.atendentes, 10)}
+                                  </select>
+                                </div>
+                              </p>
+
+                              <p className="text-sm text-gray-600 dark:text-gray-400 flex items-center">
+                                <div className="mr-2">
+                                  <select
+                                    value={formData.automacoes_qtde}
+                                    name='automacoes'
+                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand dark:bg-gray-700 dark:border-gray-600 w-[65px] text-left"
+                                    onChange={(e) => {
+                                      const value = parseInt(e.target.value, 10);
+                                      setFieldValue('automacoes_qtde', value); // Assuming you're using Formik or similar
+                                    }}
+                                  >
+                                    {getSelectOptions('Automação', plano.atendentes, 10)}
+
+                                  </select>
+                                </div>
+                              </p>
+
+                              {plano.suporte_humano && (
+                                <div className="flex items-center space-x-2">
+                                  <HeadphonesIcon className="h-5 w-5 text-gray-400" />
+                                  <span className="text-gray-700 dark:text-gray-300">Suporte Humano</span>
+                                </div>
+                              )}
+
+                              {plano.kanban && (
+                                <div className="flex items-center space-x-2">
+                                  <Layout className="h-5 w-5 text-gray-400" />
+                                  <span className="text-gray-700 dark:text-gray-300">Kanban</span>
+                                </div>
+                              )}
+
+                              {plano.whatsapp_oficial && (
+                                <div className="flex items-center space-x-2">
+                                  <Phone className="h-5 w-5 text-gray-400" />
+                                  <span className="text-gray-700 dark:text-gray-300">WhatsApp Oficial</span>
+                                </div>
+                              )}
+
+                            </div>
+                            <p className="mt-2 text-lg font-medium text-brand">
+                              {new Intl.NumberFormat('pt-BR', {
+                                style: 'currency',
+                                currency: 'BRL'
+                              }).format(plano.valor)}
+                              <span className="text-sm text-gray-500">/mês</span>
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Total Value */}
+                  <div className="border-t pt-4 mt-6">
+                    <div className="flex justify-between items-center">
+                      <p className="text-lg font-medium text-gray-900 dark:text-white">Valor Total:</p>
+                      <p className="text-2xl font-bold text-brand">
+                        {new Intl.NumberFormat('pt-BR', {
+                          style: 'currency',
+                          currency: 'BRL'
+                        }).format(formData.total)}
+                        <span className="text-sm text-gray-500">/mês</span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {etapa === 1 && (
                 <div>
@@ -139,123 +295,10 @@ export default function ProposalForm() {
                 </div>
               )}
 
-
-              {etapa === 0 && (
-                <div>
-                  {/* Plan Selection */}
-                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Informação do Plano</h2>
-                  <div className="grid grid-cols-1 gap-4">
-                    <div className="border rounded-lg p-4 dark:border-gray-600">
-
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 gap-4">
-                    {planos.map(plano => (
-                      <div key={plano.id} className="border rounded-lg p-4 dark:border-gray-600">
-                        <div className="flex items-center space-x-4">
-                          <input
-                            type="radio"
-                            name="id"
-                            value={plano.id}
-                            //onChange={handleInputChange}
-                            className="h-4 w-4 text-brand focus:ring-brand"
-                          />
-                          <div className="flex-1">
-                            <p className="font-medium text-gray-900 dark:text-white">{plano.nome}</p>
-                            <p className="text-sm text-gray-500 dark:text-gray-400">{plano.descricao}</p>
-                            <div className="mt-2 space-y-1">
-
-                              <p className="text-sm text-gray-600 dark:text-gray-400 flex items-center">
-
-                                <div className="mr-2">
-                                  <select
-                                    value={formData.caixas_entrada}
-                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand dark:bg-gray-700 dark:border-gray-600 text-left"
-                                    onChange={(e) => {
-                                      const value = parseInt(e.target.value, 10);
-                                      setFieldValue('caixas_entrada', value); // Assuming you're using Formik or similar
-                                    }}
-                                  >
-                                    {getSelectOptions('Caixa de Entrada', plano.caixas_entrada, 10)}
-                                  </select>
-                                </div>
-                              </p>
-
-
-                              <p className="text-sm text-gray-600 dark:text-gray-400 flex items-center">
-                                <div className="mr-2">
-                                  <select
-                                    value={formData.atendentes}
-                                    name='atendentes'
-                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand dark:bg-gray-700 dark:border-gray-600 w-[65px] text-left"
-                                    onChange={(e) => {
-                                      const value = parseInt(e.target.value, 10);
-                                      setFieldValue('atendentes', value); // Assuming you're using Formik or similar
-                                    }}
-                                  >
-                                    {getSelectOptions('Atendente', plano.atendentes, 10)}
-                                  </select>
-                                </div>
-                              </p>
-
-                              <p className="text-sm text-gray-600 dark:text-gray-400 flex items-center">
-                                <div className="mr-2">
-                                  <select
-                                    value={formData.automacoes}
-                                    name='automacoes'
-                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand dark:bg-gray-700 dark:border-gray-600 w-[65px] text-left"
-                                    onChange={(e) => {
-                                      const value = parseInt(e.target.value, 10);
-                                      setFieldValue('automacoes', value); // Assuming you're using Formik or similar
-                                    }}
-                                  >
-                                    {getSelectOptions('Automação', plano.atendentes, 10)}
-
-                                  </select>
-                                </div>
-                              </p>
-
-                              {plano.kanban && (
-                                <p className="text-sm text-gray-600 dark:text-gray-400">
-                                  • Kanban Incluído
-                                </p>
-                              )}
-                            </div>
-                            <p className="mt-2 text-lg font-medium text-brand">
-                              {new Intl.NumberFormat('pt-BR', {
-                                style: 'currency',
-                                currency: 'BRL'
-                              }).format(plano.valor)}
-                              <span className="text-sm text-gray-500">/mês</span>
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Total Value */}
-                  <div className="border-t pt-4 mt-6">
-                    <div className="flex justify-between items-center">
-                      <p className="text-lg font-medium text-gray-900 dark:text-white">Valor Total:</p>
-                      <p className="text-2xl font-bold text-brand">
-                        {new Intl.NumberFormat('pt-BR', {
-                          style: 'currency',
-                          currency: 'BRL'
-                        }).format(totalValue)}
-                        <span className="text-sm text-gray-500">/mês</span>
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
-
               {etapa === 0 && (
                 <div>
                 </div>
               )}
-
 
 
               <div className="flex justify-end space-x-3 pt-4">

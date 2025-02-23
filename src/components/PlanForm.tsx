@@ -8,12 +8,12 @@ import {
   Bot,
   HeadphonesIcon,
   Layout,
-  MessageSquare,
   AlertCircle,
   Loader2,
   Save,
   Phone
 } from 'lucide-react';
+
 import Plan from '../Models/Plan';
 
 interface PlanFormProps {
@@ -47,7 +47,6 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;
-    console.log(name, value, type);
     setFormData(prev => ({
       ...prev,
       [name]: type === 'number' ? Number(value) : value
@@ -389,10 +388,12 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
               onChange={() => handleToggleChange('whatsapp_oficial')}
               className="h-4 w-4 text-brand focus:ring-brand border-gray-300 rounded"
             />
+
             <div className="flex items-center space-x-2">
               <Phone className="h-5 w-5 text-gray-400" />
               <span className="text-gray-700 dark:text-gray-300">WhatsApp Oficial</span>
             </div>
+
           </label>
         </div>
       </div>

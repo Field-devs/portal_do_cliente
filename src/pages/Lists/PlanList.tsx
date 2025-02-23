@@ -1,19 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../../components/AuthProvider';
 import {
   Plus,
   Search,
-  Filter,
   Trash2,
   AlertCircle,
   Package,
   PlusSquare,
+  HeadphonesIcon,
+  Layout,
+  Phone,
   X,
-  Check,
-  Calendar,
-  Edit,
-  User
+  Edit
 } from 'lucide-react';
+
+
 import { supabase } from '../../lib/supabase';
 import { format } from 'date-fns';
 import PlanForm from '../../components/PlanForm';
@@ -64,6 +65,7 @@ export default function PlanList() {
         .from('plano_addon')
         .select('*')
         .eq('active', true)
+        .eq('user_id', user?.id)
         .order('dt_add', { ascending: false });
 
       if (addonsError) throw addonsError;
@@ -209,6 +211,9 @@ export default function PlanList() {
                   Nome
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-dark-text-secondary uppercase tracking-wider w-[50px]">
+                  Recursos
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-dark-text-secondary uppercase tracking-wider w-[50px]">
                   Valor
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-dark-text-secondary uppercase tracking-wider w-[50px]">
@@ -227,6 +232,22 @@ export default function PlanList() {
                         {plan.nome}
                       </div>
                     </td>
+
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center space-x-2">
+                        {plan.suporte_humano == true && (
+                          <HeadphonesIcon className="h-5 w-5 text-gray-400" />
+                        )}
+                        {plan.kanban == true && (
+                          <Layout className="h-5 w-5 text-gray-400" />
+                        )}
+                        {plan.whatsapp_oficial == true && (
+                          <Phone className="h-5 w-5 text-gray-400" />
+                        )}
+                      </div>
+                    </td>
+
+
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm text-gray-900 dark:text-dark-text-primary">
                         {new Intl.NumberFormat('pt-BR', {
@@ -235,6 +256,7 @@ export default function PlanList() {
                         }).format(plan.valor)}
                       </div>
                     </td>
+
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm text-gray-500 dark:text-dark-text-muted">
                         {format(new Date(plan.dt_add), 'dd/MM/yyyy')}
