@@ -235,13 +235,13 @@ export default function PlanList() {
 
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center space-x-2">
-                        {plan.suporte_humano == true && (
+                        {plan.kanban == true && (
                           <HeadphonesIcon className="h-5 w-5 text-gray-400" />
                         )}
                         {plan.kanban == true && (
                           <Layout className="h-5 w-5 text-gray-400" />
                         )}
-                        {plan.whatsapp_oficial == true && (
+                        {plan.kanban == true && (
                           <Phone className="h-5 w-5 text-gray-400" />
                         )}
                       </div>

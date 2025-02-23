@@ -17,12 +17,14 @@ import {
   BarChart2,
   UserCircle
 } from 'lucide-react';
+import AdminDashboard from './dashboard/AdminDashboard';
 import ProposalsList from './Lists/Proposals.List';
 import PartnerList from './Lists/PartnerList';
 import AccountList from './Account/AccountList';
 import FinancialDashBoard from './dashboard/FinancialDashBoard';
 import PlanList from './Lists/PlanList';
 import Profile from './Account/Profile';
+import ContractList from './Lists/Contract.List';
 
 const getRoleBadgeStyles = (role: string | null) => {
   switch (role) {
@@ -175,9 +177,9 @@ export default function Portal() {
             <div className="flex items-center space-x-4">
               {/* Profile Photo and Info */}
               <div className="flex items-center space-x-3">
-                {user?.foto_perfil ? (
+                {user?.foto ? (
                   <img
-                    src={user.foto_perfil}
+                    src={user.foto}
                     alt={user?.nome?.charAt(0) || '-'}
                     className="h-10 w-10 rounded-full object-cover border-2 border-white dark:border-gray-700"
                   />
@@ -200,8 +202,8 @@ export default function Portal() {
         {/* Page Content */}
         <div className="p-6">
           <Routes>
-            {/* <Route index element={<AdminDashboard />} /> */}
-            <Route index element={<PlanList />} />
+            <Route path="index" element={<AdminDashboard />} />
+            <Route path="contracts" element={<ContractList />} />
             <Route path="plans" element={<PlanList />} />
             <Route path="proposals" element={<ProposalsList />} />
             <Route path="partners" element={<PartnerList />} />
