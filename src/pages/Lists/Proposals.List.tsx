@@ -25,8 +25,8 @@ export default function ProposalsList() {
   const [selectedProposalId, setSelectedProposalId] = useState<string | null>(null);
   const [OpenProposal, setOpenProposal] = useState(false);
 
-  const { planos, loading: planosLoading } = usePlanos();
-  const { addons, loading: addonsLoading } = useAddons();
+  const { loading: planosLoading } = usePlanos();
+  const { loading: addonsLoading } = useAddons();
 
 
   useEffect(() => {
@@ -49,31 +49,12 @@ export default function ProposalsList() {
     }
   };
 
-  const handleDelete = async () => {
-    if (!selectedProposalId) return;
-
-    try {
-      const { error } = await supabase
-        .from('outrpropostas')
-        .delete()
-        .eq('proposta_id', selectedProposalId);
-
-      if (error) throw error;
-
-      setPropostas(prev => prev.filter(p => p.id !== selectedProposalId));
-      setIsDeleteModalOpen(false);
-      setSelectedProposalId(null);
-    } catch (error) {
-      console.error('Error deleting proposal:', error);
-    }
-  };
-
 
   const HandleOpenProposal = () => {
     setOpenProposal(true);
   };
 
-  const filteredProposals = propostas.filter(proposal => {
+  const filteredProposals = propostas.filter(() => {
     //const matchesSearch =
     //  proposal.nome.includes(searchTerm.toLowerCase()) ||
     //  proposal.email.includes(searchTerm.toLowerCase()) ||

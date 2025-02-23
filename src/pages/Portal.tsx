@@ -1,27 +1,22 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Routes, Route, NavLink, useLocation } from 'react-router-dom';
 import { useAuth } from '../components/AuthProvider';
 import { useTheme } from '../components/ThemeProvider';
 import { 
   FileText, 
   Users, 
-  Building2, 
-  User,
   Wallet,
   LogOut,
-  Home,
   ChevronRight,
   ChevronLeft,
   Package,
   Briefcase,
   Moon,
   Sun,
-  Settings,
   BarChart2,
   UserCircle
 } from 'lucide-react';
-import AdminDashboard from './dashboard/AdminDashboard';
-import ProposalsList from './Lists/ProposalsList';
+import ProposalsList from './Lists/Proposals.List';
 import PartnerList from './Lists/PartnerList';
 import AccountList from './Account/AccountList';
 import FinancialDashBoard from './dashboard/FinancialDashBoard';
