@@ -15,6 +15,9 @@ export default function ProposalForm() {
   const [isFormOpen, setIsFormOpen] = useState(true);
   const [planos, setPlanos] = useState<Plan[]>([]);
   const [etapa, setEtapa] = useState(0);
+  const [filterCaixas, setFilterCaixa] = useState(1);
+  const [filterAtendentes, setFilterAtendentes] = useState(1);
+  const [filterAutomacoes, setFilterAutomacoes] = useState(1);
 
   const [formData, setFormData] = useState<Proposta>({
     Id: '',
@@ -48,12 +51,18 @@ export default function ProposalForm() {
   });
 
   useEffect(() => {
-    
-    const fetchPlanos = async () => {
+    //fetchPlanos();
+  }, []);
+
+  // Filtra Conforme Seleciona
+  useEffect(() => {
+
+    const fetchPlanos = async (uuid: string) => {
       const { data: responseData, error: responseError } = await supabase
         .from('plano')
-        .select('*');
-
+        .select('*')
+        .eq('id', uuid)
+        ;
       if (responseError) {
         console.error("Erro ao buscar planos:", responseError);
         return;
@@ -64,8 +73,32 @@ export default function ProposalForm() {
       }
     };
 
-    fetchPlanos();
-  }, []);
+
+    const fetchFilterPlansId = async () => {
+      const { data, error: rpcError } = await supabase.rpc('fn_plan_filter', {
+        p_caixas: filterCaixas,
+        p_atendente: filterAtendentes,
+        p_automacoes: filterAutomacoes
+      });
+      if (rpcError) {
+        console.error("Erro ao buscar planos:", rpcError);
+        return;
+      }
+      console.log('Data', data);
+      if (data) {
+        await fetchPlanos(data[0]);
+      }
+      console.log('Filter', filterCaixas, filterAtendentes, filterAutomacoes);
+      console.log('data', data);
+    };
+
+
+    fetchFilterPlansId();
+
+  }, [filterCaixas, filterAtendentes, filterAutomacoes]);
+
+
+
 
   const getSelectOptions = (singleTitle: string, startIndex: number, addvalue: number) => {
     const titleStart = `${startIndex} ${startIndex == 1 ? singleTitle : singleTitle} Inclusa`;
@@ -77,6 +110,17 @@ export default function ProposalForm() {
     return options;
   };
 
+  const getListItens = (title: string, startIndex: number) => {
+    const options = getInitialArray(startIndex).map((value: number, index: number) => (
+      <option key={value} value={value}>
+        {`${index + 1} - ${title}`}
+      </option>
+    ));
+    return options;
+  };
+
+
+
   const handleSubmit = () => {
   }
 
@@ -86,18 +130,21 @@ export default function ProposalForm() {
       ...prevFormData,
       [field]: value
     }));
-    console.log(formData.caixas_entrada_add_qtde);
-    console.log(formData.caixas_entrada_add_unit);
   };
 
   const CalcTotal = () => {
-    setFieldValue('caixas_entrada_add_qtde',  formData.caixas_entrada_add_qtde + 1);
+    setFieldValue('caixas_entrada_add_qtde', formData.caixas_entrada_add_qtde + 1);
     console.log('caixas_entrada_add_qtde', formData.caixas_entrada_add_qtde);
-    setFieldValue('total',  
-      formData.total = formData.subtotal + 
+    setFieldValue('total',
+      formData.total = formData.subtotal +
       (formData.caixas_entrada_add_qtde * formData.caixas_entrada_add_unit)
     );
   };
+
+  const handleFilter = (e: any) => {
+    //setSearchTerm(e.target.value);
+  };
+
 
   return (
     <>
@@ -123,6 +170,56 @@ export default function ProposalForm() {
                   <div className="grid grid-cols-1 gap-4">
                     <div className="border rounded-lg p-4 dark:border-gray-600">
 
+                      <div className="grid grid-cols-3 gap-4">
+                        {/* Caixa de Entrada */}
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                            Caixas de Entrada
+                          </label>
+                          <select
+                            name='filterCaixas'
+                            value={filterCaixas}
+                            onChange={(e) => setFilterCaixa(parseInt(e.target.value))}
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand dark:bg-gray-700 dark:border-gray-600 text-left"
+                          >
+                            {getListItens('Caixa', 1)}
+                          </select>
+                        </div>
+
+                        {/* Atendentes */}
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                            Atendentes
+                          </label>
+                          <select
+                            name='filterAtendentes'
+                            value={filterAtendentes}
+                            onChange={(e) => setFilterAtendentes(parseInt(e.target.value))}
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand dark:bg-gray-700 dark:border-gray-600 text-left"
+                          >
+                            {getListItens('Atendente', 1)}
+                          </select>
+                        </div>
+
+                        {/* Automações */}
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                            Automações
+                          </label>
+                          <select
+                            name='filterAutomacoes'
+                            value={filterAutomacoes}
+                            onChange={(e) => setFilterAutomacoes(parseInt(e.target.value))}
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand dark:bg-gray-700 dark:border-gray-600 text-left"
+                          >
+                            {getListItens('Automaçao(es)', 1)}
+                          </select>
+                        </div>
+
+
+                      </div>
+
+
                     </div>
                   </div>
 
@@ -135,7 +232,7 @@ export default function ProposalForm() {
                             name="id"
                             value={plano.id}
                             //onChange={handleInputChange}
-                            onChange={ () => {
+                            onChange={() => {
                               setFieldValue('plano_id', plano.id);
                               setFieldValue('plano_nome', plano.nome);
                               setFieldValue('subtotal', plano.valor);
