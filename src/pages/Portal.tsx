@@ -7,15 +7,15 @@ import {
   Users, 
   Wallet,
   LogOut,
-  ChevronRight,
-  ChevronLeft,
   Package,
   FileCheck2,
   Briefcase,
   Moon,
   Sun,
   BarChart2,
-  UserCircle
+  UserCircle,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 import AdminDashboard from './dashboard/AdminDashboard';
 import ProposalsList from './Lists/Proposals.List';
@@ -29,17 +29,17 @@ import ContractList from './Lists/Contract.List';
 const getRoleBadgeStyles = (role: string | null) => {
   switch (role) {
     case 'super_admin':
-      return 'border-[#FFD700] bg-[#FFF8DC] text-[#DAA520] dark:border-[#FFD700] dark:bg-[#2A2000] dark:text-[#FFD700]';
+      return 'bg-blue-500/20 text-blue-400 border border-blue-500/30';
     case 'admin':
-      return 'border-[#1E90FF] bg-[#F0F8FF] text-[#1E90FF] dark:border-[#1E90FF] dark:bg-[#002952] dark:text-[#60A5FA]';
+      return 'bg-blue-500/20 text-blue-400 border border-blue-500/30';
     case 'client':
-      return 'border-[#32CD32] bg-[#F0FFF0] text-[#32CD32] dark:border-[#32CD32] dark:bg-[#002800] dark:text-[#4ADE4A]';
+      return 'bg-blue-500/20 text-blue-400 border border-blue-500/30';
     case 'ava':
-      return 'border-[#9370DB] bg-[#F8F4FF] text-[#9370DB] dark:border-[#9370DB] dark:bg-[#2A1A52] dark:text-[#B794F4]';
+      return 'bg-blue-500/20 text-blue-400 border border-blue-500/30';
     case 'ava_admin':
-      return 'border-[#FF69B4] bg-[#FFF0F5] text-[#FF69B4] dark:border-[#FF69B4] dark:bg-[#520025] dark:text-[#FF85C8]';
+      return 'bg-blue-500/20 text-blue-400 border border-blue-500/30';
     default:
-      return 'border-gray-300 bg-gray-50 text-gray-600 dark:border-gray-500 dark:bg-gray-700 dark:text-gray-300';
+      return 'bg-gray-500/20 text-gray-400 border border-gray-500/30';
   }
 };
 
@@ -64,7 +64,7 @@ export default function Portal() {
   const { user, role, signOut } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const location = useLocation();
-  const [isNavExpanded, setIsNavExpanded] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(true);
 
   const navigation = [
     { name: 'Dashboard', icon: BarChart2, path: '/portal' },
@@ -77,132 +77,117 @@ export default function Portal() {
   ];
 
   const logoUrl = theme === 'dark' 
-    ? "https://storage.wiseapp360.com/typebot/public/workspaces/clwl6fdyf000511ohlamongyl/typebots/cm683siyl000dm4kxlrec9tb8/results/n9bnrhtkc6gqstpe4ycafw87/blocks/flm69ulnpr4b67h01xj47t14/OutrVertical.png"
-    : "https://storage.wiseapp360.com/typebot/public/workspaces/clwl6fdyf000511ohlamongyl/typebots/cm683siyl000dm4kxlrec9tb8/results/p3d7c6ik7c9873de0uh7k59j/blocks/flm69ulnpr4b67h01xj47t14/VerticalBlack.png";
+    ? "https://storage.wiseapp360.com/typebot/public/workspaces/clwl6fdyf000511ohlamongyl/typebots/cm683siyl000dm4kxlrec9tb8/results/hkmdaw6c6ice8z349zj22v4i/blocks/cz78pvc8stcisz1y8sq2khj1/OutrVertical.png"
+    : "https://storage.wiseapp360.com/typebot/public/workspaces/clwl6fdyf000511ohlamongyl/typebots/cm683siyl000dm4kxlrec9tb8/results/jctueeexledouxj5ys19vnq9/blocks/cz78pvc8stcisz1y8sq2khj1/VerticalBlack.png";
 
   return (
-    
     <div className="min-h-screen bg-light-primary dark:bg-dark-primary flex">
       {/* Sidebar Navigation */}
-      <div 
-        className={`fixed inset-y-0 left-0 bg-light-secondary dark:bg-dark-secondary shadow-lg transition-all duration-300 z-20 ${
-          isNavExpanded ? 'w-72' : 'w-20'
-        }`}
-      >
-        <div className="flex flex-col h-full">
-          <div className="flex items-center justify-between p-4 border-b border-gray-100 dark:border-gray-700">
-            <img
-              src={logoUrl}
-              alt="OUTR.ONE"
-              className={`h-8 ${!isNavExpanded && 'w-8 object-cover'}`}
-            />
-            <button
-              onClick={() => setIsNavExpanded(!isNavExpanded)}
-              className="p-1 rounded-md text-brand dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-            >
-              {isNavExpanded ? (
-                <ChevronLeft className="h-6 w-6" />
-              ) : (
-                <ChevronRight className="h-6 w-6" />
-              )}
-            </button>
-          </div>
-          
-          <nav className="flex-1 pt-4">
-            {navigation.map((item) => {
-              const isActive = location.pathname === item.path;
-              return (
-                <NavLink
-                  key={item.path}
-                  to={item.path}
-                  className={`flex items-center px-4 py-3 text-sm font-medium transition-colors ${
-                    isActive
-                      ? 'bg-gray-100 dark:bg-gray-700 text-brand dark:text-white'
-                      : 'text-brand dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-brand dark:hover:text-white'
-                  }`}
-                >
-                  <item.icon className={`h-5 w-5 ${isNavExpanded ? 'mr-3' : 'mx-auto'}`} />
-                  {isNavExpanded && <span>{item.name}</span>}
-                </NavLink>
-              );
-            })}
-          </nav>
+      <div className={`fixed inset-y-0 left-0 bg-light-card dark:bg-dark-card shadow-lg transition-all duration-300 z-20 flex flex-col border-r border-light-border dark:border-dark-border backdrop-blur-sm ${isExpanded ? 'w-52' : 'w-20'}`}>
+        {/* Logo and Toggle */}
+        <div className="h-16 flex items-center justify-between px-3 border-b border-light-border dark:border-dark-border">
+          <img
+            src={logoUrl}
+            alt="OUTR.ONE"
+            className={`transition-all duration-300 ${isExpanded ? 'h-8 w-auto' : 'h-8 w-8 object-cover'}`}
+          />
+          <button
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="p-1.5 rounded-lg text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-light-secondary dark:hover:bg-dark-secondary"
+          >
+            {isExpanded ? <ChevronLeft className="h-5 w-5" /> : <ChevronRight className="h-5 w-5" />}
+          </button>
+        </div>
 
-          <div className="p-4 border-t border-gray-100 dark:border-gray-700 space-y-4">
-            {/* Theme Toggle */}
+        {/* User Profile */}
+        <div className="p-3 border-b border-light-border dark:border-dark-border">
+          <div className="flex flex-col items-center">
+            {user?.foto ? (
+              <img
+                src={user.foto}
+                alt={user.nome}
+                className="h-10 w-10 rounded-full object-cover ring-2 ring-brand-100 dark:ring-brand-900"
+              />
+            ) : (
+              <div className="h-10 w-10 rounded-full bg-brand-50 dark:bg-brand-900/20 text-brand-600 dark:text-brand-400 flex items-center justify-center ring-2 ring-brand-100 dark:ring-brand-900">
+                <span className="text-lg font-medium">{user?.nome?.charAt(0) || '-'}</span>
+              </div>
+            )}
+            {isExpanded && (
+              <div className="mt-2 text-center">
+                <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                  {user?.nome || '-'}
+                </p>
+                <div className={`inline-flex px-2 py-0.5 mt-1 text-xs font-medium rounded-md ${getRoleBadgeStyles(role)}`}>
+                  {getRoleDisplayName(role)}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+        
+        {/* Navigation */}
+        <nav className="flex-1 overflow-y-auto py-4">
+          {navigation.map((item) => {
+            const isActive = location.pathname === item.path;
+            return (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                className={`flex items-center px-3 py-2 mx-2 text-sm font-medium rounded-lg transition-colors ${
+                  isActive
+                    ? 'bg-brand-50 text-brand-600 dark:bg-brand-900/20 dark:text-brand-400'
+                    : 'text-gray-600 dark:text-gray-400 hover:bg-brand-50/50 dark:hover:bg-brand-900/10 hover:text-brand-600 dark:hover:text-brand-400'
+                }`}
+              >
+                <div className="min-w-[2rem] flex justify-center">
+                  <item.icon className="h-5 w-5" />
+                </div>
+                {isExpanded && (
+                  <span className="ml-3 truncate">
+                    {item.name}
+                  </span>
+                )}
+              </NavLink>
+            );
+          })}
+        </nav>
+
+        {/* Footer Actions */}
+        <div className="p-3 border-t border-light-border dark:border-dark-border">
+          <div className="flex justify-center items-center space-x-2">
             <button
               onClick={toggleTheme}
-              className={`flex items-center w-full text-brand dark:text-gray-300 hover:text-brand dark:hover:text-white ${
-                isNavExpanded ? 'justify-start' : 'justify-center'
-              }`}
+              className="p-2 rounded-lg text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-light-secondary dark:hover:bg-dark-secondary"
+              title={theme === 'dark' ? 'Mudar para tema claro' : 'Mudar para tema escuro'}
             >
-              {theme === 'dark' ? (
-                <Sun className="h-5 w-5" />
-              ) : (
-                <Moon className="h-5 w-5" />
-              )}
-              {isNavExpanded && <span className="ml-3">Tema {theme === 'dark' ? 'Claro' : 'Escuro'}</span>}
+              {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
             </button>
 
-            {/* Profile Link */}
             <NavLink
               to="/portal/profile"
-              className={`flex items-center w-full text-brand dark:text-gray-300 hover:text-brand dark:hover:text-white ${
-                isNavExpanded ? 'justify-start' : 'justify-center'
-              }`}
+              className="p-2 rounded-lg text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-light-secondary dark:hover:bg-dark-secondary"
+              title="Perfil"
             >
               <UserCircle className="h-5 w-5" />
-              {isNavExpanded && <span className="ml-3">Perfil</span>}
             </NavLink>
 
-            {/* Logout Button */}
             <button
               onClick={signOut}
-              className={`flex items-center w-full text-brand dark:text-gray-300 hover:text-brand dark:hover:text-white ${
-                isNavExpanded ? 'justify-start' : 'justify-center'
-              }`}
+              className="p-2 rounded-lg text-red-500 hover:text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:text-red-300 dark:hover:bg-red-900/20"
+              title="Sair"
             >
               <LogOut className="h-5 w-5" />
-              {isNavExpanded && <span className="ml-3">Sair</span>}
             </button>
           </div>
         </div>
       </div>
 
       {/* Main Content Area */}
-      <div className={`flex-1 transition-all duration-300 ${isNavExpanded ? 'ml-72' : 'ml-20'}`}>
-        {/* Top Bar */}
-        <div className="bg-light-secondary dark:bg-dark-secondary shadow-sm px-4 py-4">
-          <div className="flex justify-end items-center space-x-4">
-            <div className="flex items-center space-x-4">
-              {/* Profile Photo and Info */}
-              <div className="flex items-center space-x-3">
-                {user?.foto ? (
-                  <img
-                    src={user.foto}
-                    alt={user?.nome?.charAt(0) || '-'}
-                    className="h-10 w-10 rounded-full object-cover border-2 border-white dark:border-gray-700"
-                  />
-                ) : (
-                  <div className="h-10 w-10 rounded-full bg-brand text-white flex items-center justify-center border-2 border-white dark:border-gray-700">
-                    <span className="text-sm font-medium">{user?.nome?.charAt(0) || '-'}</span>
-                  </div>
-                )}
-                <div className="flex flex-col">
-                  <p className="text-sm font-medium text-brand dark:text-white">{user?.nome || '-'}</p>
-                  <div className={`px-2 py-0.5 text-xs font-semibold rounded-md ${getRoleBadgeStyles(role)}`}>
-                    {getRoleDisplayName(role)}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Page Content */}
+      <div className={`flex-1 transition-all duration-300 ${isExpanded ? 'ml-52' : 'ml-20'}`}>
         <div className="p-6">
           <Routes>
-            <Route path="index" element={<AdminDashboard />} />
+            <Route path="/" element={<AdminDashboard />} />
             <Route path="contracts" element={<ContractList />} />
             <Route path="plans" element={<PlanList />} />
             <Route path="proposals" element={<ProposalsList />} />

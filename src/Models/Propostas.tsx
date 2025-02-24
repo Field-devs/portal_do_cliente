@@ -1,5 +1,6 @@
 
 interface Proposta {
+  id : number;
   plano_id: number; 
   plano_nome: string;
 

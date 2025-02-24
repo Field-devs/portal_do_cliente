@@ -16,6 +16,7 @@ export function ModalForm({
   title,
   maxWidth = '2xl'
 }: ModalProps) {
+
   // Handle ESC key
   useEscapeKey(onClose);
 
@@ -48,20 +49,25 @@ export function ModalForm({
 
   return (
     <div 
-      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
       aria-labelledby={title ? 'modal-title' : undefined}
     >
       <div 
-        className={`bg-white dark:bg-gray-800 rounded-lg p-6 w-full mx-4 ${maxWidthClasses[maxWidth]} max-h-[90vh] overflow-y-auto`}
+        className={`bg-[#1E293B]/90 backdrop-blur-sm rounded-xl border border-gray-700/50 p-6 w-full mx-4 ${maxWidthClasses[maxWidth]} max-h-[90vh] overflow-y-auto`}
         onClick={e => e.stopPropagation()}
       >
         {title && (
-          <h2 id="modal-title" className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">
-            {title}
-          </h2>
+          <div className="flex items-center space-x-3 mb-6">
+            <div className="bg-blue-400/10 p-3 rounded-xl">
+              <div className="h-6 w-6 text-blue-400" />
+            </div>
+            <h2 id="modal-title" className="text-xl font-semibold text-white">
+              {title}
+            </h2>
+          </div>
         )}
         {children}
       </div>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../components/AuthProvider';
 import { supabase } from '../../lib/supabase';
-import { AlertCircle, Loader2, Save } from 'lucide-react';
+import { AlertCircle, Loader2, Save, DollarSign, Package, FileText } from 'lucide-react';
 
 interface AddonFormProps {
   onSuccess: () => void;
@@ -63,7 +63,6 @@ export default function AddonForm({ onSuccess, onCancel, initialData }: AddonFor
       };
 
       if (initialData?.addon_id) {
-        // Update existing addon
         const { error } = await supabase
           .from('plano_addon')
           .update(addonData)
@@ -71,7 +70,6 @@ export default function AddonForm({ onSuccess, onCancel, initialData }: AddonFor
 
         if (error) throw error;
       } else {
-        // Create new addon
         const { error } = await supabase
           .from('plano_addon')
           .insert([addonData]);
@@ -88,27 +86,45 @@ export default function AddonForm({ onSuccess, onCancel, initialData }: AddonFor
     }
   };
 
+  const cardClass = "bg-white dark:bg-[#1E293B]/70 backdrop-blur-sm p-6 rounded-xl border border-gray-200 dark:border-gray-700/50 shadow-lg";
+  const inputClass = "pl-12 block w-full rounded-xl border border-gray-200 dark:border-gray-700/50 bg-white dark:bg-[#0F172A]/60 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-brand focus:border-transparent transition-colors";
+  const labelClass = "block text-sm font-medium text-gray-700 dark:text-gray-300";
+  const iconClass = "absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400";
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="space-y-4">
+    <div className="space-y-6">
+      {/* Basic Information */}
+      <div className={cardClass}>
+        <div className="flex items-center space-x-3 mb-6">
+          <div className="bg-brand-50 dark:bg-blue-400/10 p-3 rounded-xl">
+            <Package className="h-6 w-6 text-brand dark:text-blue-400" />
+          </div>
+          <h3 className="text-lg font-medium text-gray-900 dark:text-white">
+            Informações do Add-on
+          </h3>
+        </div>
+
         {/* Nome do Add-on */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+          <label className={labelClass}>
             Nome do Add-on
           </label>
-          <input
-            type="text"
-            name="nome"
-            value={formData.nome}
-            onChange={handleInputChange}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 text-gray-900 placeholder-gray-400 dark:placeholder-gray-500"
-            required
-          />
+          <div className="mt-1 relative">
+            <FileText className={iconClass} />
+            <input
+              type="text"
+              name="nome"
+              value={formData.nome}
+              onChange={handleInputChange}
+              className={inputClass}
+              required
+            />
+          </div>
         </div>
 
         {/* Descrição */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+        <div className="mt-4">
+          <label className={labelClass}>
             Descrição
           </label>
           <textarea
@@ -116,19 +132,17 @@ export default function AddonForm({ onSuccess, onCancel, initialData }: AddonFor
             value={formData.descricao}
             onChange={handleInputChange}
             rows={3}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 text-gray-900 placeholder-gray-400 dark:placeholder-gray-500"
+            className={`${inputClass} pl-4`}
           />
         </div>
 
         {/* Valor */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+        <div className="mt-4">
+          <label className={labelClass}>
             Valor
           </label>
-          <div className="mt-1 relative rounded-md shadow-sm">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <span className="text-gray-500 dark:text-gray-400 sm:text-sm">R$</span>
-            </div>
+          <div className="mt-1 relative">
+            <DollarSign className={iconClass} />
             <input
               type="number"
               name="valor"
@@ -136,7 +150,7 @@ export default function AddonForm({ onSuccess, onCancel, initialData }: AddonFor
               onChange={handleInputChange}
               min="0"
               step="0.01"
-              className="pl-12 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 text-gray-900 placeholder-gray-400 dark:placeholder-gray-500"
+              className={inputClass}
               required
             />
           </div>
@@ -146,9 +160,9 @@ export default function AddonForm({ onSuccess, onCancel, initialData }: AddonFor
 
       {/* Error Message */}
       {error && (
-        <div className="text-red-600 text-sm flex items-center bg-red-50 dark:bg-red-900/20 p-3 rounded-md">
-          <AlertCircle className="h-4 w-4 mr-2" />
-          {error}
+        <div className="bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 rounded-xl p-4 flex items-center text-red-600 dark:text-red-400">
+          <AlertCircle className="h-5 w-5 mr-2 flex-shrink-0" />
+          <p className="text-sm">{error}</p>
         </div>
       )}
 
@@ -157,29 +171,30 @@ export default function AddonForm({ onSuccess, onCancel, initialData }: AddonFor
         <button
           type="button"
           onClick={onCancel}
-          className="px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+          className="px-4 py-2 bg-gray-100 dark:bg-[#0F172A]/60 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-200 dark:hover:bg-[#0F172A]/40 transition-colors"
           disabled={loading}
         >
           Cancelar
         </button>
         <button
           type="submit"
-          className="px-4 py-2 bg-brand text-white rounded-md hover:bg-brand/90 flex items-center"
+          onClick={handleSubmit}
+          className="px-4 py-2 bg-brand hover:bg-brand/90 text-white rounded-xl transition-colors flex items-center"
           disabled={loading}
         >
           {loading ? (
             <>
-              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              <Loader2 className="h-5 w-5 mr-2 animate-spin" />
               Salvando...
             </>
           ) : (
             <>
-              <Save className="h-4 w-4 mr-2" />
+              <Save className="h-5 w-5 mr-2" />
               {initialData ? 'Atualizar Add-on' : 'Criar Add-on'}
             </>
           )}
         </button>
       </div>
-    </form>
+    </div>
   );
 }

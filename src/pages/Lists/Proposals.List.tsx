@@ -5,29 +5,39 @@ import {
   Plus,
   Search,
   Filter,
-  Trash2,
-  Edit
+  Calendar,
+  FileText,
+  Users,
+  TrendingUp,
+  Clock,
+  CheckCircle,
+  XCircle
 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { usePlanos } from '../../hooks/usePlanos';
-import { useAddons } from '../../hooks/useAddons';
 import { ModalForm } from '../../components/Modal/Modal';
 import ProposalForm from '../Forms/ProposalForm';
-
+import ActionsButtons from '../../components/ActionsData';
+import SwitchFrag from '../../components/Fragments/SwitchFrag';
 
 export default function ProposalsList() {
-  const [openForm, setOpenForm] = useState(false);  
   const [propostas, setPropostas] = useState<Proposta[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'accepted' | 'rejected'>('all');
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [selectedProposalId, setSelectedProposalId] = useState<string | null>(null);
   const [OpenProposal, setOpenProposal] = useState(false);
+  const [active, SetActive ] = useState(true);
 
   const { loading: planosLoading } = usePlanos();
-  const { loading: addonsLoading } = useAddons();
 
+  const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-light-border dark:border-gray-700/50";
+  const titleClass = "text-4xl font-bold text-light-text-primary dark:text-white";
+  const metricTitleClass = "text-lg font-medium text-light-text-primary dark:text-white mb-1";
+  const metricValueClass = "text-3xl font-bold text-light-text-primary dark:text-white";
+  const metricSubtextClass = "text-sm text-light-text-secondary dark:text-blue-200";
+  const iconContainerClass = "bg-blue-400/10 p-3 rounded-xl";
+  const iconClass = "h-6 w-6 text-blue-600 dark:text-blue-400";
+  const badgeClass = "text-xs font-medium bg-blue-50 dark:bg-blue-400/10 text-blue-600 dark:text-blue-400 px-2 py-1 rounded-full";
 
   useEffect(() => {
     fetchProposals();
@@ -49,22 +59,21 @@ export default function ProposalsList() {
     }
   };
 
-
   const HandleOpenProposal = () => {
     setOpenProposal(true);
   };
 
+  const handleChange = (checked: boolean) => {
+    console.log(active);
+    SetActive(checked ? true : false);
+  };
+
+
   const filteredProposals = propostas.filter(() => {
-    //const matchesSearch =
-    //  proposal.nome.includes(searchTerm.toLowerCase()) ||
-    //  proposal.email.includes(searchTerm.toLowerCase()) ||
-    //  proposal.cnpj.includes(searchTerm);
-    //const matchesStatus = statusFilter === 'all' || proposal.status === statusFilter;
-    //return matchesSearch && matchesStatus;
     return propostas;
   });
 
-  if (loading || planosLoading || addonsLoading) {
+  if (loading || planosLoading) {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand"></div>
@@ -72,155 +81,232 @@ export default function ProposalsList() {
     );
   }
 
-
-
   return (
     <>
-
       <ModalForm
         isOpen={OpenProposal}
         onClose={() => setOpenProposal(false)}
-        title="Propostas"
-        maxWidth='lg'
-        
-        children={<ProposalForm />}
-      />
+        title="Nova Proposta"
+        maxWidth='2xl'
+      >
+        <ProposalForm />
+      </ModalForm>
 
       <div className="p-6">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">Propostas</h1>
+        <div className="flex justify-between items-center mb-8">
+          <h1 className={titleClass}>Propostas</h1>
           <button
             onClick={() => HandleOpenProposal()}
-            className="flex items-center px-4 py-2 bg-brand text-white rounded-md hover:bg-brand/90 transition-colors"
+            className="btn-primary flex items-center"
           >
             <Plus className="h-5 w-5 mr-2" />
             Nova Proposta
           </button>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm mb-6">
+        {/* Metrics Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          {/* Total Proposals */}
+          <div className={cardClass}>
+            <div className="flex items-center justify-between mb-4">
+              <div className={iconContainerClass}>
+                <FileText className={iconClass} />
+              </div>
+              <span className={badgeClass}>Total</span>
+            </div>
+            <h3 className={metricTitleClass}>Total de Propostas</h3>
+            <p className={metricValueClass}>{propostas.length}</p>
+            <div className="flex items-center mt-2">
+              <TrendingUp className="h-4 w-4 mr-1 text-blue-600 dark:text-blue-400" />
+              <span className={metricSubtextClass}>+12.5% este mês</span>
+            </div>
+          </div>
+
+          {/* Pending Proposals */}
+          <div className={cardClass}>
+            <div className="flex items-center justify-between mb-4">
+              <div className={iconContainerClass}>
+                <Clock className={iconClass} />
+              </div>
+              <span className={badgeClass}>Aguardando</span>
+            </div>
+            <h3 className={metricTitleClass}>Propostas Pendentes</h3>
+            <p className={metricValueClass}>
+              {propostas.filter(p => p.status === 'PE').length}
+            </p>
+            <div className="flex items-center mt-2">
+              <Users className="h-4 w-4 mr-1 text-blue-600 dark:text-blue-400" />
+              <span className={metricSubtextClass}>Aguardando aprovação</span>
+            </div>
+          </div>
+
+          {/* Accepted Proposals */}
+          <div className={cardClass}>
+            <div className="flex items-center justify-between mb-4">
+              <div className={iconContainerClass}>
+                <CheckCircle className={iconClass} />
+              </div>
+              <span className={badgeClass}>Aceitas</span>
+            </div>
+            <h3 className={metricTitleClass}>Propostas Aceitas</h3>
+            <p className={metricValueClass}>
+              {propostas.filter(p => p.status === 'AC').length}
+            </p>
+            <div className="flex items-center mt-2">
+              <TrendingUp className="h-4 w-4 mr-1 text-blue-600 dark:text-blue-400" />
+              <span className={metricSubtextClass}>+8.3% vs último mês</span>
+            </div>
+          </div>
+
+          {/* Rejected Proposals */}
+          <div className={cardClass}>
+            <div className="flex items-center justify-between mb-4">
+              <div className={iconContainerClass}>
+                <XCircle className={iconClass} />
+              </div>
+              <span className={badgeClass}>Recusadas</span>
+            </div>
+            <h3 className={metricTitleClass}>Propostas Recusadas</h3>
+            <p className={metricValueClass}>
+              {propostas.filter(p => p.status === 'RC').length}
+            </p>
+            <div className="flex items-center mt-2">
+              <TrendingUp className="h-4 w-4 mr-1 text-blue-600 dark:text-blue-400" />
+              <span className={metricSubtextClass}>-2.1% vs último mês</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Search and Filter Bar */}
+        <div className={cardClass}>
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                 <input
                   type="text"
                   placeholder="Buscar por empresa, email ou CNPJ..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand"
+                  className="input pl-12"
                 />
               </div>
             </div>
             <div className="flex items-center space-x-4">
               <div className="relative">
-                <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <Filter className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                 <select
                   value={statusFilter}
-                  onChange={(e) => setStatusFilter(e.target.value as 'all' | 'pending' | 'accepted' | 'rejected')}
-                  className="pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand"
+                  onChange={(e) => setStatusFilter(e.target.value as typeof statusFilter)}
+                  className="select pl-12"
                 >
                   <option value="all">Todos os Status</option>
                   <option value="pending">Pendentes</option>
-                  <option value="accepted">Aceitas (Não Pagas)</option>
-                  <option value="aproved">Aprovadas (Pagas)</option>
+                  <option value="accepted">Aceitas</option>
                   <option value="rejected">Recusadas</option>
-                  <option value="expired">Expiradas</option>
                 </select>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
+        {/* Proposals Table */}
+        <div className={`${cardClass} mt-6`}>
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-              <thead className="bg-gray-50 dark:bg-gray-700">
-                <tr>
-                  <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider w-[100px]">
+            <table className="min-w-full divide-y divide-light-border dark:divide-gray-700/50">
+              <thead>
+                <tr className="bg-light-secondary dark:bg-[#0F172A]/60">
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                     Data
                   </th>
-
-                  <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider w-[100px]">
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                     CNPJ/CPF
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                     Cliente
                   </th>
-
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider w-[50px]">
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                     Email
                   </th>
-
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider w-[50px]">
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                     Fone
                   </th>
-                  <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider w-[50px]">
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                     Validade
                   </th>
-                  <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider w-[50px]">
+                  <th className="px-6 py-4 text-right text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                     Valor
                   </th>
-                  <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider  w-[50px]">
-                    Status
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                   </th>
-                  <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider w-[50px]">
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  </th>
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider w-[20px]">
+                    Ativo
                   </th>
                 </tr>
               </thead>
-
-
-              <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+              <tbody className="divide-y divide-light-border dark:divide-gray-700/50">
                 {filteredProposals.map((proposta) => (
-                  <tr key={proposta.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
-
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                      {new Date(proposta.dt).toLocaleDateString('pt-BR')}
-                    </td>
-
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                      {formatCNPJCPF(proposta.cnpjcpf)}
-                    </td>
-
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                      {proposta.nome}
-                    </td>
-
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                      {proposta.email}
-                    </td>
-
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                      {formatPhone(proposta.fone)}
-                    </td>
-
-                    <td className="px-6 py-4 whitespace-nowrap text-center">
-                      <span className="text-sm text-gray-900 dark:text-white font-medium">
-                        {proposta.validade} {proposta.validade === 1 ? 'Dia' : 'Dias'}
-                      </span>
-                    </td>
-
+                  <tr
+                    key={proposta.id}
+                    className="hover:bg-light-secondary dark:hover:bg-[#0F172A]/40 transition-colors"
+                  >
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="text-sm text-gray-900 dark:text-white font-medium">
+                      <div className="text-base text-light-text-secondary dark:text-gray-300">
+                        {new Date(proposta.dt).toLocaleDateString('pt-BR')}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-base text-light-text-secondary dark:text-gray-300">
+                        {formatCNPJCPF(proposta.cnpjcpf)}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-base font-medium text-light-text-primary dark:text-gray-100">
+                        {proposta.nome}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-base text-light-text-secondary dark:text-gray-300">
+                        {proposta.email}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-base text-light-text-secondary dark:text-gray-300">
+                        {formatPhone(proposta.fone)}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-center">
+                      <div className="text-base text-light-text-secondary dark:text-gray-300">
+                        {proposta.validade} {proposta.validade === 1 ? 'Dia' : 'Dias'}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-right">
+                      <div className="text-base font-medium text-light-text-primary dark:text-gray-100">
                         {new Intl.NumberFormat('pt-BR', {
                           style: 'currency',
                           currency: 'BRL'
                         }).format(proposta.total)}
-                      </span>
+                      </div>
                     </td>
-
-
-                    <td className="px-8 py-4 whitespace-nowrap">
-                      <span className=
-                        {
-                          `px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${proposta.status === 'PE'
-                            ? 'justify-center bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200 w-[100%]'
-                            : proposta.status === 'AC'
-                              ? 'justify-center bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 w-[100%]'
-                              : 'justify-center bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 w-[100%]'
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex justify-center">
+                        <span className={`px-3 py-1 text-sm font-medium rounded-full ${proposta.status === 'PE'
+                          ? 'badge-warning'
+                          : proposta.status === 'AC'
+                            ? 'badge-success'
+                            : 'badge-error'
                           }`}>
-                        {proposta.status_title}
-                      </span>
+                          {proposta.status_title}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <ActionsButtons onRead={() => handleEdit(proposta.id)} />
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-right">
+                      <SwitchFrag checked={active} onChange={handleChange} />
                     </td>
 
                   </tr>
@@ -229,9 +315,7 @@ export default function ProposalsList() {
             </table>
           </div>
         </div>
-
       </div>
-
     </>
   );
 }

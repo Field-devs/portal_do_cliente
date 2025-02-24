@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { 
   BarChart2, 
   Users, 
@@ -6,14 +6,10 @@ import {
   DollarSign,
   TrendingUp,
   UserPlus,
-  AlertCircle,
-  CheckCircle,
-  XCircle,
   Clock,
   Building,
   UserCheck
 } from 'lucide-react';
-import { supabase } from '../../lib/supabase';
 import {
   LineChart,
   Line,
@@ -26,243 +22,127 @@ import {
   Bar
 } from 'recharts';
 
-interface DashboardMetrics {
-  proposals: {
-    total: number;
-    pending: number;
-    accepted: number;
-    rejected: number;
-  };
-  clients: {
-    cf: number;
-    ava: number;
-  };
-  monthlyRevenue: number;
-  activeAffiliates: number;
-}
+const revenueData = [
+  { month: 'Jan', revenue: 12000, projected: 15000 },
+  { month: 'Fev', revenue: 19000, projected: 22000 },
+  { month: 'Mar', revenue: 25000, projected: 28000 },
+  { month: 'Abr', revenue: 32000, projected: 35000 },
+  { month: 'Mai', revenue: 40000, projected: 42000 },
+  { month: 'Jun', revenue: 45000, projected: 48000 },
+];
 
-interface RevenueData {
-  date: string;
-  value: number;
-}
-
-interface ClientAcquisitionData {
-  month: string;
-  cf: number;
-  ava: number;
-}
+const acquisitionData = [
+  { month: 'Jan', cf: 5, ava: 2 },
+  { month: 'Fev', cf: 8, ava: 3 },
+  { month: 'Mar', cf: 12, ava: 5 },
+  { month: 'Abr', cf: 15, ava: 7 },
+  { month: 'Mai', cf: 20, ava: 10 },
+  { month: 'Jun', cf: 25, ava: 12 },
+];
 
 export default function AdminDashboard() {
-  const [metrics, setMetrics] = useState<DashboardMetrics>({
-    proposals: { total: 0, pending: 0, accepted: 0, rejected: 0 },
-    clients: { cf: 0, ava: 0 },
-    monthlyRevenue: 0,
-    activeAffiliates: 0
-  });
-  const [revenueData, setRevenueData] = useState<RevenueData[]>([]);
-  const [acquisitionData, setAcquisitionData] = useState<ClientAcquisitionData[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetchDashboardData();
-  }, []);
-
-  const fetchDashboardData = async () => {
-    try {
-      // Fetch proposals metrics
-      const { data: proposalsData } = await supabase
-        .from('proposta_outr')
-        .select('status');
-
-      const proposals = proposalsData?.reduce((acc, curr) => {
-        acc.total++;
-        if (curr.status === 'pending') acc.pending++;
-        else if (curr.status === 'accepted') acc.accepted++;
-        else if (curr.status === 'rejected') acc.rejected++;
-        return acc;
-      }, { total: 0, pending: 0, accepted: 0, rejected: 0 }) || {
-        total: 0, pending: 0, accepted: 0, rejected: 0
-      };
-
-      // Fetch clients metrics
-      const { data: clientsData } = await supabase
-        .from('pessoas')
-        .select('perfil_id')
-        .eq('status', true);
-
-      const clients = clientsData?.reduce((acc, curr) => {
-        if (curr.perfil_id === 5) acc.cf++;
-        else if (curr.perfil_id === 4) acc.ava++;
-        return acc;
-      }, { cf: 0, ava: 0 }) || { cf: 0, ava: 0 };
-
-      // Fetch monthly revenue
-      const { data: revenueData } = await supabase
-        .from('proposta_outr')
-        .select('valor')
-        .eq('status', true);
-
-      const monthlyRevenue = revenueData?.reduce((acc, curr) => acc + curr.valor, 0) || 0;
-
-      // Fetch active affiliates
-      const { count: activeAffiliates } = await supabase
-        .from('pessoas')
-        .select('*', { count: 'exact' })
-        .eq('perfil_id', 6)
-        .eq('status', true);
-
-      setMetrics({
-        proposals,
-        clients,
-        monthlyRevenue,
-        activeAffiliates: activeAffiliates || 0
-      });
-
-      // Fetch revenue timeline data
-      const { data: timelineData } = await supabase
-        .from('proposta_outr')
-        .select('dt_inicio, valor')
-        .eq('status', true)
-        .order('dt_inicio', { ascending: true });
-
-      if (timelineData) {
-        const aggregatedData = timelineData.reduce((acc: RevenueData[], curr) => {
-          const date = new Date(curr.dt_inicio).toLocaleDateString('pt-BR', { month: 'short', year: 'numeric' });
-          const existingEntry = acc.find(item => item.date === date);
-          if (existingEntry) {
-            existingEntry.value += curr.valor;
-          } else {
-            acc.push({ date, value: curr.valor });
-          }
-          return acc;
-        }, []);
-        setRevenueData(aggregatedData);
-      }
-
-      // Fetch client acquisition data
-      const { data: acquisitionTimelineData } = await supabase
-        .from('pessoas')
-        .select('dt_add, perfil_id')
-        .in('perfil_id', [4, 5])
-        .order('dt_add', { ascending: true });
-
-      if (acquisitionTimelineData) {
-        const aggregatedAcquisitionData = acquisitionTimelineData.reduce((acc: ClientAcquisitionData[], curr) => {
-          const month = new Date(curr.dt_add).toLocaleDateString('pt-BR', { month: 'short', year: 'numeric' });
-          const existingEntry = acc.find(item => item.month === month);
-          if (existingEntry) {
-            if (curr.perfil_id === 5) existingEntry.cf++;
-            else if (curr.perfil_id === 4) existingEntry.ava++;
-          } else {
-            acc.push({
-              month,
-              cf: curr.perfil_id === 5 ? 1 : 0,
-              ava: curr.perfil_id === 4 ? 1 : 0
-            });
-          }
-          return acc;
-        }, []);
-        setAcquisitionData(aggregatedAcquisitionData);
-      }
-
-    } catch (error) {
-      console.error('Error fetching dashboard data:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand"></div>
-      </div>
-    );
-  }
+  const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-light-border dark:border-gray-700/50";
+  const titleClass = "text-4xl font-bold text-light-text-primary dark:text-white";
+  const metricTitleClass = "text-lg font-medium text-light-text-primary dark:text-white mb-1";
+  const metricValueClass = "text-3xl font-bold text-light-text-primary dark:text-white";
+  const metricSubtextClass = "text-sm text-light-text-secondary dark:text-blue-200";
+  const iconContainerClass = "bg-blue-400/10 p-3 rounded-xl";
+  const iconClass = "h-6 w-6 text-blue-600 dark:text-blue-400";
+  const badgeClass = "text-xs font-medium bg-blue-50 dark:bg-blue-400/10 text-blue-600 dark:text-blue-400 px-2 py-1 rounded-full";
 
   return (
-    <div className="space-y-6">
+    <div className="p-6">
+      <div className="flex justify-between items-center mb-8">
+        <h1 className={titleClass}>Dashboard</h1>
+      </div>
+
       {/* Metrics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {/* Proposals Card */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        {/* Total Proposals */}
+        <div className={cardClass}>
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Propostas</h3>
-            <FileText className="h-6 w-6 text-brand dark:text-white" />
+            <div className={iconContainerClass}>
+              <FileText className={iconClass} />
+            </div>
+            <span className={badgeClass}>Total</span>
           </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <p className="text-sm text-gray-500 dark:text-gray-400">Total</p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-white">{metrics.proposals.total}</p>
-            </div>
-            <div>
-              <p className="text-sm text-gray-500 dark:text-gray-400">Pendentes</p>
-              <p className="text-2xl font-bold text-yellow-500">{metrics.proposals.pending}</p>
-            </div>
-            <div>
-              <p className="text-sm text-gray-500 dark:text-gray-400">Aceitas</p>
-              <p className="text-2xl font-bold text-green-500">{metrics.proposals.accepted}</p>
-            </div>
-            <div>
-              <p className="text-sm text-gray-500 dark:text-gray-400">Recusadas</p>
-              <p className="text-2xl font-bold text-red-500">{metrics.proposals.rejected}</p>
-            </div>
+          <h3 className={metricTitleClass}>Total de Propostas</h3>
+          <p className={metricValueClass}>127</p>
+          <div className="flex items-center mt-2">
+            <TrendingUp className="h-4 w-4 mr-1 text-blue-600 dark:text-blue-400" />
+            <span className={metricSubtextClass}>+12.5% este mês</span>
           </div>
         </div>
 
-        {/* Active Clients Card */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+        {/* Active Clients */}
+        <div className={cardClass}>
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Clientes Ativos</h3>
-            <Users className="h-6 w-6 text-brand dark:text-white" />
+            <div className={iconContainerClass}>
+              <Users className={iconClass} />
+            </div>
+            <span className={badgeClass}>Total Atual</span>
           </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <p className="text-sm text-gray-500 dark:text-gray-400">CFs</p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-white">{metrics.clients.cf}</p>
-            </div>
-            <div>
-              <p className="text-sm text-gray-500 dark:text-gray-400">AVAs</p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-white">{metrics.clients.ava}</p>
-            </div>
+          <h3 className={metricTitleClass}>Clientes Ativos</h3>
+          <p className={metricValueClass}>584</p>
+          <div className="flex items-center mt-2">
+            <UserPlus className="h-4 w-4 mr-1 text-blue-600 dark:text-blue-400" />
+            <span className={metricSubtextClass}>+24 novos este mês</span>
           </div>
         </div>
 
-        {/* Monthly Revenue Card */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+        {/* Monthly Revenue */}
+        <div className={cardClass}>
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Faturamento Mensal</h3>
-            <DollarSign className="h-6 w-6 text-brand dark:text-white" />
+            <div className={iconContainerClass}>
+              <DollarSign className={iconClass} />
+            </div>
+            <span className={badgeClass}>Este Mês</span>
           </div>
-          <p className="text-3xl font-bold text-gray-900 dark:text-white">
-            {new Intl.NumberFormat('pt-BR', {
-              style: 'currency',
-              currency: 'BRL'
-            }).format(metrics.monthlyRevenue)}
-          </p>
+          <h3 className={metricTitleClass}>Receita Mensal</h3>
+          <p className={metricValueClass}>R$ 45.850</p>
+          <div className="flex items-center mt-2">
+            <TrendingUp className="h-4 w-4 mr-1 text-blue-600 dark:text-blue-400" />
+            <span className={metricSubtextClass}>+18.2% vs último mês</span>
+          </div>
         </div>
 
-        {/* Active Affiliates Card */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+        {/* Active Partners */}
+        <div className={cardClass}>
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Afiliados Ativos</h3>
-            <UserCheck className="h-6 w-6 text-brand dark:text-white" />
+            <div className={iconContainerClass}>
+              <Building className={iconClass} />
+            </div>
+            <span className={badgeClass}>Total Atual</span>
           </div>
-          <p className="text-3xl font-bold text-gray-900 dark:text-white">{metrics.activeAffiliates}</p>
+          <h3 className={metricTitleClass}>Parceiros Ativos</h3>
+          <p className={metricValueClass}>32</p>
+          <div className="flex items-center mt-2">
+            <UserCheck className="h-4 w-4 mr-1 text-blue-600 dark:text-blue-400" />
+            <span className={metricSubtextClass}>+3 novos este mês</span>
+          </div>
         </div>
       </div>
 
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Revenue Timeline Chart */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Receita Acumulada</h3>
+        {/* Revenue Chart */}
+        <div className={cardClass}>
+          <div className="flex items-center justify-between mb-6">
+            <h3 className={metricTitleClass}>Receita x Projeção</h3>
+            <div className="flex items-center space-x-2">
+              <span className="w-3 h-3 rounded-full bg-blue-500"></span>
+              <span className="text-sm text-light-text-secondary dark:text-gray-300">Realizado</span>
+              <span className="w-3 h-3 rounded-full bg-blue-200"></span>
+              <span className="text-sm text-light-text-secondary dark:text-gray-300">Projetado</span>
+            </div>
+          </div>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={revenueData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" />
-                <YAxis
+              <BarChart data={revenueData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#1E293B" />
+                <XAxis dataKey="month" stroke="#64748B" />
+                <YAxis 
+                  stroke="#64748B"
                   tickFormatter={(value) => 
                     new Intl.NumberFormat('pt-BR', {
                       style: 'currency',
@@ -271,39 +151,69 @@ export default function AdminDashboard() {
                     }).format(value)
                   }
                 />
-                <Tooltip
+                <Tooltip 
                   formatter={(value: number) =>
                     new Intl.NumberFormat('pt-BR', {
                       style: 'currency',
                       currency: 'BRL'
                     }).format(value)
                   }
+                  contentStyle={{
+                    backgroundColor: '#0F172A',
+                    border: 'none',
+                    borderRadius: '0.5rem',
+                    color: '#F1F5F9'
+                  }}
                 />
-                <Line
-                  type="monotone"
-                  dataKey="value"
-                  stroke="#07152E"
-                  strokeWidth={2}
-                  dot={false}
-                />
-              </LineChart>
+                <Bar dataKey="revenue" name="Receita" fill="#3B82F6" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="projected" name="Projeção" fill="#93C5FD" radius={[4, 4, 0, 0]} />
+              </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
 
         {/* Client Acquisition Chart */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Aquisição de Clientes</h3>
+        <div className={cardClass}>
+          <div className="flex items-center justify-between mb-6">
+            <h3 className={metricTitleClass}>Aquisição de Clientes</h3>
+            <div className="flex items-center space-x-2">
+              <span className="w-3 h-3 rounded-full bg-blue-600"></span>
+              <span className="text-sm text-light-text-secondary dark:text-gray-300">CFs</span>
+              <span className="w-3 h-3 rounded-full bg-blue-300"></span>
+              <span className="text-sm text-light-text-secondary dark:text-gray-300">AVAs</span>
+            </div>
+          </div>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={acquisitionData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="cf" name="CFs" fill="#07152E" />
-                <Bar dataKey="ava" name="AVAs" fill="#4B5563" />
-              </BarChart>
+              <LineChart data={acquisitionData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#1E293B" />
+                <XAxis dataKey="month" stroke="#64748B" />
+                <YAxis stroke="#64748B" />
+                <Tooltip 
+                  contentStyle={{
+                    backgroundColor: '#0F172A',
+                    border: 'none',
+                    borderRadius: '0.5rem',
+                    color: '#F1F5F9'
+                  }}
+                />
+                <Line 
+                  type="monotone" 
+                  dataKey="cf" 
+                  name="CFs" 
+                  stroke="#2563EB" 
+                  strokeWidth={2}
+                  dot={{ r: 4, fill: "#2563EB" }}
+                />
+                <Line 
+                  type="monotone" 
+                  dataKey="ava" 
+                  name="AVAs" 
+                  stroke="#93C5FD" 
+                  strokeWidth={2}
+                  dot={{ r: 4, fill: "#93C5FD" }}
+                />
+              </LineChart>
             </ResponsiveContainer>
           </div>
         </div>

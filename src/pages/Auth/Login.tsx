@@ -46,7 +46,7 @@ export default function Login() {
     <div className="min-h-screen bg-light-primary dark:bg-dark-primary flex flex-col justify-center py-12 sm:px-6 lg:px-8 transition-colors">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <img
-          src="https://storage.wiseapp360.com/typebot/public/workspaces/clwl6fdyf000511ohlamongyl/typebots/cm683siyl000dm4kxlrec9tb8/results/vu9uzur9vcwl0dloosghraen/blocks/flm69ulnpr4b67h01xj47t14/White - 512x512.svg"
+          src="https://storage.wiseapp360.com/typebot/public/workspaces/clwl6fdyf000511ohlamongyl/typebots/cm683siyl000dm4kxlrec9tb8/results/m2n2jfpdc8sedkee07cafp0r/blocks/cz78pvc8stcisz1y8sq2khj1/0cc329_44c4841586af44c5916565126e60942f~mv2.png"
           alt="OUTR.ONE"
           className="mx-auto h-16 w-auto"
         />

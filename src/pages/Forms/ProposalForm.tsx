@@ -131,7 +131,7 @@ export default function ProposalForm() {
   const getListItens = (title: string, startIndex: number) => {
     const options = getInitialArray(startIndex).map((value: number, index: number) => (
       <option key={value} value={value}>
-        {`${index + 1} - ${title}`}
+        {`${index + 1}`}
       </option>
     ));
     return options;
@@ -171,11 +171,14 @@ export default function ProposalForm() {
     }
 
   }
+  const classSelect = "mt-1 text-center block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand dark:bg-gray-700 dark:border-gray-600 text-white font-bold";
+
+
 
   return (
     <>
       {isFormOpen && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div className="space-y-6 max-w-4xl mx-auto">
           <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-6">
               {etapa < 2 && (
@@ -209,7 +212,7 @@ export default function ProposalForm() {
                             name='filterCaixas'
                             value={filterCaixa}
                             onChange={(e) => setFilterCaixa(parseInt(e.target.value))}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand dark:bg-gray-700 dark:border-gray-600 text-left"
+                            className={classSelect}
                           >
                             {getListItens('Caixa', 1)}
                           </select>
@@ -224,7 +227,7 @@ export default function ProposalForm() {
                             name='filterAtendentes'
                             value={filterAtendents}
                             onChange={(e) => setFilterAtendentes(parseInt(e.target.value))}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand dark:bg-gray-700 dark:border-gray-600 text-left"
+                            className={classSelect}
                           >
                             {getListItens('Atendente', 1)}
                           </select>
@@ -239,7 +242,7 @@ export default function ProposalForm() {
                             name='filterAutomacoes'
                             value={filterAutomacoes}
                             onChange={(e) => setFilterAutomacoes(parseInt(e.target.value))}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand dark:bg-gray-700 dark:border-gray-600 text-left"
+                            className={classSelect}
                           >
                             {getListItens('Automaçao(es)', 1)}
                           </select>
@@ -366,7 +369,7 @@ export default function ProposalForm() {
 
               {etapa === 1 && loading == true && (
                 <div>
-                Criando Proposta...
+                  Criando Proposta...
                 </div>
               )}
 
@@ -445,7 +448,7 @@ export default function ProposalForm() {
 
               <div className="flex justify-end space-x-3 pt-4">
 
-                {etapa < 2  && loading == false && (
+                {etapa < 2 && loading == false && (
                   <button
                     type="button"
                     onClick={() => setIsFormOpen(false)}
@@ -456,7 +459,7 @@ export default function ProposalForm() {
 
                 )}
 
-                {(etapa > 0 && etapa < 2  && loading == false ) && (
+                {(etapa > 0 && etapa < 2 && loading == false) && (
                   <button
                     type="button"
                     onClick={() => setEtapa(etapa - 1)}
@@ -467,7 +470,7 @@ export default function ProposalForm() {
 
                 )}
 
-                {etapa === 0  && loading == false && (
+                {etapa === 0 && loading == false && (
                   <button
                     type="button"
                     onClick={() => setEtapa(etapa + 1)}
@@ -477,7 +480,7 @@ export default function ProposalForm() {
                   </button>
                 )}
 
-                {etapa === 1 && loading == false  && (
+                {etapa === 1 && loading == false && (
                   <button
                     type="button"
                     // onClick={() => setEtapa(etapa + 1)}

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { supabase } from '../../lib/supabase';
-import { User } from '../../Models/Uses';
 import { useAuth } from '../../components/AuthProvider';
-
+import { supabase } from '../../lib/supabase';
+import { ModalForm } from '../../components/Modal/Modal';
+import UserForm from '../Forms/UserForm';
 import {
   Search,
   Filter,
@@ -16,46 +16,33 @@ import {
   Phone,
   Building2,
   Lock,
-  User as UserIcon
+  User as UserIcon,
+  CheckCircle,
+  TrendingUp,
+  Users,
+  Clock
 } from 'lucide-react';
 
-const inputClasses = `pl-10 block w-full rounded-md shadow-sm focus:ring-brand focus:border-brand 
-  border-gray-300 dark:border-gray-600 
-  bg-white dark:bg-gray-700 
-  text-gray-900 dark:text-gray-100 
-  placeholder-gray-400 dark:placeholder-gray-500`;
-
-const selectClasses = `pl-10 block w-full rounded-md shadow-sm focus:ring-brand focus:border-brand 
-  border-gray-300 dark:border-gray-600 
-  bg-white dark:bg-gray-700 
-  text-gray-900 dark:text-gray-100`;
-
-
-
-export default function AccountList() {
+function AccountList() {
   const [users, setUsers] = useState<User[]>([]);
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [roleFilter, setRoleFilter] = useState<number | 'all'>('all');
   const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive'>('all');
-  const [isFormOpen, setIsFormOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+  const [showUserForm, setShowUserForm] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
 
-  const [formData, setFormData] = useState({
-    nome: 'NEY DIXON',
-    email: 'admin1@gmail.com',
-    fone: '99982342254',
-    cnpj: '12344444478598',
-    empresa: 'IMPERSOFT',
-    perfil_id: 1,
-    perfil_nome: '',
-    senha: '102030',
-    confirmarSenha: '102030',
-    user_id: ''
-  });
+  const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-light-border dark:border-gray-700/50";
+  const titleClass = "text-4xl font-bold text-light-text-primary dark:text-white";
+  const metricTitleClass = "text-lg font-medium text-light-text-primary dark:text-white mb-1";
+  const metricValueClass = "text-3xl font-bold text-light-text-primary dark:text-white";
+  const metricSubtextClass = "text-sm text-light-text-secondary dark:text-blue-200";
+  const iconContainerClass = "bg-blue-400/10 p-3 rounded-xl";
+  const iconClass = "h-6 w-6 text-blue-600 dark:text-blue-400";
+  const badgeClass = "text-xs font-medium bg-blue-50 dark:bg-blue-400/10 text-blue-600 dark:text-blue-400 px-2 py-1 rounded-full";
 
   useEffect(() => {
     fetchUsers();
@@ -77,97 +64,14 @@ export default function AccountList() {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    console.log('ENVIANDO');
-    e.preventDefault();
-    if (formData.senha !== formData.confirmarSenha) {
-      alert('As senhas não coincidem');
-      return;
-    }
-    
-    try {
-      if (editingUser) {
-        const { error } = await supabase
-          .from('users')
-          .update({
-            nome: formData.nome,
-            email: formData.email,
-            fone: formData.fone,
-            cnpj: formData.cnpj,
-            empresa: formData.empresa,
-          })
-          .eq('id', editingUser.id);
-        if (error) throw error;
+  const handleEdit = (user: User) => {
+    setEditingUser(user);
+    setShowUserForm(true);
+  };
 
-        setUsers(prev =>
-          prev.map(user =>
-            user.id === editingUser.id
-              ? {
-                ...user,
-                nome: formData.nome,
-                email: formData.email,
-                telefone: formData.fone,
-                cnpj: formData.cnpj,
-                empresa: formData.empresa,
-                perfil_id: formData.perfil_id,
-                perfil_nome: formData.perfil_nome
-              }
-              : user
-          )
-        );
-      } else {
-
-        // Verifyy if user already exists in auth
-        // const { authData, authError } = await supabase.rpc('fn_user_exists', {
-        //   p_mail: formData.email
-        // });
-
-        // if (authError?.code?.includes("invalid_credentials"))
-        // {
-        //   alert("Usuário existente");
-        //   return;
-        // }
-
-        //Create auth user first
-        const { error: authError } = await supabase.auth.signUp({
-          email: formData.email,
-          password: formData.senha
-        });
- 
-
-        //if (authError) throw authError;
-        if (!authError) 
-          throw authError;
-
-        //if (authData.user) {
-          // Create user profile
-          console.log("user", user);
-          const { error: insertError } = await supabase
-            .from('users')
-            .insert([{
-              email: formData.email,
-              user_ref_id: user?.id,  
-              user_id: user?.id,
-              nome: formData.nome,
-              fone: formData.fone,
-              cnpj: formData.cnpj,
-              empresa: formData.empresa,
-              perfil_id: formData.perfil_id,
-              active: true
-            }]);
-
-          if (insertError) {
-            throw insertError;
-          }
-        //}
-      }
-
-      setIsFormOpen(false);
-      resetForm();
-    } catch (error) {
-      console.error('Error managing user 2:', error);
-      alert('Erro ao gerenciar usuário. Por favor, tente novamente.');
-    }
+  const handleFormClose = () => {
+    setEditingUser(null);
+    setShowUserForm(false);
   };
 
   const handleDelete = async () => {
@@ -176,8 +80,8 @@ export default function AccountList() {
     try {
       const { error } = await supabase
         .from('users')
-        .update({ status: false })
-        .eq('pessoas_id', selectedUserId);
+        .update({ active: false })
+        .eq('id', selectedUserId);
 
       if (error) throw error;
 
@@ -195,22 +99,6 @@ export default function AccountList() {
     }
   };
 
-  const resetForm = () => {
-    setFormData({
-      nome: '',
-      email: '',
-      fone: '',
-      cnpj: '',
-      empresa: '',
-      perfil_id: 5,
-      perfil_nome: '',
-      senha: '',
-      confirmarSenha: '',
-      user_id: ''
-    });
-    setEditingUser(null);
-  };
-
   const filteredUsers = users.filter(user => {
     const matchesSearch =
       user.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -221,8 +109,8 @@ export default function AccountList() {
 
     const matchesStatus =
       statusFilter === 'all' ||
-      (statusFilter === 'active' && user.f_status) ||
-      (statusFilter === 'inactive' && !user.f_status);
+      (statusFilter === 'active' && user.active) ||
+      (statusFilter === 'inactive' && !user.active);
 
     return matchesSearch && matchesRole && matchesStatus;
   });
@@ -237,39 +125,130 @@ export default function AccountList() {
 
   return (
     <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">Gestão de Contas</h1>
+      <div className="flex justify-between items-center mb-8">
+        <h1 className={titleClass}>Usuários</h1>
         <button
-          onClick={() => setIsFormOpen(true)}
-          className="flex items-center px-4 py-2 bg-brand text-white rounded-md hover:bg-brand/90 transition-colors"
+          onClick={() => setShowUserForm(true)}
+          className="btn-primary flex items-center"
         >
           <Plus className="h-5 w-5 mr-2" />
           Nova Conta
         </button>
       </div>
 
-      {/* Search and Filter Bar */}
-      <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm mb-6">
+      <ModalForm
+        isOpen={showUserForm}
+        onClose={handleFormClose}
+        title={editingUser ? "Editar Usuário" : "Nova Conta"}
+        maxWidth="2xl"
+      >
+        <UserForm
+          initialData={editingUser || undefined}
+          onSuccess={() => {
+            handleFormClose();
+            fetchUsers();
+          }}
+          onCancel={handleFormClose}
+        />
+      </ModalForm>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        {/* Total Users */}
+        <div className={cardClass}>
+          <div className="flex items-center justify-between mb-4">
+            <div className={iconContainerClass}>
+              <Users className={iconClass} />
+            </div>
+            <span className={badgeClass}>Total</span>
+          </div>
+          <h3 className={metricTitleClass}>Total de Usuários</h3>
+          <p className={metricValueClass}>{users.length}</p>
+          <div className="flex items-center mt-2">
+            <TrendingUp className="h-4 w-4 mr-1 text-blue-600 dark:text-blue-400" />
+            <span className={metricSubtextClass}>+12.5% este mês</span>
+          </div>
+        </div>
+
+        {/* Active Users */}
+        <div className={cardClass}>
+          <div className="flex items-center justify-between mb-4">
+            <div className={iconContainerClass}>
+              <CheckCircle className={iconClass} />
+            </div>
+            <span className={badgeClass}>Ativos</span>
+          </div>
+          <h3 className={metricTitleClass}>Usuários Ativos</h3>
+          <p className={metricValueClass}>
+            {users.filter(u => u.active).length}
+          </p>
+          <div className="flex items-center mt-2">
+            <Users className="h-4 w-4 mr-1 text-blue-600 dark:text-blue-400" />
+            <span className={metricSubtextClass}>Acessando o sistema</span>
+          </div>
+        </div>
+
+        {/* Pending Users */}
+        <div className={cardClass}>
+          <div className="flex items-center justify-between mb-4">
+            <div className={iconContainerClass}>
+              <Clock className={iconClass} />
+            </div>
+            <span className={badgeClass}>Pendentes</span>
+          </div>
+          <h3 className={metricTitleClass}>Usuários Pendentes</h3>
+          <p className={metricValueClass}>
+            {users.filter(u => !u.active).length}
+          </p>
+          <div className="flex items-center mt-2">
+            <Clock className="h-4 w-4 mr-1 text-blue-600 dark:text-blue-400" />
+            <span className={metricSubtextClass}>Aguardando ativação</span>
+          </div>
+        </div>
+
+        {/* Recent Users */}
+        <div className={cardClass}>
+          <div className="flex items-center justify-between mb-4">
+            <div className={iconContainerClass}>
+              <TrendingUp className={iconClass} />
+            </div>
+            <span className={badgeClass}>Recentes</span>
+          </div>
+          <h3 className={metricTitleClass}>Novos Usuários</h3>
+          <p className={metricValueClass}>
+            {users.filter(u => {
+              const oneWeekAgo = new Date();
+              oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+              return new Date(u.dt_add) > oneWeekAgo;
+            }).length}
+          </p>
+          <div className="flex items-center mt-2">
+            <TrendingUp className="h-4 w-4 mr-1 text-blue-600 dark:text-blue-400" />
+            <span className={metricSubtextClass}>Últimos 7 dias</span>
+          </div>
+        </div>
+      </div>
+
+      <div className={cardClass}>
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
               <input
                 type="text"
                 placeholder="Buscar por nome, email ou CNPJ..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className={inputClasses}
+                className="input pl-12"
               />
             </div>
           </div>
           <div className="flex items-center space-x-4">
             <div className="relative">
-              <Shield className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <Shield className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
               <select
                 value={roleFilter}
                 onChange={(e) => setRoleFilter(e.target.value === 'all' ? 'all' : Number(e.target.value))}
-                className={selectClasses}
+                className="select pl-12"
               >
                 <option value="all">Todos os Perfis</option>
                 <option value="1">Super Admin</option>
@@ -281,11 +260,11 @@ export default function AccountList() {
               </select>
             </div>
             <div className="relative">
-              <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <Filter className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value as 'all' | 'active' | 'inactive')}
-                className={selectClasses}
+                className="select pl-12"
               >
                 <option value="all">Todos os Status</option>
                 <option value="active">Ativos</option>
@@ -296,92 +275,106 @@ export default function AccountList() {
         </div>
       </div>
 
-      {/* Users Table */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
+      <div className={`${cardClass} mt-6`}>
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-            <thead className="bg-gray-50 dark:bg-gray-700">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                  Usuário
+          <table className="min-w-full divide-y divide-light-border dark:divide-gray-700/50">
+            <thead>
+              <tr className="bg-light-secondary dark:bg-[#0F172A]/60">
+                <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  Nome
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  Email
+                </th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  Telefone
+                </th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                   Perfil
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                  Empresa
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                  Data de Criação
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                   Status
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  Data de Criação
+                </th>
+                <th className="px-6 py-4 text-right text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  Ações
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+            <tbody className="divide-y divide-light-border dark:divide-gray-700/50">
               {filteredUsers.map((user) => (
-                <tr key={user.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                <tr 
+                  key={user.id}
+                  className="hover:bg-light-secondary dark:hover:bg-[#0F172A]/40 transition-colors"
+                >
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div>
-                      <div className="text-sm font-medium text-gray-900 dark:text-white">
-                        {user.nome}
+                    <div className="flex items-center">
+                      {user.foto ? (
+                        <img
+                          src={user.foto}
+                          alt={user.nome}
+                          className="h-10 w-10 rounded-full object-cover"
+                        />
+                      ) : (
+                        <div className="h-10 w-10 rounded-full bg-brand-50 dark:bg-brand-900/20 text-brand-600 dark:text-brand-400 flex items-center justify-center">
+                          <span className="text-lg font-medium">{user.nome.charAt(0)}</span>
+                        </div>
+                      )}
+                      <div className="ml-4">
+                        <div className="text-base font-medium text-light-text-primary dark:text-white">
+                          {user.nome}
+                        </div>
                       </div>
-                      <div className="text-sm text-gray-500 dark:text-gray-400">
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="flex flex-col space-y-1">
+                      <div className="flex items-center text-light-text-secondary dark:text-gray-300">
+                        <Mail className="h-4 w-4 mr-2" />
                         {user.email}
                       </div>
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
+                    <div className="flex flex-col space-y-1">
+                      <div className="flex items-center text-light-text-secondary dark:text-gray-300">
+                        <Phone className="h-4 w-4 mr-2" />
+                        {user.fone || '-'}
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className="badge badge-info">
                       {user.perfil_nome}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                    {user.empresa || '-'}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                    {new Date(user.dt_add).toLocaleDateString('pt-BR')}
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className={`badge ${user.active ? 'badge-success' : 'badge-error'}`}>
+                      {user.active ? 'Ativo' : 'Inativo'}
+                    </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${user.f_status
-                      ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
-                      : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
-                      }`}>
-                      {user.f_status}</span>
+                    <div className="text-base text-light-text-secondary dark:text-gray-300">
+                      {new Date(user.dt_add).toLocaleDateString('pt-BR')}
+                    </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <div className="flex space-x-3">
+                  <td className="px-6 py-4 whitespace-nowrap text-right">
+                    <div className="flex justify-end space-x-2">
                       <button
-                        onClick={() => {
-                          setEditingUser(user);
-                          setFormData({
-                            nome: user.nome,
-                            email: user.email,
-                            fone: user.fone || '',
-                            cnpj: user.cnpj || '',
-                            empresa: user.empresa || '',
-                            perfil_id: user.perfil_id,
-                            perfil_nome: user.perfil_nome || '',
-                            user_id: user.id,
-                            senha: '',
-                            confirmarSenha: ''
-                          });
-                          setIsFormOpen(true);
-                        }}
-                        className="group p-2 rounded-lg transition-all duration-200 hover:bg-orange-100 dark:hover:bg-orange-900/20 focus:outline-none focus:ring-2 focus:ring-orange-500 dark:focus:ring-orange-500/60 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+                        onClick={() => handleEdit(user)}
+                        className="p-2 text-brand hover:text-brand/80 transition-colors"
                       >
-                        <Edit className="h-5 w-5 text-orange-500 dark:text-orange-400 group-hover:text-orange-600 dark:group-hover:text-orange-300 transition-colors" />
+                        <Edit className="h-5 w-5" />
                       </button>
-                      {user.f_status && (
+                      {user.active && (
                         <button
                           onClick={() => {
                             setSelectedUserId(user.id);
                             setIsDeleteModalOpen(true);
                           }}
-                          className="text-red-600 hover:text-red-800"
+                          className="p-2 text-red-500 hover:text-red-600 transition-colors"
                         >
                           <Trash2 className="h-5 w-5" />
                         </button>
@@ -395,216 +388,32 @@ export default function AccountList() {
         </div>
       </div>
 
-      {/* User Form Modal */}
-      {isFormOpen && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-                {editingUser ? 'Editar Conta' : 'Nova Conta'}
-              </h2>
-              <button
-                onClick={() => {
-                  setIsFormOpen(false);
-                  resetForm();
-                }}
-                className="text-gray-500 hover:text-gray-700"
-              >
-                <X className="h-6 w-6" />
-              </button>
-            </div>
-
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Basic Information */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Nome Completo
-                  </label>
-                  <div className="mt-1 relative">
-                    <UserIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                    <input
-                      type="text"
-                      value={formData.nome}
-                      onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
-                      className={inputClasses}
-                      required
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Email
-                  </label>
-                  <div className="mt-1 relative">
-                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                    <input
-                      type="email"
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className={inputClasses}
-                      required
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Telefone
-                  </label>
-                  <div className="mt-1 relative">
-                    <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                    <input
-                      type="tel"
-                      value={formData.fone}
-                      onChange={(e) => setFormData({ ...formData, fone: e.target.value })}
-                      className={inputClasses}
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                    CNPJ
-                  </label>
-                  <div className="mt-1 relative">
-                    <Building2 className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                    <input
-                      type="text"
-                      value={formData.cnpj}
-                      onChange={(e) => setFormData({ ...formData, cnpj: e.target.value })}
-                      className={inputClasses}
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Empresa
-                  </label>
-                  <div className="mt-1 relative">
-                    <Building2 className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                    <input
-                      type="text"
-                      value={formData.empresa}
-                      onChange={(e) => setFormData({ ...formData, empresa: e.target.value })}
-                      className={inputClasses}
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Perfil
-                  </label>
-                  <div className="mt-1 relative">
-                    <Shield className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                    <select
-                      value={formData.perfil_id}
-                      disabled={editingUser}
-                      onChange={(e) => setFormData({ ...formData, perfil_id: Number(e.target.value) })}
-                      className={selectClasses}
-                      required
-                    >
-                      <option value="1">Super Admin</option>
-                      <option value="2">Admin</option>
-                      <option value="3">AVA Admin</option>
-                      <option value="4">AVA</option>
-                      <option value="5">Cliente</option>
-                      <option value="6">Afiliado</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-
-              {/* Password Fields (only for new users) */}
-              {!editingUser && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                      Senha
-                    </label>
-                    <div className="mt-1 relative">
-                      <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                      <input
-                        type="password"
-                        value={formData.senha}
-                        onChange={(e) => setFormData({ ...formData, senha: e.target.value })}
-                        className={inputClasses}
-                        required={!editingUser}
-                        minLength={6}
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                      Confirmar Senha
-                    </label>
-                    <div className="mt-1 relative">
-                      <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                      <input
-                        type="password"
-                        value={formData.confirmarSenha}
-                        onChange={(e) => setFormData({ ...formData, confirmarSenha: e.target.value })}
-                        className={inputClasses}
-                        required={!editingUser}
-                        minLength={6}
-                      />
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              <div className="flex justify-end space-x-3 pt-4">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsFormOpen(false);
-                    resetForm();
-                  }}
-                  className="px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
-                >
-                  Cancelar
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 bg-brand text-white rounded-md hover:bg-brand/90"
-                >
-                  {editingUser ? 'Salvar Alterações' : 'Criar Conta'}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* Delete Confirmation Modal */}
       {isDeleteModalOpen && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4">
-            <div className="flex items-center text-red-600 mb-4">
+          <div className={`${cardClass} max-w-md w-full mx-4`}>
+            <div className="flex items-center text-red-400 mb-4">
               <AlertCircle className="h-6 w-6 mr-2" />
-              <h3 className="text-lg font-medium">Confirmar a INATIVAÇÃO</h3>
+              <h3 className="text-lg font-medium">Confirmar Desativação</h3>
             </div>
-            <p className="text-gray-600 dark:text-gray-400 mb-4">
-              Tem certeza que deseja INATIVAR esta conta? Esta ação pode ser revertida posteriormente.
+            <p className="text-light-text-secondary dark:text-gray-300 mb-4">
+              Tem certeza que deseja desativar esta conta? Esta ação pode ser revertida posteriormente.
             </p>
-
             <div className="flex justify-end space-x-3">
               <button
                 onClick={() => {
                   setIsDeleteModalOpen(false);
                   setSelectedUserId(null);
                 }}
-                className="px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+                className="btn-secondary"
               >
                 Cancelar
               </button>
-
               <button
                 onClick={handleDelete}
-                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+                className="px-4 py-2 bg-red-500/80 hover:bg-red-600/80 text-white rounded-xl transition-colors"
               >
                 Desativar
               </button>
-
-
             </div>
           </div>
         </div>
@@ -612,3 +421,5 @@ export default function AccountList() {
     </div>
   );
 }
+
+export default AccountList;

@@ -27,10 +27,9 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-
   const [formData, setFormData] = useState({
     nome: initialData?.nome || '',
-    descricao: '',
+    descricao: initialData?.descricao || '',
     caixas_entrada_add: initialData?.caixas_entrada_add || 0,
     automacoes_add: initialData?.automacoes_add || 0,
     atendentes_add: initialData?.atendentes_add || 0,
@@ -89,9 +88,7 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-
     e.preventDefault();
-    console.log(user);
     if (!validateForm() || !user?.id) return;
 
     setLoading(true);
@@ -99,7 +96,6 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
 
     try {
       if (initialData?.id) {
-        // Update existing plan
         const { error } = await supabase
           .from('plano')
           .update({
@@ -115,16 +111,12 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
             caixas_entrada_add: formData.caixas_entrada_add,
             automacoes_add: formData.automacoes_add,
             atendentes_add: formData.atendentes_add,
-
             active: true
           })
           .eq('id', initialData.id);
 
         if (error) throw error;
-      }
-      else {
-
-        // Create new plan
+      } else {
         const { error } = await supabase
           .from('plano')
           .insert([{
@@ -134,7 +126,6 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
             caixas_entrada_add: formData.caixas_entrada_add,
             automacoes_add: formData.automacoes_add,
             atendentes_add: formData.atendentes_add,
-
             caixas_entrada: formData.caixas_entrada,
             atendentes: formData.atendentes,
             automacoes: formData.automacoes,
@@ -159,10 +150,15 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="space-y-4">
+      {/* Basic Information */}
+      <div className="bg-[#1E293B]/70 backdrop-blur-sm p-6 rounded-xl shadow-lg space-y-4">
+        <h3 className="text-lg font-semibold text-white mb-4">
+          Informações Básicas
+        </h3>
+
         {/* Nome do Plano */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+          <label className="block text-sm font-medium text-gray-300">
             Nome do Plano
           </label>
           <input
@@ -170,14 +166,14 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
             name="nome"
             value={formData.nome}
             onChange={handleInputChange}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 text-gray-900 placeholder-gray-400 dark:placeholder-gray-500"
+            className="mt-1 block w-full px-4 py-3 bg-[#0F172A]/60 border border-gray-700/50 rounded-xl text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-all"
             required
           />
         </div>
 
         {/* Descrição */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+          <label className="block text-sm font-medium text-gray-300">
             Descrição
           </label>
           <textarea
@@ -185,18 +181,18 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
             value={formData.descricao}
             onChange={handleInputChange}
             rows={3}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 text-gray-900 placeholder-gray-400 dark:placeholder-gray-500"
+            className="mt-1 block w-full px-4 py-3 bg-[#0F172A]/60 border border-gray-700/50 rounded-xl text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-all resize-none"
           />
         </div>
 
         {/* Valor */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-            Valor
+          <label className="block text-sm font-medium text-gray-300">
+            Valor Base
           </label>
-          <div className="mt-1 relative rounded-md shadow-sm">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <span className="text-gray-500 dark:text-gray-400 sm:text-sm">R$</span>
+          <div className="mt-1 relative">
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+              <span className="text-gray-400">R$</span>
             </div>
             <input
               type="number"
@@ -205,204 +201,193 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
               onChange={handleInputChange}
               min="0"
               step="0.01"
-              className="pl-12 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 text-gray-900 placeholder-gray-400 dark:placeholder-gray-500"
+              className="block w-full pl-12 pr-4 py-3 bg-[#0F172A]/60 border border-gray-700/50 rounded-xl text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-all"
               required
             />
           </div>
-          {/* <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Valor por unidade</p> */}
         </div>
       </div>
 
       {/* Resource Limits */}
-      <div className="space-y-0">
-        <h3 className="text-lg font-medium text-gray-900 dark:text-white">Recursos</h3>
+      <div className="bg-[#1E293B]/70 backdrop-blur-sm p-6 rounded-xl shadow-lg space-y-4">
+        <h3 className="text-lg font-semibold text-white mb-4">Recursos Inclusos</h3>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Caixas de Entrada */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            <label className="block text-sm font-medium text-gray-300">
               Caixas de Entrada
             </label>
             <div className="mt-1 relative">
-              <Inbox className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <Inbox className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
               <input
                 type="number"
                 name="caixas_entrada"
                 value={formData.caixas_entrada}
                 onChange={handleInputChange}
                 min="1"
-                className="pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 text-gray-900 placeholder-gray-400 dark:placeholder-gray-500"
+                className="block w-full pl-12 pr-4 py-3 bg-[#0F172A]/60 border border-gray-700/50 rounded-xl text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-all"
                 required
               />
             </div>
-
-
           </div>
 
+          {/* Atendentes */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            <label className="block text-sm font-medium text-gray-300">
               Atendentes
             </label>
             <div className="mt-1 relative">
-              <Users className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <Users className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
               <input
                 type="number"
                 name="atendentes"
                 value={formData.atendentes}
                 onChange={handleInputChange}
                 min="1"
-                className="pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 text-gray-900 placeholder-gray-400 dark:placeholder-gray-500"
+                className="block w-full pl-12 pr-4 py-3 bg-[#0F172A]/60 border border-gray-700/50 rounded-xl text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-all"
                 required
               />
             </div>
-
-
-
-
           </div>
 
+          {/* Automações */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            <label className="block text-sm font-medium text-gray-300">
               Automações
             </label>
             <div className="mt-1 relative">
-              <Bot className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <Bot className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
               <input
                 type="number"
                 name="automacoes"
                 value={formData.automacoes}
                 onChange={handleInputChange}
                 min="1"
-                className="pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 text-gray-900 placeholder-gray-400 dark:placeholder-gray-500"
+                className="block w-full pl-12 pr-4 py-3 bg-[#0F172A]/60 border border-gray-700/50 rounded-xl text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-all"
                 required
               />
             </div>
-
           </div>
         </div>
       </div>
 
-      {/* Resource Limits */}
-      <div className="space-y-0">
-        <h3 className="text-lg font-medium text-gray-900 dark:text-white">Valor Adicional Por</h3>
+      {/* Additional Resource Pricing */}
+      <div className="bg-[#1E293B]/70 backdrop-blur-sm p-6 rounded-xl shadow-lg space-y-4">
+        <h3 className="text-lg font-semibold text-white mb-4">Valor Adicional Por</h3>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Caixas de Entrada Adicionais */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-              Caixas de Entrada
+            <label className="block text-sm font-medium text-gray-300">
+              Caixa de Entrada
             </label>
             <div className="mt-1 relative">
-              <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <DollarSign className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
               <input
                 type="number"
                 name="caixas_entrada_add"
                 value={formData.caixas_entrada_add}
                 onChange={handleInputChange}
-                className="pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 text-gray-900 placeholder-gray-400 dark:placeholder-gray-500"
+                className="block w-full pl-12 pr-4 py-3 bg-[#0F172A]/60 border border-gray-700/50 rounded-xl text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-all"
                 required
                 title="Valor Adicional por Caixa de Entrada"
               />
-
             </div>
-
-
           </div>
 
+          {/* Atendentes Adicionais */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            <label className="block text-sm font-medium text-gray-300">
               Atendente
             </label>
             <div className="mt-1 relative">
-              <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <DollarSign className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
               <input
                 type="number"
                 name="atendentes_add"
                 value={formData.atendentes_add}
                 onChange={handleInputChange}
-                className="pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 text-gray-900 placeholder-gray-400 dark:placeholder-gray-500"
+                className="block w-full pl-12 pr-4 py-3 bg-[#0F172A]/60 border border-gray-700/50 rounded-xl text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-all"
                 required
                 title="Valor Adicional por Atendente"
               />
             </div>
-
           </div>
 
+          {/* Automações Adicionais */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            <label className="block text-sm font-medium text-gray-300">
               Automação
             </label>
             <div className="mt-1 relative">
-              <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <DollarSign className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
               <input
                 type="number"
                 name="automacoes_add"
                 value={formData.automacoes_add}
                 onChange={handleInputChange}
-                min="1"
-                className="pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 text-gray-900 placeholder-gray-400 dark:placeholder-gray-500"
+                className="block w-full pl-12 pr-4 py-3 bg-[#0F172A]/60 border border-gray-700/50 rounded-xl text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-all"
                 required
                 title="Valor Adicional por Automação"
               />
             </div>
-
           </div>
         </div>
       </div>
 
-
       {/* Features */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-medium text-gray-900 dark:text-white">Recursos Adicionais</h3>
+      <div className="bg-[#1E293B]/70 backdrop-blur-sm p-6 rounded-xl shadow-lg space-y-4">
+        <h3 className="text-lg font-semibold text-white mb-4">Recursos Adicionais</h3>
 
         <div className="space-y-4">
-          <label className="flex items-center space-x-3">
+          <label className="flex items-center space-x-3 p-4 bg-[#0F172A]/60 border border-gray-700/50 rounded-xl cursor-pointer hover:bg-[#0F172A]/40 transition-colors group">
             <input
               type="checkbox"
               checked={formData.suporte_humano}
               onChange={() => handleToggleChange('suporte_humano')}
-              className="h-4 w-4 text-brand focus:ring-brand border-gray-300 rounded"
+              className="h-5 w-5 rounded border-gray-700/50 text-blue-500/80 focus:ring-blue-500/50 focus:ring-offset-0 bg-[#0F172A]/60 transition-colors"
             />
-            <div className="flex items-center space-x-2">
-              <HeadphonesIcon className="h-5 w-5 text-gray-400" />
-              <span className="text-gray-700 dark:text-gray-300">Suporte Humano</span>
+            <div className="flex items-center space-x-3">
+              <HeadphonesIcon className="h-5 w-5 text-gray-400 group-hover:text-gray-300 transition-colors" />
+              <span className="text-gray-300 group-hover:text-gray-200 transition-colors">Suporte Humano</span>
             </div>
           </label>
 
-          <label className="flex items-center space-x-3">
+          <label className="flex items-center space-x-3 p-4 bg-[#0F172A]/60 border border-gray-700/50 rounded-xl cursor-pointer hover:bg-[#0F172A]/40 transition-colors group">
             <input
               disabled={true}
               type="checkbox"
               checked={formData.kanban}
               onChange={() => handleToggleChange('kanban')}
-              className="h-4 w-4 text-brand focus:ring-brand border-gray-300 rounded"
+              className="h-5 w-5 rounded border-gray-700/50 text-blue-500/80 focus:ring-blue-500/50 focus:ring-offset-0 bg-[#0F172A]/60 transition-colors"
             />
-            <div className="flex items-center space-x-2">
-              <Layout className="h-5 w-5 text-gray-400" />
-              <span className="text-gray-700 dark:text-gray-300">Kanban</span>
+            <div className="flex items-center space-x-3">
+              <Layout className="h-5 w-5 text-gray-400 group-hover:text-gray-300 transition-colors" />
+              <span className="text-gray-300 group-hover:text-gray-200 transition-colors">Kanban</span>
             </div>
           </label>
 
-          <label className="flex items-center space-x-3">
+          <label className="flex items-center space-x-3 p-4 bg-[#0F172A]/60 border border-gray-700/50 rounded-xl cursor-pointer hover:bg-[#0F172A]/40 transition-colors group">
             <input
               type="checkbox"
               checked={formData.whatsapp_oficial}
               onChange={() => handleToggleChange('whatsapp_oficial')}
-              className="h-4 w-4 text-brand focus:ring-brand border-gray-300 rounded"
+              className="h-5 w-5 rounded border-gray-700/50 text-blue-500/80 focus:ring-blue-500/50 focus:ring-offset-0 bg-[#0F172A]/60 transition-colors"
             />
-
-            <div className="flex items-center space-x-2">
-              <Phone className="h-5 w-5 text-gray-400" />
-              <span className="text-gray-700 dark:text-gray-300">WhatsApp Oficial</span>
+            <div className="flex items-center space-x-3">
+              <Phone className="h-5 w-5 text-gray-400 group-hover:text-gray-300 transition-colors" />
+              <span className="text-gray-300 group-hover:text-gray-200 transition-colors">WhatsApp Oficial</span>
             </div>
-
           </label>
         </div>
       </div>
 
       {/* Error Message */}
       {error && (
-        <div className="text-red-600 text-sm flex items-center bg-red-50 dark:bg-red-900/20 p-3 rounded-md">
-          <AlertCircle className="h-4 w-4 mr-2" />
-          {error}
+        <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 flex items-center text-red-400">
+          <AlertCircle className="h-5 w-5 mr-2 flex-shrink-0" />
+          <p className="text-sm">{error}</p>
         </div>
       )}
 
@@ -411,24 +396,24 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
         <button
           type="button"
           onClick={onCancel}
-          className="px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+          className="px-4 py-2 bg-[#0F172A]/60 text-gray-300 rounded-xl hover:bg-[#0F172A]/40 transition-colors"
           disabled={loading}
         >
           Cancelar
         </button>
         <button
           type="submit"
-          className="px-4 py-2 bg-brand text-white rounded-md hover:bg-brand/90 flex items-center"
+          className="px-4 py-2 bg-blue-500/80 hover:bg-blue-600/80 text-white rounded-xl transition-colors flex items-center"
           disabled={loading}
         >
           {loading ? (
             <>
-              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              <Loader2 className="h-5 w-5 mr-2 animate-spin" />
               Salvando...
             </>
           ) : (
             <>
-              <Save className="h-4 w-4 mr-2" />
+              <Save className="h-5 w-5 mr-2" />
               {initialData ? 'Atualizar Plano' : 'Criar Plano'}
             </>
           )}

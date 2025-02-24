@@ -1,8 +1,5 @@
-import React, { useState } from 'react';
-import { Edit, Check, X, Plus, AlertTriangle, Package, PlusSquare, MinusSquare } from 'lucide-react';
-import { usePlanos } from '../../hooks/usePlanos';
-import { useAddons } from '../../hooks/useAddons';
-import { Database } from '../../lib/database.types';
+import { useState } from 'react';
+import { Edit, Check, X, AlertTriangle, Package, PlusSquare } from 'lucide-react';
 
 type ContentType = 'plans' | 'addons';
 type Plan = {
