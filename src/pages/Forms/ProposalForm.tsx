@@ -15,17 +15,16 @@ export default function ProposalForm() {
   const [isFormOpen, setIsFormOpen] = useState(true);
   const [planos, setPlanos] = useState<Plan[]>([]);
   const [etapa, setEtapa] = useState(0);
+  const [loading, setLoading] = useState(false);
   // Selecao de Filtro
   const [filterCaixa, setFilterCaixa] = useState(1);
   const [filterAtendents, setFilterAtendentes] = useState(1);
   const [filterAutomacoes, setFilterAutomacoes] = useState(1);
+  const [total, setTotal] = useState(0);
 
 
 
   const [formData, setFormData] = useState<Proposta>({
-    Id: '',
-    dt: '',
-    cliente_id: 0,
     plano_id: 0,
     plano_nome: '',
     caixas_entrada_qtde: 0,
@@ -41,15 +40,15 @@ export default function ProposalForm() {
     atendentes_add_unit: 0,
     automacoes_add_qtde: 0,
     automacoes_add_unit: 0,
-    total: 0,
+    // total: 0,
     validade: 1,
     mail_send: false,
     status: 'PE',
-    status_title: '',
-    user_id: '',
-    nome: '',
-    cnpj: '',
-    email: '',
+
+    user_id: 'db25dc7f-f8f7-4b29-9998-5a8f032cfece',
+    nome: 'JOSE',
+    cnpjcpf: '',
+    email: 'jose@gmail.com',
     fone: ''
   });
 
@@ -74,7 +73,6 @@ export default function ProposalForm() {
 
       if (responseData) {
         setPlanos(responseData as Plan[]);
-        console.log("Planos encontrados:", firstPlan);
         setFieldValue('plano_id', firstPlan.id);
         setFieldValue('plano_nome', firstPlan.nome);
         setFieldValue('subtotal', firstPlan.valor);
@@ -91,15 +89,6 @@ export default function ProposalForm() {
 
 
     const CalcTotal = () => {
-      // caixas_entrada_qtde: number;
-      // atendentes_qtde: number; 
-      // automacoes_qtde: number; 
-      // subtotal: number; 
-      // const [filterCaixa, setFilterCaixa] = useState(1);
-      // const [filterAtendents, setFilterAtendentes] = useState(1);
-      // const [filterAutomacoes, setFilterAutomacoes] = useState(1);
-
-      console.clear();
       setFieldValue('caixas_entrada_add_qtde', 0);
       setFieldValue('atendentes_add_qtde', 0);
       setFieldValue('automacoes_add_qtde', 0);
@@ -113,14 +102,10 @@ export default function ProposalForm() {
       if (filterAutomacoes > formData.automacoes_qtde) {
         setFieldValue('automacoes_add_qtde', filterAutomacoes - formData.automacoes_qtde);
       }
-
-
-      setFieldValue('total',
-        formData.total = formData.subtotal +
+      setTotal(formData.subtotal +
         (formData.caixas_entrada_add_qtde * formData.caixas_entrada_add_unit) +
         (formData.atendentes_add_qtde * formData.atendentes_add_unit) +
-        (formData.automacoes_add_qtde * formData.automacoes_add_unit)
-      );
+        (formData.automacoes_add_qtde * formData.automacoes_add_unit));
     };
 
     const fetchFilterPlansId = async () => {
@@ -152,10 +137,13 @@ export default function ProposalForm() {
     return options;
   };
 
-
-
-  const handleSubmit = () => {
-  }
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value, type } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'number' ? Number(value) : value
+    }));
+  };
 
   const setFieldValue = (field: string, value: any) => {
     setFormData(prevFormData => ({
@@ -164,7 +152,25 @@ export default function ProposalForm() {
     }));
   };
 
+  const handleSubmit = async () => {
+    try {
+      setLoading(true);
+      // Aguarda 2 Segundos
+      await new Promise(resolve => setTimeout(resolve, 2000));
 
+      const { data, error } = await supabase
+        .from('proposta')
+        .insert([formData]);
+      if (error) throw error;
+      setEtapa(2);
+      setLoading(false);
+      return data;
+
+    } catch (err) {
+      throw err instanceof Error ? err : new Error('Erro ao criar Proposta');
+    }
+
+  }
 
   return (
     <>
@@ -172,7 +178,9 @@ export default function ProposalForm() {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Nova Proposta</h2>
+              {etapa < 2 && (
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Nova Proposta</h2>
+              )}
               <button
                 onClick={() => setIsFormOpen(false)}
                 className="text-gray-500 hover:text-gray-700"
@@ -182,8 +190,9 @@ export default function ProposalForm() {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
-
+              {/* Selecionar Plano */}
               {etapa === 0 && (
+
                 <div>
                   {/* Plan Selection */}
                   <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Filtragem do Plano</h2>
@@ -301,30 +310,19 @@ export default function ProposalForm() {
                               )}
 
                             </div>
-        
+
                           </div>
                         </div>
                       </div>
                     ))}
                   </div>
 
-                  {/* Total Value */}
-                  <div className="border-t pt-4 mt-6">
-                    <div className="flex justify-between items-center">
-                      <p className="text-lg font-medium text-gray-900 dark:text-white">Valor Total:</p>
-                      <p className="text-2xl font-bold text-brand">
-                        {new Intl.NumberFormat('pt-BR', {
-                          style: 'currency',
-                          currency: 'BRL'
-                        }).format(formData.total)}
-                        <span className="text-sm text-gray-500">/mês</span>
-                      </p>
-                    </div>
-                  </div>
                 </div>
               )}
 
-              {etapa === 1 && (
+              {/* Dados do Cliente */}
+
+              {etapa === 1 && loading == false && (
                 <div>
                   {/* Company Information */}
                   <div className="space-y-4">
@@ -338,7 +336,7 @@ export default function ProposalForm() {
                           type="text"
                           name="nome"
                           value={formData.nome}
-                          // onChange={handleInputChange}
+                          onChange={handleInputChange}
                           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand dark:bg-gray-700 dark:border-gray-600"
                           required
                         />
@@ -352,7 +350,7 @@ export default function ProposalForm() {
                           type="email"
                           name="email"
                           value={formData.email}
-                          //onChange={handleInputChange}
+                          onChange={handleInputChange}
                           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand dark:bg-gray-700 dark:border-gray-600"
                           required
                         />
@@ -366,31 +364,137 @@ export default function ProposalForm() {
                 </div>
               )}
 
-              {etapa === 2 && (
+              {etapa === 1 && loading == true && (
                 <div>
+                Criando Proposta...
                 </div>
               )}
 
 
+
+
+
+              {/* Resumo da proposta */}
+              {etapa === 2 && (
+                <div>
+                  {/* Company Information */}
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-medium text-gray-900 dark:text-white">Proposta Criada com Sucesso!</h3>
+
+                    <div style={{ marginBottom: '50px' }}>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        O Contrato foi Criado,  enviado o link para o emal do CLIENTE.
+                      </label>
+
+                    </div>
+
+                    <div className="grid grid-cols-2 md:grid-cols-2 gap-4">
+
+                      <button
+                        type="button"
+                        onClick={() => setEtapa(etapa + 1)}
+                        className="px-4 py-2 bg-brand text-white rounded-md hover:bg-brand/90"
+                      >
+                        Copiar o Link da Proposta
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setEtapa(etapa + 1)}
+                        className="px-4 py-2 bg-brand text-white rounded-md hover:bg-brand/90"
+                      >
+                        Reenviar por Email
+                      </button>
+
+
+                      <button
+                        type="button"
+                        onClick={() => setEtapa(etapa + 1)}
+                        className="px-4 py-2 bg-brand text-white rounded-md hover:bg-brand/90"
+                      >
+                        Finalizar
+                      </button>
+
+
+                    </div>
+                  </div>
+                </div >
+              )
+              }
+
+              {/* Calculo da Proposta   */}
+              {
+                etapa < 2 && loading == false && (
+                  <div>
+                    {/* Total Value */}
+                    <div className="border-t pt-4 mt-6">
+                      <div className="flex justify-between items-center">
+                        <p className="text-lg font-medium text-gray-900 dark:text-white">Valor Total:</p>
+                        <p className="text-2xl font-bold text-brand">
+                          {new Intl.NumberFormat('pt-BR', {
+                            style: 'currency',
+                            currency: 'BRL'
+                          }).format(total)}
+                          <span className="text-sm text-gray-500">/mês</span>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )
+              }
+
               <div className="flex justify-end space-x-3 pt-4">
-                <button
-                  type="button"
-                  onClick={() => setIsFormOpen(false)}
-                  className="px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
-                >
-                  Cancelar
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 bg-brand text-white rounded-md hover:bg-brand/90"
-                >
-                  Criar Proposta
-                </button>
+
+                {etapa < 2  && loading == false && (
+                  <button
+                    type="button"
+                    onClick={() => setIsFormOpen(false)}
+                    className="px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+                  >
+                    Cancelar
+                  </button>
+
+                )}
+
+                {(etapa > 0 && etapa < 2  && loading == false ) && (
+                  <button
+                    type="button"
+                    onClick={() => setEtapa(etapa - 1)}
+                    className="px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+                  >
+                    Voltar
+                  </button>
+
+                )}
+
+                {etapa === 0  && loading == false && (
+                  <button
+                    type="button"
+                    onClick={() => setEtapa(etapa + 1)}
+                    className="px-4 py-2 bg-brand text-white rounded-md hover:bg-brand/90"
+                  >
+                    Dados do Cliente
+                  </button>
+                )}
+
+                {etapa === 1 && loading == false  && (
+                  <button
+                    type="button"
+                    // onClick={() => setEtapa(etapa + 1)}
+                    onClick={() => handleSubmit()}
+                    className="px-4 py-2 bg-brand text-white rounded-md hover:bg-brand/90"
+                  >
+                    Confirmar Proposta
+                  </button>
+                )}
+
+
               </div>
-            </form>
-          </div>
-        </div>
-      )}
+            </form >
+          </div >
+        </div >
+      )
+      }
     </>
   );
 }

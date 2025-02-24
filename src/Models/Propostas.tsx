@@ -1,8 +1,5 @@
 
 interface Proposta {
-  Id: string; 
-  dt: string; 
-  cliente_id: number;
   plano_id: number; 
   plano_nome: string;
 
@@ -25,7 +22,7 @@ interface Proposta {
   automacoes_add_qtde: number; 
   automacoes_add_unit: number; 
 
-  total: number;
+  // total: number;
 
   // Validade de 1 Dia
   validade: number; //  validade integer not null default 1,
@@ -34,7 +31,7 @@ interface Proposta {
   mail_send: boolean; 
   // PE = Pendente, AC - Aceita, RC - Recusada, EX - Expirado
   status: string; 
-  status_title: string; // from view v_proposta
+  // status_title: string; // from view v_proposta
 
   // Usuario Proprietário
   user_id: string; //  user_id uuid not null references public.users (id),
@@ -47,7 +44,7 @@ interface Proposta {
 
   // Dados Basico do Cliente 
   nome: string;      
-  cnpj: string;      
+  cnpjcpf: string;      
   email: string;     
   fone: string;      
 }
