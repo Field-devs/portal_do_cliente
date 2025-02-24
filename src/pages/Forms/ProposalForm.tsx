@@ -15,9 +15,12 @@ export default function ProposalForm() {
   const [isFormOpen, setIsFormOpen] = useState(true);
   const [planos, setPlanos] = useState<Plan[]>([]);
   const [etapa, setEtapa] = useState(0);
-  const [filterCaixas, setFilterCaixa] = useState(1);
-  const [filterAtendentes, setFilterAtendentes] = useState(1);
+  // Selecao de Filtro
+  const [filterCaixa, setFilterCaixa] = useState(1);
+  const [filterAtendents, setFilterAtendentes] = useState(1);
   const [filterAutomacoes, setFilterAutomacoes] = useState(1);
+
+
 
   const [formData, setFormData] = useState<Proposta>({
     Id: '',
@@ -67,48 +70,78 @@ export default function ProposalForm() {
         console.error("Erro ao buscar planos:", responseError);
         return;
       }
+      let firstPlan = responseData ? responseData[0] : null;
 
       if (responseData) {
         setPlanos(responseData as Plan[]);
+        console.log("Planos encontrados:", firstPlan);
+        setFieldValue('plano_id', firstPlan.id);
+        setFieldValue('plano_nome', firstPlan.nome);
+        setFieldValue('subtotal', firstPlan.valor);
+
+        setFieldValue('caixas_entrada_qtde', firstPlan.caixas_entrada);
+        setFieldValue('atendentes_qtde', firstPlan.atendentes);
+        setFieldValue('automacoes_qtde', firstPlan.automacoes);
+
+        setFieldValue('caixas_entrada_add_unit', firstPlan.caixas_entrada_add);
+        setFieldValue('atendentes_add_unit', firstPlan.atendentes_add);
+        setFieldValue('automacoes_add_unit', firstPlan.automacoes_add);
       }
     };
 
 
+    const CalcTotal = () => {
+      // caixas_entrada_qtde: number;
+      // atendentes_qtde: number; 
+      // automacoes_qtde: number; 
+      // subtotal: number; 
+      // const [filterCaixa, setFilterCaixa] = useState(1);
+      // const [filterAtendents, setFilterAtendentes] = useState(1);
+      // const [filterAutomacoes, setFilterAutomacoes] = useState(1);
+
+      console.clear();
+      setFieldValue('caixas_entrada_add_qtde', 0);
+      setFieldValue('atendentes_add_qtde', 0);
+      setFieldValue('automacoes_add_qtde', 0);
+
+      if (filterCaixa > formData.caixas_entrada_qtde) {
+        setFieldValue('caixas_entrada_add_qtde', filterCaixa - formData.caixas_entrada_qtde);
+      }
+      if (filterAtendents > formData.atendentes_qtde) {
+        setFieldValue('atendentes_add_qtde', filterAtendents - formData.atendentes_qtde);
+      }
+      if (filterAutomacoes > formData.automacoes_qtde) {
+        setFieldValue('automacoes_add_qtde', filterAutomacoes - formData.automacoes_qtde);
+      }
+
+
+      setFieldValue('total',
+        formData.total = formData.subtotal +
+        (formData.caixas_entrada_add_qtde * formData.caixas_entrada_add_unit) +
+        (formData.atendentes_add_qtde * formData.atendentes_add_unit) +
+        (formData.automacoes_add_qtde * formData.automacoes_add_unit)
+      );
+    };
+
     const fetchFilterPlansId = async () => {
       const { data, error: rpcError } = await supabase.rpc('fn_plan_filter', {
-        p_caixas: filterCaixas,
-        p_atendente: filterAtendentes,
+        p_caixas: filterCaixa,
+        p_atendente: filterAtendents,
         p_automacoes: filterAutomacoes
       });
       if (rpcError) {
         console.error("Erro ao buscar planos:", rpcError);
         return;
       }
-      console.log('Data', data);
       if (data) {
         await fetchPlanos(data[0]);
+        CalcTotal();
       }
-      console.log('Filter', filterCaixas, filterAtendentes, filterAutomacoes);
-      console.log('data', data);
     };
-
-
     fetchFilterPlansId();
 
-  }, [filterCaixas, filterAtendentes, filterAutomacoes]);
+  }, [filterCaixa, filterAtendents, filterAutomacoes]);
 
-
-
-
-  const getSelectOptions = (singleTitle: string, startIndex: number, addvalue: number) => {
-    const titleStart = `${startIndex} ${startIndex == 1 ? singleTitle : singleTitle} Inclusa`;
-    const options = getInitialArray(startIndex).map((value: number, index: number) => (
-      <option key={value} value={value}>
-        {index === 0 ? titleStart : `${titleStart} + ${index} Adicional por R$ ${addvalue * index}`}
-      </option>
-    ));
-    return options;
-  };
 
   const getListItens = (title: string, startIndex: number) => {
     const options = getInitialArray(startIndex).map((value: number, index: number) => (
@@ -125,25 +158,12 @@ export default function ProposalForm() {
   }
 
   const setFieldValue = (field: string, value: any) => {
-    console.log(formData.caixas_entrada_add_qtde);
     setFormData(prevFormData => ({
       ...prevFormData,
       [field]: value
     }));
   };
 
-  const CalcTotal = () => {
-    setFieldValue('caixas_entrada_add_qtde', formData.caixas_entrada_add_qtde + 1);
-    console.log('caixas_entrada_add_qtde', formData.caixas_entrada_add_qtde);
-    setFieldValue('total',
-      formData.total = formData.subtotal +
-      (formData.caixas_entrada_add_qtde * formData.caixas_entrada_add_unit)
-    );
-  };
-
-  const handleFilter = (e: any) => {
-    //setSearchTerm(e.target.value);
-  };
 
 
   return (
@@ -166,7 +186,7 @@ export default function ProposalForm() {
               {etapa === 0 && (
                 <div>
                   {/* Plan Selection */}
-                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Informação do Plano</h2>
+                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Filtragem do Plano</h2>
                   <div className="grid grid-cols-1 gap-4">
                     <div className="border rounded-lg p-4 dark:border-gray-600">
 
@@ -178,7 +198,7 @@ export default function ProposalForm() {
                           </label>
                           <select
                             name='filterCaixas'
-                            value={filterCaixas}
+                            value={filterCaixa}
                             onChange={(e) => setFilterCaixa(parseInt(e.target.value))}
                             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand dark:bg-gray-700 dark:border-gray-600 text-left"
                           >
@@ -193,7 +213,7 @@ export default function ProposalForm() {
                           </label>
                           <select
                             name='filterAtendentes'
-                            value={filterAtendentes}
+                            value={filterAtendents}
                             onChange={(e) => setFilterAtendentes(parseInt(e.target.value))}
                             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand dark:bg-gray-700 dark:border-gray-600 text-left"
                           >
@@ -222,80 +242,40 @@ export default function ProposalForm() {
 
                     </div>
                   </div>
+                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Plano Disponível</h2>
 
                   <div className="grid grid-cols-1 gap-4">
                     {planos.map(plano => (
                       <div key={plano.id} className="border rounded-lg p-4 dark:border-gray-600">
                         <div className="flex items-center space-x-4">
-                          <input
-                            type="radio"
-                            name="id"
-                            value={plano.id}
-                            //onChange={handleInputChange}
-                            onChange={() => {
-                              setFieldValue('plano_id', plano.id);
-                              setFieldValue('plano_nome', plano.nome);
-                              setFieldValue('subtotal', plano.valor);
 
-                              setFieldValue('caixas_entrada_add_unit', plano.caixas_entrada_add);
-                              setFieldValue('atendentes_add_unit', plano.atendentes_add);
-                              setFieldValue('automacoes_add_unit', plano.automacoes_add);
-                            }}
-                            className="h-4 w-4 text-brand focus:ring-brand"
-                          />
                           <div className="flex-1">
                             <p className="font-medium text-gray-900 dark:text-white">{plano.nome}</p>
                             <p className="text-sm text-gray-500 dark:text-gray-400">{plano.descricao}</p>
                             <div className="mt-2 space-y-1">
 
+                              {/* Plano Selecionado */}
+
                               <p className="text-sm text-gray-600 dark:text-gray-400 flex items-center">
 
                                 <div className="mr-2">
-                                  <select
-                                    name='caixas_entrada_add_qtde'
-                                    value={formData.caixas_entrada_add_qtde}
-                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand dark:bg-gray-700 dark:border-gray-600 text-left"
-                                    onChange={(e) => {
-                                      setFieldValue('caixas_entrada_add_qtde', e.target.value); // Assuming you're using Formik or similar
-                                      CalcTotal();
-                                    }}
-                                  >
-                                    {getSelectOptions('Caixa de Entrada', plano.caixas_entrada, 10)}
-                                  </select>
+                                  • {plano.caixas_entrada} {plano.caixas_entrada == 1 ? 'Caixa' : 'Caixas'} de Entrada Inclusa
+                                  {formData.caixas_entrada_qtde > 0 ? ' + ' + formData.caixas_entrada_add_qtde + ' Adicionais' : ''}
                                 </div>
                               </p>
 
 
                               <p className="text-sm text-gray-600 dark:text-gray-400 flex items-center">
                                 <div className="mr-2">
-                                  <select
-                                    value={formData.atendentes_add_qtde}
-                                    name='atendentes_add_qtde'
-                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand dark:bg-gray-700 dark:border-gray-600 w-[65px] text-left"
-                                    onChange={(e) => {
-                                      console.log('atendentes_add_qtde', e.target.value);
-                                      setFieldValue('atendentes_add_qtde', e); // Assuming you're using Formik or similar
-                                    }}
-                                  >
-                                    {getSelectOptions('Atendente', plano.atendentes, 10)}
-                                  </select>
+                                  • {plano.atendentes} {plano.atendentes == 1 ? 'Atendente' : 'Atendentes'} Incluso
+                                  {formData.atendentes_add_qtde > 0 ? ' + ' + formData.atendentes_add_qtde + ' Adicionais' : ''}
                                 </div>
                               </p>
 
                               <p className="text-sm text-gray-600 dark:text-gray-400 flex items-center">
                                 <div className="mr-2">
-                                  <select
-                                    value={formData.automacoes_qtde}
-                                    name='automacoes'
-                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand dark:bg-gray-700 dark:border-gray-600 w-[65px] text-left"
-                                    onChange={(e) => {
-                                      const value = parseInt(e.target.value, 10);
-                                      setFieldValue('automacoes_qtde', value); // Assuming you're using Formik or similar
-                                    }}
-                                  >
-                                    {getSelectOptions('Automação', plano.atendentes, 10)}
-
-                                  </select>
+                                  • {plano.automacoes} {plano.automacoes == 1 ? 'Automação' : 'Automações'} Inclusa
+                                  {formData.automacoes_add_qtde > 0 ? ' + ' + formData.automacoes_add_qtde + ' Adicionais' : ''}
                                 </div>
                               </p>
 
@@ -321,13 +301,7 @@ export default function ProposalForm() {
                               )}
 
                             </div>
-                            <p className="mt-2 text-lg font-medium text-brand">
-                              {new Intl.NumberFormat('pt-BR', {
-                                style: 'currency',
-                                currency: 'BRL'
-                              }).format(plano.valor)}
-                              <span className="text-sm text-gray-500">/mês</span>
-                            </p>
+        
                           </div>
                         </div>
                       </div>
@@ -392,7 +366,7 @@ export default function ProposalForm() {
                 </div>
               )}
 
-              {etapa === 0 && (
+              {etapa === 2 && (
                 <div>
                 </div>
               )}

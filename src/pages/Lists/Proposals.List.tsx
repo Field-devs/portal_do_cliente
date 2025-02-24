@@ -16,7 +16,7 @@ import ProposalForm from '../Forms/ProposalForm';
 
 
 export default function ProposalsList() {
-  const [openForm, setOpenForm] = useState(false);
+  const [openForm, setOpenForm] = useState(false);  
   const [propostas, setPropostas] = useState<Proposta[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
