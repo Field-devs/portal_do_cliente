@@ -68,7 +68,6 @@ export default function ProposalsList() {
     SetActive(checked ? true : false);
   };
 
-
   const filteredProposals = propostas.filter(() => {
     return propostas;
   });
@@ -82,7 +81,7 @@ export default function ProposalsList() {
   }
 
   return (
-    <>
+    <div className="max-w-[calc(100vw-theme(space.24))] overflow-x-auto">
       <ModalForm
         isOpen={OpenProposal}
         onClose={() => setOpenProposal(false)}
@@ -92,8 +91,8 @@ export default function ProposalsList() {
         <ProposalForm />
       </ModalForm>
 
-      <div className="p-6">
-        <div className="flex justify-between items-center mb-8">
+      <div className="p-4">
+        <div className="flex justify-between items-center mb-6">
           <h1 className={titleClass}>Propostas</h1>
           <button
             onClick={() => HandleOpenProposal()}
@@ -104,9 +103,7 @@ export default function ProposalsList() {
           </button>
         </div>
 
-        {/* Metrics Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {/* Total Proposals */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           <div className={cardClass}>
             <div className="flex items-center justify-between mb-4">
               <div className={iconContainerClass}>
@@ -122,7 +119,6 @@ export default function ProposalsList() {
             </div>
           </div>
 
-          {/* Pending Proposals */}
           <div className={cardClass}>
             <div className="flex items-center justify-between mb-4">
               <div className={iconContainerClass}>
@@ -140,7 +136,6 @@ export default function ProposalsList() {
             </div>
           </div>
 
-          {/* Accepted Proposals */}
           <div className={cardClass}>
             <div className="flex items-center justify-between mb-4">
               <div className={iconContainerClass}>
@@ -158,7 +153,6 @@ export default function ProposalsList() {
             </div>
           </div>
 
-          {/* Rejected Proposals */}
           <div className={cardClass}>
             <div className="flex items-center justify-between mb-4">
               <div className={iconContainerClass}>
@@ -177,28 +171,27 @@ export default function ProposalsList() {
           </div>
         </div>
 
-        {/* Search and Filter Bar */}
         <div className={cardClass}>
-          <div className="flex flex-col md:flex-row gap-4">
+          <div className="flex flex-col md:flex-row gap-3">
             <div className="flex-1">
               <div className="relative">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                 <input
                   type="text"
-                  placeholder="Buscar por empresa, email ou CNPJ..."
+                  placeholder="Buscar..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="input pl-12"
+                  className="input pl-10 py-2"
                 />
               </div>
             </div>
-            <div className="flex items-center space-x-4">
-              <div className="relative">
-                <Filter className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+            <div className="flex items-center space-x-3">
+              <div className="relative w-40">
+                <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value as typeof statusFilter)}
-                  className="select pl-12"
+                  className="select pl-10 py-2 w-full"
                 >
                   <option value="all">Todos os Status</option>
                   <option value="pending">Pendentes</option>
@@ -210,38 +203,37 @@ export default function ProposalsList() {
           </div>
         </div>
 
-        {/* Proposals Table */}
-        <div className={`${cardClass} mt-6`}>
+        <div className={`${cardClass} mt-4`}>
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-light-border dark:divide-gray-700/50">
+            <table className="w-full divide-y divide-light-border dark:divide-gray-700/50">
               <thead>
                 <tr className="bg-light-secondary dark:bg-[#0F172A]/60">
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                     Data
                   </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                     CNPJ/CPF
                   </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                     Cliente
                   </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                     Email
                   </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                     Fone
                   </th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                     Validade
                   </th>
-                  <th className="px-6 py-4 text-right text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-right text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                     Valor
                   </th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                   </th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                   </th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider w-[20px]">
+                  <th className="px-4 py-3 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider w-[20px]">
                     Ativo
                   </th>
                 </tr>
@@ -252,37 +244,37 @@ export default function ProposalsList() {
                     key={proposta.id}
                     className="hover:bg-light-secondary dark:hover:bg-[#0F172A]/40 transition-colors"
                   >
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-4 py-3 whitespace-nowrap">
                       <div className="text-base text-light-text-secondary dark:text-gray-300">
                         {new Date(proposta.dt).toLocaleDateString('pt-BR')}
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-4 py-3 whitespace-nowrap">
                       <div className="text-base text-light-text-secondary dark:text-gray-300">
                         {formatCNPJCPF(proposta.cnpjcpf)}
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-4 py-3 whitespace-nowrap">
                       <div className="text-base font-medium text-light-text-primary dark:text-gray-100">
                         {proposta.nome}
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-4 py-3 whitespace-nowrap">
                       <div className="text-base text-light-text-secondary dark:text-gray-300">
                         {proposta.email}
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-4 py-3 whitespace-nowrap">
                       <div className="text-base text-light-text-secondary dark:text-gray-300">
                         {formatPhone(proposta.fone)}
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-center">
+                    <td className="px-4 py-3 whitespace-nowrap text-center">
                       <div className="text-base text-light-text-secondary dark:text-gray-300">
                         {proposta.validade} {proposta.validade === 1 ? 'Dia' : 'Dias'}
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right">
+                    <td className="px-4 py-3 whitespace-nowrap text-right">
                       <div className="text-base font-medium text-light-text-primary dark:text-gray-100">
                         {new Intl.NumberFormat('pt-BR', {
                           style: 'currency',
@@ -290,7 +282,7 @@ export default function ProposalsList() {
                         }).format(proposta.total)}
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-4 py-3 whitespace-nowrap">
                       <div className="flex justify-center">
                         <span className={`px-3 py-1 text-sm font-medium rounded-full ${proposta.status === 'PE'
                           ? 'badge-warning'
@@ -302,13 +294,12 @@ export default function ProposalsList() {
                         </span>
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-4 py-3 whitespace-nowrap">
                       <ActionsButtons onRead={() => handleEdit(proposta.id)} />
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right">
+                    <td className="px-4 py-3 whitespace-nowrap text-right">
                       <SwitchFrag checked={active} onChange={handleChange} />
                     </td>
-
                   </tr>
                 ))}
               </tbody>
@@ -316,6 +307,6 @@ export default function ProposalsList() {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }

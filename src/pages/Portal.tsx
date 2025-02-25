@@ -83,7 +83,7 @@ export default function Portal() {
   return (
     <div className="min-h-screen bg-light-primary dark:bg-dark-primary flex">
       {/* Sidebar Navigation */}
-      <div className={`fixed inset-y-0 left-0 bg-light-card dark:bg-dark-card shadow-lg transition-all duration-300 z-20 flex flex-col border-r border-light-border dark:border-dark-border backdrop-blur-sm ${isExpanded ? 'w-52' : 'w-20'}`}>
+      <div className={`fixed inset-y-0 left-0 bg-light-card dark:bg-dark-card shadow-lg transition-all duration-300 z-20 flex flex-col border-r border-light-border dark:border-dark-border backdrop-blur-sm ${isExpanded ? 'w-48' : 'w-16'}`}>
         {/* Logo and Toggle */}
         <div className="h-16 flex items-center justify-between px-3 border-b border-light-border dark:border-dark-border">
           <img
@@ -95,7 +95,7 @@ export default function Portal() {
             onClick={() => setIsExpanded(!isExpanded)}
             className="p-1.5 rounded-lg text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-light-secondary dark:hover:bg-dark-secondary"
           >
-            {isExpanded ? <ChevronLeft className="h-5 w-5" /> : <ChevronRight className="h-5 w-5" />}
+            {isExpanded ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
           </button>
         </div>
 
@@ -106,19 +106,19 @@ export default function Portal() {
               <img
                 src={user.foto}
                 alt={user.nome}
-                className="h-10 w-10 rounded-full object-cover ring-2 ring-brand-100 dark:ring-brand-900"
+                className="h-8 w-8 rounded-full object-cover ring-2 ring-brand-100 dark:ring-brand-900"
               />
             ) : (
-              <div className="h-10 w-10 rounded-full bg-brand-50 dark:bg-brand-900/20 text-brand-600 dark:text-brand-400 flex items-center justify-center ring-2 ring-brand-100 dark:ring-brand-900">
-                <span className="text-lg font-medium">{user?.nome?.charAt(0) || '-'}</span>
+              <div className="h-8 w-8 rounded-full bg-brand-50 dark:bg-brand-900/20 text-brand-600 dark:text-brand-400 flex items-center justify-center ring-2 ring-brand-100 dark:ring-brand-900">
+                <span className="text-sm font-medium">{user?.nome?.charAt(0) || '-'}</span>
               </div>
             )}
             {isExpanded && (
               <div className="mt-2 text-center">
-                <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                <p className="text-xs font-medium text-gray-900 dark:text-white truncate">
                   {user?.nome || '-'}
                 </p>
-                <div className={`inline-flex px-2 py-0.5 mt-1 text-xs font-medium rounded-md ${getRoleBadgeStyles(role)}`}>
+                <div className={`inline-flex px-1.5 py-0.5 mt-1 text-[10px] font-medium rounded ${getRoleBadgeStyles(role)}`}>
                   {getRoleDisplayName(role)}
                 </div>
               </div>
@@ -127,7 +127,7 @@ export default function Portal() {
         </div>
         
         {/* Navigation */}
-        <nav className="flex-1 overflow-y-auto py-4">
+        <nav className="flex-1 overflow-y-auto py-2">
           {navigation.map((item) => {
             const isActive = location.pathname === item.path;
             return (
@@ -140,7 +140,7 @@ export default function Portal() {
                     : 'text-gray-600 dark:text-gray-400 hover:bg-brand-50/50 dark:hover:bg-brand-900/10 hover:text-brand-600 dark:hover:text-brand-400'
                 }`}
               >
-                <div className="min-w-[2rem] flex justify-center">
+                <div className={`flex justify-center ${isExpanded ? 'w-5' : 'w-full'}`}>
                   <item.icon className="h-5 w-5" />
                 </div>
                 {isExpanded && (
@@ -152,40 +152,38 @@ export default function Portal() {
             );
           })}
         </nav>
+      </div>
 
-        {/* Footer Actions */}
-        <div className="p-3 border-t border-light-border dark:border-dark-border">
-          <div className="flex justify-center items-center space-x-2">
-            <button
-              onClick={toggleTheme}
-              className="p-2 rounded-lg text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-light-secondary dark:hover:bg-dark-secondary"
-              title={theme === 'dark' ? 'Mudar para tema claro' : 'Mudar para tema escuro'}
-            >
-              {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-            </button>
+      {/* Floating Action Buttons */}
+      <div className="fixed top-4 right-4 z-30 flex items-center space-x-2">
+        <button
+          onClick={toggleTheme}
+          className="p-2 rounded-lg text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 bg-white/80 dark:bg-gray-800/80 hover:bg-white dark:hover:bg-gray-800 shadow-lg backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 transition-all"
+          title={theme === 'dark' ? 'Mudar para tema claro' : 'Mudar para tema escuro'}
+        >
+          {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+        </button>
 
-            <NavLink
-              to="/portal/profile"
-              className="p-2 rounded-lg text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-light-secondary dark:hover:bg-dark-secondary"
-              title="Perfil"
-            >
-              <UserCircle className="h-5 w-5" />
-            </NavLink>
+        <NavLink
+          to="/portal/profile"
+          className="p-2 rounded-lg text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 bg-white/80 dark:bg-gray-800/80 hover:bg-white dark:hover:bg-gray-800 shadow-lg backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 transition-all"
+          title="Perfil"
+        >
+          <UserCircle className="h-4 w-4" />
+        </NavLink>
 
-            <button
-              onClick={signOut}
-              className="p-2 rounded-lg text-red-500 hover:text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:text-red-300 dark:hover:bg-red-900/20"
-              title="Sair"
-            >
-              <LogOut className="h-5 w-5" />
-            </button>
-          </div>
-        </div>
+        <button
+          onClick={signOut}
+          className="p-2 rounded-lg text-red-500 hover:text-red-600 bg-white/80 dark:bg-gray-800/80 hover:bg-white dark:hover:bg-gray-800 shadow-lg backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 transition-all"
+          title="Sair"
+        >
+          <LogOut className="h-4 w-4" />
+        </button>
       </div>
 
       {/* Main Content Area */}
-      <div className={`flex-1 transition-all duration-300 ${isExpanded ? 'ml-52' : 'ml-20'}`}>
-        <div className="p-6">
+      <div className={`flex-1 transition-all duration-300 ${isExpanded ? 'ml-48' : 'ml-16'}`}>
+        <div className="pt-16 px-4 pb-4"> {/* Changed p-4 to pt-16 px-4 pb-4 */}
           <Routes>
             <Route path="/" element={<AdminDashboard />} />
             <Route path="contracts" element={<ContractList />} />
