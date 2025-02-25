@@ -21,6 +21,7 @@ import ActionsButtons from '../../components/ActionsData';
 import SwitchFrag from '../../components/Fragments/SwitchFrag';
 
 export default function ProposalsList() {
+  const [propid, setPropId] = useState<string | null>(null);
   const [propostas, setPropostas] = useState<Proposta[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -68,6 +69,10 @@ export default function ProposalsList() {
     SetActive(checked ? true : false);
   };
 
+  const handleEdit = (row : string) => {
+    setPropId(row);
+    HandleOpenProposal();
+  };
 
   const filteredProposals = propostas.filter(() => {
     return propostas;
@@ -89,7 +94,7 @@ export default function ProposalsList() {
         title="Nova Proposta"
         maxWidth='2xl'
       >
-        <ProposalForm />
+        <ProposalForm id={propid ?? ''} />
       </ModalForm>
 
       <div className="p-6">

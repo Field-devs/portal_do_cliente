@@ -7,10 +7,12 @@ interface AddonFormProps {
   onSuccess: () => void;
   onCancel: () => void;
   initialData?: {
-    addon_id: string;
+    id: string;
     nome: string;
-    descricao?: string;
     valor: number;
+    qtd: number;
+    active: boolean;
+    dt_add: string;
   };
 }
 
@@ -21,7 +23,7 @@ export default function AddonForm({ onSuccess, onCancel, initialData }: AddonFor
 
   const [formData, setFormData] = useState({
     nome: initialData?.nome || '',
-    descricao: initialData?.descricao || '',
+    descricao: initialData?.nome || '',
     valor: initialData?.valor || 0
   });
 
@@ -59,14 +61,15 @@ export default function AddonForm({ onSuccess, onCancel, initialData }: AddonFor
         nome: formData.nome,
         descricao: formData.descricao,
         valor: formData.valor,
+        user_id: user.id,
         active: true,
       };
 
-      if (initialData?.addon_id) {
+      if (initialData?.id) {
         const { error } = await supabase
           .from('plano_addon')
           .update(addonData)
-          .eq('id', initialData.addon_id);
+          .eq('id', initialData.id);
 
         if (error) throw error;
       } else {

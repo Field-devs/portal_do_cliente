@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 
 
-export default function ProposalForm() {
+export default function ProposalForm(sender) {
   const [isFormOpen, setIsFormOpen] = useState(true);
   const [planos, setPlanos] = useState<Plan[]>([]);
   const [etapa, setEtapa] = useState(0);
@@ -21,10 +21,25 @@ export default function ProposalForm() {
   const [filterAtendents, setFilterAtendentes] = useState(1);
   const [filterAutomacoes, setFilterAutomacoes] = useState(1);
   const [total, setTotal] = useState(0);
+  
+  useEffect(() => {
+    const fetchData = async () => {
+      const { data, error } = await supabase.from('proposta').select('*').eq('id', sender.id);
+      if (error) {
+        console.error("Erro ao buscar proposta:", error);
+        return;
+      }
+      else  {
+        console.log(data);
+        //setFormData(data[0]);
+      }
+    };
+    fetchData();
+  }, [sender]);
 
-
-
+  
   const [formData, setFormData] = useState<Proposta>({
+    id: undefined,
     plano_id: 0,
     plano_nome: '',
     caixas_entrada_qtde: 0,

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../components/AuthProvider';
 import { supabase } from '../../lib/supabase';
+import SwitchFrag from '../../components/Fragments/SwitchFrag';
 import {
   Users,
   Bot,
@@ -28,6 +29,7 @@ interface PlanFormProps {
     automacoes: number;
     suporte_humano: boolean;
     kanban: boolean;
+    active: boolean;
     whatsapp_oficial: boolean;
   };
 }
@@ -46,6 +48,7 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
     automacoes: initialData?.automacoes || 1,
     suporte_humano: initialData?.suporte_humano || false,
     kanban: initialData?.kanban || true,
+    active : initialData?.active || true,
     whatsapp_oficial: initialData?.whatsapp_oficial || false
   });
 
@@ -106,9 +109,14 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
   const inputClass = "pl-12 block w-full rounded-xl border border-gray-200 dark:border-gray-700/50 bg-white dark:bg-[#0F172A]/60 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-brand focus:border-transparent transition-colors";
   const labelClass = "block text-sm font-medium text-gray-700 dark:text-gray-300";
   const iconClass = "absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400";
+  const handleChange = () =>  {
+    console.log("marcado");
+  };
+
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+     
       {/* Basic Information */}
       <div className={cardClass}>
         <div className="flex items-center space-x-3 mb-6">

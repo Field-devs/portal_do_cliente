@@ -26,6 +26,7 @@ export default function PlanList() {
   const [plans, setPlans] = useState<Plan[]>([]);
   const [plan, setPlan] = useState<Plan | null>(null);
   const [addons, setAddons] = useState<PlanAddon[]>([]);
+  const [addon, setAddon] = useState<PlanAddon | null>(null);
 
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -74,12 +75,22 @@ export default function PlanList() {
     }
   };
 
-  const handleEdit = (id: number) => {
-    const selectedPlan = plans.find(plan => plan.id === id);
-    if (selectedPlan) {
-      setPlan(selectedPlan);
-      setShowPlanForm(true);
+  const handleEdit = (id: string) => {
+    if (activeTab === 'plans') {
+      const selectedPlan = plans.find(plan => plan.id = id);
+      if (selectedPlan) {
+        setPlan(selectedPlan);
+        setShowPlanForm(true);
+      }
+    } else if (activeTab === 'addons') {
+      const selectedAddon = addons.find(addon => addon.id === id);
+      if (selectedAddon) {
+        setAddon(selectedAddon);
+        setShowAddonForm(true);
+      }
     }
+
+
   };
 
   const handleNewPlan = () => {
@@ -93,10 +104,13 @@ export default function PlanList() {
     setShowAddonForm(false);
   };
 
-  const handleChange = (checked: boolean) => {
-    SetActive(checked ? true : false);
+  const handleChange = (id: string) => (checked: boolean) => {
+    setPlans(prevPlans =>
+      prevPlans.map(plan =>
+        plan.id === id ? { ...plan, active: checked } : plan // Usar `checked`, não `!active`
+      )
+    );
   };
-
 
   const filteredPlans = plans.filter(plan =>
     plan.nome.toLowerCase().includes(searchTerm.toLowerCase())
@@ -154,12 +168,13 @@ export default function PlanList() {
       <ModalForm
         isOpen={showAddonForm}
         onClose={() => setShowAddonForm(false)}
-        title="Novo Add-on"
+        title={addon ? `Editar Addon: ${addon?.nome}` : 'Novo Addon'}
         maxWidth="2xl"
       >
         <AddonForm
           onSuccess={handleFormSuccess}
           onCancel={() => setShowAddonForm(false)}
+          initialData={addon}
         />
       </ModalForm>
 
@@ -263,7 +278,7 @@ export default function PlanList() {
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right">
-                    <SwitchFrag name='active' checked={item.active} onChange={handleChange} />
+                    <SwitchFrag name='active' checked={item.active} onChange={() => handleChange(item.id)} /> 
                   </td>
                 </tr>
               ))}
