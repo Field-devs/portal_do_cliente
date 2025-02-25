@@ -10,7 +10,9 @@ import {
   Lock,
   Building2,
   CreditCard,
-  Shield
+  Shield,
+  UserCircle,
+  Users
 } from 'lucide-react';
 
 interface UserFormProps {
@@ -148,7 +150,7 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
       <div className="bg-[#1E293B]/70 backdrop-blur-sm p-6 rounded-xl border border-gray-700/50">
         <div className="flex items-center space-x-3 mb-6">
           <div className="bg-blue-400/10 p-3 rounded-xl">
-            <User className="h-6 w-6 text-blue-400" />
+            <UserCircle className="h-6 w-6 text-blue-400" />
           </div>
           <h3 className="text-lg font-medium text-white">
             Informações Básicas
@@ -161,14 +163,17 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
             <label className="block text-sm font-medium text-gray-300">
               Nome
             </label>
-            <input
-              type="text"
-              name="firstName"
-              value={formData.firstName}
-              onChange={handleInputChange}
-              className="mt-1 block w-full rounded-xl border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
-              required
-            />
+            <div className="mt-1 relative">
+              <User className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <input
+                type="text"
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleInputChange}
+                className="pl-12 block w-full rounded-xl border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
+                required
+              />
+            </div>
           </div>
 
           {/* Last Name */}
@@ -176,14 +181,17 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
             <label className="block text-sm font-medium text-gray-300">
               Sobrenome
             </label>
-            <input
-              type="text"
-              name="lastName"
-              value={formData.lastName}
-              onChange={handleInputChange}
-              className="mt-1 block w-full rounded-xl border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
-              required
-            />
+            <div className="mt-1 relative">
+              <User className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <input
+                type="text"
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleInputChange}
+                className="pl-12 block w-full rounded-xl border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
+                required
+              />
+            </div>
           </div>
 
           {/* Email */}
@@ -210,7 +218,7 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
               Tipo de Perfil
             </label>
             <div className="mt-1 relative">
-              <Shield className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <Users className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
               <select
                 name="perfil_id"
                 value={formData.perfil_id}
