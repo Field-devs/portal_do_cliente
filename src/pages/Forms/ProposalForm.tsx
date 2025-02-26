@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import Plan from '../../Models/Plan';
 import { supabase } from '../../lib/supabase';
 import { getInitialArray } from '../../utils/Utils';
-import Proposta from '../../Models/Propostas';
+import { PropostaForm } from '../../Models/Propostas';
 
 import {
   HeadphonesIcon,
@@ -34,12 +34,12 @@ export default function ProposalForm(sender) {
         //setFormData(data[0]);
       }
     };
-    fetchData();
+    
+    //fetchData();
   }, [sender]);
 
   
-  const [formData, setFormData] = useState<Proposta>({
-    id: undefined,
+  const [formData, setFormData] = useState<PropostaForm>({
     plano_id: 0,
     plano_nome: '',
     caixas_entrada_qtde: 0,
