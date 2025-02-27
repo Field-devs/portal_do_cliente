@@ -89,37 +89,32 @@ export default function AddonForm({ onSuccess, onCancel, initialData }: AddonFor
     }
   };
 
-  const cardClass = "bg-white dark:bg-[#1E293B]/70 backdrop-blur-sm p-6 rounded-xl border border-gray-200 dark:border-gray-700/50 shadow-lg";
-  const inputClass = "pl-12 block w-full rounded-xl border border-gray-200 dark:border-gray-700/50 bg-white dark:bg-[#0F172A]/60 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-brand focus:border-transparent transition-colors";
-  const labelClass = "block text-sm font-medium text-gray-700 dark:text-gray-300";
-  const iconClass = "absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400";
-
   return (
     <div className="space-y-6">
       {/* Basic Information */}
-      <div className={cardClass}>
+      <div className="bg-[#1E293B]/70 backdrop-blur-sm p-6 rounded-xl border border-gray-700/50">
         <div className="flex items-center space-x-3 mb-6">
-          <div className="bg-brand-50 dark:bg-blue-400/10 p-3 rounded-xl">
-            <Package className="h-6 w-6 text-brand dark:text-blue-400" />
+          <div className="bg-blue-400/10 p-3 rounded-xl">
+            <Package className="h-6 w-6 text-blue-400" />
           </div>
-          <h3 className="text-lg font-medium text-gray-900 dark:text-white">
+          <h3 className="text-2xl font-bold text-white">
             Informações do Add-on
           </h3>
         </div>
 
         {/* Nome do Add-on */}
         <div>
-          <label className={labelClass}>
+          <label className="block text-sm font-medium text-gray-300">
             Nome do Add-on
           </label>
           <div className="mt-1 relative">
-            <FileText className={iconClass} />
+            <FileText className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
             <input
               type="text"
               name="nome"
               value={formData.nome}
               onChange={handleInputChange}
-              className={inputClass}
+              className="pl-12 block w-full rounded-xl border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
               required
             />
           </div>
@@ -127,7 +122,7 @@ export default function AddonForm({ onSuccess, onCancel, initialData }: AddonFor
 
         {/* Descrição */}
         <div className="mt-4">
-          <label className={labelClass}>
+          <label className="block text-sm font-medium text-gray-300">
             Descrição
           </label>
           <textarea
@@ -135,17 +130,17 @@ export default function AddonForm({ onSuccess, onCancel, initialData }: AddonFor
             value={formData.descricao}
             onChange={handleInputChange}
             rows={3}
-            className={`${inputClass} pl-4`}
+            className="mt-1 block w-full rounded-xl border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors resize-none px-4 py-2"
           />
         </div>
 
         {/* Valor */}
         <div className="mt-4">
-          <label className={labelClass}>
+          <label className="block text-sm font-medium text-gray-300">
             Valor
           </label>
           <div className="mt-1 relative">
-            <DollarSign className={iconClass} />
+            <DollarSign className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
             <input
               type="number"
               name="valor"
@@ -153,17 +148,17 @@ export default function AddonForm({ onSuccess, onCancel, initialData }: AddonFor
               onChange={handleInputChange}
               min="0"
               step="0.01"
-              className={inputClass}
+              className="pl-12 block w-full rounded-xl border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
               required
             />
           </div>
-          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Valor por unidade</p>
+          <p className="mt-1 text-sm text-gray-400">Valor por unidade</p>
         </div>
       </div>
 
       {/* Error Message */}
       {error && (
-        <div className="bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 rounded-xl p-4 flex items-center text-red-600 dark:text-red-400">
+        <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 flex items-center text-red-400">
           <AlertCircle className="h-5 w-5 mr-2 flex-shrink-0" />
           <p className="text-sm">{error}</p>
         </div>
@@ -174,7 +169,7 @@ export default function AddonForm({ onSuccess, onCancel, initialData }: AddonFor
         <button
           type="button"
           onClick={onCancel}
-          className="px-4 py-2 bg-gray-100 dark:bg-[#0F172A]/60 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-200 dark:hover:bg-[#0F172A]/40 transition-colors"
+          className="px-4 py-2 bg-[#0F172A]/60 text-gray-300 rounded-xl hover:bg-[#0F172A]/40 transition-colors"
           disabled={loading}
         >
           Cancelar
