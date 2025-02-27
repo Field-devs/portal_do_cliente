@@ -94,10 +94,14 @@ export default function ProposalsList() {
         title="Nova Proposta"
         maxWidth='2xl'
       >
-        <ProposalForm id={propid ?? ''} />
+        <ProposalForm 
+          id={propid ?? ''}
+          onCancel={() => setOpenProposal(false)}
+        />
+        
       </ModalForm>
 
-      <div className="p-6">
+      <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-8">
           <h1 className={titleClass}>Propostas</h1>
           <button
@@ -110,16 +114,16 @@ export default function ProposalsList() {
         </div>
 
         {/* Metrics Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
           {/* Total Proposals */}
-          <div className={cardClass}>
+          <div className={`${cardClass} p-3`}>
             <div className="flex items-center justify-between mb-4">
               <div className={iconContainerClass}>
                 <FileText className={iconClass} />
               </div>
               <span className={badgeClass}>Total</span>
             </div>
-            <h3 className={metricTitleClass}>Total de Propostas</h3>
+            <h3 className="text-base font-medium text-light-text-primary dark:text-white mb-1">Total</h3>
             <p className={metricValueClass}>{propostas.length}</p>
             <div className="flex items-center mt-2">
               <TrendingUp className="h-4 w-4 mr-1 text-blue-600 dark:text-blue-400" />
@@ -128,14 +132,14 @@ export default function ProposalsList() {
           </div>
 
           {/* Pending Proposals */}
-          <div className={cardClass}>
+          <div className={`${cardClass} p-3`}>
             <div className="flex items-center justify-between mb-4">
               <div className={iconContainerClass}>
                 <Clock className={iconClass} />
               </div>
               <span className={badgeClass}>Aguardando</span>
             </div>
-            <h3 className={metricTitleClass}>Propostas Pendentes</h3>
+            <h3 className="text-base font-medium text-light-text-primary dark:text-white mb-1">Pendentes</h3>
             <p className={metricValueClass}>
               {propostas.filter(p => p.status === 'PE').length}
             </p>
@@ -146,14 +150,14 @@ export default function ProposalsList() {
           </div>
 
           {/* Accepted Proposals */}
-          <div className={cardClass}>
+          <div className={`${cardClass} p-3`}>
             <div className="flex items-center justify-between mb-4">
               <div className={iconContainerClass}>
                 <CheckCircle className={iconClass} />
               </div>
               <span className={badgeClass}>Aceitas</span>
             </div>
-            <h3 className={metricTitleClass}>Propostas Aceitas</h3>
+            <h3 className="text-base font-medium text-light-text-primary dark:text-white mb-1">Aceitas</h3>
             <p className={metricValueClass}>
               {propostas.filter(p => p.status === 'AC').length}
             </p>
@@ -164,14 +168,14 @@ export default function ProposalsList() {
           </div>
 
           {/* Rejected Proposals */}
-          <div className={cardClass}>
+          <div className={`${cardClass} p-3`}>
             <div className="flex items-center justify-between mb-4">
               <div className={iconContainerClass}>
                 <XCircle className={iconClass} />
               </div>
               <span className={badgeClass}>Recusadas</span>
             </div>
-            <h3 className={metricTitleClass}>Propostas Recusadas</h3>
+            <h3 className="text-base font-medium text-light-text-primary dark:text-white mb-1">Recusadas</h3>
             <p className={metricValueClass}>
               {propostas.filter(p => p.status === 'RC').length}
             </p>
@@ -183,17 +187,17 @@ export default function ProposalsList() {
         </div>
 
         {/* Search and Filter Bar */}
-        <div className={cardClass}>
+        <div className={`${cardClass} p-3 mb-6`}>
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1">
               <div className="relative">
                 <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                 <input
                   type="text"
-                  placeholder="Buscar por empresa, email ou CNPJ..."
+                  placeholder="Buscar..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="input pl-12"
+                  className="w-full px-4 py-2 pl-12 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 rounded-xl text-light-text-primary dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors"
                 />
               </div>
             </div>
@@ -203,7 +207,7 @@ export default function ProposalsList() {
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value as typeof statusFilter)}
-                  className="select pl-12"
+                  className="w-full px-4 py-2 pl-12 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 rounded-xl text-light-text-primary dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors appearance-none"
                 >
                   <option value="all">Todos os Status</option>
                   <option value="pending">Pendentes</option>
@@ -216,37 +220,36 @@ export default function ProposalsList() {
         </div>
 
         {/* Proposals Table */}
-        <div className={`${cardClass} mt-6`}>
+        <div className={`bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm rounded-lg p-0 overflow-hidden border border-[#E5E5E5] dark:border-gray-700/50 shadow-sm`}>
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-light-border dark:divide-gray-700/50">
               <thead>
                 <tr className="bg-light-secondary dark:bg-[#0F172A]/60">
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-3 py-2 text-left text-xs font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider w-[100px]">
                     Data
                   </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-3 py-2 text-left text-xs font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider w-[120px]">
                     CNPJ/CPF
                   </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-3 py-2 text-left text-xs font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider w-[150px]">
                     Cliente
                   </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-3 py-2 text-left text-xs font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider w-[150px]">
                     Email
                   </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
-                    Fone
-                  </th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-3 py-2 text-center text-xs font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider w-[80px]">
                     Validade
                   </th>
-                  <th className="px-6 py-4 text-right text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-3 py-2 text-right text-xs font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider w-[100px]">
                     Valor
                   </th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-3 py-2 text-center text-xs font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider w-[100px]">
+                  Status
                   </th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-3 py-2 text-center text-xs font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider w-[80px]">
+                    Ações
                   </th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider w-[20px]">
+                  <th className="px-3 py-2 text-center text-xs font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider w-[80px]">
                     Ativo
                   </th>
                 </tr>
@@ -257,37 +260,32 @@ export default function ProposalsList() {
                     key={proposta.id}
                     className="hover:bg-light-secondary dark:hover:bg-[#0F172A]/40 transition-colors"
                   >
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-3 py-2 whitespace-nowrap text-sm">
                       <div className="text-base text-light-text-secondary dark:text-gray-300">
                         {new Date(proposta.dt).toLocaleDateString('pt-BR')}
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-3 py-2 whitespace-nowrap text-sm">
                       <div className="text-base text-light-text-secondary dark:text-gray-300">
                         {formatCNPJCPF(proposta.cnpjcpf)}
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-3 py-2 whitespace-nowrap text-sm">
                       <div className="text-base font-medium text-light-text-primary dark:text-gray-100">
                         {proposta.nome}
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-3 py-2 whitespace-nowrap text-sm">
                       <div className="text-base text-light-text-secondary dark:text-gray-300">
                         {proposta.email}
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-base text-light-text-secondary dark:text-gray-300">
-                        {formatPhone(proposta.fone)}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-center">
+                    <td className="px-3 py-2 whitespace-nowrap text-center text-sm">
                       <div className="text-base text-light-text-secondary dark:text-gray-300">
                         {proposta.validade} {proposta.validade === 1 ? 'Dia' : 'Dias'}
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right">
+                    <td className="px-3 py-2 whitespace-nowrap text-right text-sm">
                       <div className="text-base font-medium text-light-text-primary dark:text-gray-100">
                         {new Intl.NumberFormat('pt-BR', {
                           style: 'currency',
@@ -295,7 +293,7 @@ export default function ProposalsList() {
                         }).format(proposta.total)}
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-3 py-2 whitespace-nowrap text-sm">
                       <div className="flex justify-center">
                         <span className={`px-3 py-1 text-sm font-medium rounded-full ${proposta.status === 'PE'
                           ? 'badge-warning'
@@ -307,10 +305,12 @@ export default function ProposalsList() {
                         </span>
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <ActionsButtons onRead={() => handleEdit(proposta.id)} />
+                    <td className="px-3 py-2 whitespace-nowrap text-sm">
+                      <div className="flex justify-center">
+                        <ActionsButtons onRead={() => handleEdit(proposta.id)} />
+                      </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right">
+                    <td className="px-3 py-2 whitespace-nowrap text-center text-sm">
                       <SwitchFrag checked={active} onChange={handleChange} />
                     </td>
 

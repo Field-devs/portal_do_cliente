@@ -10,8 +10,14 @@ import {
   Phone
 } from 'lucide-react';
 
+interface ProposalFormProps {
+  onSuccess: () => void;
+  onCancel: () => void;
+  sender: any;
+}
 
-export default function ProposalForm(sender) {
+
+export default function ProposalForm({onSuccess, onCancel, sender}) : ProposalFormProps {
   const [isFormOpen, setIsFormOpen] = useState(true);
   const [planos, setPlanos] = useState<Plan[]>([]);
   const [etapa, setEtapa] = useState(0);
@@ -27,10 +33,11 @@ export default function ProposalForm(sender) {
       const { data, error } = await supabase.from('proposta').select('*').eq('id', sender.id);
       if (error) {
         console.error("Erro ao buscar proposta:", error);
+          
         return;
       }
       else  {
-        console.log(data);
+        //console.log(data);
         //setFormData(data[0]);
       }
     };
@@ -91,6 +98,7 @@ export default function ProposalForm(sender) {
         setFieldValue('plano_id', firstPlan.id);
         setFieldValue('plano_nome', firstPlan.nome);
         setFieldValue('subtotal', firstPlan.valor);
+        setFieldValue('subtotal', firstPlan.valor);
 
         setFieldValue('caixas_entrada_qtde', firstPlan.caixas_entrada);
         setFieldValue('atendentes_qtde', firstPlan.atendentes);
@@ -100,8 +108,14 @@ export default function ProposalForm(sender) {
         setFieldValue('atendentes_add_unit', firstPlan.atendentes_add);
         setFieldValue('automacoes_add_unit', firstPlan.automacoes_add);
       }
+
+      console.log("Valor : ", firstPlan.valor);
+      console.log("SubTotal : ", formData.subtotal);
+
     };
 
+
+    
 
     const CalcTotal = () => {
       setFieldValue('caixas_entrada_add_qtde', 0);
@@ -227,7 +241,7 @@ export default function ProposalForm(sender) {
                             name='filterCaixas'
                             value={filterCaixa}
                             onChange={(e) => setFilterCaixa(parseInt(e.target.value))}
-                            className={classSelect}
+                           className="mt-1 text-center block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand bg-white dark:bg-gray-700 text-gray-900 dark:text-white font-medium"
                           >
                             {getListItens('Caixa', 1)}
                           </select>
@@ -242,7 +256,7 @@ export default function ProposalForm(sender) {
                             name='filterAtendentes'
                             value={filterAtendents}
                             onChange={(e) => setFilterAtendentes(parseInt(e.target.value))}
-                            className={classSelect}
+                           className="mt-1 text-center block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand bg-white dark:bg-gray-700 text-gray-900 dark:text-white font-medium"
                           >
                             {getListItens('Atendente', 1)}
                           </select>
@@ -257,7 +271,7 @@ export default function ProposalForm(sender) {
                             name='filterAutomacoes'
                             value={filterAutomacoes}
                             onChange={(e) => setFilterAutomacoes(parseInt(e.target.value))}
-                            className={classSelect}
+                           className="mt-1 text-center block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand bg-white dark:bg-gray-700 text-gray-900 dark:text-white font-medium"
                           >
                             {getListItens('Automaçao(es)', 1)}
                           </select>
@@ -447,13 +461,13 @@ export default function ProposalForm(sender) {
                     {/* Total Value */}
                     <div className="border-t pt-4 mt-6">
                       <div className="flex justify-between items-center">
-                        <p className="text-lg font-medium text-gray-900 dark:text-white">Valor Total:</p>
-                        <p className="text-2xl font-bold text-brand">
+                        <p className="text-xl font-medium text-gray-900 dark:text-white">Valor Total:</p>
+                        <p className="text-3xl font-bold text-gray-900 dark:text-white">
                           {new Intl.NumberFormat('pt-BR', {
                             style: 'currency',
                             currency: 'BRL'
                           }).format(total)}
-                          <span className="text-sm text-gray-500">/mês</span>
+                          <span className="text-sm text-gray-500 dark:text-gray-400 ml-2">/mês</span>
                         </p>
                       </div>
                     </div>
@@ -466,7 +480,7 @@ export default function ProposalForm(sender) {
                 {etapa < 2 && loading == false && (
                   <button
                     type="button"
-                    onClick={() => setIsFormOpen(false)}
+                    onClick={onCancel}
                     className="px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
                   >
                     Cancelar

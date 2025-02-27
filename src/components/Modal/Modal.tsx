@@ -49,27 +49,29 @@ export function ModalForm({
 
   return (
     <div 
-      className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
+      className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-start justify-center z-50 pt-4 p-4"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
       aria-labelledby={title ? 'modal-title' : undefined}
     >
       <div 
-        className={`bg-[#1E293B]/90 backdrop-blur-sm rounded-xl border border-gray-700/50 p-6 w-full mx-4 ${maxWidthClasses[maxWidth]} max-h-[90vh] overflow-y-auto`}
+        className={`bg-white/90 dark:bg-[#1E293B]/80 backdrop-blur-sm rounded-lg border-8 border-brand/30 dark:border-brand/30 w-full ${maxWidthClasses[maxWidth]} max-h-[calc(100vh-2rem)] overflow-y-auto shadow-lg p-8`}
         onClick={e => e.stopPropagation()}
       >
         {title && (
-          <div className="flex items-center space-x-3 mb-6">
-            <div className="bg-blue-400/10 p-3 rounded-xl">
+          <div className="flex items-center space-x-3 mb-8">
+            <div className="bg-blue-400/10 p-3 rounded-lg">
               <div className="h-6 w-6 text-blue-400" />
             </div>
-            <h2 id="modal-title" className="text-xl font-semibold text-white">
+            <h2 id="modal-title" className="text-xl font-semibold text-gray-700 dark:text-white">
               {title}
             </h2>
           </div>
         )}
-        {children}
+        <div className="space-y-6">
+          {children}
+        </div>
       </div>
     </div>
   );

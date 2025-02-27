@@ -33,7 +33,7 @@
 
 @layer components {
   .card {
-    @apply bg-light-card dark:bg-dark-card backdrop-blur-sm rounded-xl shadow-lg border border-light-border dark:border-dark-border;
+    @apply bg-white/80 dark:bg-[#1E293B]/90 backdrop-blur-sm rounded-lg p-0 overflow-hidden border-2 border-brand/50 dark:border-brand/50 shadow-sm hover:bg-white transition-colors;
   }
 
   .title {
@@ -57,15 +57,15 @@
   }
 
   .input {
-    @apply w-full px-4 py-2 bg-light-secondary dark:bg-dark-secondary border border-light-border dark:border-dark-border rounded-xl text-light-text-primary dark:text-dark-text-primary placeholder-light-text-secondary/50 dark:placeholder-dark-text-secondary/50 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors;
+    @apply w-full px-4 py-2 pl-12 bg-gray-50 dark:bg-[#0F172A]/60 border-2 border-brand/50 dark:border-brand/50 rounded-xl text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors shadow-sm hover:bg-white focus:bg-white;
   }
 
   .select {
-    @apply w-full px-4 py-2 bg-light-secondary dark:bg-dark-secondary border border-light-border dark:border-dark-border rounded-xl text-light-text-primary dark:text-dark-text-primary focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors appearance-none;
+    @apply w-full px-4 py-2 pl-12 bg-gray-50 dark:bg-[#0F172A]/60 border-2 border-brand/50 dark:border-brand/50 rounded-xl text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors appearance-none shadow-sm hover:bg-white focus:bg-white;
   }
 
   .badge {
-    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-medium;
   }
 
   .badge-success {

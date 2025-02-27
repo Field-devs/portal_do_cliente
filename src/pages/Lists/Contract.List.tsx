@@ -108,22 +108,22 @@ export default function ContractList() {
   }
 
   return (
-    <div className="p-6">
+    <div className="max-w-7xl mx-auto">
       <div className="flex justify-between items-center mb-8">
         <h1 className={titleClass}>Contratos</h1>
       </div>
 
       {/* Metrics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
         {/* Active Contracts */}
-        <div className={cardClass}>
+        <div className={`${cardClass} p-3`}>
           <div className="flex items-center justify-between mb-4">
             <div className={iconContainerClass}>
               <CheckCircle className={iconClass} />
             </div>
             <span className={badgeClass}>Total Atual</span>
           </div>
-          <h3 className={metricTitleClass}>Contratos Ativos</h3>
+          <h3 className="text-base font-medium text-light-text-primary dark:text-white mb-1">Ativos</h3>
           <p className={metricValueClass}>
             {contracts.filter(c => c.status_title.toLowerCase() === 'ativo').length}
           </p>
@@ -134,14 +134,14 @@ export default function ContractList() {
         </div>
 
         {/* Pending Contracts */}
-        <div className={cardClass}>
+        <div className={`${cardClass} p-3`}>
           <div className="flex items-center justify-between mb-4">
             <div className={iconContainerClass}>
               <Clock className={iconClass} />
             </div>
             <span className={badgeClass}>Aguardando</span>
           </div>
-          <h3 className={metricTitleClass}>Contratos Pendentes</h3>
+          <h3 className="text-base font-medium text-light-text-primary dark:text-white mb-1">Pendentes</h3>
           <p className={metricValueClass}>
             {contracts.filter(c => c.status_title.toLowerCase() === 'pendente').length}
           </p>
@@ -152,14 +152,14 @@ export default function ContractList() {
         </div>
 
         {/* Suspended Contracts */}
-        <div className={cardClass}>
+        <div className={`${cardClass} p-3`}>
           <div className="flex items-center justify-between mb-4">
             <div className={iconContainerClass}>
               <XCircle className={iconClass} />
             </div>
             <span className={badgeClass}>Suspensos</span>
           </div>
-          <h3 className={metricTitleClass}>Contratos Suspensos</h3>
+          <h3 className="text-base font-medium text-light-text-primary dark:text-white mb-1">Suspensos</h3>
           <p className={metricValueClass}>
             {contracts.filter(c => c.status_title.toLowerCase() === 'suspenso').length}
           </p>
@@ -170,14 +170,14 @@ export default function ContractList() {
         </div>
 
         {/* Cancelled Contracts */}
-        <div className={cardClass}>
+        <div className={`${cardClass} p-3`}>
           <div className="flex items-center justify-between mb-4">
             <div className={iconContainerClass}>
               <XCircle className={iconClass} />
             </div>
             <span className={badgeClass}>Cancelados</span>
           </div>
-          <h3 className={metricTitleClass}>Contratos Cancelados</h3>
+          <h3 className="text-base font-medium text-light-text-primary dark:text-white mb-1">Cancelados</h3>
           <p className={metricValueClass}>
             {contracts.filter(c => c.status_title.toLowerCase() === 'cancelado').length}
           </p>
@@ -189,17 +189,17 @@ export default function ContractList() {
       </div>
 
       {/* Search and Filter Bar */}
-      <div className={cardClass}>
+      <div className={`${cardClass} p-3 mb-6`}>
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1">
             <div className="relative">
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
               <input
                 type="text"
-                placeholder="Buscar por nome, email ou telefone..."
+                placeholder="Buscar..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 rounded-xl text-light-text-primary dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors"
+                className="w-full px-4 py-2 pl-12 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 rounded-xl text-light-text-primary dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors"
               />
             </div>
           </div>
@@ -209,7 +209,7 @@ export default function ContractList() {
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value as typeof statusFilter)}
-                className="pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 rounded-xl text-light-text-primary dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors appearance-none min-w-[200px]"
+                className="w-full px-4 py-2 pl-12 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 rounded-xl text-light-text-primary dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors appearance-none"
               >
                 <option value="all">Todos os Status</option>
                 <option value="active">Ativos</option>
@@ -223,7 +223,7 @@ export default function ContractList() {
               <select
                 value={dateFilter}
                 onChange={(e) => setDateFilter(e.target.value as typeof dateFilter)}
-                className="pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 rounded-xl text-light-text-primary dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors appearance-none min-w-[200px]"
+                className="w-full px-4 py-2 pl-12 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 rounded-xl text-light-text-primary dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors appearance-none"
               >
                 <option value="all">Todas as Datas</option>
                 <option value="thisMonth">Este Mês</option>
@@ -236,24 +236,24 @@ export default function ContractList() {
       </div>
 
       {/* Contracts Table */}
-      <div className={`${cardClass} mt-6`}>
+      <div className={`bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm rounded-lg p-0 overflow-hidden border border-[#E5E5E5] dark:border-gray-700/50 shadow-sm mt-6`}>
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-light-border dark:divide-gray-700/50">
             <thead>
               <tr className="bg-light-secondary dark:bg-[#0F172A]/60">
-                <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                <th className="px-3 py-3 text-left text-xs font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider w-[150px]">
                   Cliente
                 </th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                <th className="px-3 py-3 text-left text-xs font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                   Contato
                 </th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                <th className="px-3 py-3 text-left text-xs font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider w-[120px]">
                   Plano
                 </th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                <th className="px-3 py-3 text-left text-xs font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider w-[100px]">
                   Status
                 </th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                <th className="px-3 py-3 text-left text-xs font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider w-[100px]">
                   Consumo
                 </th>
               </tr>
@@ -264,12 +264,12 @@ export default function ContractList() {
                   key={contract.id}
                   className="hover:bg-light-secondary dark:hover:bg-[#0F172A]/40 transition-colors"
                 >
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-3 py-2 whitespace-nowrap">
                     <div className="text-base font-medium text-light-text-primary dark:text-gray-100">
                       {contract.nome}
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-3 py-2 whitespace-nowrap">
                     <div className="flex flex-col space-y-1">
                       <div className="flex items-center text-light-text-secondary dark:text-gray-300">
                         <Mail className="h-4 w-4 mr-2" />
@@ -281,19 +281,19 @@ export default function ContractList() {
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-3 py-2 whitespace-nowrap">
                     <div className="text-base text-light-text-secondary dark:text-gray-300">
                       {contract.plano_nome}
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-3 py-2 whitespace-nowrap">
                     <span className={`px-3 py-1 text-sm font-medium rounded-full ${getStatusBadgeStyles(contract.status_title)}`}>
                       {contract.status_title}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-3 py-2 whitespace-nowrap">
                     <div className="text-base text-light-text-secondary dark:text-gray-300">
-                      -
+                      Não preenchido
                     </div>
                   </td>
                 </tr>

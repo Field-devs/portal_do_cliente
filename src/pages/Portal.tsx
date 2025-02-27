@@ -25,6 +25,7 @@ import FinancialDashBoard from './dashboard/FinancialDashBoard';
 import PlanList from './Lists/PlanList';
 import Profile from './Account/Profile';
 import ContractList from './Lists/Contract.List';
+import ProposalConfirm from './Forms/ProposalConfirm';
 
 const getRoleBadgeStyles = (role: string | null) => {
   switch (role) {
@@ -82,6 +83,42 @@ export default function Portal() {
 
   return (
     <div className="min-h-screen bg-light-primary dark:bg-dark-primary flex">
+      {/* Floating Action Buttons */}
+      <div className="fixed top-4 right-4 flex items-center space-x-2 z-50">
+        <button
+          onClick={toggleTheme}
+          className="p-2 rounded-full bg-white dark:bg-gray-800 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 relative group"
+          title={theme === 'dark' ? 'Mudar para tema claro' : 'Mudar para tema escuro'}
+        >
+          {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+          <span className="absolute hidden group-hover:block right-0 top-full mt-2 bg-gray-900 text-white text-xs py-1 px-2 rounded-md whitespace-nowrap">
+            {theme === 'dark' ? 'Mudar para tema claro' : 'Mudar para tema escuro'}
+          </span>
+        </button>
+
+        <NavLink
+          to="/portal/profile"
+          className="p-2 rounded-full bg-white dark:bg-gray-800 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 relative group"
+          title="Perfil"
+        >
+          <UserCircle className="h-5 w-5" />
+          <span className="absolute hidden group-hover:block right-0 top-full mt-2 bg-gray-900 text-white text-xs py-1 px-2 rounded-md whitespace-nowrap">
+            Perfil
+          </span>
+        </NavLink>
+
+        <button
+          onClick={signOut}
+          className="p-2 rounded-full bg-white dark:bg-gray-800 text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300 shadow-lg hover:shadow-xl transition-all duration-300 relative group"
+          title="Sair"
+        >
+          <LogOut className="h-5 w-5" />
+          <span className="absolute hidden group-hover:block right-0 top-full mt-2 bg-gray-900 text-white text-xs py-1 px-2 rounded-md whitespace-nowrap">
+            Sair
+          </span>
+        </button>
+      </div>
+
       {/* Sidebar Navigation */}
       <div className={`fixed inset-y-0 left-0 bg-light-card dark:bg-dark-card shadow-lg transition-all duration-300 z-20 flex flex-col border-r border-light-border dark:border-dark-border backdrop-blur-sm ${isExpanded ? 'w-52' : 'w-20'}`}>
         {/* Logo and Toggle */}
@@ -93,9 +130,12 @@ export default function Portal() {
           />
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="p-1.5 rounded-lg text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-light-secondary dark:hover:bg-dark-secondary"
+            className="p-1.5 rounded-lg text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-light-secondary dark:hover:bg-dark-secondary relative group"
           >
             {isExpanded ? <ChevronLeft className="h-5 w-5" /> : <ChevronRight className="h-5 w-5" />}
+            <span className="absolute hidden group-hover:block bg-gray-900 text-white text-xs py-1 px-2 rounded-md -right-2 translate-x-full">
+              {isExpanded ? 'Recolher menu' : 'Expandir menu'}
+            </span>
           </button>
         </div>
 
@@ -126,25 +166,31 @@ export default function Portal() {
           </div>
         </div>
         
-        {/* Navigation */}
-        <nav className="flex-1 overflow-y-auto py-4">
+        {/* Navigation with increased top padding */}
+        <nav className="flex-1 overflow-y-auto py-6">
           {navigation.map((item) => {
             const isActive = location.pathname === item.path;
             return (
               <NavLink
                 key={item.path}
                 to={item.path}
-                className={`flex items-center px-3 py-2 mx-2 text-sm font-medium rounded-lg transition-colors ${
+                title={item.name}
+                className={`flex items-center py-2 mx-2 text-sm font-medium rounded-lg transition-colors relative group ${isExpanded ? 'px-3' : 'justify-center px-2'} ${
                   isActive
                     ? 'bg-brand-50 text-brand-600 dark:bg-brand-900/20 dark:text-brand-400'
                     : 'text-gray-600 dark:text-gray-400 hover:bg-brand-50/50 dark:hover:bg-brand-900/10 hover:text-brand-600 dark:hover:text-brand-400'
                 }`}
               >
-                <div className="min-w-[2rem] flex justify-center">
+                <div className={isExpanded ? "min-w-[2rem] flex" : "flex"}>
                   <item.icon className="h-5 w-5" />
                 </div>
                 {isExpanded && (
-                  <span className="ml-3 truncate">
+                  <span className="ml-3 truncate text-left">
+                    {item.name}
+                  </span>
+                )}
+                {!isExpanded && (
+                  <span className="absolute hidden group-hover:block bg-gray-900 text-white text-xs py-1 px-2 rounded-md left-full ml-2 whitespace-nowrap z-50">
                     {item.name}
                   </span>
                 )}
@@ -153,39 +199,11 @@ export default function Portal() {
           })}
         </nav>
 
-        {/* Footer Actions */}
-        <div className="p-3 border-t border-light-border dark:border-dark-border">
-          <div className="flex justify-center items-center space-x-2">
-            <button
-              onClick={toggleTheme}
-              className="p-2 rounded-lg text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-light-secondary dark:hover:bg-dark-secondary"
-              title={theme === 'dark' ? 'Mudar para tema claro' : 'Mudar para tema escuro'}
-            >
-              {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-            </button>
-
-            <NavLink
-              to="/portal/profile"
-              className="p-2 rounded-lg text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-light-secondary dark:hover:bg-dark-secondary"
-              title="Perfil"
-            >
-              <UserCircle className="h-5 w-5" />
-            </NavLink>
-
-            <button
-              onClick={signOut}
-              className="p-2 rounded-lg text-red-500 hover:text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:text-red-300 dark:hover:bg-red-900/20"
-              title="Sair"
-            >
-              <LogOut className="h-5 w-5" />
-            </button>
-          </div>
-        </div>
       </div>
 
       {/* Main Content Area */}
       <div className={`flex-1 transition-all duration-300 ${isExpanded ? 'ml-52' : 'ml-20'}`}>
-        <div className="p-6">
+        <div className="p-6 pt-16">
           <Routes>
             <Route path="/" element={<AdminDashboard />} />
             <Route path="contracts" element={<ContractList />} />
@@ -195,6 +213,8 @@ export default function Portal() {
             <Route path="accounts" element={<AccountList />} />
             <Route path="financial" element={<FinancialDashBoard />} />
             <Route path="profile" element={<Profile />} />
+            
+            <Route path="/proposal-confirm" element={<ProposalConfirm />} />
           </Routes>
         </div>
       </div>

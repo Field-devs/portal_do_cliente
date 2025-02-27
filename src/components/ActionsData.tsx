@@ -1,5 +1,5 @@
 import React from 'react';
-import { Plus, Eye, Edit, Trash2 } from 'lucide-react';
+import { Plus, Edit, Trash2 } from 'lucide-react';
 
 interface CrudButtonsProps {
   onCreate: () => void;
@@ -30,9 +30,12 @@ const ActionsButtons: React.FC<CrudButtonsProps> = ({ onCreate, onRead, onUpdate
         onRead && (
           <button
             onClick={onRead}
-            className="text-yellow-500"
+            className="text-yellow-500 relative group"
           >
             <Edit className="mr-2" />
+            <span className="absolute hidden group-hover:block bg-gray-900 text-white text-xs py-1 px-2 rounded-md -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap">
+              Editar proposta
+            </span>
           </button>
         )
       }

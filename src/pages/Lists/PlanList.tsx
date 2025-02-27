@@ -129,7 +129,7 @@ export default function PlanList() {
   }
 
   return (
-    <div className="p-6">
+    <div className="max-w-7xl mx-auto">
       <div className="flex justify-between items-center mb-8">
         <h1 className={titleClass}>Planos</h1>
         <div className="flex space-x-3">
@@ -179,16 +179,16 @@ export default function PlanList() {
       </ModalForm>
 
       {/* Search and Tabs */}
-      <div className={cardClass}>
+      <div className={`${cardClass} p-3`}>
         <div className="flex flex-col space-y-6">
           <div className="relative">
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
             <input
               type="text"
-              placeholder="Buscar por nome..."
+              placeholder="Buscar..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="input pl-12"
+              className="w-full px-4 py-2 pl-12 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 rounded-xl text-light-text-primary dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors"
             />
           </div>
 
@@ -212,26 +212,28 @@ export default function PlanList() {
       </div>
 
       {/* Content */}
-      <div className={`${cardClass} mt-6`}>
+      <div className={`bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm rounded-lg p-0 overflow-hidden border border-[#E5E5E5] dark:border-gray-700/50 shadow-sm mt-6`}>
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-light-border dark:divide-gray-700/50">
             <thead>
               <tr className="bg-light-secondary dark:bg-[#0F172A]/60">
-                <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                <th className="px-3 py-2 text-left text-xs font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider w-[150px]">
                   Nome
                 </th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider w-[20px]">
+                <th className="px-3 py-2 text-center text-xs font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider w-[100px]">
                   Recursos
                 </th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider w-[20px]">
+                <th className="px-3 py-2 text-right text-xs font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider w-[120px]">
                   Valor
                 </th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider w-[20px]">
+                <th className="px-3 py-2 text-left text-xs font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider w-[100px]">
                   Data de Criação
                 </th>
-                <th className="px-6 py-4 text-right text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider w-[50px]">
+                <th className="px-3 py-2 text-center text-xs font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider w-[80px]">
+                  Ações
                 </th>
-                <th className="px-6 py-4 text-right text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider w-[20px]">
+                <th className="px-3 py-2 text-center text-xs font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider w-[80px]">
+                  Estado
                 </th>
               </tr>
             </thead>
@@ -241,12 +243,12 @@ export default function PlanList() {
                   key={item.id}
                   className="hover:bg-light-secondary dark:hover:bg-[#0F172A]/40 transition-colors"
                 >
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-3 py-2 whitespace-nowrap text-sm">
                     <div className="text-base font-medium text-light-text-primary dark:text-gray-100">
                       {item.nome}
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-center">
+                  <td className="px-3 py-2 whitespace-nowrap text-center text-sm">
                     <div className="flex justify-center space-x-2">
                       {'suporte_humano' in item && item.suporte_humano && (
                         <HeadphonesIcon className="h-5 w-5 text-brand-600 dark:text-brand-400" />
@@ -259,7 +261,7 @@ export default function PlanList() {
                       )}
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-3 py-2 whitespace-nowrap text-right text-sm">
                     <div className="text-base text-right text-light-text-secondary dark:text-gray-300">
                       {new Intl.NumberFormat('pt-BR', {
                         style: 'currency',
@@ -267,17 +269,17 @@ export default function PlanList() {
                       }).format(item.valor)}
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-3 py-2 whitespace-nowrap text-sm">
                     <div className="text-base text-light-text-secondary dark:text-gray-300">
                       {new Date(item.dt_add).toLocaleDateString('pt-BR')}
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right">
-                    <div className="flex justify-end space-x-2">
+                  <td className="px-3 py-2 whitespace-nowrap text-sm">
+                    <div className="flex justify-center space-x-2">
                       <ActionsButtons onRead={() => handleEdit(item.id)} />
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right">
+                  <td className="px-3 py-2 whitespace-nowrap text-center text-sm">
                     <SwitchFrag name='active' checked={item.active} onChange={() => handleChange(item.id)} /> 
                   </td>
                 </tr>
