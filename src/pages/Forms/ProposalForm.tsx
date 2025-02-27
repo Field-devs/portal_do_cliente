@@ -9,7 +9,7 @@ import {
 } from 'lucide-react';
 import Plan from '../../Models/Plan';
 import { getInitialArray } from '../../utils/Utils';
-import Proposta from '../../Models/Propostas';
+import { PropostaForm } from '../../Models/Propostas';
 
 interface ProposalFormProps {
   onClose: () => void;
@@ -39,12 +39,12 @@ export default function ProposalForm(sender) {
         //setFormData(data[0]);
       }
     };
-    fetchData();
+    
+    //fetchData();
   }, [sender]);
 
   
-  const [formData, setFormData] = useState<Proposta>({
-    id: undefined,
+  const [formData, setFormData] = useState<PropostaForm>({
     plano_id: 0,
     plano_nome: '',
     caixas_entrada_qtde: 0,
