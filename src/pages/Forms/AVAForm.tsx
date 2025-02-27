@@ -16,7 +16,7 @@ import {
 } from 'lucide-react';
 import Cliente from '../../Models/Cliente';
 
-interface CommercialAffiliateFormProps {
+interface AVAFormProps {
   onSuccess: () => void;
   onCancel: () => void;
   initialData?: {
@@ -31,7 +31,7 @@ interface CommercialAffiliateFormProps {
   };
 }
 
-export default function CommercialAffiliateForm({ onSuccess, onCancel, initialData }: CommercialAffiliateFormProps) {
+export default function AVAForm({ onSuccess, onCancel, initialData }: AVAFormProps) {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
