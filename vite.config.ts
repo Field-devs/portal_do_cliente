@@ -9,7 +9,7 @@ export default defineConfig({
   },
   server: {
     open: true, // Abre o navegador automaticamente
-    host: true, // Permite acessar pelo IP da rede
-    port: 3000, // Define a porta do servidor
+    // host: true, // Permite acessar pelo IP da rede
+    // port: 3000, // Define a porta do servidor
   },
 });

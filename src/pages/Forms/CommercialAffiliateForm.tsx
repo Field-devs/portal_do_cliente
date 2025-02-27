@@ -14,19 +14,20 @@ import {
   Building2,
   UserCheck
 } from 'lucide-react';
+import Cliente from '../../Models/Cliente';
 
 interface CommercialAffiliateFormProps {
   onSuccess: () => void;
   onCancel: () => void;
   initialData?: {
-    cliente_afiliado_id: string;
+    id: string;
     nome: string;
     email: string;
-    telefone: number;
+    fone: number;
     desconto: number;
     comissao: number;
     vencimento: string;
-    status: boolean;
+    active: boolean;
   };
 }
 
@@ -35,14 +36,16 @@ export default function CommercialAffiliateForm({ onSuccess, onCancel, initialDa
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const [formData, setFormData] = useState({
-    email: initialData?.email || '',
-    nome: initialData?.nome || '',
-    telefone: initialData?.telefone ? formatPhoneNumber(initialData.telefone) : '',
-    desconto: initialData?.desconto.toString() || '',
-    comissao: initialData?.comissao.toString() || '',
+  const [formData, setFormData] = useState<Cliente>({
+    tipo: 'AF',
+    user_id: user?.id || '',
+    email: initialData?.email || 'jose@gmail.com ',
+    nome: initialData?.nome || 'JOSE DA SILVA',
+    fone: initialData?.fone ? formatPhoneNumber(initialData.fone) : '99999999999',
+    desconto: initialData?.desconto ?? 5,
+    comissao: initialData?.comissao ?? 10,
     vencimento: initialData?.vencimento ? new Date(initialData.vencimento).toISOString().split('T')[0] : '',
-    status: initialData?.status ?? true
+    active: initialData?.active ?? true
   });
 
   function formatPhoneNumber(phone: number): string {
@@ -61,7 +64,7 @@ export default function CommercialAffiliateForm({ onSuccess, onCancel, initialDa
     setError(null);
 
     try {
-      const phoneNumber = Number(formData.telefone.replace(/\D/g, ''));
+      const fone = Number(formData.telefone.replace(/\D/g, ''));
       
       if (initialData) {
         const { error: updateError } = await supabase
@@ -70,16 +73,17 @@ export default function CommercialAffiliateForm({ onSuccess, onCancel, initialDa
             tipo: 'AF',
             email: formData.email,
             nome: formData.nome,
-            fone: phoneNumber,
+            fone: fone,
             desconto: Number(formData.desconto),
             comissao: Number(formData.comissao),
             vencimento: formData.vencimento,
-            active: formData.status
+            active: formData.active
           })
-          .eq('id', initialData.cliente_afiliado_id);
+          .eq('id', initialData.id);
 
         if (updateError) throw updateError;
       } else {
+
         const couponCode = generateCouponCode();
         
         const { error: insertError } = await supabase
@@ -87,13 +91,13 @@ export default function CommercialAffiliateForm({ onSuccess, onCancel, initialDa
           .insert([{
             email: formData.email,
             nome: formData.nome,
-            telefone: phoneNumber,
-            desconto: Number(formData.desconto),
-            comissao: Number(formData.comissao),
+            fone: fone,
+            desconto: formData.desconto,
+            comissao: formData.comissao,
             vencimento: formData.vencimento,
-            codigo_cupom: couponCode,
-            pessoas_user_id: user?.pessoas_id,
-            status: formData.status
+            cupom: couponCode,
+            user_id: user?.id,
+            active: formData.active
           }]);
 
         if (insertError) throw insertError;

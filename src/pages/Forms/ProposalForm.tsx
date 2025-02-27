@@ -441,7 +441,7 @@ export default function ProposalForm({onSuccess, onCancel, sender}) : ProposalFo
 
                       <button
                         type="button"
-                        onClick={() => setEtapa(etapa + 1)}
+                        onClick={onCancel}
                         className="px-4 py-2 bg-brand text-white rounded-md hover:bg-brand/90"
                       >
                         Finalizar

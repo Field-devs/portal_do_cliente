@@ -13,26 +13,30 @@ import { supabase } from '../../lib/supabase';
 import { format } from 'date-fns';
 import CommercialAffiliateForm from '../Forms/CommercialAffiliateForm';
 import { formatPhone, formatCNPJCPF } from '../../utils/formatters';
-import {ModalForm} from '../../components/Modal/Modal';
+import { ModalForm } from '../../components/Modal/Modal';
 
-type PartnerType = 'cf' | 'ava' | 'commercial';
+type PartnerType = 'cf' | 'ava' | 'afiliado';
 
 interface Partner {
-  cliente_afiliado_id: string;
+  id: string;
   nome: string;
   email: string;
   telefone: number;
   desconto: number;
   comissao: number;
-  codigo_cupom: string;
+  cupom: string;
   vencimento: string;
-  status: boolean;
-  datacriacao: string;
+  active: boolean;
+  dt: string;
 }
 
 export default function PartnerList() {
   const [activeTab, setActiveTab] = useState<PartnerType>('cf');
-  const [partners, setPartners] = useState<Partner[]>([]);
+  const [client, setClient] = useState<Partner[]>([]);
+  const [ava, setAVA] = useState<Partner[]>([]);
+  const [afilate, setAfilate] = useState<Partner[]>([]);
+
+
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -45,49 +49,34 @@ export default function PartnerList() {
 
   const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-light-border dark:border-gray-700/50";
   const titleClass = "text-4xl font-bold text-light-text-primary dark:text-white";
-  const metricTitleClass = "text-lg font-medium text-light-text-primary dark:text-white mb-1";
-  const metricValueClass = "text-3xl font-bold text-light-text-primary dark:text-white";
-  const metricSubtextClass = "text-sm text-light-text-secondary dark:text-blue-200";
-  const iconContainerClass = "bg-blue-400/10 p-3 rounded-xl";
-  const iconClass = "h-6 w-6 text-blue-600 dark:text-blue-400";
-  const badgeClass = "text-xs font-medium bg-blue-50 dark:bg-blue-400/10 text-blue-600 dark:text-blue-400 px-2 py-1 rounded-full";
 
   useEffect(() => {
-    if (activeTab === 'commercial') {
-      fetchPartners();
-    } else {
-      fetchUsers();
-    }
+    fetchClientes();
   }, [activeTab]);
 
-  const fetchPartners = async () => {
+  const fetchClientes = async () => {
     try {
+      let Tipo = 'CF';
+      if (activeTab === 'ava') {
+        Tipo = 'AVA';
+      }
+      else if (activeTab === 'afiliado') {
+        Tipo = 'AF';
+      }
+
       const { data, error } = await supabase
-        .from('cliente_afiliado')
+        .from('cliente')
         .select('*')
+        .eq('tipo', Tipo)
         .order('dt_add', { ascending: false });
 
       if (error) throw error;
-      setPartners(data || []);
+      setClient(data || []);
+      setAVA(data || []);
+      setAfilate(data || []);
+
     } catch (error) {
       console.error('Error fetching partners:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchUsers = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('users')
-        .select('*')
-        .eq('perfil_id', activeTab === 'cf' ? 5 : 4)
-        .order('dt_add', { ascending: false });
-
-      if (error) throw error;
-      setUsers(data || []);
-    } catch (error) {
-      console.error('Error fetching users:', error);
     } finally {
       setLoading(false);
     }
@@ -103,16 +92,16 @@ export default function PartnerList() {
     }
   };
 
-  const filteredItems = activeTab === 'commercial'
-    ? partners.filter(partner => {
+  const filteredItems = activeTab === 'afiliado'
+    ? client.filter(partner => {
       const matchesSearch =
         partner.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
         partner.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        partner.codigo_cupom.toLowerCase().includes(searchTerm.toLowerCase());
+        partner.cupom.toLowerCase().includes(searchTerm.toLowerCase());
 
       const matchesStatus =
         statusFilter === 'all' ||
-        (statusFilter === 'active' ? partner.status : !partner.status);
+        (statusFilter === 'active' ? partner.active : !partner.active);
 
       return matchesSearch && matchesStatus;
     })
@@ -140,13 +129,13 @@ export default function PartnerList() {
     <div className="p-6">
       <div className="flex justify-between items-center mb-8">
         <h1 className={titleClass}>Clientes</h1>
-        {activeTab === 'commercial' && (
+        {activeTab != 'cf' && (
           <button
             onClick={() => setShowAfilate(true)}
             className="flex items-center px-4 py-2 bg-brand hover:bg-brand/90 text-white rounded-xl transition-colors"
           >
             <Plus className="h-5 w-5 mr-2" />
-            Novo Afiliado
+            {activeTab === 'afiliado' ? 'Adicionar Afiliado' : 'Adicionar AVA'}
           </button>
         )}
       </div>
@@ -177,8 +166,8 @@ export default function PartnerList() {
               AVAs
             </button>
             <button
-              onClick={() => setActiveTab('commercial')}
-              className={`flex items-center px-4 py-2 rounded-lg transition-colors ${activeTab === 'commercial'
+              onClick={() => setActiveTab('afiliado')}
+              className={`flex items-center px-4 py-2 rounded-lg transition-colors ${activeTab === 'afiliado'
                 ? 'bg-brand-50 text-brand-600 dark:bg-brand-900/20 dark:text-brand-400'
                 : 'text-gray-600 dark:text-gray-400 hover:bg-brand-50/50 dark:hover:bg-brand-900/10 hover:text-brand-600 dark:hover:text-brand-400'
                 }`}
@@ -235,7 +224,7 @@ export default function PartnerList() {
                 <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                   Telefone
                 </th>
-                {activeTab === 'commercial' && (
+                {activeTab === 'afiliado' && (
                   <>
                     <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                       Cupom
@@ -256,7 +245,7 @@ export default function PartnerList() {
             <tbody className="divide-y divide-light-border dark:divide-gray-700/50">
               {filteredItems.map((item) => (
                 <tr
-                  key={activeTab === 'commercial' ? item.cliente_afiliado_id : item.id}
+                  key={activeTab === 'afiliado' ? item.id : item.id}
                   className="hover:bg-light-secondary dark:hover:bg-[#0F172A]/40 transition-colors"
                 >
                   <td className="px-6 py-4 whitespace-nowrap">
@@ -274,18 +263,18 @@ export default function PartnerList() {
                       {formatPhone(item.telefone?.toString())}
                     </div>
                   </td>
-                  {activeTab === 'commercial' && (
+                  {activeTab === 'afiliado' && (
                     <>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="relative">
                           <button
-                            onClick={() => handleCopyToClipboard(item.codigo_cupom)}
+                            onClick={() => handleCopyToClipboard(item.cupom)}
                             className="group px-3 py-1.5 inline-flex items-center space-x-2 text-sm leading-5 font-medium rounded-full bg-brand-50 dark:bg-brand-900/20 text-brand-600 dark:text-brand-400 hover:bg-brand-100 dark:hover:bg-brand-900/30 border border-brand-200 dark:border-brand-700/30 transition-colors"
                           >
-                            <span>{item.codigo_cupom}</span>
+                            <span>{item.cupom}</span>
                             <Copy className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity" />
                           </button>
-                          {showCopyTooltip === item.codigo_cupom && (
+                          {showCopyTooltip === item.cupom && (
                             <div className="absolute left-1/2 -translate-x-1/2 -top-8 px-2 py-1 bg-gray-900 text-white text-xs rounded shadow-lg z-10">
                               <div className="flex items-center space-x-1">
                                 <CheckCircle className="h-3 w-3" />
@@ -314,7 +303,7 @@ export default function PartnerList() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-base text-light-text-secondary dark:text-gray-300">
-                      {format(new Date(item.datacriacao), 'dd/MM/yyyy')}
+                      {/* {format(new Date(item?.datacriacao), 'dd/MM/yyyy')} */}
                     </div>
                   </td>
                 </tr>
@@ -325,26 +314,26 @@ export default function PartnerList() {
       </div>
 
       {/* Commercial Affiliate Form Modal */}
-        <ModalForm
-          isOpen={showAfilate}
-          onClose={() => setShowAfilate(false)}
-          title="Titulo"
-          maxWidth="2xl"
-        >
+      <ModalForm
+        isOpen={showAfilate}
+        onClose={() => setShowAfilate(false)}
+        title="Titulo"
+        maxWidth="2xl"
+      >
 
-          <CommercialAffiliateForm
-            initialData={editingPartner}
-            onSuccess={() => {
-              setEditingPartner(null);
-              fetchPartners();
-            }}
-            onCancel={() => {
-              setShowAfilate(false);
-              setEditingPartner(null);
-            }}
-          />
+        <CommercialAffiliateForm
+          initialData={editingPartner}
+          onSuccess={() => {
+            setEditingPartner(null);
+            fetchClientes();
+          }}
+          onCancel={() => {
+            setShowAfilate(false);
+            setEditingPartner(null);
+          }}
+        />
 
-        </ModalForm>
+      </ModalForm>
 
 
     </div>

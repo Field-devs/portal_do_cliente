@@ -60,6 +60,27 @@ export default function ProposalsList() {
     }
   };
 
+  useEffect(() => {
+    if (searchTerm) {
+      const filtered = propostas.filter((proposta) =>
+        proposta.nome.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setPropostas(filtered);
+    } else {
+      fetchProposals();
+    }
+  }, [searchTerm]);
+
+  useEffect(() => {
+    const filtered = propostas.filter((proposta) => {
+      if (statusFilter === 'all') return true;
+      return proposta.status === statusFilter;
+    });
+    setPropostas(filtered);
+  }, [statusFilter]);
+
+
+
   const HandleOpenProposal = () => {
     setOpenProposal(true);
   };
