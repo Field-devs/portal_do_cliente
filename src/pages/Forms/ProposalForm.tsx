@@ -10,8 +10,14 @@ import {
   Phone
 } from 'lucide-react';
 
+interface ProposalFormProps {
+  onSuccess: () => void;
+  onCancel: () => void;
+  sender: any;
+}
 
-export default function ProposalForm(sender) {
+
+export default function ProposalForm({onSuccess, onCancel, sender}) : ProposalFormProps {
   const [isFormOpen, setIsFormOpen] = useState(true);
   const [planos, setPlanos] = useState<Plan[]>([]);
   const [etapa, setEtapa] = useState(0);
@@ -27,10 +33,11 @@ export default function ProposalForm(sender) {
       const { data, error } = await supabase.from('proposta').select('*').eq('id', sender.id);
       if (error) {
         console.error("Erro ao buscar proposta:", error);
+          
         return;
       }
       else  {
-        console.log(data);
+        //console.log(data);
         //setFormData(data[0]);
       }
     };
@@ -91,6 +98,7 @@ export default function ProposalForm(sender) {
         setFieldValue('plano_id', firstPlan.id);
         setFieldValue('plano_nome', firstPlan.nome);
         setFieldValue('subtotal', firstPlan.valor);
+        setFieldValue('subtotal', firstPlan.valor);
 
         setFieldValue('caixas_entrada_qtde', firstPlan.caixas_entrada);
         setFieldValue('atendentes_qtde', firstPlan.atendentes);
@@ -100,8 +108,14 @@ export default function ProposalForm(sender) {
         setFieldValue('atendentes_add_unit', firstPlan.atendentes_add);
         setFieldValue('automacoes_add_unit', firstPlan.automacoes_add);
       }
+
+      console.log("Valor : ", firstPlan.valor);
+      console.log("SubTotal : ", formData.subtotal);
+
     };
 
+
+    
 
     const CalcTotal = () => {
       setFieldValue('caixas_entrada_add_qtde', 0);
@@ -466,7 +480,7 @@ export default function ProposalForm(sender) {
                 {etapa < 2 && loading == false && (
                   <button
                     type="button"
-                    onClick={() => setIsFormOpen(false)}
+                    onClick={onCancel}
                     className="px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
                   >
                     Cancelar

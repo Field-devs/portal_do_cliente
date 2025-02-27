@@ -25,6 +25,7 @@ import FinancialDashBoard from './dashboard/FinancialDashBoard';
 import PlanList from './Lists/PlanList';
 import Profile from './Account/Profile';
 import ContractList from './Lists/Contract.List';
+import ProposalConfirm from './Forms/ProposalConfirm';
 
 const getRoleBadgeStyles = (role: string | null) => {
   switch (role) {
@@ -195,6 +196,8 @@ export default function Portal() {
             <Route path="accounts" element={<AccountList />} />
             <Route path="financial" element={<FinancialDashBoard />} />
             <Route path="profile" element={<Profile />} />
+            
+            <Route path="/proposal-confirm" element={<ProposalConfirm />} />
           </Routes>
         </div>
       </div>
