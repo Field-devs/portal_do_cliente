@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  Plus, 
-  Search, 
+import { useState, useEffect } from 'react';
+import Proposta from '../../Models/Propostas';
+import { formatPhone, formatCNPJCPF } from '../../utils/formatters';
+import {
+  Plus,
+  Search,
   Filter,
   Calendar,
   FileText,
@@ -9,9 +11,7 @@ import {
   TrendingUp,
   Clock,
   CheckCircle,
-  XCircle,
-  ArrowUpDown,
-  CalendarRange
+  XCircle
 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { usePlanos } from '../../hooks/usePlanos';
@@ -19,8 +19,6 @@ import { ModalForm } from '../../components/Modal/Modal';
 import ProposalForm from '../Forms/ProposalForm';
 import ActionsButtons from '../../components/ActionsData';
 import SwitchFrag from '../../components/Fragments/SwitchFrag';
-import Proposta from '../../Models/Propostas';
-import { formatPhone, formatCNPJCPF } from '../../utils/formatters';
 
 export default function ProposalsList() {
   const [propid, setPropId] = useState<string | null>(null);
@@ -29,14 +27,7 @@ export default function ProposalsList() {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'accepted' | 'rejected'>('all');
   const [OpenProposal, setOpenProposal] = useState(false);
-  const [active, SetActive] = useState(true);
-  const [sortBy, setSortBy] = useState<'date' | 'name' | 'value'>('date');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
-  const [dateFilter, setDateFilter] = useState<'1d' | '15d' | '1m' | 'custom'>('1m');
-  const [customDateRange, setCustomDateRange] = useState({
-    start: '',
-    end: ''
-  });
+  const [active, SetActive ] = useState(true);
 
   const { loading: planosLoading } = usePlanos();
 
@@ -52,34 +43,6 @@ export default function ProposalsList() {
   useEffect(() => {
     fetchProposals();
   }, []);
-
-  useEffect(() => {
-    // Update date range based on selected filter
-    const now = new Date();
-    let start = new Date();
-    let end = now;
-
-    switch (dateFilter) {
-      case '1d':
-        start.setDate(now.getDate() - 1);
-        break;
-      case '15d':
-        start.setDate(now.getDate() - 15);
-        break;
-      case '1m':
-        start.setMonth(now.getMonth() - 1);
-        break;
-      case 'custom':
-        return; // Don't update if custom
-    }
-
-    if (dateFilter !== 'custom') {
-      setCustomDateRange({
-        start: start.toISOString().split('T')[0],
-        end: end.toISOString().split('T')[0]
-      });
-    }
-  }, [dateFilter]);
 
   const fetchProposals = async () => {
     try {
@@ -97,15 +60,12 @@ export default function ProposalsList() {
     }
   };
 
-  const handleCloseProposal = () => {
-    setOpenProposal(false);
-  };
-
-  const handleOpenProposal = () => {
+  const HandleOpenProposal = () => {
     setOpenProposal(true);
   };
 
   const handleChange = (checked: boolean) => {
+    console.log(active);
     SetActive(checked ? true : false);
   };
 
@@ -117,52 +77,6 @@ export default function ProposalsList() {
   const filteredProposals = propostas.filter(() => {
     return propostas;
   });
-  const handleSort = (type: 'date' | 'name' | 'value') => {
-    if (sortBy === type) {
-      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
-    } else {
-      setSortBy(type);
-      setSortOrder('asc');
-    }
-  };
-
-  const filteredProposals = propostas
-    .filter(proposta => {
-      // Text search
-      const searchMatch = proposta.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        proposta.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        proposta.cnpjcpf.includes(searchTerm);
-
-      // Status filter
-      const statusMatch = statusFilter === 'all' || 
-        (statusFilter === 'pending' && proposta.status === 'PE') ||
-        (statusFilter === 'accepted' && proposta.status === 'AC') ||
-        (statusFilter === 'rejected' && proposta.status === 'RC');
-
-      // Date range filter
-      const propostaDate = new Date(proposta.dt);
-      const startDate = customDateRange.start ? new Date(customDateRange.start) : null;
-      const endDate = customDateRange.end ? new Date(customDateRange.end) : null;
-      
-      const dateMatch = (!startDate || propostaDate >= startDate) &&
-        (!endDate || propostaDate <= endDate);
-
-      return searchMatch && statusMatch && dateMatch;
-    })
-    .sort((a, b) => {
-      const multiplier = sortOrder === 'asc' ? 1 : -1;
-      
-      switch (sortBy) {
-        case 'date':
-          return multiplier * (new Date(a.dt).getTime() - new Date(b.dt).getTime());
-        case 'name':
-          return multiplier * a.nome.localeCompare(b.nome);
-        case 'value':
-          return multiplier * (a.total - b.total);
-        default:
-          return 0;
-      }
-    });
 
   if (loading || planosLoading) {
     return (
@@ -173,22 +87,21 @@ export default function ProposalsList() {
   }
 
   return (
-    <div className="max-w-[calc(100vw-theme(space.24))] overflow-x-auto">
+    <>
       <ModalForm
         isOpen={OpenProposal}
-        onClose={handleCloseProposal}
-        title="Informações da Nova Proposta"
-        maxWidth="2xl"
+        onClose={() => setOpenProposal(false)}
+        title="Nova Proposta"
+        maxWidth='2xl'
       >
         <ProposalForm id={propid ?? ''} />
-        <ProposalForm onClose={handleCloseProposal} />
       </ModalForm>
 
-      <div className="p-4">
-        <div className="flex justify-between items-center mb-6">
+      <div className="p-6">
+        <div className="flex justify-between items-center mb-8">
           <h1 className={titleClass}>Propostas</h1>
           <button
-            onClick={handleOpenProposal}
+            onClick={() => HandleOpenProposal()}
             className="btn-primary flex items-center"
           >
             <Plus className="h-5 w-5 mr-2" />
@@ -196,7 +109,9 @@ export default function ProposalsList() {
           </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        {/* Metrics Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          {/* Total Proposals */}
           <div className={cardClass}>
             <div className="flex items-center justify-between mb-4">
               <div className={iconContainerClass}>
@@ -212,6 +127,7 @@ export default function ProposalsList() {
             </div>
           </div>
 
+          {/* Pending Proposals */}
           <div className={cardClass}>
             <div className="flex items-center justify-between mb-4">
               <div className={iconContainerClass}>
@@ -229,6 +145,7 @@ export default function ProposalsList() {
             </div>
           </div>
 
+          {/* Accepted Proposals */}
           <div className={cardClass}>
             <div className="flex items-center justify-between mb-4">
               <div className={iconContainerClass}>
@@ -246,6 +163,7 @@ export default function ProposalsList() {
             </div>
           </div>
 
+          {/* Rejected Proposals */}
           <div className={cardClass}>
             <div className="flex items-center justify-between mb-4">
               <div className={iconContainerClass}>
@@ -264,30 +182,28 @@ export default function ProposalsList() {
           </div>
         </div>
 
+        {/* Search and Filter Bar */}
         <div className={cardClass}>
-          <div className="flex flex-col space-y-4">
-            <div className="flex items-center space-x-3">
-              {/* Search */}
-              <div className="flex-1">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                  <input
-                    type="text"
-                    placeholder="Buscar por nome, email ou CNPJ/CPF..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="input pl-10 py-2 w-full"
-                  />
-                </div>
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="flex-1">
+              <div className="relative">
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Buscar por empresa, email ou CNPJ..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="input pl-12"
+                />
               </div>
-
-              {/* Status Filter */}
-              <div className="relative w-40">
-                <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+            </div>
+            <div className="flex items-center space-x-4">
+              <div className="relative">
+                <Filter className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value as typeof statusFilter)}
-                  className="select pl-10 py-2 w-full"
+                  className="select pl-12"
                 >
                   <option value="all">Todos os Status</option>
                   <option value="pending">Pendentes</option>
@@ -295,129 +211,42 @@ export default function ProposalsList() {
                   <option value="rejected">Recusadas</option>
                 </select>
               </div>
-
-              {/* Sort Options */}
-              <div className="relative w-48">
-                <ArrowUpDown className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                <select
-                  value={`${sortBy}-${sortOrder}`}
-                  onChange={(e) => {
-                    const [type, order] = e.target.value.split('-');
-                    setSortBy(type as typeof sortBy);
-                    setSortOrder(order as typeof sortOrder);
-                  }}
-                  className="select pl-10 py-2 w-full"
-                >
-                  <option value="date-desc">Data (mais recente)</option>
-                  <option value="date-asc">Data (mais antiga)</option>
-                  <option value="name-asc">Nome (A-Z)</option>
-                  <option value="name-desc">Nome (Z-A)</option>
-                  <option value="value-desc">Valor (maior-menor)</option>
-                  <option value="value-asc">Valor (menor-maior)</option>
-                </select>
-              </div>
-            </div>
-
-            {/* Date Filter */}
-            <div className="flex items-center space-x-3">
-              <div className="flex items-center space-x-2">
-                <CalendarRange className="h-5 w-5 text-gray-400" />
-                <span className="text-sm text-gray-400">Período:</span>
-              </div>
-              <div className="flex space-x-2">
-                <button
-                  onClick={() => setDateFilter('1d')}
-                  className={`px-3 py-1 rounded-lg text-sm ${
-                    dateFilter === '1d'
-                      ? 'bg-brand text-white'
-                      : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
-                  }`}
-                >
-                  1 dia
-                </button>
-                <button
-                  onClick={() => setDateFilter('15d')}
-                  className={`px-3 py-1 rounded-lg text-sm ${
-                    dateFilter === '15d'
-                      ? 'bg-brand text-white'
-                      : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
-                  }`}
-                >
-                  15 dias
-                </button>
-                <button
-                  onClick={() => setDateFilter('1m')}
-                  className={`px-3 py-1 rounded-lg text-sm ${
-                    dateFilter === '1m'
-                      ? 'bg-brand text-white'
-                      : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
-                  }`}
-                >
-                  1 mês
-                </button>
-                <button
-                  onClick={() => setDateFilter('custom')}
-                  className={`px-3 py-1 rounded-lg text-sm ${
-                    dateFilter === 'custom'
-                      ? 'bg-brand text-white'
-                      : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
-                  }`}
-                >
-                  Personalizado
-                </button>
-              </div>
-              {dateFilter === 'custom' && (
-                <div className="flex items-center space-x-2">
-                  <input
-                    type="date"
-                    value={customDateRange.start}
-                    onChange={(e) => setCustomDateRange(prev => ({ ...prev, start: e.target.value }))}
-                    className="input py-1 w-36 text-sm"
-                  />
-                  <span className="text-gray-400">até</span>
-                  <input
-                    type="date"
-                    value={customDateRange.end}
-                    onChange={(e) => setCustomDateRange(prev => ({ ...prev, end: e.target.value }))}
-                    className="input py-1 w-36 text-sm"
-                  />
-                </div>
-              )}
             </div>
           </div>
         </div>
 
-        <div className={`${cardClass} mt-4`}>
+        {/* Proposals Table */}
+        <div className={`${cardClass} mt-6`}>
           <div className="overflow-x-auto">
-            <table className="w-full divide-y divide-light-border dark:divide-gray-700/50">
+            <table className="min-w-full divide-y divide-light-border dark:divide-gray-700/50">
               <thead>
                 <tr className="bg-light-secondary dark:bg-[#0F172A]/60">
-                  <th className="px-4 py-3 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                     Data
                   </th>
-                  <th className="px-4 py-3 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                     CNPJ/CPF
                   </th>
-                  <th className="px-4 py-3 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                     Cliente
                   </th>
-                  <th className="px-4 py-3 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                     Email
                   </th>
-                  <th className="px-4 py-3 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                     Fone
                   </th>
-                  <th className="px-4 py-3 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                     Validade
                   </th>
-                  <th className="px-4 py-3 text-right text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-right text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                     Valor
                   </th>
-                  <th className="px-4 py-3 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                   </th>
-                  <th className="px-4 py-3 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                   </th>
-                  <th className="px-4 py-3 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider w-[20px]">
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider w-[20px]">
                     Ativo
                   </th>
                 </tr>
@@ -428,37 +257,37 @@ export default function ProposalsList() {
                     key={proposta.id}
                     className="hover:bg-light-secondary dark:hover:bg-[#0F172A]/40 transition-colors"
                   >
-                    <td className="px-4 py-3 whitespace-nowrap">
+                    <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-base text-light-text-secondary dark:text-gray-300">
                         {new Date(proposta.dt).toLocaleDateString('pt-BR')}
                       </div>
                     </td>
-                    <td className="px-4 py-3 whitespace-nowrap">
+                    <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-base text-light-text-secondary dark:text-gray-300">
                         {formatCNPJCPF(proposta.cnpjcpf)}
                       </div>
                     </td>
-                    <td className="px-4 py-3 whitespace-nowrap">
+                    <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-base font-medium text-light-text-primary dark:text-gray-100">
                         {proposta.nome}
                       </div>
                     </td>
-                    <td className="px-4 py-3 whitespace-nowrap">
+                    <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-base text-light-text-secondary dark:text-gray-300">
                         {proposta.email}
                       </div>
                     </td>
-                    <td className="px-4 py-3 whitespace-nowrap">
+                    <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-base text-light-text-secondary dark:text-gray-300">
                         {formatPhone(proposta.fone)}
                       </div>
                     </td>
-                    <td className="px-4 py-3 whitespace-nowrap text-center">
+                    <td className="px-6 py-4 whitespace-nowrap text-center">
                       <div className="text-base text-light-text-secondary dark:text-gray-300">
                         {proposta.validade} {proposta.validade === 1 ? 'Dia' : 'Dias'}
                       </div>
                     </td>
-                    <td className="px-4 py-3 whitespace-nowrap text-right">
+                    <td className="px-6 py-4 whitespace-nowrap text-right">
                       <div className="text-base font-medium text-light-text-primary dark:text-gray-100">
                         {new Intl.NumberFormat('pt-BR', {
                           style: 'currency',
@@ -466,7 +295,7 @@ export default function ProposalsList() {
                         }).format(proposta.total)}
                       </div>
                     </td>
-                    <td className="px-4 py-3 whitespace-nowrap">
+                    <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex justify-center">
                         <span className={`px-3 py-1 text-sm font-medium rounded-full ${proposta.status === 'PE'
                           ? 'badge-warning'
@@ -478,12 +307,13 @@ export default function ProposalsList() {
                         </span>
                       </div>
                     </td>
-                    <td className="px-4 py-3 whitespace-nowrap">
+                    <td className="px-6 py-4 whitespace-nowrap">
                       <ActionsButtons onRead={() => handleEdit(proposta.id)} />
                     </td>
-                    <td className="px-4 py-3 whitespace-nowrap text-right">
-                      <SwitchFrag name='active' checked={active} onChange={handleChange} />
+                    <td className="px-6 py-4 whitespace-nowrap text-right">
+                      <SwitchFrag checked={active} onChange={handleChange} />
                     </td>
+
                   </tr>
                 ))}
               </tbody>
@@ -491,6 +321,6 @@ export default function ProposalsList() {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

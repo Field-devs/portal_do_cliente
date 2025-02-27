@@ -13,6 +13,7 @@ export function ModalForm({
   isOpen, 
   onClose, 
   children, 
+  title,
   maxWidth = '2xl'
 }: ModalProps) {
 
@@ -52,11 +53,22 @@ export function ModalForm({
       onClick={onClose}
       role="dialog"
       aria-modal="true"
+      aria-labelledby={title ? 'modal-title' : undefined}
     >
       <div 
         className={`bg-[#1E293B]/90 backdrop-blur-sm rounded-xl border border-gray-700/50 p-6 w-full mx-4 ${maxWidthClasses[maxWidth]} max-h-[90vh] overflow-y-auto`}
         onClick={e => e.stopPropagation()}
       >
+        {title && (
+          <div className="flex items-center space-x-3 mb-6">
+            <div className="bg-blue-400/10 p-3 rounded-xl">
+              <div className="h-6 w-6 text-blue-400" />
+            </div>
+            <h2 id="modal-title" className="text-xl font-semibold text-white">
+              {title}
+            </h2>
+          </div>
+        )}
         {children}
       </div>
     </div>
