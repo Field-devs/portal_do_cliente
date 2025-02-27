@@ -10,8 +10,14 @@ import {
   Phone
 } from 'lucide-react';
 
+interface ProposalFormProps {
+  onSuccess: () => void;
+  onCancel: () => void;
+  sender: any;
+}
 
-export default function ProposalForm(sender) {
+
+export default function ProposalForm({onSuccess, onCancel, sender}) : PlanFormProps {
   const [isFormOpen, setIsFormOpen] = useState(true);
   const [planos, setPlanos] = useState<Plan[]>([]);
   const [etapa, setEtapa] = useState(0);
@@ -27,6 +33,7 @@ export default function ProposalForm(sender) {
       const { data, error } = await supabase.from('proposta').select('*').eq('id', sender.id);
       if (error) {
         console.error("Erro ao buscar proposta:", error);
+          
         return;
       }
       else  {
@@ -466,7 +473,7 @@ export default function ProposalForm(sender) {
                 {etapa < 2 && loading == false && (
                   <button
                     type="button"
-                    onClick={() => setIsFormOpen(false)}
+                    onClick={onCancel}
                     className="px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
                   >
                     Cancelar

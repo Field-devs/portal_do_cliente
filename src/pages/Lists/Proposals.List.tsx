@@ -94,7 +94,11 @@ export default function ProposalsList() {
         title="Nova Proposta"
         maxWidth='2xl'
       >
-        <ProposalForm id={propid ?? ''} />
+        <ProposalForm 
+          id={propid ?? ''}
+          onCancel={() => setOpenProposal(false)}
+        />
+        
       </ModalForm>
 
       <div className="p-6">

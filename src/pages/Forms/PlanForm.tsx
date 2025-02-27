@@ -95,7 +95,6 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
 
         if (error) throw error;
       }
-
       onSuccess();
     } catch (error) {
       console.error('Error saving plan:', error);
