@@ -15,7 +15,7 @@ import CommercialAffiliateForm from '../Forms/CommercialAffiliateForm';
 import { formatPhone, formatCNPJCPF } from '../../utils/formatters';
 import { ModalForm } from '../../components/Modal/Modal';
 
-type PartnerType = 'cf' | 'ava' | 'afiliado';
+type PartnerType = 'CF' | 'AVA' | 'AF';
 
 interface Partner {
   id: string;
@@ -31,7 +31,7 @@ interface Partner {
 }
 
 export default function PartnerList() {
-  const [activeTab, setActiveTab] = useState<PartnerType>('cf');
+  const [tipo, setTipo] = useState<PartnerType>('CF');
   const [client, setClient] = useState<Partner[]>([]);
   const [ava, setAVA] = useState<Partner[]>([]);
   const [afilate, setAfilate] = useState<Partner[]>([]);
@@ -52,28 +52,18 @@ export default function PartnerList() {
 
   useEffect(() => {
     fetchClientes();
-  }, [activeTab]);
+  }, [tipo]);
 
   const fetchClientes = async () => {
     try {
-      let Tipo = 'CF';
-      if (activeTab === 'ava') {
-        Tipo = 'AVA';
-      }
-      else if (activeTab === 'afiliado') {
-        Tipo = 'AF';
-      }
-
       const { data, error } = await supabase
         .from('cliente')
         .select('*')
-        .eq('tipo', Tipo)
+        .eq('tipo', tipo)
         .order('dt_add', { ascending: false });
 
       if (error) throw error;
       setClient(data || []);
-      setAVA(data || []);
-      setAfilate(data || []);
 
     } catch (error) {
       console.error('Error fetching partners:', error);
@@ -92,8 +82,8 @@ export default function PartnerList() {
     }
   };
 
-  const filteredItems = activeTab === 'afiliado'
-    ? client.filter(partner => {
+  const filteredItems =
+    client.filter(partner => {
       const matchesSearch =
         partner.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
         partner.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -102,17 +92,6 @@ export default function PartnerList() {
       const matchesStatus =
         statusFilter === 'all' ||
         (statusFilter === 'active' ? partner.active : !partner.active);
-
-      return matchesSearch && matchesStatus;
-    })
-    : users.filter(user => {
-      const matchesSearch =
-        user.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.email.toLowerCase().includes(searchTerm.toLowerCase());
-
-      const matchesStatus =
-        statusFilter === 'all' ||
-        (statusFilter === 'active' ? user.status : !user.status);
 
       return matchesSearch && matchesStatus;
     });
@@ -129,13 +108,13 @@ export default function PartnerList() {
     <div className="p-6">
       <div className="flex justify-between items-center mb-8">
         <h1 className={titleClass}>Clientes</h1>
-        {activeTab != 'cf' && (
+        {tipo != 'CF' && (
           <button
             onClick={() => setShowAfilate(true)}
             className="flex items-center px-4 py-2 bg-brand hover:bg-brand/90 text-white rounded-xl transition-colors"
           >
             <Plus className="h-5 w-5 mr-2" />
-            {activeTab === 'afiliado' ? 'Adicionar Afiliado' : 'Adicionar AVA'}
+            {tipo === 'AF' ? 'Adicionar Afiliado' : 'Adicionar AVA'}
           </button>
         )}
       </div>
@@ -146,8 +125,8 @@ export default function PartnerList() {
           {/* Tabs */}
           <div className="flex space-x-4">
             <button
-              onClick={() => setActiveTab('cf')}
-              className={`flex items-center px-4 py-2 rounded-lg transition-colors ${activeTab === 'cf'
+              onClick={() => setTipo('CF')}
+              className={`flex items-center px-4 py-2 rounded-lg transition-colors ${tipo === 'CF'
                 ? 'bg-brand-50 text-brand-600 dark:bg-brand-900/20 dark:text-brand-400'
                 : 'text-gray-600 dark:text-gray-400 hover:bg-brand-50/50 dark:hover:bg-brand-900/10 hover:text-brand-600 dark:hover:text-brand-400'
                 }`}
@@ -156,8 +135,8 @@ export default function PartnerList() {
               Clientes Finais
             </button>
             <button
-              onClick={() => setActiveTab('ava')}
-              className={`flex items-center px-4 py-2 rounded-lg transition-colors ${activeTab === 'ava'
+              onClick={() => setTipo('AVA')}
+              className={`flex items-center px-4 py-2 rounded-lg transition-colors ${tipo === 'AVA'
                 ? 'bg-brand-50 text-brand-600 dark:bg-brand-900/20 dark:text-brand-400'
                 : 'text-gray-600 dark:text-gray-400 hover:bg-brand-50/50 dark:hover:bg-brand-900/10 hover:text-brand-600 dark:hover:text-brand-400'
                 }`}
@@ -166,8 +145,8 @@ export default function PartnerList() {
               AVAs
             </button>
             <button
-              onClick={() => setActiveTab('afiliado')}
-              className={`flex items-center px-4 py-2 rounded-lg transition-colors ${activeTab === 'afiliado'
+              onClick={() => setTipo('AF')}
+              className={`flex items-center px-4 py-2 rounded-lg transition-colors ${tipo === 'AF'
                 ? 'bg-brand-50 text-brand-600 dark:bg-brand-900/20 dark:text-brand-400'
                 : 'text-gray-600 dark:text-gray-400 hover:bg-brand-50/50 dark:hover:bg-brand-900/10 hover:text-brand-600 dark:hover:text-brand-400'
                 }`}
@@ -224,7 +203,7 @@ export default function PartnerList() {
                 <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                   Telefone
                 </th>
-                {activeTab === 'afiliado' && (
+                {tipo === 'AF' && (
                   <>
                     <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                       Cupom
@@ -242,10 +221,12 @@ export default function PartnerList() {
                 </th>
               </tr>
             </thead>
+
+
             <tbody className="divide-y divide-light-border dark:divide-gray-700/50">
               {filteredItems.map((item) => (
                 <tr
-                  key={activeTab === 'afiliado' ? item.id : item.id}
+                  key={tipo === 'AF' ? item.id : item.id}
                   className="hover:bg-light-secondary dark:hover:bg-[#0F172A]/40 transition-colors"
                 >
                   <td className="px-6 py-4 whitespace-nowrap">
@@ -260,10 +241,10 @@ export default function PartnerList() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-base text-light-text-secondary dark:text-gray-300">
-                      {formatPhone(item.telefone?.toString())}
+                      {formatPhone(item.fone?.toString())}
                     </div>
                   </td>
-                  {activeTab === 'afiliado' && (
+                  {tipo === 'AF' && (
                     <>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="relative">
@@ -294,21 +275,24 @@ export default function PartnerList() {
                     </>
                   )}
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-3 py-1 text-sm font-medium rounded-full ${item.status
-                      ? 'bg-green-50 dark:bg-green-500/20 text-green-600 dark:text-green-400 border border-green-200 dark:border-green-500/30'
-                      : 'bg-red-50 dark:bg-red-500/20 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-500/30'
-                      }`}>
-                      {item.status ? 'Ativo' : 'Inativo'}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-base text-light-text-secondary dark:text-gray-300">
                       {/* {format(new Date(item?.datacriacao), 'dd/MM/yyyy')} */}
                     </div>
                   </td>
+
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className={`px-3 py-1 text-sm font-medium rounded-full ${item.active
+                      ? 'bg-green-50 dark:bg-green-500/20 text-green-600 dark:text-green-400 border border-green-200 dark:border-green-500/30'
+                      : 'bg-red-50 dark:bg-red-500/20 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-500/30'
+                      }`}>
+                      {item.active ? 'Ativo' : 'Inativo'}
+                    </span>
+                  </td>
+
                 </tr>
               ))}
             </tbody>
+
           </table>
         </div>
       </div>
