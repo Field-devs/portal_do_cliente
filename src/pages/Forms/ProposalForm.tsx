@@ -388,6 +388,22 @@ export default function ProposalForm({onSuccess, onCancel, sender}) : ProposalFo
                         />
                       </div>
 
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                          Validade
+                        </label>
+                        <input
+                          type="number"
+                          name="validade"
+                          value={formData.validade}
+                          onChange={handleInputChange}
+                          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand dark:bg-gray-700 dark:border-gray-600"
+                          required
+                          min="1" // Minimum value
+                          step="1" // Increment step
+                        />
+                      </div>
+
                     </div>
                   </div>
 

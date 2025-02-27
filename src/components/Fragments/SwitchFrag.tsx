@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../../styles/custom.css';
+import '../../Styles/custom.css';
 
 interface SwitchProps {
   checked: boolean;
