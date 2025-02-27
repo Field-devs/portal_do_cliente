@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useAuth } from './AuthProvider';
-import { supabase } from '../lib/supabase';
+import { useAuth } from '../../components/AuthProvider';
+import { supabase } from '../../lib/supabase';
 import { 
   Mail, 
   User, 

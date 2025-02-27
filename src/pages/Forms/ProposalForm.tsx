@@ -17,7 +17,7 @@ interface ProposalFormProps {
 }
 
 
-export default function ProposalForm({onSuccess, onCancel, sender}) : PlanFormProps {
+export default function ProposalForm({onSuccess, onCancel, sender}) : ProposalFormProps {
   const [isFormOpen, setIsFormOpen] = useState(true);
   const [planos, setPlanos] = useState<Plan[]>([]);
   const [etapa, setEtapa] = useState(0);
@@ -37,7 +37,7 @@ export default function ProposalForm({onSuccess, onCancel, sender}) : PlanFormPr
         return;
       }
       else  {
-        console.log(data);
+        //console.log(data);
         //setFormData(data[0]);
       }
     };
@@ -98,6 +98,7 @@ export default function ProposalForm({onSuccess, onCancel, sender}) : PlanFormPr
         setFieldValue('plano_id', firstPlan.id);
         setFieldValue('plano_nome', firstPlan.nome);
         setFieldValue('subtotal', firstPlan.valor);
+        setFieldValue('subtotal', firstPlan.valor);
 
         setFieldValue('caixas_entrada_qtde', firstPlan.caixas_entrada);
         setFieldValue('atendentes_qtde', firstPlan.atendentes);
@@ -107,8 +108,14 @@ export default function ProposalForm({onSuccess, onCancel, sender}) : PlanFormPr
         setFieldValue('atendentes_add_unit', firstPlan.atendentes_add);
         setFieldValue('automacoes_add_unit', firstPlan.automacoes_add);
       }
+
+      console.log("Valor : ", firstPlan.valor);
+      console.log("SubTotal : ", formData.subtotal);
+
     };
 
+
+    
 
     const CalcTotal = () => {
       setFieldValue('caixas_entrada_add_qtde', 0);

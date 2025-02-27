@@ -17,7 +17,6 @@ export function ModalForm({
   maxWidth = '2xl'
 }: ModalProps) {
 
-  console.log('ModalForm isOpen:', isOpen);
   // Handle ESC key
   useEscapeKey(onClose);
 

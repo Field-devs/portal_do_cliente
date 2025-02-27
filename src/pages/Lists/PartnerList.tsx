@@ -11,8 +11,9 @@ import {
 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { format } from 'date-fns';
-import CommercialAffiliateForm from '../../components/CommercialAffiliateForm';
+import CommercialAffiliateForm from '../Forms/CommercialAffiliateForm';
 import { formatPhone, formatCNPJCPF } from '../../utils/formatters';
+import {ModalForm} from '../../components/Modal/Modal';
 
 type PartnerType = 'cf' | 'ava' | 'commercial';
 
@@ -36,10 +37,11 @@ export default function PartnerList() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive'>('all');
-  const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedPartnerId, setSelectedPartnerId] = useState<string | null>(null);
   const [editingPartner, setEditingPartner] = useState<Partner | null>(null);
   const [showCopyTooltip, setShowCopyTooltip] = useState<string | null>(null);
+  const [showAfilate, setShowAfilate] = useState<boolean>(false);
+
 
   const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-light-border dark:border-gray-700/50";
   const titleClass = "text-4xl font-bold text-light-text-primary dark:text-white";
@@ -140,7 +142,7 @@ export default function PartnerList() {
         <h1 className={titleClass}>Clientes</h1>
         {activeTab === 'commercial' && (
           <button
-            onClick={() => setIsFormOpen(true)}
+            onClick={() => setShowAfilate(true)}
             className="flex items-center px-4 py-2 bg-brand hover:bg-brand/90 text-white rounded-xl transition-colors"
           >
             <Plus className="h-5 w-5 mr-2" />
@@ -156,33 +158,30 @@ export default function PartnerList() {
           <div className="flex space-x-4">
             <button
               onClick={() => setActiveTab('cf')}
-              className={`flex items-center px-4 py-2 rounded-lg transition-colors ${
-                activeTab === 'cf'
-                  ? 'bg-brand-50 text-brand-600 dark:bg-brand-900/20 dark:text-brand-400'
-                  : 'text-gray-600 dark:text-gray-400 hover:bg-brand-50/50 dark:hover:bg-brand-900/10 hover:text-brand-600 dark:hover:text-brand-400'
-              }`}
+              className={`flex items-center px-4 py-2 rounded-lg transition-colors ${activeTab === 'cf'
+                ? 'bg-brand-50 text-brand-600 dark:bg-brand-900/20 dark:text-brand-400'
+                : 'text-gray-600 dark:text-gray-400 hover:bg-brand-50/50 dark:hover:bg-brand-900/10 hover:text-brand-600 dark:hover:text-brand-400'
+                }`}
             >
               <Users className="h-5 w-5 mr-2" />
               Clientes Finais
             </button>
             <button
               onClick={() => setActiveTab('ava')}
-              className={`flex items-center px-4 py-2 rounded-lg transition-colors ${
-                activeTab === 'ava'
-                  ? 'bg-brand-50 text-brand-600 dark:bg-brand-900/20 dark:text-brand-400'
-                  : 'text-gray-600 dark:text-gray-400 hover:bg-brand-50/50 dark:hover:bg-brand-900/10 hover:text-brand-600 dark:hover:text-brand-400'
-              }`}
+              className={`flex items-center px-4 py-2 rounded-lg transition-colors ${activeTab === 'ava'
+                ? 'bg-brand-50 text-brand-600 dark:bg-brand-900/20 dark:text-brand-400'
+                : 'text-gray-600 dark:text-gray-400 hover:bg-brand-50/50 dark:hover:bg-brand-900/10 hover:text-brand-600 dark:hover:text-brand-400'
+                }`}
             >
               <Building2 className="h-5 w-5 mr-2" />
               AVAs
             </button>
             <button
               onClick={() => setActiveTab('commercial')}
-              className={`flex items-center px-4 py-2 rounded-lg transition-colors ${
-                activeTab === 'commercial'
-                  ? 'bg-brand-50 text-brand-600 dark:bg-brand-900/20 dark:text-brand-400'
-                  : 'text-gray-600 dark:text-gray-400 hover:bg-brand-50/50 dark:hover:bg-brand-900/10 hover:text-brand-600 dark:hover:text-brand-400'
-              }`}
+              className={`flex items-center px-4 py-2 rounded-lg transition-colors ${activeTab === 'commercial'
+                ? 'bg-brand-50 text-brand-600 dark:bg-brand-900/20 dark:text-brand-400'
+                : 'text-gray-600 dark:text-gray-400 hover:bg-brand-50/50 dark:hover:bg-brand-900/10 hover:text-brand-600 dark:hover:text-brand-400'
+                }`}
             >
               <UserCheck className="h-5 w-5 mr-2" />
               Afiliados Comerciais
@@ -256,7 +255,7 @@ export default function PartnerList() {
             </thead>
             <tbody className="divide-y divide-light-border dark:divide-gray-700/50">
               {filteredItems.map((item) => (
-                <tr 
+                <tr
                   key={activeTab === 'commercial' ? item.cliente_afiliado_id : item.id}
                   className="hover:bg-light-secondary dark:hover:bg-[#0F172A]/40 transition-colors"
                 >
@@ -306,11 +305,10 @@ export default function PartnerList() {
                     </>
                   )}
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-3 py-1 text-sm font-medium rounded-full ${
-                      item.status
-                        ? 'bg-green-50 dark:bg-green-500/20 text-green-600 dark:text-green-400 border border-green-200 dark:border-green-500/30'
-                        : 'bg-red-50 dark:bg-red-500/20 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-500/30'
-                    }`}>
+                    <span className={`px-3 py-1 text-sm font-medium rounded-full ${item.status
+                      ? 'bg-green-50 dark:bg-green-500/20 text-green-600 dark:text-green-400 border border-green-200 dark:border-green-500/30'
+                      : 'bg-red-50 dark:bg-red-500/20 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-500/30'
+                      }`}>
                       {item.status ? 'Ativo' : 'Inativo'}
                     </span>
                   </td>
@@ -327,20 +325,28 @@ export default function PartnerList() {
       </div>
 
       {/* Commercial Affiliate Form Modal */}
-      {isFormOpen && (
-        <CommercialAffiliateForm
-          initialData={editingPartner}
-          onSuccess={() => {
-            setIsFormOpen(false);
-            setEditingPartner(null);
-            fetchPartners();
-          }}
-          onCancel={() => {
-            setIsFormOpen(false);
-            setEditingPartner(null);
-          }}
-        />
-      )}
+        <ModalForm
+          isOpen={showAfilate}
+          onClose={() => setShowAfilate(false)}
+          title="Titulo"
+          maxWidth="2xl"
+        >
+
+          <CommercialAffiliateForm
+            initialData={editingPartner}
+            onSuccess={() => {
+              setEditingPartner(null);
+              fetchPartners();
+            }}
+            onCancel={() => {
+              setShowAfilate(false);
+              setEditingPartner(null);
+            }}
+          />
+
+        </ModalForm>
+
+
     </div>
   );
 }
