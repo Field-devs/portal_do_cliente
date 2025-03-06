@@ -153,12 +153,13 @@ export default function Profile() {
       let PessoaData = {
         nome: `${formData.firstName} ${formData.lastName}`.trim(),
         email: formData.email,
-        telefone: formData.phone || null,
+        fone: formData.phone || null,
         cnpj: formData.cnpj || null,
         empresa: formData.empresa || null
       };
       // Atualiza na base SupaBase
-      await supabase.from('pessoas').update(PessoaData).eq('pessoas_id', user?.pessoas_id);
+      await supabase.from('users')
+      .update(PessoaData).eq('id', user?.id);
 
       setSuccess(true);
       setIsEditing(false);
