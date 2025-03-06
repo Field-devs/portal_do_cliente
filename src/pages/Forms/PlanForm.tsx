@@ -282,7 +282,7 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
 
           <label className="flex items-center space-x-3 p-4 bg-white dark:bg-[#0F172A]/60 border border-gray-200 dark:border-gray-700/50 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#0F172A]/40 transition-colors group">
             <input
-              type="checkbox"
+              // type="checkbox"
               disabled={true}
               checked={formData.kanban}
               onChange={() => handleToggleChange('kanban')}

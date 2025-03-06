@@ -15,6 +15,7 @@ import CommercialAffiliateForm from '../Forms/CommercialAffiliateForm';
 import { formatPhone } from '../../utils/formatters';
 import { ModalForm } from '../../components/Modal/Modal';
 import SwitchFrag from '../../components/Fragments/SwitchFrag';
+import ActionsButtons from '../../components/ActionsData';
 
 type PartnerType = 'CF' | 'AVA' | 'AF';
 
@@ -32,7 +33,7 @@ interface Partner {
 }
 
 export default function PartnerList() {
-  const [tipo, setTipo] = useState<PartnerType>('CF');
+  const [tipo, setTipo] = useState<PartnerType>('AVA');
   const [title, setTitle] = useState('Cliente Final');
   const [client, setClient] = useState<Partner[]>([]);
   const [ava, setAVA] = useState<Partner[]>([]);
@@ -292,9 +293,8 @@ export default function PartnerList() {
                       {/* {format(new Date(item?.datacriacao), 'dd/MM/yyyy')} */}
                     </div>
                   </td>
-
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <SwitchFrag checked={item.active} />
+                    <ActionsButtons />
                   </td>
                   {/* <td className="px-6 py-4 whitespace-nowrap">
                     <span className={`px-3 py-1 text-sm font-medium rounded-full ${item.active

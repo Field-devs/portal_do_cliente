@@ -37,10 +37,10 @@ export default function AVAForm({ onSuccess, onCancel, initialData }: AVAFormPro
   const [error, setError] = useState<string | null>(null);
 
   const [formData, setFormData] = useState<Cliente>({
-    tipo: 'AF',
+    tipo: 'AVA',
     user_id: user?.id || '',
     email: initialData?.email || 'jose@gmail.com ',
-    nome: initialData?.nome || 'JOSE DA SILVA',
+    nome: initialData?.nome || 'JOSE DA SILVA2',
     fone: initialData?.fone ? formatPhoneNumber(initialData.fone) : '99999999999',
     desconto: initialData?.desconto ?? 5,
     comissao: initialData?.comissao ?? 10,
@@ -126,7 +126,7 @@ export default function AVAForm({ onSuccess, onCancel, initialData }: AVAFormPro
             <UserCheck className="h-6 w-6 text-blue-400" />
           </div>
           <h3 className="text-lg font-medium text-white">
-            Informações do Afiliado
+            Informações do AVA
           </h3>
         </div>
 
