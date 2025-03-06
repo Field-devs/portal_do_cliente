@@ -1,12 +1,9 @@
-import React from 'react';
 import { 
-  BarChart2, 
   Users, 
   FileText, 
   DollarSign,
   TrendingUp,
   UserPlus,
-  Clock,
   Building,
   UserCheck
 } from 'lucide-react';
@@ -21,6 +18,9 @@ import {
   BarChart,
   Bar
 } from 'recharts';
+import { supabase } from '../../lib/supabase';
+import { useEffect, useState } from 'react';
+import { da } from 'date-fns/locale';
 
 const revenueData = [
   { month: 'Jan', revenue: 12000, projected: 15000 },
@@ -40,6 +40,26 @@ const acquisitionData = [
   { month: 'Jun', cf: 25, ava: 12 },
 ];
 
+interface IDashboardData  {
+  totalProp: number;
+  totalPropPerc: number;
+  
+  activeCli: number;
+  activeCliNews: number;
+
+  totalCashMonth: number;
+  totalCashMonthLastMonth: number;
+
+  activeParc: number;
+  activeParcNew: number;
+
+
+  totalClients: number;
+  totalCompanies: number;
+  totalAdmins: number;
+}
+
+
 export default function AdminDashboard() {
   const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-light-border dark:border-gray-700/50";
   const titleClass = "text-4xl font-bold text-light-text-primary dark:text-white";
@@ -49,6 +69,42 @@ export default function AdminDashboard() {
   const iconContainerClass = "bg-blue-400/10 p-3 rounded-xl";
   const iconClass = "h-6 w-6 text-blue-600 dark:text-blue-400";
   const badgeClass = "text-xs font-medium bg-blue-50 dark:bg-blue-400/10 text-blue-600 dark:text-blue-400 px-2 py-1 rounded-full";
+
+  const [userData, setUserData] = useState({});
+
+  async function fetchData() {
+    const { data, error } = await supabase
+      .rpc('fn_dashboard').single();
+      if (error) {
+        console.error("Error fetching data:", error);
+      }
+      if (data) {
+        setUserData(data);
+      }
+  }
+
+  let DashboardData : IDashboardData = {
+    totalProp: userData.r_total_prop,
+    totalPropPerc: 10,
+    
+    activeCli: 10,
+    activeCliNews: 15,
+
+    totalCashMonth: 4755.75,
+    totalCashMonthLastMonth: 80,
+
+    activeParc: 20,
+    activeParcNew: 25,
+
+    totalClients: 25,
+    totalCompanies: 30,
+    totalAdmins: 0
+  }
+
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <div className="p-6">
@@ -67,10 +123,10 @@ export default function AdminDashboard() {
             <span className={badgeClass}>Total</span>
           </div>
           <h3 className={metricTitleClass}>Total de Propostas</h3>
-          <p className={metricValueClass}>127</p>
+          <p className={metricValueClass}>{DashboardData.totalProp}</p>
           <div className="flex items-center mt-2">
             <TrendingUp className="h-4 w-4 mr-1 text-blue-600 dark:text-blue-400" />
-            <span className={metricSubtextClass}>+12.5% este mês</span>
+            <span className={metricSubtextClass}>+{DashboardData.totalPropPerc}% este mês</span>
           </div>
         </div>
 
@@ -83,10 +139,10 @@ export default function AdminDashboard() {
             <span className={badgeClass}>Total Atual</span>
           </div>
           <h3 className={metricTitleClass}>Clientes Ativos</h3>
-          <p className={metricValueClass}>584</p>
+          <p className={metricValueClass}>{DashboardData.activeCli}</p>
           <div className="flex items-center mt-2">
             <UserPlus className="h-4 w-4 mr-1 text-blue-600 dark:text-blue-400" />
-            <span className={metricSubtextClass}>+24 novos este mês</span>
+            <span className={metricSubtextClass}>+{DashboardData.activeCliNews} novos este mês</span>
           </div>
         </div>
 
@@ -99,10 +155,10 @@ export default function AdminDashboard() {
             <span className={badgeClass}>Este Mês</span>
           </div>
           <h3 className={metricTitleClass}>Receita Mensal</h3>
-          <p className={metricValueClass}>R$ 45.850</p>
+          <p className={metricValueClass}>R$ {DashboardData.totalCashMonth}</p>
           <div className="flex items-center mt-2">
             <TrendingUp className="h-4 w-4 mr-1 text-blue-600 dark:text-blue-400" />
-            <span className={metricSubtextClass}>+18.2% vs último mês</span>
+            <span className={metricSubtextClass}>+{DashboardData.totalCashMonthLastMonth}% vs último mês</span>
           </div>
         </div>
 
@@ -115,10 +171,10 @@ export default function AdminDashboard() {
             <span className={badgeClass}>Total Atual</span>
           </div>
           <h3 className={metricTitleClass}>Parceiros Ativos</h3>
-          <p className={metricValueClass}>32</p>
+          <p className={metricValueClass}>{DashboardData.activeParc}</p>
           <div className="flex items-center mt-2">
             <UserCheck className="h-4 w-4 mr-1 text-blue-600 dark:text-blue-400" />
-            <span className={metricSubtextClass}>+3 novos este mês</span>
+            <span className={metricSubtextClass}>+{DashboardData.activeParcNew} novos este mês</span>
           </div>
         </div>
       </div>

@@ -133,7 +133,7 @@ export default function PartnerList() {
     <div className="p-6">
       <div className="flex justify-between items-center mb-8">
         <h1 className={titleClass}>{title}</h1>
-        {tipo != 'CF' && (
+        {tipo == 'AF' && (
           <button
             onClick={() => handleClickNew()}
             className="flex items-center px-4 py-2 bg-brand hover:bg-brand/90 text-white transition-colors"
