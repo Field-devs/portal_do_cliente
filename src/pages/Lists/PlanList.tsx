@@ -34,7 +34,7 @@ export default function PlanList() {
   const [showPlanForm, setShowPlanForm] = useState(false);
   const [showAddonForm, setShowAddonForm] = useState(false);
 
-  const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-light-border dark:border-gray-700/50";
+  const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50";
   const titleClass = "text-4xl font-bold text-light-text-primary dark:text-white";
   const tabClass = (active: boolean) => `flex items-center px-4 py-2 rounded-lg transition-colors ${active
       ? 'bg-brand-50 text-brand-600 dark:bg-brand-900/20 dark:text-brand-400'
@@ -93,9 +93,22 @@ export default function PlanList() {
 
   };
 
+  const handleNewClick = () => {
+    if (activeTab === 'plans') {
+      handleNewPlan();
+    } else if (activeTab === 'addons') {
+      handleNewAddOn()
+    }
+  };
+
   const handleNewPlan = () => {
     setPlan(null);
     setShowPlanForm(true);
+  }
+
+  const handleNewAddOn = () => {
+    setAddon(null);
+    setShowAddonForm(true)
   }
 
   const handleFormSuccess = () => {
@@ -131,22 +144,15 @@ export default function PlanList() {
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-8">
-        <h1 className={titleClass}>Planos</h1>
+        <h1 className={titleClass}>{activeTab == "plans" ? "Lista de Planos" : "Lista de Addons" }</h1>
         <div className="flex space-x-3">
           <button
             // onClick={() =>  setShowPlanForm(true)}
-            onClick={() => handleNewPlan()}
+            onClick={() => handleNewClick()}
             className="btn-primary flex items-center"
           >
             <Plus className="h-5 w-5 mr-2" />
-            Novo Plano
-          </button>
-          <button
-            onClick={() => setShowAddonForm(true)}
-            className="btn-primary flex items-center"
-          >
-            <Plus className="h-5 w-5 mr-2" />
-            Novo Add-on
+            {activeTab == "plans" ? "Novo Plano" : "Novo Add-on"}
           </button>
         </div>
       </div>
@@ -207,7 +213,8 @@ export default function PlanList() {
               <PlusSquare className="h-5 w-5 mr-2" />
               Add-ons
             </button>
-          </div>
+          </div
+          >
         </div>
       </div>
 

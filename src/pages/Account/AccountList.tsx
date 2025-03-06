@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../../components/AuthProvider';
 import { supabase } from '../../lib/supabase';
 import { ModalForm } from '../../components/Modal/Modal';
@@ -10,18 +10,15 @@ import {
   Edit,
   Trash2,
   AlertCircle,
-  X,
   Shield,
   Mail,
   Phone,
-  Building2,
-  Lock,
-  User as UserIcon,
   CheckCircle,
   TrendingUp,
   Users,
   Clock
 } from 'lucide-react';
+import SwitchFrag from '../../components/Fragments/SwitchFrag';
 
 function AccountList() {
   const [users, setUsers] = useState<User[]>([]);
@@ -35,7 +32,7 @@ function AccountList() {
   const [showUserForm, setShowUserForm] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
 
-  const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-light-border dark:border-gray-700/50";
+  const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50";
   const titleClass = "text-4xl font-bold text-light-text-primary dark:text-white";
   const metricTitleClass = "text-lg font-medium text-light-text-primary dark:text-white mb-1";
   const metricValueClass = "text-3xl font-bold text-light-text-primary dark:text-white";
@@ -299,7 +296,6 @@ function AccountList() {
                   Data de Criação
                 </th>
                 <th className="px-6 py-4 text-right text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
-                  Ações
                 </th>
               </tr>
             </thead>
@@ -368,17 +364,11 @@ function AccountList() {
                       >
                         <Edit className="h-5 w-5" />
                       </button>
-                      {user.active && (
-                        <button
-                          onClick={() => {
-                            setSelectedUserId(user.id);
-                            setIsDeleteModalOpen(true);
-                          }}
-                          className="p-2 text-red-500 hover:text-red-600 transition-colors"
-                        >
-                          <Trash2 className="h-5 w-5" />
-                        </button>
-                      )}
+                      <div>
+                      <td className=" whitespace-nowrap">
+                        <SwitchFrag checked={user.active} />
+                      </td>
+                      </div>
                     </div>
                   </td>
                 </tr>
@@ -398,6 +388,7 @@ function AccountList() {
             <p className="text-light-text-secondary dark:text-gray-300 mb-4">
               Tem certeza que deseja desativar esta conta? Esta ação pode ser revertida posteriormente.
             </p>
+
             <div className="flex justify-end space-x-3">
               <button
                 onClick={() => {
@@ -408,12 +399,15 @@ function AccountList() {
               >
                 Cancelar
               </button>
+
               <button
                 onClick={handleDelete}
-                className="px-4 py-2 bg-red-500/80 hover:bg-red-600/80 text-white rounded-xl transition-colors"
+                className="px-4 py-2 bg-red-500/80 hover:bg-red-600/80 text-white transition-colors"
               >
                 Desativar
               </button>
+
+
             </div>
           </div>
         </div>

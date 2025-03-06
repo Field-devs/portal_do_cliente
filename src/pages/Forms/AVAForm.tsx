@@ -120,7 +120,7 @@ export default function AVAForm({ onSuccess, onCancel, initialData }: AVAFormPro
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Basic Information */}
-      <div className="bg-[#1E293B]/70 backdrop-blur-sm p-6 rounded-xl border border-gray-700/50">
+      <div className="bg-[#1E293B]/70 backdrop-blur-sm p-6 border border-gray-700/50">
         <div className="flex items-center space-x-3 mb-6">
           <div className="bg-blue-400/10 p-3 rounded-xl">
             <UserCheck className="h-6 w-6 text-blue-400" />
@@ -143,7 +143,7 @@ export default function AVAForm({ onSuccess, onCancel, initialData }: AVAFormPro
                 name="nome"
                 value={formData.nome}
                 onChange={handleInputChange}
-                className="pl-12 block w-full rounded-xl border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
+                className="pl-12 block w-full border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
                 required
               />
             </div>
@@ -161,7 +161,7 @@ export default function AVAForm({ onSuccess, onCancel, initialData }: AVAFormPro
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                className="pl-12 block w-full rounded-xl border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
+                className="pl-12 block w-full border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
                 required
               />
             </div>
@@ -180,7 +180,7 @@ export default function AVAForm({ onSuccess, onCancel, initialData }: AVAFormPro
                 value={formData.telefone}
                 onChange={handleInputChange}
                 placeholder="(00) 00000-0000"
-                className="pl-12 block w-full rounded-xl border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
+                className="pl-12 block w-full border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
                 required
               />
             </div>
@@ -199,7 +199,7 @@ export default function AVAForm({ onSuccess, onCancel, initialData }: AVAFormPro
                 value={formData.vencimento}
                 onChange={handleInputChange}
                 min={new Date().toISOString().split('T')[0]}
-                className="pl-12 block w-full rounded-xl border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
+                className="pl-12 block w-full border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
                 required
               />
             </div>
@@ -208,7 +208,7 @@ export default function AVAForm({ onSuccess, onCancel, initialData }: AVAFormPro
       </div>
 
       {/* Commission Settings */}
-      <div className="bg-[#1E293B]/70 backdrop-blur-sm p-6 rounded-xl border border-gray-700/50">
+      <div className="bg-[#1E293B]/70 backdrop-blur-sm p-6 border border-gray-700/50">
         <div className="flex items-center space-x-3 mb-6">
           <div className="bg-blue-400/10 p-3 rounded-xl">
             <Building2 className="h-6 w-6 text-blue-400" />
@@ -234,7 +234,7 @@ export default function AVAForm({ onSuccess, onCancel, initialData }: AVAFormPro
                 min="0"
                 max="100"
                 step="0.1"
-                className="pl-12 block w-full rounded-xl border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
+                className="pl-12 block w-full border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
                 required
               />
             </div>
@@ -255,7 +255,7 @@ export default function AVAForm({ onSuccess, onCancel, initialData }: AVAFormPro
                 min="0"
                 max="100"
                 step="0.1"
-                className="pl-12 block w-full rounded-xl border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
+                className="pl-12 block w-full border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
                 required
               />
             </div>
@@ -265,7 +265,7 @@ export default function AVAForm({ onSuccess, onCancel, initialData }: AVAFormPro
 
       {/* Error Message */}
       {error && (
-        <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 flex items-center text-red-400">
+        <div className="bg-red-500/10 border border-red-500/20 p-4 flex items-center text-red-400">
           <AlertCircle className="h-5 w-5 mr-2 flex-shrink-0" />
           <p className="text-sm">{error}</p>
         </div>
@@ -276,14 +276,14 @@ export default function AVAForm({ onSuccess, onCancel, initialData }: AVAFormPro
         <button
           type="button"
           onClick={onCancel}
-          className="px-4 py-2 bg-[#0F172A]/60 text-gray-300 rounded-xl hover:bg-[#0F172A]/40 transition-colors"
+          className="px-4 py-2 bg-[#0F172A]/60 text-gray-300 hover:bg-[#0F172A]/40 transition-colors"
           disabled={loading}
         >
           Cancelar
         </button>
         <button
           type="submit"
-          className="px-4 py-2 bg-blue-500/80 hover:bg-blue-600/80 text-white rounded-xl transition-colors flex items-center"
+          className="px-4 py-2 bg-blue-500/80 hover:bg-blue-600/80 text-white transition-colors flex items-center"
           disabled={loading}
         >
           {loading ? (

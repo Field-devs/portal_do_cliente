@@ -60,7 +60,7 @@ export function ModalForm({
       aria-labelledby={title ? 'modal-title' : undefined}
     >
       <div 
-        className={`bg-[#1E293B]/90 backdrop-blur-sm rounded-xl border border-gray-700/50 p-6 w-full mx-4 ${maxWidthClasses[maxWidth]} max-h-[90vh] overflow-y-auto`}
+        className={`bg-[#1E293B]/90 backdrop-blur-sm border border-gray-700/50 p-6 w-full mx-4 ${maxWidthClasses[maxWidth]} max-h-[90vh] overflow-y-auto`}
         onClick={e => e.stopPropagation()}
       >
         {title && (

@@ -145,7 +145,7 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Basic Information */}
-      <div className="bg-[#1E293B]/70 backdrop-blur-sm p-6 rounded-xl border border-gray-700/50">
+      <div className="bg-[#1E293B]/70 backdrop-blur-sm p-6 border border-gray-700/50">
         <div className="flex items-center space-x-3 mb-6">
           <div className="bg-blue-400/10 p-3 rounded-xl">
             <User className="h-6 w-6 text-blue-400" />
@@ -166,7 +166,7 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
               name="firstName"
               value={formData.firstName}
               onChange={handleInputChange}
-              className="mt-1 block w-full rounded-xl border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
+              className="mt-1 block w-full border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
               required
             />
           </div>
@@ -181,7 +181,7 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
               name="lastName"
               value={formData.lastName}
               onChange={handleInputChange}
-              className="mt-1 block w-full rounded-xl border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
+              className="mt-1 block w-full border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
               required
             />
           </div>
@@ -198,7 +198,7 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                className="pl-12 block w-full rounded-xl border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
+                className="pl-12 block w-full border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
                 required
               />
             </div>
@@ -215,7 +215,7 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
                 name="perfil_id"
                 value={formData.perfil_id}
                 onChange={handleInputChange}
-                className="pl-12 block w-full rounded-xl border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
+                className="pl-12 block w-full border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
                 required
               >
                 <option value={5}>Cliente</option>
@@ -230,7 +230,7 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
       </div>
 
       {/* Company Information */}
-      <div className="bg-[#1E293B]/70 backdrop-blur-sm p-6 rounded-xl border border-gray-700/50">
+      <div className="bg-[#1E293B]/70 backdrop-blur-sm p-6 border border-gray-700/50">
         <div className="flex items-center space-x-3 mb-6">
           <div className="bg-blue-400/10 p-3 rounded-xl">
             <Building2 className="h-6 w-6 text-blue-400" />
@@ -253,7 +253,7 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
                 name="empresa"
                 value={formData.empresa}
                 onChange={handleInputChange}
-                className="pl-12 block w-full rounded-xl border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
+                className="pl-12 block w-full border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
               />
             </div>
           </div>
@@ -270,7 +270,7 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
                 name="cnpj"
                 value={formData.cnpj}
                 onChange={handleInputChange}
-                className="pl-12 block w-full rounded-xl border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
+                className="pl-12 block w-full border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
               />
             </div>
           </div>
@@ -279,7 +279,7 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
 
       {/* Password Section (only for new users) */}
       {!initialData && (
-        <div className="bg-[#1E293B]/70 backdrop-blur-sm p-6 rounded-xl border border-gray-700/50">
+        <div className="bg-[#1E293B]/70 backdrop-blur-sm p-6 border border-gray-700/50">
           <div className="flex items-center space-x-3 mb-6">
             <div className="bg-blue-400/10 p-3 rounded-xl">
               <Lock className="h-6 w-6 text-blue-400" />
@@ -302,7 +302,7 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
                   name="password"
                   value={formData.password}
                   onChange={handleInputChange}
-                  className="pl-12 block w-full rounded-xl border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
+                  className="pl-12 block w-full border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
                 />
               </div>
             </div>
@@ -319,7 +319,7 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
                   name="confirmPassword"
                   value={formData.confirmPassword}
                   onChange={handleInputChange}
-                  className="pl-12 block w-full rounded-xl border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
+                  className="pl-12 block w-full border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
                 />
               </div>
             </div>
@@ -329,7 +329,7 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
 
       {/* Error Message */}
       {error && (
-        <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 flex items-center text-red-400">
+        <div className="bg-red-500/10 border border-red-500/20 p-4 flex items-center text-red-400">
           <AlertCircle className="h-5 w-5 mr-2 flex-shrink-0" />
           <p className="text-sm">{error}</p>
         </div>
@@ -340,14 +340,14 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
         <button
           type="button"
           onClick={onCancel}
-          className="px-4 py-2 bg-[#0F172A]/60 text-gray-300 rounded-xl hover:bg-[#0F172A]/40 transition-colors"
+          className="px-4 py-2 bg-[#0F172A]/60 text-gray-300 hover:bg-[#0F172A]/40 transition-colors"
           disabled={loading}
         >
           Cancelar
         </button>
         <button
           type="submit"
-          className="px-4 py-2 bg-blue-500/80 hover:bg-blue-600/80 text-white rounded-xl transition-colors flex items-center"
+          className="px-4 py-2 bg-blue-500/80 hover:bg-blue-600/80 text-white transition-colors flex items-center"
           disabled={loading}
         >
           {loading ? (

@@ -48,7 +48,7 @@ export default function PaymentModal({ invoice, onClose, onSubmit }: PaymentModa
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-      <div className="bg-[#1E293B]/90 backdrop-blur-sm rounded-xl border border-gray-700/50 p-6 w-full max-w-md">
+      <div className="bg-[#1E293B]/90 backdrop-blur-sm border border-gray-700/50 p-6 w-full max-w-md">
         <div className="flex justify-between items-center mb-6">
           <div className="flex items-center space-x-3">
             <div className="bg-blue-400/10 p-3 rounded-xl">
@@ -81,7 +81,7 @@ export default function PaymentModal({ invoice, onClose, onSubmit }: PaymentModa
         ) : (
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Client Information */}
-            <div className="bg-[#0F172A]/60 p-6 rounded-xl border border-gray-700/50">
+            <div className="bg-[#0F172A]/60 p-6 border border-gray-700/50">
               <label className="block text-sm font-medium text-gray-300">
                 Cliente
               </label>
@@ -91,7 +91,7 @@ export default function PaymentModal({ invoice, onClose, onSubmit }: PaymentModa
             </div>
 
             {/* Payment Details */}
-            <div className="bg-[#0F172A]/60 p-6 rounded-xl border border-gray-700/50 space-y-4">
+            <div className="bg-[#0F172A]/60 p-6 border border-gray-700/50 space-y-4">
               <h3 className="text-lg font-medium text-white mb-4">
                 Detalhes do Pagamento
               </h3>
@@ -108,7 +108,7 @@ export default function PaymentModal({ invoice, onClose, onSubmit }: PaymentModa
                     step="0.01"
                     value={amount}
                     onChange={(e) => setAmount(Number(e.target.value))}
-                    className="pl-12 block w-full rounded-xl border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 placeholder-gray-400 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
+                    className="pl-12 block w-full border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 placeholder-gray-400 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
                     required
                   />
                 </div>
@@ -125,7 +125,7 @@ export default function PaymentModal({ invoice, onClose, onSubmit }: PaymentModa
                     type="date"
                     value={date}
                     onChange={(e) => setDate(e.target.value)}
-                    className="pl-12 block w-full rounded-xl border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 placeholder-gray-400 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
+                    className="pl-12 block w-full border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 placeholder-gray-400 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
                     required
                   />
                 </div>
@@ -139,7 +139,7 @@ export default function PaymentModal({ invoice, onClose, onSubmit }: PaymentModa
                 <select
                   value={method}
                   onChange={(e) => setMethod(e.target.value)}
-                  className="mt-1 block w-full rounded-xl border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 placeholder-gray-400 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
+                  className="mt-1 block w-full border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 placeholder-gray-400 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
                   required
                 >
                   <option value="pix">PIX</option>
@@ -159,14 +159,14 @@ export default function PaymentModal({ invoice, onClose, onSubmit }: PaymentModa
                   value={reference}
                   onChange={(e) => setReference(e.target.value)}
                   placeholder="Ex: Número da transação, identificador do pagamento"
-                  className="mt-1 block w-full rounded-xl border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 placeholder-gray-400 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
+                  className="mt-1 block w-full border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 placeholder-gray-400 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
                 />
               </div>
             </div>
 
             {/* Error Message */}
             {error && (
-              <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 flex items-center text-red-400">
+              <div className="bg-red-500/10 border border-red-500/20 p-4 flex items-center text-red-400">
                 <AlertCircle className="h-5 w-5 mr-2 flex-shrink-0" />
                 <p className="text-sm">{error}</p>
               </div>
@@ -177,14 +177,14 @@ export default function PaymentModal({ invoice, onClose, onSubmit }: PaymentModa
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 bg-[#0F172A]/60 text-gray-300 rounded-xl hover:bg-[#0F172A]/40 transition-colors"
+                className="px-4 py-2 bg-[#0F172A]/60 text-gray-300 hover:bg-[#0F172A]/40 transition-colors"
                 disabled={loading}
               >
                 Cancelar
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 bg-blue-500/80 hover:bg-blue-600/80 text-white rounded-xl transition-colors flex items-center"
+                className="px-4 py-2 bg-blue-500/80 hover:bg-blue-600/80 text-white transition-colors flex items-center"
                 disabled={loading}
               >
                 {loading ? (

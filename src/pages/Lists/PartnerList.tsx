@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Plus,
   Search,
@@ -11,9 +11,8 @@ import {
   UserPlus
 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
-import { format } from 'date-fns';
 import CommercialAffiliateForm from '../Forms/CommercialAffiliateForm';
-import { formatPhone, formatCNPJCPF } from '../../utils/formatters';
+import { formatPhone } from '../../utils/formatters';
 import { ModalForm } from '../../components/Modal/Modal';
 import SwitchFrag from '../../components/Fragments/SwitchFrag';
 
@@ -34,6 +33,7 @@ interface Partner {
 
 export default function PartnerList() {
   const [tipo, setTipo] = useState<PartnerType>('CF');
+  const [title, setTitle] = useState('Cliente Final');
   const [client, setClient] = useState<Partner[]>([]);
   const [ava, setAVA] = useState<Partner[]>([]);
   const [afilate, setAfilate] = useState<Partner[]>([]);
@@ -49,11 +49,21 @@ export default function PartnerList() {
   const [showAfilate, setShowAfilate] = useState<boolean>(false);
 
 
-  const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-light-border dark:border-gray-700/50";
+  const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50";
   const titleClass = "text-4xl font-bold text-light-text-primary dark:text-white";
 
   useEffect(() => {
     fetchClientes();
+
+    setTitle('');
+    if (tipo === 'CF') {
+      setTitle('Clientes Finais');
+    } else if (tipo === 'AVA') {
+      setTitle('AVA');
+    } else if (tipo === 'AF') {
+      setTitle('Afiliados');
+    }
+
   }, [tipo]);
 
   const fetchClientes = async () => {
@@ -98,6 +108,7 @@ export default function PartnerList() {
       return matchesSearch && matchesStatus;
     });
 
+    
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -109,11 +120,11 @@ export default function PartnerList() {
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-8">
-        <h1 className={titleClass}>Clientes</h1>
+        <h1 className={titleClass}>{title}</h1>
         {tipo != 'CF' && (
           <button
             onClick={() => setShowAfilate(true)}
-            className="flex items-center px-4 py-2 bg-brand hover:bg-brand/90 text-white rounded-xl transition-colors"
+            className="flex items-center px-4 py-2 bg-brand hover:bg-brand/90 text-white transition-colors"
           >
             <Plus className="h-5 w-5 mr-2" />
             {tipo === 'AF' ? 'Adicionar Afiliado' : 'Adicionar AVA'}
@@ -168,7 +179,7 @@ export default function PartnerList() {
                   placeholder="Buscar por nome, email ou telefone..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 rounded-xl text-light-text-primary dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors"
+                  className="w-full pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors"
                 />
               </div>
             </div>
@@ -178,7 +189,7 @@ export default function PartnerList() {
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value as 'all' | 'active' | 'inactive')}
-                  className="pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 rounded-xl text-light-text-primary dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors appearance-none min-w-[200px]"
+                  className="pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors appearance-none min-w-[200px]"
                 >
                   <option value="all">Todos os Status</option>
                   <option value="active">Ativos</option>
