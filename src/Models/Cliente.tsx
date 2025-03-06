@@ -8,7 +8,7 @@ interface Cliente {
   email: string;
   endereco?: string; // Opcional
   cnpj?: string; // Opcional
-wallet_id?: string; // Opcional
+  wallet_id?: string; // Opcional
   cupom?: string; // Opcional
   desconto: number;
   comissao: number;

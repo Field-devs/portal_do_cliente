@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../components/AuthProvider';
 import { supabase } from '../../lib/supabase';
-import { 
-  Mail, 
-  User, 
-  Phone, 
-  Percent, 
-  DollarSign, 
+import {
+  Mail,
+  User,
+  Phone,
+  Percent,
+  DollarSign,
   Calendar,
   AlertCircle,
   Loader2,
   Save,
   Building2,
-  UserCheck
+  UserCheck,
+  MonitorX
 } from 'lucide-react';
 import Cliente from '../../Models/Cliente';
 
@@ -82,17 +83,19 @@ export default function AVAForm({ onSuccess, onCancel, initialData }: AVAFormPro
       } else {
 
         const couponCode = generateCouponCode();
-        
+
         const { error: insertError } = await supabase
           .from('cliente')
           .insert([{
-            tipo: 'AF',
-            email: formData.email,
+            tipo: 'AVA',
             nome: formData.nome,
             fone: fone,
+            email: formData.email,
+            endereco: formData.endereco,
+            cnpj: formData.cnpj,
             desconto: formData.desconto,
             comissao: formData.comissao,
-            vencimento: formData.vencimento,
+            // vencimento: formData.vencimento,
             cupom: couponCode,
             user_id: user?.id,
             active: formData.active
@@ -130,9 +133,28 @@ export default function AVAForm({ onSuccess, onCancel, initialData }: AVAFormPro
           </h3>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <div className="grid grid-cols-12 md:grid-cols-12 gap-6">
+          {/* CNPJ */}
+          <div className='col-span-5 md:col-span-5'>
+            <label className="block text-sm font-medium text-gray-300">
+              CNPJ
+            </label>
+            <div className="mt-1 relative">
+              <MonitorX className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <input
+                type="cnpj"
+                name="cnpj"
+                value={formData.cnpj}
+                onChange={handleInputChange}
+                className="pl-12 block w-full border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
+                required
+              />
+            </div>
+          </div>
+
           {/* Nome */}
-          <div>
+          <div className='col-span-7 md:col-span-7'>
             <label className="block text-sm font-medium text-gray-300">
               Nome
             </label>
@@ -149,8 +171,30 @@ export default function AVAForm({ onSuccess, onCancel, initialData }: AVAFormPro
             </div>
           </div>
 
+
+
+          {/* Fone */}
+          <div className='col-span-6 md:col-span-6'>
+            <label className="block text-sm font-medium text-gray-300">
+              Fone
+            </label>
+            <div className="mt-1 relative">
+              <Phone className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <input
+                type="tel"
+                name="telefone"
+                value={formData.fone}
+                onChange={handleInputChange}
+                placeholder="(00) 00000-0000"
+                className="pl-12 block w-full border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
+                required
+              />
+            </div>
+          </div>
+
+
           {/* Email */}
-          <div>
+          <div className='col-span-6 md:col-span-6'>
             <label className="block text-sm font-medium text-gray-300">
               Email
             </label>
@@ -167,99 +211,25 @@ export default function AVAForm({ onSuccess, onCancel, initialData }: AVAFormPro
             </div>
           </div>
 
-          {/* Telefone */}
-          <div>
+          {/* Endereco */}
+          <div className='col-span-12 md:col-span-12'>
             <label className="block text-sm font-medium text-gray-300">
-              Telefone
+              Endereço
             </label>
             <div className="mt-1 relative">
-              <Phone className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <User className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
               <input
-                type="tel"
-                name="telefone"
-                value={formData.telefone}
+                type="text"
+                name="endereco"
+                value={formData.endereco}
                 onChange={handleInputChange}
-                placeholder="(00) 00000-0000"
                 className="pl-12 block w-full border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
                 required
               />
             </div>
           </div>
 
-          {/* Data de Vencimento */}
-          <div>
-            <label className="block text-sm font-medium text-gray-300">
-              Data de Vencimento
-            </label>
-            <div className="mt-1 relative">
-              <Calendar className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-              <input
-                type="date"
-                name="vencimento"
-                value={formData.vencimento}
-                onChange={handleInputChange}
-                min={new Date().toISOString().split('T')[0]}
-                className="pl-12 block w-full border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
-                required
-              />
-            </div>
-          </div>
-        </div>
-      </div>
 
-      {/* Commission Settings */}
-      <div className="bg-[#1E293B]/70 backdrop-blur-sm p-6 border border-gray-700/50">
-        <div className="flex items-center space-x-3 mb-6">
-          <div className="bg-blue-400/10 p-3 rounded-xl">
-            <Building2 className="h-6 w-6 text-blue-400" />
-          </div>
-          <h3 className="text-lg font-medium text-white">
-            Configurações de Comissão
-          </h3>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Desconto */}
-          <div>
-            <label className="block text-sm font-medium text-gray-300">
-              Percentual de Desconto
-            </label>
-            <div className="mt-1 relative">
-              <Percent className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-              <input
-                type="number"
-                name="desconto"
-                value={formData.desconto}
-                onChange={handleInputChange}
-                min="0"
-                max="100"
-                step="0.1"
-                className="pl-12 block w-full border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
-                required
-              />
-            </div>
-          </div>
-
-          {/* Comissão */}
-          <div>
-            <label className="block text-sm font-medium text-gray-300">
-              Taxa de Comissão
-            </label>
-            <div className="mt-1 relative">
-              <DollarSign className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-              <input
-                type="number"
-                name="comissao"
-                value={formData.comissao}
-                onChange={handleInputChange}
-                min="0"
-                max="100"
-                step="0.1"
-                className="pl-12 block w-full border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
-                required
-              />
-            </div>
-          </div>
         </div>
       </div>
 
@@ -294,7 +264,7 @@ export default function AVAForm({ onSuccess, onCancel, initialData }: AVAFormPro
           ) : (
             <>
               <Save className="h-5 w-5 mr-2" />
-              {initialData ? 'Atualizar Afiliado' : 'Criar Afiliado'}
+              {initialData ? 'Atualizar Afiliado' : 'Criar AVA'}
             </>
           )}
         </button>

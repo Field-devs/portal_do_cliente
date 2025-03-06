@@ -16,6 +16,7 @@ import { formatPhone } from '../../utils/formatters';
 import { ModalForm } from '../../components/Modal/Modal';
 import SwitchFrag from '../../components/Fragments/SwitchFrag';
 import ActionsButtons from '../../components/ActionsData';
+import AVAForm from '../Forms/AVAForm';
 
 type PartnerType = 'CF' | 'AVA' | 'AF';
 
@@ -48,6 +49,7 @@ export default function PartnerList() {
   const [editingPartner, setEditingPartner] = useState<Partner | null>(null);
   const [showCopyTooltip, setShowCopyTooltip] = useState<string | null>(null);
   const [showAfilate, setShowAfilate] = useState<boolean>(false);
+  const [showAVA, setShowAVA] = useState<boolean>(false);
 
 
   const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50";
@@ -109,7 +111,16 @@ export default function PartnerList() {
       return matchesSearch && matchesStatus;
     });
 
-    
+  const handleClickNew = () => {
+    if (tipo === 'AF') {
+      setShowAfilate(true);
+    } else if (tipo === 'AVA') {
+      setShowAVA(true);
+    }
+    console.log(tipo);
+  };
+
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -124,7 +135,7 @@ export default function PartnerList() {
         <h1 className={titleClass}>{title}</h1>
         {tipo != 'CF' && (
           <button
-            onClick={() => setShowAfilate(true)}
+            onClick={() => handleClickNew()}
             className="flex items-center px-4 py-2 bg-brand hover:bg-brand/90 text-white transition-colors"
           >
             <Plus className="h-5 w-5 mr-2" />
@@ -318,7 +329,7 @@ export default function PartnerList() {
         isOpen={showAfilate}
         onClose={() => setShowAfilate(false)}
         title="Afiliado"
-        icon={<>{<UserPlus className="h-5 w-5"/>}</>}
+        icon={<>{<UserPlus className="h-5 w-5" />}</>}
         maxWidth="2xl"
       >
 
@@ -337,6 +348,32 @@ export default function PartnerList() {
         />
 
       </ModalForm>
+
+      {/* Commercial Affiliate Form Modal */}
+      <ModalForm
+        isOpen={showAVA}
+        onClose={() => setShowAfilate(false)}
+        title="AVA"
+        icon={<>{<UserPlus className="h-5 w-5" />}</>}
+        maxWidth="2xl"
+      >
+
+        <AVAForm
+          initialData={editingPartner}
+          onSuccess={() => {
+            setShowAVA(false);
+            setEditingPartner(null);
+            fetchClientes();
+          }}
+          onCancel={() => {
+            setShowAVA(false);
+            setEditingPartner(null);
+          }}
+
+        />
+
+      </ModalForm>
+
 
 
     </div>
