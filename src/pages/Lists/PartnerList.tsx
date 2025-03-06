@@ -7,7 +7,8 @@ import {
   Users,
   UserCheck,
   Copy,
-  CheckCircle
+  CheckCircle,
+  UserPlus
 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { format } from 'date-fns';
@@ -305,7 +306,8 @@ export default function PartnerList() {
       <ModalForm
         isOpen={showAfilate}
         onClose={() => setShowAfilate(false)}
-        title="Titulo"
+        title="Afiliado"
+        icon={<>{<UserPlus className="h-5 w-5"/>}</>}
         maxWidth="2xl"
       >
 

@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { LucideIcon  } from 'lucide-react';
 import { useEscapeKey } from '../../hooks/useEscapeKey';
 
 interface ModalProps {
@@ -6,6 +7,8 @@ interface ModalProps {
   onClose: () => void;
   children: React.ReactNode;
   title?: string;
+  // icon: LucideIcon;
+  icon: any;
   maxWidth?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | '6xl' | '7xl';
 }
 
@@ -14,6 +17,7 @@ export function ModalForm({
   onClose, 
   children, 
   title,
+  icon, 
   maxWidth = '2xl'
 }: ModalProps) {
 
@@ -61,9 +65,12 @@ export function ModalForm({
       >
         {title && (
           <div className="flex items-center space-x-3 mb-6">
-            <div className="bg-blue-400/10 p-3 rounded-xl">
-              <div className="h-6 w-6 text-blue-400" />
-            </div>
+            {icon && (
+              <div className="bg-blue-400/10 p-3 rounded-xl">
+                {/* {React.createElement(icon, { className: 'h-6 w-6 text-blue-400' })} */} 
+                {icon}
+              </div>
+            )}
             <h2 id="modal-title" className="text-xl font-semibold text-white">
               {title}
             </h2>
