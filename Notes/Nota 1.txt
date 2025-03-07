@@ -1,6 +1,7 @@
-
-Database - OUTR
+Host : aws-0-us-west-1.pooler.supabase.com
+User : postgres.vgxuxmfcjylbikovlctc
 Password O1j0%iQYg3V!
+Database - postgres
 
 Url:
 https://vgxuxmfcjylbikovlctc.supabase.co
