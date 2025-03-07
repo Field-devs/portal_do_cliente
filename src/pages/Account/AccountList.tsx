@@ -69,10 +69,8 @@ function AccountList() {
   };
 
 
-  const handleOnLock = async(id: string) => {
-    console.log("Locking user with ID:", id);
-    let response = await UpdateSingleField("users", "id", id, "active", false);
-    console.log(response);
+  const handleOnLock = async(id: string, status: boolean) => {
+    let response = await UpdateSingleField("users", "id", id, "active", !status);
     return response;
   };
 
@@ -342,11 +340,13 @@ function AccountList() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right">
                     <div className="flex justify-end space-x-2">
+                      
                       <ActionsButtons
                         onEdit={handleEdit} 
-                        onLocker={user.perfil_id == 1 ? null : async () => handleOnLock(user.id)}
+                        onLocker={user.perfil_id == 1 ? null : async () => handleOnLock(user.id, user.active)} 
                         active={user.active}
                       />
+
                     </div>
                   </td>
                 </tr>

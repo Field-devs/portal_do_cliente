@@ -18,7 +18,8 @@ import { usePlanos } from '../../hooks/usePlanos';
 import { ModalForm } from '../../components/Modal/Modal';
 import ProposalForm from '../Forms/ProposalForm';
 import ActionsButtons from '../../components/ActionsData';
-import SwitchFrag from '../../components/Fragments/SwitchFrag';
+import { UpdateSingleField } from '../../utils/supageneric';
+
 
 export default function ProposalsList() {
   const [propid, setPropId] = useState<string | null>(null);
@@ -84,12 +85,10 @@ export default function ProposalsList() {
     setOpenProposal(true);
   };
 
-
-  function handleLocker(id: any): void {
-    supa
-  }
-
-
+  const handleOnLock = async(id: string, status: boolean) => {
+    let response = await UpdateSingleField("proposta", "id", id, "active", !status);
+    return response;
+  };
 
   const handleChange = (checked: boolean) => {
     console.log(active);
@@ -250,6 +249,7 @@ export default function ProposalsList() {
         <div className={`${cardClass} mt-6`}>
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-light-border dark:divide-gray-700/50">
+
               <thead>
                 <tr className="bg-light-secondary dark:bg-[#0F172A]/60">
                   <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
@@ -277,10 +277,8 @@ export default function ProposalsList() {
                   </th>
                   <th className="px-6 py-4 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                   </th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider w-[20px]">
-                    Ativo
-                  </th>
                 </tr>
+
               </thead>
               <tbody className="divide-y divide-light-border dark:divide-gray-700/50">
                 {filteredProposals.map((proposta) => (
@@ -339,10 +337,13 @@ export default function ProposalsList() {
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <ActionsButtons 
+                          
+                      <ActionsButtons
                         onEdit={() => handleEdit(proposta.id)}
-                        onLocker={() => handleLocker(proposta.id)} 
-                        />
+                        onLocker={() => handleOnLock(proposta.id, proposta.active)}
+                        active={proposta.active}
+                      />
+
                     </td>
 
                   </tr>
