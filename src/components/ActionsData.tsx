@@ -1,14 +1,34 @@
 import React from 'react';
-import { Plus, Eye, Edit, Trash2 } from 'lucide-react';
+import { Plus, Edit, Trash2 } from 'lucide-react';
+import SwitchFrag from './Fragments/SwitchFrag';
 
 interface CrudButtonsProps {
   onCreate: () => void;
   onRead: () => void;
-  onUpdate: () => void;
+  onEdit: () => void;
   onDelete: () => void;
+  onLocker: () => Promise<boolean>;
+  active: boolean;
 }
 
-const ActionsButtons: React.FC<CrudButtonsProps> = ({ onCreate, onRead, onUpdate, onDelete, onLocker }) => {
+const ActionsButtons: React.FC<CrudButtonsProps> = ({ onCreate, onRead, onEdit, onDelete, onLocker, active }) => {
+
+  const [activeActual, setActiveActual] = React.useState(active);
+
+  const handleOnLock = async () => {
+    const resultChecked = await onLocker();
+    setActiveActual(resultChecked);
+  }
+
+  const handleEdit = () => {
+    onEdit();
+    console.log("Editando");
+  };
+
+  const handleDelete = () => {
+    onDelete();
+  };
+
   return (
 
     <div className="flex space-x-2">
@@ -38,23 +58,23 @@ const ActionsButtons: React.FC<CrudButtonsProps> = ({ onCreate, onRead, onUpdate
       }
 
       {/* Botao de Atualização */}
-      {/* {
-        onUpdate && (
+      {
+        onEdit && (
           <button
-            onClick={onUpdate}
+            onClick={handleEdit}
             className="text-blue-500"
           >
             <Edit className="mr-2" />
           </button>
         )
-      } */}
+      }
 
       {/* Botao de Exclusão */}
 
       {
-        onUpdate && (
+        onDelete && (
           <button
-            onClick={onDelete}
+            onClick={handleDelete}
             className="text-red-500"
           >
             <Trash2 className="mr-2" />
@@ -64,12 +84,10 @@ const ActionsButtons: React.FC<CrudButtonsProps> = ({ onCreate, onRead, onUpdate
 
       {
         onLocker && (
-          <button
-            onClick={onLocker}
-            className="text-black-500"
-          >
-            <Trash2 className="mr-2" />
-          </button>
+          <SwitchFrag
+            onClick={handleOnLock}
+            checked={activeActual}
+          />
         )
       }
       

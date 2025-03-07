@@ -27,7 +27,7 @@ export default function ProposalsList() {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'accepted' | 'rejected'>('all');
   const [OpenProposal, setOpenProposal] = useState(false);
-  const [active, SetActive ] = useState(true);
+  const [active, SetActive] = useState(true);
 
   const { loading: planosLoading } = usePlanos();
 
@@ -80,17 +80,23 @@ export default function ProposalsList() {
   }, [statusFilter]);
 
 
-
   const HandleOpenProposal = () => {
     setOpenProposal(true);
   };
+
+
+  function handleLocker(id: any): void {
+    supa
+  }
+
+
 
   const handleChange = (checked: boolean) => {
     console.log(active);
     SetActive(checked ? true : false);
   };
 
-  const handleEdit = (row : string) => {
+  const handleEdit = (row: string) => {
     setPropId(row);
     HandleOpenProposal();
   };
@@ -115,11 +121,11 @@ export default function ProposalsList() {
         title="Nova Proposta"
         maxWidth='2xl'
       >
-        <ProposalForm 
+        <ProposalForm
           id={propid ?? ''}
           onCancel={() => setOpenProposal(false)}
         />
-        
+
       </ModalForm>
 
       <div className="p-6">
@@ -333,10 +339,10 @@ export default function ProposalsList() {
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <ActionsButtons onRead={() => handleEdit(proposta.id)} />
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right">
-                      <SwitchFrag checked={active} onChange={handleChange} />
+                      <ActionsButtons 
+                        onEdit={() => handleEdit(proposta.id)}
+                        onLocker={() => handleLocker(proposta.id)} 
+                        />
                     </td>
 
                   </tr>

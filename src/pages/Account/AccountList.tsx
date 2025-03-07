@@ -7,9 +7,6 @@ import {
   Search,
   Filter,
   Plus,
-  Edit,
-  Trash2,
-  AlertCircle,
   Shield,
   Mail,
   Phone,
@@ -18,7 +15,8 @@ import {
   Users,
   Clock
 } from 'lucide-react';
-import SwitchFrag from '../../components/Fragments/SwitchFrag';
+import ActionsButtons from '../../components/ActionsData';
+import { UpdateSingleField } from '../../utils/supageneric';
 
 function AccountList() {
   const [users, setUsers] = useState<User[]>([]);
@@ -27,7 +25,6 @@ function AccountList() {
   const [searchTerm, setSearchTerm] = useState('');
   const [roleFilter, setRoleFilter] = useState<number | 'all'>('all');
   const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive'>('all');
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const [showUserForm, setShowUserForm] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
@@ -61,40 +58,24 @@ function AccountList() {
     }
   };
 
-  const handleEdit = (user: User) => {
-    setEditingUser(user);
-    setShowUserForm(true);
-  };
-
   const handleFormClose = () => {
     setEditingUser(null);
     setShowUserForm(false);
   };
 
-  const handleDelete = async () => {
-    if (!selectedUserId) return;
-
-    try {
-      const { error } = await supabase
-        .from('users')
-        .update({ active: false })
-        .eq('id', selectedUserId);
-
-      if (error) throw error;
-
-      setUsers(prev =>
-        prev.map(user =>
-          user.id === selectedUserId
-            ? { ...user, active: false }
-            : user
-        )
-      );
-      setIsDeleteModalOpen(false);
-      setSelectedUserId(null);
-    } catch (error) {
-      console.error('Error deactivating user:', error);
-    }
+  const handleEdit = () => {
+    setEditingUser(user);
+    setShowUserForm(true);
   };
+
+
+  const handleOnLock = async(id: string) => {
+    console.log("Locking user with ID:", id);
+    //let response = await UpdateSingleField("users", "id", id, "active", true);
+    return false;
+  };
+
+
 
   const filteredUsers = users.filter(user => {
     const matchesSearch =
@@ -120,7 +101,9 @@ function AccountList() {
     );
   }
 
+
   return (
+
     <div className="p-6">
       <div className="flex justify-between items-center mb-8">
         <h1 className={titleClass}>Usuários</h1>
@@ -301,7 +284,7 @@ function AccountList() {
             </thead>
             <tbody className="divide-y divide-light-border dark:divide-gray-700/50">
               {filteredUsers.map((user) => (
-                <tr 
+                <tr
                   key={user.id}
                   className="hover:bg-light-secondary dark:hover:bg-[#0F172A]/40 transition-colors"
                 >
@@ -358,17 +341,10 @@ function AccountList() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right">
                     <div className="flex justify-end space-x-2">
-                      <button
-                        onClick={() => handleEdit(user)}
-                        className="p-2 text-brand hover:text-brand/80 transition-colors"
-                      >
-                        <Edit className="h-5 w-5" />
-                      </button>
-                      <div>
-                      <td className=" whitespace-nowrap">
-                        <SwitchFrag checked={user.active} />
-                      </td>
-                      </div>
+                      <ActionsButtons
+                        onEdit={handleEdit} 
+                        onLocker={async () => handleOnLock(user.id)} 
+                      />
                     </div>
                   </td>
                 </tr>
@@ -378,40 +354,6 @@ function AccountList() {
         </div>
       </div>
 
-      {isDeleteModalOpen && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className={`${cardClass} max-w-md w-full mx-4`}>
-            <div className="flex items-center text-red-400 mb-4">
-              <AlertCircle className="h-6 w-6 mr-2" />
-              <h3 className="text-lg font-medium">Confirmar Desativação</h3>
-            </div>
-            <p className="text-light-text-secondary dark:text-gray-300 mb-4">
-              Tem certeza que deseja desativar esta conta? Esta ação pode ser revertida posteriormente.
-            </p>
-
-            <div className="flex justify-end space-x-3">
-              <button
-                onClick={() => {
-                  setIsDeleteModalOpen(false);
-                  setSelectedUserId(null);
-                }}
-                className="btn-secondary"
-              >
-                Cancelar
-              </button>
-
-              <button
-                onClick={handleDelete}
-                className="px-4 py-2 bg-red-500/80 hover:bg-red-600/80 text-white transition-colors"
-              >
-                Desativar
-              </button>
-
-
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

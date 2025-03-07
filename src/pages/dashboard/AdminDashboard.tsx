@@ -30,7 +30,6 @@ const revenueData = [
   { month: 'Mai', revenue: 40000, projected: 42000 },
   { month: 'Jun', revenue: 45000, projected: 48000 },
 ];
-
 const acquisitionData = [
   { month: 'Jan', cf: 5, ava: 2 },
   { month: 'Fev', cf: 8, ava: 3 },
@@ -54,9 +53,8 @@ interface IDashboardData  {
   activeParcNew: number;
 
 
-  totalClients: number;
-  totalCompanies: number;
-  totalAdmins: number;
+  receitaProjecao : JSON[] | any;
+
 }
 
 
@@ -70,7 +68,7 @@ export default function AdminDashboard() {
   const iconClass = "h-6 w-6 text-blue-600 dark:text-blue-400";
   const badgeClass = "text-xs font-medium bg-blue-50 dark:bg-blue-400/10 text-blue-600 dark:text-blue-400 px-2 py-1 rounded-full";
 
-  const [userData, setUserData] = useState({});
+  const [userData, setUserData] = useState(null);
 
   async function fetchData() {
     const { data, error } = await supabase
@@ -80,25 +78,26 @@ export default function AdminDashboard() {
       }
       if (data) {
         setUserData(data);
+
       }
   }
-
+  
   let DashboardData : IDashboardData = {
-    totalProp: userData.r_total_prop,
-    totalPropPerc: 10,
+    totalProp: userData?.r_total_prop || 0,
+    totalPropPerc: userData?.r_total_prop_perc || 0,
     
-    activeCli: 10,
-    activeCliNews: 15,
+    activeCli: userData?.r_active_cli || 0,
+    activeCliNews: userData?.r_active_cli_news || 0,
 
-    totalCashMonth: 4755.75,
-    totalCashMonthLastMonth: 80,
+    totalCashMonth: userData?.r_total_cash_month || 0,
+    totalCashMonthLastMonth: userData?.r_total_cash_month_last_month || 0,
 
-    activeParc: 20,
-    activeParcNew: 25,
+    activeParc: userData?.r_active_parc || 0,
+    activeParcNew: userData?.r_active_parc_new || 0,
 
-    totalClients: 25,
-    totalCompanies: 30,
-    totalAdmins: 0
+    
+    receitaProjecao : userData?.r_receita_projecao,
+//    receitaProjecao : userData ? JSON.parse(userData.receitaProjecao) : [],
   }
 
 
@@ -194,7 +193,7 @@ export default function AdminDashboard() {
           </div>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={revenueData}>
+              <BarChart data={DashboardData.receitaProjecao}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#1E293B" />
                 <XAxis dataKey="month" stroke="#64748B" />
                 <YAxis 
