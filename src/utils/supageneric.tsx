@@ -7,6 +7,7 @@ export async function UpdateSingleField(
   fieldToUpdate: string,
   newValue: any
 ) {
+
   try {
     const { data, error } = await supabase
       .from(tableName)
@@ -17,6 +18,7 @@ export async function UpdateSingleField(
       console.error('Error updating field:', error);
       return false;
     }
+
     return true;
   } catch (err) {
     console.error('Error updating field:', err);

@@ -90,7 +90,7 @@ const ActionsButtons: React.FC<CrudButtonsProps> = ({ onCreate, onRead, onEdit, 
           />
         )
       }
-      
+
       {/* 
       lock
       lock-open 
