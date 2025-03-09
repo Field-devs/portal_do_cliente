@@ -151,6 +151,7 @@ export default function ProposalsList() {
       <div className="p-6">
         <div className="flex justify-between items-center mb-8">
           <h1 className={titleClass}>Propostas</h1>
+
           <button
             onClick={() => HandleOpenProposal()}
             className="btn-primary flex items-center"
@@ -158,6 +159,8 @@ export default function ProposalsList() {
             <Plus className="h-5 w-5 mr-2" />
             Nova Proposta
           </button>
+
+
         </div>
 
         {/* Metrics Cards */}

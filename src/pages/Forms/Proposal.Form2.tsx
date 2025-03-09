@@ -3,19 +3,33 @@ import { ToggleRight } from "lucide-react";
 import { supabase } from "../../lib/supabase";
 import Plan from "../../Models/Plan";
 import { useAuth } from "../../components/AuthProvider";
+import PlanAddon from "../../Models/Plan.Addon";
+import { AskDialog } from "../../components/Dialogs/SweetAlert";
+import SwitchFrag from "../../components/Fragments/SwitchFrag";
 
-export default function ProposalForm2(id : string) {
-    const { user } = useAuth();
-  
+export default function ProposalForm2(id: string) {
+  const { user } = useAuth();
+
   const [viewInactive, setViewInactive] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<Plan>();
-  const [plans,  setPlans] = useState<Plan[]>([]);
+  const [plans, setPlans] = useState<Plan[]>([]);
+  const [addons, setAddons] = useState<PlanAddon[]>([]);
+  const [addonQuantities, setAddonQuantities] = useState<Record<number, number>>({});
+
+
 
   const fetchData = async () => {
     try {
-      var { data, error } = await supabase.from("plano").select("*").eq("user_id", user?.id);
-      setPlans(data);
-      console.log(data);
+      var { data } = await supabase.from("plano").select("*").eq("user_id", user?.id);
+      if (data) {
+        setPlans(data);
+      }
+
+      var { data } = await supabase.from("plano_addon").select("*").eq("user_id", user?.id);
+      if (data) {
+        setAddons(data);
+      }
+
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -25,41 +39,39 @@ export default function ProposalForm2(id : string) {
     fetchData();
   }, []);
 
-  const [addons, setAddons] = useState({
-    inbox: 0,
-    agents: 12,
-    metaAccount: 1,
-    wiseappAutomation: 2,
-    humanSupport: 0,
-    assistedSetup: 0,
-    customAutomation: 0,
-    customizations: 0,
-  });
 
-  const addonPrices = {
-    inbox: 62.5,
-    agents: 62.5,
-    metaAccount: 62.5,
-    wiseappAutomation: 115,
-    humanSupport: 495,
-    assistedSetup: 2500,
-    customAutomation: 2500,
-    customizations: 4800,
-  };
-
-  const totalAddons = Object.keys(addons).reduce(
-    (sum, key) => sum + addons[key] * addonPrices[key],
+  const totalAddons = addons.reduce(
+    (sum, addon) => sum + (addonQuantities[addon.id] || 0) * addon.valor,
     0
   );
 
+  const handleCancel = async () => {
+    await AskDialog("Você tem certeza que deseja cancelar a edição da proposta atual ?").then((result) => {
+      if (result.isConfirmed) {
+        console.log("Confirmed");
+        return true;
+      } else {
+        console.log("Cancelled");
+        return false;
+      }
+    });
+  };
+
+  const handleInactive = async () => {
+  }
+
   return (
+
     <div className="max-w-4xl mx-auto p-3 bg-white shadow-md rounded-lg">
+
+
       <h2 className="text-lg font-bold">Proposta</h2>
-      <div className="flex justify-between items-center my-4">
+      <div className="flex flex-col items-end my-4 gap-1">
         <span className="font-medium">Ver Inativos</span>
-        <button onClick={() => setViewInactive(!viewInactive)} className="focus:outline-none">
-          <ToggleRight size={20} className={viewInactive ? "text-blue-500" : "text-gray-400"} />
-        </button>
+        <SwitchFrag
+          onClick={handleInactive}
+          checked={viewInactive}
+        />
       </div>
 
       <div className="grid grid-cols-2 gap-6">
@@ -83,18 +95,21 @@ export default function ProposalForm2(id : string) {
         <div>
           <h3 className="font-semibold">Add-ons</h3>
           <div className="grid grid-cols-1 gap-2 mt-1">
-            {Object.keys(addons).map((addon) => (
-              <div key={addon} className="flex justify-between items-center">
+            {addons.map((addon) => (
+              <div key={addon.id} className="flex justify-between items-center">
                 <span>
-                  {addon.replace(/([A-Z])/g, ' $1')} (R$ {addonPrices[addon]})
+                  {addon.nome.replace(/([A-Z])/g, ' $1')} (R$ {addon.valor})
                 </span>
                 <input
                   type="number"
                   min="0"
                   className="w-12 border rounded text-center"
-                  value={addons[addon]}
+                  value={addonQuantities[addon.id] || 0}
                   onChange={(e) =>
-                    setAddons({ ...addons, [addon]: Number(e.target.value) })
+                    setAddonQuantities({
+                      ...addonQuantities,
+                      [addon.id]: Number(e.target.value)
+                    })
                   }
                 />
               </div>
@@ -115,7 +130,7 @@ export default function ProposalForm2(id : string) {
       </div>
 
       <div className="flex justify-between mt-4">
-        <button className="px-4 py-2 border rounded-md hover:bg-gray-100">Cancelar</button>
+        <button className="px-4 py-2 border rounded-md hover:bg-gray-100" onClick={handleCancel} >Cancelar</button>
         <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Dados do Cliente</button>
       </div>
     </div>
