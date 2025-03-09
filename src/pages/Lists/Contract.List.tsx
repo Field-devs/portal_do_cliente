@@ -17,8 +17,10 @@ import { formatPhone } from '../../utils/formatters';
 import ActionsButtons from '../../components/ActionsData';
 import { UpdateSingleField } from '../../utils/supageneric';
 import ComboFrag from '../../components/Fragments/ComboFrag';
+import { useAuth } from '../../components/AuthProvider';
 
 export default function ContractList() {
+  const { user, profile: role, signOut } = useAuth();
   const [contracts, setContracts] = useState<Contract[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -50,6 +52,7 @@ export default function ContractList() {
       const { data, error } = await supabase
         .from('v_contrato')
         .select('*')
+        .eq('empresa_id', user?.id)
         .order("id")
         ;
 

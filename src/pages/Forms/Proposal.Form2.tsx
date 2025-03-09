@@ -1,9 +1,7 @@
 import { useState } from "react";
-import { Switch } from "@/components/ui/switch";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { ToggleRight } from "lucide-react";
 
-export default function ProposalForm() {
+export default function ProposalForm2(id : string) {
   const [viewInactive, setViewInactive] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState("Professional");
   const [addons, setAddons] = useState({
@@ -40,13 +38,15 @@ export default function ProposalForm() {
   );
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg">
+    <div className="max-w-4xl mx-auto p-3 bg-white shadow-md rounded-lg">
       <h2 className="text-lg font-bold">Proposta</h2>
       <div className="flex justify-between items-center my-4">
         <span className="font-medium">Ver Inativos</span>
-        <Switch checked={viewInactive} onCheckedChange={setViewInactive} />
+        <button onClick={() => setViewInactive(!viewInactive)} className="focus:outline-none">
+          <ToggleRight size={20} className={viewInactive ? "text-blue-500" : "text-gray-400"} />
+        </button>
       </div>
-      
+
       <div className="grid grid-cols-2 gap-6">
         {/* Coluna de Planos */}
         <div>
@@ -55,7 +55,7 @@ export default function ProposalForm() {
             {Object.keys(plans).map((plan) => (
               <button
                 key={plan}
-                className={`px-4 py-2 border rounded-md ${selectedPlan === plan ? "bg-blue-500 text-white" : "bg-gray-100"}`}
+                className={`px-4 py-1 border rounded-md ${selectedPlan === plan ? "bg-blue-500 text-white" : "bg-gray-100"}`}
                 onClick={() => setSelectedPlan(plan)}
               >
                 {plan} (R$ {plans[plan]},00)
@@ -63,11 +63,11 @@ export default function ProposalForm() {
             ))}
           </div>
         </div>
-        
+
         {/* Coluna de Add-ons */}
         <div>
           <h3 className="font-semibold">Add-ons</h3>
-          <div className="grid grid-cols-1 gap-4 mt-2">
+          <div className="grid grid-cols-1 gap-2 mt-1">
             {Object.keys(addons).map((addon) => (
               <div key={addon} className="flex justify-between items-center">
                 <span>
@@ -87,19 +87,19 @@ export default function ProposalForm() {
           </div>
         </div>
       </div>
-      
-      <Card className="mt-6">
-        <CardContent className="p-4">
+
+      <div className="mt-6 rounded-md border">
+        <div className="p-4">
           <h3 className="font-semibold">Resumo da Assinatura</h3>
           <p className="mt-2">Plano: {selectedPlan} - R$ {plans[selectedPlan]},00</p>
           <p>Add-ons: R$ {totalAddons.toFixed(2)}</p>
           <h2 className="text-xl font-bold mt-2">Valor Total: R$ {(plans[selectedPlan] + totalAddons).toFixed(2)}/mês</h2>
-        </CardContent>
-      </Card>
-      
+        </div>
+      </div>
+
       <div className="flex justify-between mt-4">
-        <Button variant="outline">Cancelar</Button>
-        <Button>Dados do Cliente</Button>
+        <button className="px-4 py-2 border rounded-md hover:bg-gray-100">Cancelar</button>
+        <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Dados do Cliente</button>
       </div>
     </div>
   );

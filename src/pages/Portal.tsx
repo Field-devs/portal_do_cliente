@@ -56,7 +56,7 @@ export default function Portal() {
     { id: 2, name: 'Propostas', icon: FileText, path: '/portal/proposals', visible: [1, 2, 3, 4] },
     { id: 3, name: 'Contratos', icon: FileCheck2, path: '/portal/contracts', visible: [1, 2, 3, 4] },
     { id: 4, name: 'Planos/Addons', icon: Package, path: '/portal/plans', visible: [1, 2, 3, 4] },
-    { id: 5, name: 'Clientes', icon: Briefcase, path: '/portal/partners', visible: [1, 2, 3, 4] },
+    { id: 5, name: 'Contas', icon: Briefcase, path: '/portal/partners', visible: [1, 2, 3, 4] },
     { id: 6, name: 'Usuários', icon: Users, path: '/portal/accounts', visible: [1, 2] },
     { id: 7, name: 'Financeiro', icon: Wallet, path: '/portal/financial', visible: [1, 2, 3, 4, 5] }
   ];

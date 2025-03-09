@@ -11,17 +11,20 @@ import {
   TrendingUp,
   Clock,
   CheckCircle,
-  XCircle
-} from 'lucide-react';
+  XCircle} from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { usePlanos } from '../../hooks/usePlanos';
 import { ModalForm } from '../../components/Modal/Modal';
-import ProposalForm from '../Forms/ProposalForm';
+import ProposalForm from '../Forms/Proposal.Form';
 import ActionsButtons from '../../components/ActionsData';
 import { UpdateSingleField } from '../../utils/supageneric';
+import { useAuth } from '../../components/AuthProvider';
+import ProposalForm2 from '../Forms/Proposal.Form2';
 
 
 export default function ProposalsList() {
+  const { user, profile: role, signOut } = useAuth();
+
   const [propid, setPropId] = useState<string | null>(null);
   const [propostas, setPropostas] = useState<Proposta[]>([]);
   const [loading, setLoading] = useState(true);
@@ -50,6 +53,7 @@ export default function ProposalsList() {
       const { data, error } = await supabase
         .from('v_proposta')
         .select('*')
+        .eq('user_id', user?.id)
         .order('id', { ascending: false });
 
       if (error) throw error;
@@ -120,7 +124,7 @@ export default function ProposalsList() {
         title="Nova Proposta"
         maxWidth='2xl'
       >
-        <ProposalForm
+        <ProposalForm2
           id={propid ?? ''}
           onCancel={() => setOpenProposal(false)}
         />

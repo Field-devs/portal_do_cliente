@@ -17,7 +17,7 @@ interface ProposalFormProps {
 }
 
 
-export default function ProposalForm({onSuccess, onCancel, sender}) : ProposalFormProps {
+export default function ProposalForm({onSuccess, onCancel, sender, id : string}) : ProposalFormProps {
   const [isFormOpen, setIsFormOpen] = useState(true);
   const [planos, setPlanos] = useState<Plan[]>([]);
   const [etapa, setEtapa] = useState(0);

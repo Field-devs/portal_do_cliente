@@ -1,12 +1,12 @@
-- Limpar base para Retestar
+OK - Limpar base para Retestar
 
 - Integração Wiseapp
-- Ajustar Privilégios de Cada Conta
+OK - Ajustar Privilégios de Cada Conta
 OK - Ajustar Botão Switch (em diversas abas)
 - Corrigir criar Planos
 - Alterar de Dropbox para Caixa de Preenchimento numérico (Padrão Laerte)
 - Ajustar envio de Propostas via Asaas com novas decisões do Laerte
-- Corrigir editar usuário
-- Corrigir editar afiliado
+OK - Corrigir editar usuário (REMOVIDO)
+OK - Corrigir editar afiliado (REMOVIDO)
 
 - Filtro das Telas por Conta

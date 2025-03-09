@@ -50,7 +50,6 @@ export default function PlanList() {
       const { data: plansData, error: plansError } = await supabase
         .from('plano')
         .select('*')
-        // .eq('active', true)
         .eq('user_id', user?.id)
         .order('dt_add', { ascending: false });
 
@@ -59,7 +58,6 @@ export default function PlanList() {
       const { data: addonsData, error: addonsError } = await supabase
         .from('plano_addon')
         .select('*')
-        .eq('active', true)
         .eq('user_id', user?.id)
         .order('dt_add', { ascending: false });
 
