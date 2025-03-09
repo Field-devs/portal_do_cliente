@@ -1,9 +1,30 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ToggleRight } from "lucide-react";
+import { supabase } from "../../lib/supabase";
+import Plan from "../../Models/Plan";
+import { useAuth } from "../../components/AuthProvider";
 
 export default function ProposalForm2(id : string) {
+    const { user } = useAuth();
+  
   const [viewInactive, setViewInactive] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState("Professional");
+  const [selectedPlan, setSelectedPlan] = useState<Plan>();
+  const [plans,  setPlans] = useState<Plan[]>([]);
+
+  const fetchData = async () => {
+    try {
+      var { data, error } = await supabase.from("plano").select("*").eq("user_id", user?.id);
+      setPlans(data);
+      console.log(data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   const [addons, setAddons] = useState({
     inbox: 0,
     agents: 12,
@@ -14,12 +35,6 @@ export default function ProposalForm2(id : string) {
     customAutomation: 0,
     customizations: 0,
   });
-
-  const plans = {
-    Standard: 449,
-    Professional: 649,
-    Enterprise: 799,
-  };
 
   const addonPrices = {
     inbox: 62.5,
@@ -52,13 +67,13 @@ export default function ProposalForm2(id : string) {
         <div>
           <h3 className="font-semibold">Plano</h3>
           <div className="flex flex-col space-y-2 mt-2">
-            {Object.keys(plans).map((plan) => (
+            {plans.map((plan) => (
               <button
-                key={plan}
+                key={plan.id}
                 className={`px-4 py-1 border rounded-md ${selectedPlan === plan ? "bg-blue-500 text-white" : "bg-gray-100"}`}
                 onClick={() => setSelectedPlan(plan)}
               >
-                {plan} (R$ {plans[plan]},00)
+                {plan.nome} (R$ {plan.valor},00)
               </button>
             ))}
           </div>
@@ -91,9 +106,11 @@ export default function ProposalForm2(id : string) {
       <div className="mt-6 rounded-md border">
         <div className="p-4">
           <h3 className="font-semibold">Resumo da Assinatura</h3>
-          <p className="mt-2">Plano: {selectedPlan} - R$ {plans[selectedPlan]},00</p>
+          <p className="mt-2">Plano: {selectedPlan?.nome} - R$ {selectedPlan?.valor || 0},00</p>
           <p>Add-ons: R$ {totalAddons.toFixed(2)}</p>
-          <h2 className="text-xl font-bold mt-2">Valor Total: R$ {(plans[selectedPlan] + totalAddons).toFixed(2)}/mês</h2>
+          <h2 className="text-xl font-bold mt-2">
+            Valor Total: R$ {((selectedPlan?.valor || 0) + totalAddons).toFixed(2)}/mês
+          </h2>
         </div>
       </div>
 

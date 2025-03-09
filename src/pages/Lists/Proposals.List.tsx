@@ -23,7 +23,7 @@ import ProposalForm2 from '../Forms/Proposal.Form2';
 
 
 export default function ProposalsList() {
-  const { user, profile: role, signOut } = useAuth();
+  const { user } = useAuth();
 
   const [propid, setPropId] = useState<string | null>(null);
   const [propostas, setPropostas] = useState<Proposta[]>([]);
