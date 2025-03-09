@@ -57,10 +57,11 @@ const authenticateUser = async (email: string, password: string) => {
       cnpj: userData.cnpj || '',
       perfil_id: userData.perfil_id,
       perfil_nome: userData.perfil_nome,
+      perfil_cod: userData.perfil_cod,
       fone: userData.telefone?.toString() || null,
       foto: userData.foto_perfil || null,
+      dt_add: userData.dt_add,
       f_status: userData.f_status,
-      DateCreate: userData.dt_add,
       active: userData.active
     };
 

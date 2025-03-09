@@ -14,6 +14,7 @@ interface User {
   cnpj: string;
   perfil_id: number;
   perfil_nome: string;
+  perfil_cod: string;
   fone?: string;
   active: boolean;
   f_status: string;

@@ -4,17 +4,15 @@ import SwitchFrag from './Fragments/SwitchFrag';
 
 interface CrudButtonsProps {
   onCreate: () => void;
-  onRead: () => void;
   onEdit: () => void;
   onDelete: () => void;
   onLocker: () => Promise<boolean>;
   active: boolean;
 }
 
-const ActionsButtons: React.FC<CrudButtonsProps> = ({ onCreate, onRead, onEdit, onDelete, onLocker, active }) => {
+const ActionsButtons: React.FC<CrudButtonsProps> = ({ onCreate, onEdit, onDelete, onLocker, active }) => {
 
   const [activeActual, setActiveActual] = React.useState(active);
-
   const handleOnLock = async () => {
     const resultChecked = await onLocker();
     setActiveActual(resultChecked);
@@ -45,17 +43,6 @@ const ActionsButtons: React.FC<CrudButtonsProps> = ({ onCreate, onRead, onEdit, 
         )
       }
 
-      {/* Botao de Edição */}
-      {
-        onRead && (
-          <button
-            onClick={onRead}
-            className="text-yellow-500"
-          >
-            <Edit className="mr-2" />
-          </button>
-        )
-      }
 
       {/* Botao de Atualização */}
       {

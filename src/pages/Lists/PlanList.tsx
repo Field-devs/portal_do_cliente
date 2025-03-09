@@ -16,13 +16,12 @@ import { ModalForm } from '../../components/Modal/Modal';
 import PlanForm from '../Forms/PlanForm';
 import AddonForm from '../Forms/AddonForm';
 import ActionsButtons from '../../components/ActionsData';
-import SwitchFrag from '../../components/Fragments/SwitchFrag';
+import { UpdateSingleField } from '../../utils/supageneric';
 
 type ContentType = 'plans' | 'addons';
 
 export default function PlanList() {
   const { user } = useAuth();
-  const [active, SetActive] = useState(true);
   const [plans, setPlans] = useState<Plan[]>([]);
   const [plan, setPlan] = useState<Plan | null>(null);
   const [addons, setAddons] = useState<PlanAddon[]>([]);
@@ -117,12 +116,13 @@ export default function PlanList() {
     setShowAddonForm(false);
   };
 
-  const handleChange = (id: string) => (checked: boolean) => {
-    setPlans(prevPlans =>
-      prevPlans.map(plan =>
-        plan.id === id ? { ...plan, active: checked } : plan // Usar `checked`, não `!active`
-      )
-    );
+  const handleOnLock = async (id: string, status: boolean) : Promise<boolean> => {
+    if (activeTab === 'plans') {
+      await UpdateSingleField("plano", "id", id, "active", !status);
+    } else if (activeTab === 'addons') {
+      await UpdateSingleField("plano_addon", "id", id, "active", !status);
+    }
+    return true;
   };
 
   const filteredPlans = plans.filter(plan =>
@@ -238,8 +238,6 @@ export default function PlanList() {
                 </th>
                 <th className="px-6 py-4 text-right text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider w-[50px]">
                 </th>
-                <th className="px-6 py-4 text-right text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider w-[20px]">
-                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-light-border dark:divide-gray-700/50">
@@ -281,12 +279,15 @@ export default function PlanList() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right">
                     <div className="flex justify-end space-x-2">
-                      <ActionsButtons onRead={() => handleEdit(item.id)} />
+                      <ActionsButtons 
+                        onEdit={() => handleEdit(item.id)}
+                        onLocker={async () => handleOnLock(item.id, item.active)}
+                        active={item.active}
+                      />
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right">
-                    <SwitchFrag name='active' checked={item.active} onChange={() => handleChange(item.id)} /> 
-                  </td>
+
+                  
                 </tr>
               ))}
             </tbody>

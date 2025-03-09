@@ -50,7 +50,7 @@ export default function ProposalsList() {
       const { data, error } = await supabase
         .from('v_proposta')
         .select('*')
-        .order('dt', { ascending: false });
+        .order('id', { ascending: false });
 
       if (error) throw error;
       setPropostas(data || []);
@@ -326,7 +326,7 @@ export default function ProposalsList() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex justify-center">
-                        <span className={`px-3 py-1 text-sm font-medium rounded-full ${proposta.status === 'PE'
+                        <span className={`px-3 py-1 text-sm font-medium rounded-full w-24 text-center ${proposta.status === 'PE'
                           ? 'badge-warning'
                           : proposta.status === 'AC'
                             ? 'badge-success'

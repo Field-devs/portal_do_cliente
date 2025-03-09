@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import {
-  Plus,
   Search,
   Filter,
   Building2,
@@ -14,42 +13,38 @@ import { supabase } from '../../lib/supabase';
 import CommercialAffiliateForm from '../Forms/CommercialAffiliateForm';
 import { formatPhone } from '../../utils/formatters';
 import { ModalForm } from '../../components/Modal/Modal';
-import SwitchFrag from '../../components/Fragments/SwitchFrag';
 import ActionsButtons from '../../components/ActionsData';
 import AVAForm from '../Forms/AVAForm';
+import { UpdateSingleField } from '../../utils/supageneric';
+import { format } from 'date-fns';
 
 type PartnerType = 'CF' | 'AVA' | 'AF';
 
 interface Partner {
   id: string;
-  nome: string;
   email: string;
-  telefone: number;
+  nome: string;
+  fone: number;
   desconto: number;
   comissao: number;
   cupom: string;
   vencimento: string;
   active: boolean;
-  dt: string;
+  tipo: string;
+  dt_add: string;
 }
 
 export default function PartnerList() {
   const [tipo, setTipo] = useState<PartnerType>('AVA');
   const [title, setTitle] = useState('Cliente Final');
   const [client, setClient] = useState<Partner[]>([]);
-  const [ava, setAVA] = useState<Partner[]>([]);
-  const [afilate, setAfilate] = useState<Partner[]>([]);
 
-
-  const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive'>('all');
-  const [selectedPartnerId, setSelectedPartnerId] = useState<string | null>(null);
   const [editingPartner, setEditingPartner] = useState<Partner | null>(null);
   const [showCopyTooltip, setShowCopyTooltip] = useState<string | null>(null);
   const [showAfilate, setShowAfilate] = useState<boolean>(false);
-  const [showAVA, setShowAVA] = useState<boolean>(false);
 
 
   const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50";
@@ -75,7 +70,7 @@ export default function PartnerList() {
         .from('cliente')
         .select('*')
         .eq('tipo', tipo)
-        .order('dt_add', { ascending: false });
+        .order('id', { ascending: false });
 
       if (error) throw error;
       setClient(data || []);
@@ -111,14 +106,14 @@ export default function PartnerList() {
       return matchesSearch && matchesStatus;
     });
 
-  const handleClickNew = () => {
-    if (tipo === 'AF') {
-      setShowAfilate(true);
-    } else if (tipo === 'AVA') {
-      setShowAVA(true);
-    }
-    console.log(tipo);
-  };
+  // const handleClickNew = () => {
+  //   if (tipo === 'AF') {
+  //     setShowAfilate(true);
+  //   } else if (tipo === 'AVA') {
+  //     setShowAVA(true);
+  //   }
+  //   console.log(tipo);
+  // };
 
 
   if (loading) {
@@ -127,6 +122,16 @@ export default function PartnerList() {
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500/80"></div>
       </div>
     );
+  }
+
+  const handleOnLock = async (id: string, status: boolean) : Promise<boolean> => {
+      UpdateSingleField("cliente", "id", id, "active", !status);
+      return true;
+  };
+
+  function handleEdit(value: Partner): void {
+    setEditingPartner(value);
+    setShowAfilate(true);
   }
 
   return (
@@ -242,82 +247,81 @@ export default function PartnerList() {
                   Data de Criação
                 </th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
-                  Ativo
+                  
                 </th>
               </tr>
             </thead>
 
 
             <tbody className="divide-y divide-light-border dark:divide-gray-700/50">
-              {filteredItems.map((item) => (
-                <tr
-                  key={tipo === 'AF' ? item.id : item.id}
-                  className="hover:bg-light-secondary dark:hover:bg-[#0F172A]/40 transition-colors"
-                >
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-base font-medium text-light-text-primary dark:text-gray-100">
-                      {item.nome}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-base text-light-text-secondary dark:text-gray-300">
-                      {item.email}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-base text-light-text-secondary dark:text-gray-300">
-                      {formatPhone(item.fone?.toString())}
-                    </div>
-                  </td>
-                  {tipo === 'AF' && (
-                    <>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="relative">
-                          <button
-                            onClick={() => handleCopyToClipboard(item.cupom)}
-                            className="group px-3 py-1.5 inline-flex items-center space-x-2 text-sm leading-5 font-medium rounded-full bg-brand-50 dark:bg-brand-900/20 text-brand-600 dark:text-brand-400 hover:bg-brand-100 dark:hover:bg-brand-900/30 border border-brand-200 dark:border-brand-700/30 transition-colors"
-                          >
-                            <span>{item.cupom}</span>
-                            <Copy className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity" />
-                          </button>
-                          {showCopyTooltip === item.cupom && (
-                            <div className="absolute left-1/2 -translate-x-1/2 -top-8 px-2 py-1 bg-gray-900 text-white text-xs rounded shadow-lg z-10">
-                              <div className="flex items-center space-x-1">
-                                <CheckCircle className="h-3 w-3" />
-                                <span>Copiado!</span>
+              {filteredItems.map((item) => {
+                // console.log(item); // Log the item object here
+                return (
+                  <tr
+                    key={item.id}
+                  >
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-base font-medium text-light-text-primary dark:text-gray-100">
+                        {item.nome}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-base text-light-text-secondary dark:text-gray-300">
+                        {item.email}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-base text-light-text-secondary dark:text-gray-300">
+                        {formatPhone(item.fone?.toString())}
+                      </div>
+                    </td>
+                    {tipo === 'AF' && (
+                      <>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="relative">
+                            <button
+                              onClick={() => handleCopyToClipboard(item.cupom)}
+                              className="group px-3 py-1.5 inline-flex items-center space-x-2 text-sm leading-5 font-medium rounded-full bg-brand-50 dark:bg-brand-900/20 text-brand-600 dark:text-brand-400 hover:bg-brand-100 dark:hover:bg-brand-900/30 border border-brand-200 dark:border-brand-700/30 transition-colors"
+                            >
+                              <span>{item.cupom}</span>
+                              <Copy className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity" />
+                            </button>
+                            {showCopyTooltip === item.cupom && (
+                              <div className="absolute left-1/2 -translate-x-1/2 -top-8 px-2 py-1 bg-gray-900 text-white text-xs rounded shadow-lg z-10">
+                                <div className="flex items-center space-x-1">
+                                  <CheckCircle className="h-3 w-3" />
+                                  <span>Copiado!</span>
+                                </div>
+                                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-2 h-2 bg-gray-900 transform rotate-45"></div>
                               </div>
-                              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-2 h-2 bg-gray-900 transform rotate-45"></div>
-                            </div>
-                          )}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-base text-light-text-secondary dark:text-gray-300">
-                          <div>Desconto: {item.desconto}%</div>
-                          <div>Comissão: {item.comissao}%</div>
-                        </div>
-                      </td>
-                    </>
-                  )}
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-base text-light-text-secondary dark:text-gray-300">
-                      {/* {format(new Date(item?.datacriacao), 'dd/MM/yyyy')} */}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <ActionsButtons />
-                  </td>
-                  {/* <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-3 py-1 text-sm font-medium rounded-full ${item.active
-                      ? 'bg-green-50 dark:bg-green-500/20 text-green-600 dark:text-green-400 border border-green-200 dark:border-green-500/30'
-                      : 'bg-red-50 dark:bg-red-500/20 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-500/30'
-                      }`}>
-                      {item.active ? 'Ativo' : 'Inativo'}
-                    </span>
-                  </td> */}
+                            )}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-base text-light-text-secondary dark:text-gray-300">
+                            <div>Desconto: {item.desconto}%</div>
+                            <div>Comissão: {item.comissao}%</div>
+                          </div>
+                        </td>
+                      </>
+                    )}
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-base text-light-text-secondary dark:text-gray-300">
+                        {format(new Date(item?.dt_add), 'dd/MM/yyyy')} 
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      
+                      <ActionsButtons 
+                        onLocker={async () => handleOnLock(item.id, item.active)} 
+                        onEdit={() => {item.tipo == "AF" ? handleEdit(item) : null}}
+                        active={item.active}
+                      />
+                    </td>
 
-                </tr>
-              ))}
+                  </tr>
+                );
+              })}
             </tbody>
 
           </table>
@@ -342,31 +346,6 @@ export default function PartnerList() {
           }}
           onCancel={() => {
             setShowAfilate(false);
-            setEditingPartner(null);
-          }}
-
-        />
-
-      </ModalForm>
-
-      {/* Commercial Affiliate Form Modal */}
-      <ModalForm
-        isOpen={showAVA}
-        onClose={() => setShowAfilate(false)}
-        title="AVA"
-        icon={<>{<UserPlus className="h-5 w-5" />}</>}
-        maxWidth="2xl"
-      >
-
-        <AVAForm
-          initialData={editingPartner}
-          onSuccess={() => {
-            setShowAVA(false);
-            setEditingPartner(null);
-            fetchClientes();
-          }}
-          onCancel={() => {
-            setShowAVA(false);
             setEditingPartner(null);
           }}
 

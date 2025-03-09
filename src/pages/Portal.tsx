@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { Routes, Route, NavLink, useLocation } from 'react-router-dom';
 import { useAuth } from '../components/AuthProvider';
 import { useTheme } from '../components/ThemeProvider';
-import { 
-  FileText, 
-  Users, 
+import {
+  FileText,
+  Users,
   Wallet,
   LogOut,
   Package,
@@ -44,40 +44,24 @@ const getRoleBadgeStyles = (role: string | null) => {
   }
 };
 
-const getRoleDisplayName = (role: string | null) => {
-  switch (role) {
-    case 'super_admin':
-      return 'Super Admin';
-    case 'admin':
-      return 'Admin';
-    case 'client':
-      return 'Cliente';
-    case 'ava':
-      return 'AVA';
-    case 'ava_admin':
-      return 'AVA Admin';
-    default:
-      return role || 'Usuário';
-  }
-};
 
 export default function Portal() {
-  const { user, role, signOut } = useAuth();
+  const { user, profile: role, signOut } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const location = useLocation();
   const [isExpanded, setIsExpanded] = useState(true);
 
   const navigation = [
-    { name: 'Dashboard', icon: BarChart2, path: '/portal' },
-    { name: 'Propostas', icon: FileText, path: '/portal/proposals' },
-    { name: 'Contratos', icon: FileCheck2, path: '/portal/contracts' },
-    { name: 'Planos/Addons', icon: Package, path: '/portal/plans' },
-    { name: 'Clientes', icon: Briefcase, path: '/portal/partners' },
-    { name: 'Usuários', icon: Users, path: '/portal/accounts' },
-    { name: 'Financeiro', icon: Wallet, path: '/portal/financial' }
+    { id: 1, name: 'Dashboard', icon: BarChart2, path: '/portal', visible: [1] },
+    { id: 2, name: 'Propostas', icon: FileText, path: '/portal/proposals', visible: [1, 2, 3, 4] },
+    { id: 3, name: 'Contratos', icon: FileCheck2, path: '/portal/contracts', visible: [1, 2, 3, 4] },
+    { id: 4, name: 'Planos/Addons', icon: Package, path: '/portal/plans', visible: [1, 2, 3, 4] },
+    { id: 5, name: 'Clientes', icon: Briefcase, path: '/portal/partners', visible: [1, 2, 3, 4] },
+    { id: 6, name: 'Usuários', icon: Users, path: '/portal/accounts', visible: [1, 2] },
+    { id: 7, name: 'Financeiro', icon: Wallet, path: '/portal/financial', visible: [1, 2, 3, 4, 5] }
   ];
 
-  const logoUrl = theme === 'dark' 
+  const logoUrl = theme === 'dark'
     ? "https://storage.wiseapp360.com/typebot/public/workspaces/clwl6fdyf000511ohlamongyl/typebots/cm683siyl000dm4kxlrec9tb8/results/hkmdaw6c6ice8z349zj22v4i/blocks/cz78pvc8stcisz1y8sq2khj1/OutrVertical.png"
     : "https://storage.wiseapp360.com/typebot/public/workspaces/clwl6fdyf000511ohlamongyl/typebots/cm683siyl000dm4kxlrec9tb8/results/jctueeexledouxj5ys19vnq9/blocks/cz78pvc8stcisz1y8sq2khj1/VerticalBlack.png";
 
@@ -120,30 +104,35 @@ export default function Portal() {
                   {user?.nome || '-'}
                 </p>
                 <div className={`inline-flex px-2 py-0.5 mt-1 text-xs font-medium rounded-md ${getRoleBadgeStyles(role)}`}>
-                  {getRoleDisplayName(role)}
+                  {user?.perfil_nome}
                 </div>
               </div>
             )}
           </div>
         </div>
-        
+
         {/* Navigation */}
         <nav className="flex-1 overflow-y-auto py-4">
           {navigation.map((item) => {
             const isActive = location.pathname === item.path;
+            if (item.visible && !item.visible.includes(user?.perfil_id)) return null;
+
             return (
               <NavLink
                 key={item.path}
                 to={item.path}
-                className={`flex items-center px-3 py-2 mx-2 text-sm font-medium rounded-lg transition-colors ${
-                  isActive
+
+                className={`flex items-center px-3 py-2 mx-2 text-sm font-medium rounded-lg transition-colors ${isActive
                     ? 'bg-brand-50 text-brand-600 dark:bg-brand-900/20 dark:text-brand-400'
                     : 'text-gray-600 dark:text-gray-400 hover:bg-brand-50/50 dark:hover:bg-brand-900/10 hover:text-brand-600 dark:hover:text-brand-400'
-                }`}
+                  }`}
               >
+
                 <div className="min-w-[2rem] flex justify-center">
                   <item.icon className="h-5 w-5" />
                 </div>
+
+
                 {isExpanded && (
                   <span className="ml-3 truncate">
                     {item.name}
@@ -184,6 +173,9 @@ export default function Portal() {
         </div>
       </div>
 
+
+
+
       {/* Main Content Area */}
       <div className={`flex-1 transition-all duration-300 ${isExpanded ? 'ml-52' : 'ml-20'}`}>
         <div className="p-6">
@@ -197,7 +189,7 @@ export default function Portal() {
             <Route path="accounts" element={<AccountList />} />
             <Route path="financial" element={<FinancialDashBoard />} />
             <Route path="profile" element={<Profile />} />
-            
+
             <Route path="/proposal-confirm" element={<ProposalConfirm />} />
           </Routes>
         </div>

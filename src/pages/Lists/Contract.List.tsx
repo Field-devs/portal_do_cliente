@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Search, 
-  Filter, 
+import {
+  Search,
+  Filter,
   Calendar,
   FileText,
   Users,
@@ -14,6 +14,9 @@ import {
 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { formatPhone } from '../../utils/formatters';
+import ActionsButtons from '../../components/ActionsData';
+import { UpdateSingleField } from '../../utils/supageneric';
+import ComboFrag from '../../components/Fragments/ComboFrag';
 
 export default function ContractList() {
   const [contracts, setContracts] = useState<Contract[]>([]);
@@ -31,6 +34,13 @@ export default function ContractList() {
   const iconClass = "h-6 w-6 text-blue-600 dark:text-blue-400";
   const badgeClass = "text-xs font-medium bg-blue-50 dark:bg-blue-400/10 text-blue-600 dark:text-blue-400 px-2 py-1 rounded-full";
 
+  const optContract = [
+    {key: "AT",label: "Ativo"},
+    {key: "IN",label: "Inativo"},
+    {key: "CA",label: "Cancelado"},
+    {key: "SP",label: "Suspenso"},
+  ];
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -39,7 +49,9 @@ export default function ContractList() {
     try {
       const { data, error } = await supabase
         .from('v_contrato')
-        .select('*');
+        .select('*')
+        .order("id")
+        ;
 
       if (error) throw error;
       setContracts(data || []);
@@ -66,13 +78,13 @@ export default function ContractList() {
   };
 
   const filteredContracts = contracts.filter(contract => {
-    const matchesSearch = 
+    const matchesSearch =
       contract.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
       contract.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
       (contract.fone && contract.fone.includes(searchTerm));
 
-    const matchesStatus = 
-      statusFilter === 'all' || 
+    const matchesStatus =
+      statusFilter === 'all' ||
       contract.status_title.toLowerCase() === statusFilter;
 
     const matchesDate = () => {
@@ -106,6 +118,12 @@ export default function ContractList() {
       </div>
     );
   }
+
+  const handleStatusChange = async(id: string, status: string) => {
+    //console.log("handleStatusChange", id, status);
+    let response = await UpdateSingleField("contrato", "id", id, "status", status);
+    return response;
+  };
 
   return (
     <div className="p-6">
@@ -250,17 +268,18 @@ export default function ContractList() {
                 <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                   Plano
                 </th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
-                  Status
-                </th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                <th className="px-6 py-4 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wide">
                   Consumo
+                </th>
+
+                <th className="px-6 py-4 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider w-1/6">
+                  Status
                 </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-light-border dark:divide-gray-700/50">
               {filteredContracts.map((contract) => (
-                <tr 
+                <tr
                   key={contract.id}
                   className="hover:bg-light-secondary dark:hover:bg-[#0F172A]/40 transition-colors"
                 >
@@ -286,16 +305,23 @@ export default function ContractList() {
                       {contract.plano_nome}
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-3 py-1 text-sm font-medium rounded-full ${getStatusBadgeStyles(contract.status_title)}`}>
-                      {contract.status_title}
-                    </span>
-                  </td>
+                  
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-base text-light-text-secondary dark:text-gray-300">
                       -
                     </div>
                   </td>
+                  
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="flex justify-center">
+                    <ComboFrag 
+                      options={optContract} 
+                      value={contract.status}
+                      onChange={(value:string) => handleStatusChange(contract.id, value)}
+                     />
+                    </div>
+                  </td>
+
                 </tr>
               ))}
             </tbody>

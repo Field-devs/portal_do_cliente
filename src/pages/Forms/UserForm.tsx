@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../components/AuthProvider';
 import { supabase } from '../../lib/supabase';
 import {
@@ -12,6 +12,7 @@ import {
   CreditCard,
   Shield
 } from 'lucide-react';
+import { set } from 'date-fns';
 
 interface UserFormProps {
   onSuccess: () => void;
@@ -30,6 +31,7 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [profileList, setProfileList] = useState<string[] | null>([]);
 
   const [formData, setFormData] = useState({
     firstName: initialData?.nome.split(' ')[0] || '',
@@ -49,6 +51,19 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
       [name]: value
     }));
   };
+
+  useEffect(() => {
+    const fetchProfiles = async () => {
+      const { data, error } = await supabase.from('perfil').select('*');
+      if (error) {
+        console.error('Error fetching profiles:', error);
+        setProfileList(null);
+      } else {
+        setProfileList(data);
+      }
+    };
+    fetchProfiles();
+  }, []);
 
   const validateForm = () => {
     if (!formData.firstName.trim() || !formData.lastName.trim()) {
@@ -218,11 +233,11 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
                 className="pl-12 block w-full border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
                 required
               >
-                <option value={5}>Cliente</option>
-                <option value={4}>AVA</option>
-                <option value={3}>AVA Admin</option>
-                <option value={2}>Admin</option>
-                <option value={1}>Super Admin</option>
+                {profileList && profileList.map(profile => (
+                  <option key={profile.id} value={profile.nome}>
+                    {profile.nome}
+                  </option>
+                ))}
               </select>
             </div>
           </div>

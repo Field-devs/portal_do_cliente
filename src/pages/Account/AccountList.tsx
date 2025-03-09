@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import ActionsButtons from '../../components/ActionsData';
 import { UpdateSingleField } from '../../utils/supageneric';
+import { User } from '../../Models/Uses';
 
 function AccountList() {
   const [users, setUsers] = useState<User[]>([]);
@@ -69,7 +70,7 @@ function AccountList() {
   };
 
 
-  const handleOnLock = async(id: string, status: boolean) => {
+  const handleOnLock = async (id: string, status: boolean) => {
     let response = await UpdateSingleField("users", "id", id, "active", !status);
     return response;
   };
@@ -272,9 +273,6 @@ function AccountList() {
                   Perfil
                 </th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
-                  Status
-                </th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                   Data de Criação
                 </th>
                 <th className="px-6 py-4 text-right text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
@@ -328,11 +326,7 @@ function AccountList() {
                       {user.perfil_nome}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`badge ${user.active ? 'badge-success' : 'badge-error'}`}>
-                      {user.active ? 'Ativo' : 'Inativo'}
-                    </span>
-                  </td>
+
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-base text-light-text-secondary dark:text-gray-300">
                       {new Date(user.dt_add).toLocaleDateString('pt-BR')}
@@ -340,10 +334,10 @@ function AccountList() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right">
                     <div className="flex justify-end space-x-2">
-                      
+
                       <ActionsButtons
-                        onEdit={handleEdit} 
-                        onLocker={user.perfil_id == 1 ? null : async () => handleOnLock(user.id, user.active)} 
+                        onEdit={handleEdit}
+                        onLocker={user.perfil_id == 1 ? null : async () => handleOnLock(user.id, user.active)}
                         active={user.active}
                       />
 
