@@ -1,14 +1,17 @@
 import { useState, useEffect } from "react";
-import { ToggleRight } from "lucide-react";
 import { supabase } from "../../lib/supabase";
 import Plan from "../../Models/Plan";
 import { useAuth } from "../../components/AuthProvider";
 import PlanAddon from "../../Models/Plan.Addon";
 import { AskDialog } from "../../components/Dialogs/SweetAlert";
 import SwitchFrag from "../../components/Fragments/SwitchFrag";
+import Profile from "../../Models/Perfil";
 
 export default function ProposalForm2(id: string) {
   const { user } = useAuth();
+
+  const [profiles, setProfiles] = useState<Profile[]>([]);
+  const [selectedprofile, setSelectedProfile] = useState<Profile>();
 
   const [viewInactive, setViewInactive] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<Plan>();
@@ -23,11 +26,18 @@ export default function ProposalForm2(id: string) {
       var { data } = await supabase.from("plano").select("*").eq("user_id", user?.id);
       if (data) {
         setPlans(data);
+        setSelectedPlan(data[0]);
       }
 
       var { data } = await supabase.from("plano_addon").select("*").eq("user_id", user?.id);
       if (data) {
         setAddons(data);
+      }      
+      
+      var { data } = await supabase.from("perfil").select("*").gt("id", 2);
+      if (data) {
+        setProfiles(data);
+        setSelectedProfile(data[0]);
       }
 
     } catch (error) {
@@ -64,6 +74,23 @@ export default function ProposalForm2(id: string) {
 
     <div className="max-w-4xl mx-auto p-3 bg-white shadow-md rounded-lg">
 
+      <div className="grid grid-cols-1 gap-1">
+        {/* Coluna de Planos */}
+        <div>
+          <h3 className="font-semibold">Perfil de Acesso</h3>
+          <div className="flex flex-row mt-2">
+            {profiles.map((profile) => (
+              <button
+                key={profile.id}
+                className={`px-4 py-1 border rounded-md ${selectedprofile === profile ? "bg-blue-500 text-white" : "bg-gray-100"}`}
+                onClick={() => setSelectedProfile(profile)}
+              >
+                {profile.nome} 
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
 
       <h2 className="text-lg font-bold">Proposta</h2>
       <div className="flex flex-col items-end my-4 gap-1">

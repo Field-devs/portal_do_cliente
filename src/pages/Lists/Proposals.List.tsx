@@ -23,11 +23,11 @@ import ProposalForm2 from '../Forms/Proposal.Form2';
 import { AlertDialog, AskDialog } from '../../components/Dialogs/SweetAlert';
 import Plan from '../../Models/Plan';
 import Plans from '../dashboard/Plans';
+import Profile from '../../Models/Perfil';
 
 
 export default function ProposalsList() {
   const { user } = useAuth();
-
   const [propid, setPropId] = useState<string | null>(null);
   const [propostas, setPropostas] = useState<Proposta[]>([]);
   const [planscount, setPlanscount] = useState<number>(0);
@@ -48,6 +48,7 @@ export default function ProposalsList() {
   const iconContainerClass = "bg-blue-400/10 p-3 rounded-xl";
   const iconClass = "h-6 w-6 text-blue-600 dark:text-blue-400";
   const badgeClass = "text-xs font-medium bg-blue-50 dark:bg-blue-400/10 text-blue-600 dark:text-blue-400 px-2 py-1 rounded-full";
+
 
   useEffect(() => {
     fetchData();
