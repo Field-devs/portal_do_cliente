@@ -12,7 +12,6 @@ export default function ProposalForm2(id: string) {
 
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [selectedprofile, setSelectedProfile] = useState<Profile>();
-
   const [viewInactive, setViewInactive] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<Plan>();
   const [plans, setPlans] = useState<Plan[]>([]);
@@ -32,8 +31,8 @@ export default function ProposalForm2(id: string) {
       var { data } = await supabase.from("plano_addon").select("*").eq("user_id", user?.id);
       if (data) {
         setAddons(data);
-      }      
-      
+      }
+
       var { data } = await supabase.from("perfil").select("*").gt("id", 2);
       if (data) {
         setProfiles(data);
@@ -68,6 +67,7 @@ export default function ProposalForm2(id: string) {
   };
 
   const handleInactive = async () => {
+    setViewInactive(!viewInactive);
   }
 
   return (
@@ -85,28 +85,36 @@ export default function ProposalForm2(id: string) {
                 className={`px-4 py-1 border rounded-md ${selectedprofile === profile ? "bg-blue-500 text-white" : "bg-gray-100"}`}
                 onClick={() => setSelectedProfile(profile)}
               >
-                {profile.nome} 
+                {profile.nome}
               </button>
             ))}
           </div>
         </div>
       </div>
 
-      <h2 className="text-lg font-bold">Proposta</h2>
-      <div className="flex flex-col items-end my-4 gap-1">
-        <span className="font-medium">Ver Inativos</span>
-        <SwitchFrag
-          onClick={handleInactive}
-          checked={viewInactive}
-        />
+      <div className="grid grid-cols-2 gap-6">
+        <div>
+          <h1 className="text-2xl font-bold">Proposta</h1>
+        </div>
+        <div>
+          <div className="flex flex-col items-end my-4 gap-1">
+            <span className="font-medium">Ver Inativos</span>
+            <SwitchFrag
+              onClick={handleInactive}
+              checked={viewInactive}
+            />
+          </div>
+        </div>
       </div>
+
 
       <div className="grid grid-cols-2 gap-6">
         {/* Coluna de Planos */}
         <div>
           <h3 className="font-semibold">Plano</h3>
           <div className="flex flex-col space-y-2 mt-2">
-            {plans.map((plan) => (
+
+            {plans.filter(plan => viewInactive && !plan.active).map((plan) => (
               <button
                 key={plan.id}
                 className={`px-4 py-1 border rounded-md ${selectedPlan === plan ? "bg-blue-500 text-white" : "bg-gray-100"}`}
@@ -115,6 +123,18 @@ export default function ProposalForm2(id: string) {
                 {plan.nome} (R$ {plan.valor},00)
               </button>
             ))}
+
+            {plans.filter(plan => plan.active == true).map((plan) => (
+              <button
+                key={plan.id}
+                className={`px-4 py-1 border rounded-md ${selectedPlan === plan ? "bg-blue-500 text-white" : "bg-gray-100"}`}
+                onClick={() => setSelectedPlan(plan)}
+              >
+                {plan.nome} (R$ {plan.valor},00)
+              </button>
+            ))}
+
+
           </div>
         </div>
 
@@ -122,7 +142,8 @@ export default function ProposalForm2(id: string) {
         <div>
           <h3 className="font-semibold">Add-ons</h3>
           <div className="grid grid-cols-1 gap-2 mt-1">
-            {addons.map((addon) => (
+
+            {addons.filter(addon => viewInactive && !addon.active).map((addon) => (
               <div key={addon.id} className="flex justify-between items-center">
                 <span>
                   {addon.nome.replace(/([A-Z])/g, ' $1')} (R$ {addon.valor})
@@ -141,6 +162,28 @@ export default function ProposalForm2(id: string) {
                 />
               </div>
             ))}
+
+            {addons.filter(addon => addon.active == true).map((addon) => (
+              <div key={addon.id} className="flex justify-between items-center">
+                <span>
+                  {addon.nome.replace(/([A-Z])/g, ' $1')} (R$ {addon.valor})
+                </span>
+                <input
+                  type="number"
+                  min="0"
+                  className="w-12 border rounded text-center"
+                  value={addonQuantities[addon.id] || 0}
+                  onChange={(e) =>
+                    setAddonQuantities({
+                      ...addonQuantities,
+                      [addon.id]: Number(e.target.value)
+                    })
+                  }
+                />
+              </div>
+            ))}
+
+
           </div>
         </div>
       </div>
