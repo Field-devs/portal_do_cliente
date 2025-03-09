@@ -20,6 +20,9 @@ import ActionsButtons from '../../components/ActionsData';
 import { UpdateSingleField } from '../../utils/supageneric';
 import { useAuth } from '../../components/AuthProvider';
 import ProposalForm2 from '../Forms/Proposal.Form2';
+import { AlertDialog, AskDialog } from '../../components/Dialogs/SweetAlert';
+import Plan from '../../Models/Plan';
+import Plans from '../dashboard/Plans';
 
 
 export default function ProposalsList() {
@@ -27,6 +30,8 @@ export default function ProposalsList() {
 
   const [propid, setPropId] = useState<string | null>(null);
   const [propostas, setPropostas] = useState<Proposta[]>([]);
+  const [planscount, setPlanscount] = useState<number>(0);
+
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'accepted' | 'rejected'>('all');
@@ -45,11 +50,12 @@ export default function ProposalsList() {
   const badgeClass = "text-xs font-medium bg-blue-50 dark:bg-blue-400/10 text-blue-600 dark:text-blue-400 px-2 py-1 rounded-full";
 
   useEffect(() => {
-    fetchProposals();
+    fetchData();
   }, []);
 
-  const fetchProposals = async () => {
+  const fetchData = async () => {
     try {
+      // Retorna com as Propostas
       const { data, error } = await supabase
         .from('v_proposta')
         .select('*')
@@ -58,6 +64,13 @@ export default function ProposalsList() {
 
       if (error) throw error;
       setPropostas(data || []);
+
+      // Retorna com os Planos
+      const { data : planData, error: planosError } = 
+      await supabase.from('plano').select('*').eq("user_id", user?.id);
+      if (planosError) throw planosError;
+      setPlanscount(planData.length);
+
     } catch (error) {
       console.error('Error fetching proposals:', error);
     } finally {
@@ -72,7 +85,7 @@ export default function ProposalsList() {
       );
       setPropostas(filtered);
     } else {
-      fetchProposals();
+      fetchData();
     }
   }, [searchTerm]);
 
@@ -86,6 +99,10 @@ export default function ProposalsList() {
 
 
   const HandleOpenProposal = () => {
+    if (planscount === 0) {
+      AlertDialog("Não há planos cadastrados. Por favor, cadastre um plano antes de abrir uma proposta.");
+      return;
+    }
     setOpenProposal(true);
   };
 
