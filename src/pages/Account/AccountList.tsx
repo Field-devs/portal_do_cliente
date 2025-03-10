@@ -29,7 +29,8 @@ function AccountList() {
   const [showUserForm, setShowUserForm] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
 
-  const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50";
+    const borderRadius = 'rounded-xl'; // Define o raio da borda
+  const cardClass = `bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50 ${borderRadius}`;
   const titleClass = "text-4xl font-bold text-light-text-primary dark:text-white";
   const metricTitleClass = "text-lg font-medium text-light-text-primary dark:text-white mb-1";
   const metricValueClass = "text-3xl font-bold text-light-text-primary dark:text-white";
@@ -106,16 +107,16 @@ function AccountList() {
   return (
 
     <div className="p-6">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className={titleClass}>Usuários</h1>
-        <button
-          onClick={() => setShowUserForm(true)}
-          className="btn-primary flex items-center"
-        >
-          <Plus className="h-5 w-5 mr-2" />
-          Nova Conta
-        </button>
-      </div>
+    <div className="flex justify-between items-center mb-8">
+      <h1 className={titleClass}>Usuários</h1>
+      <button
+        onClick={() => setShowUserForm(true)}
+        className="btn-primary flex items-center rounded-full" // Adicionado rounded-full aqui
+      >
+        <Plus className="h-5 w-5 mr-2" />
+        Nova Conta
+      </button>
+    </div>
 
       <ModalForm
         isOpen={showUserForm}
@@ -219,7 +220,7 @@ function AccountList() {
                 placeholder="Buscar por nome, email ou CNPJ..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="input pl-12"
+                className={`input pl-12 ${borderRadius}`}
               />
             </div>
           </div>
@@ -229,7 +230,7 @@ function AccountList() {
               <select
                 value={roleFilter}
                 onChange={(e) => setRoleFilter(e.target.value === 'all' ? 'all' : Number(e.target.value))}
-                className="select pl-12"
+                className={`select pl-12 ${borderRadius}`}
               >
                 <option value="all">Todos os Perfis</option>
                 <option value="1">Super Admin</option>
@@ -245,7 +246,7 @@ function AccountList() {
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value as 'all' | 'active' | 'inactive')}
-                className="select pl-12"
+                className={`select pl-12 ${borderRadius}`}
               >
                 <option value="all">Todos os Status</option>
                 <option value="active">Ativos</option>

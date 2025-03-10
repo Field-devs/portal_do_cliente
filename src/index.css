@@ -69,15 +69,36 @@
   }
 
   .input {
-    @apply w-full px-4 py-2 bg-light-secondary dark:bg-dark-secondary border border-light-border dark:border-dark-border rounded-xl text-light-text-primary dark:text-dark-text-primary placeholder-light-text-secondary/50 dark:placeholder-dark-text-secondary/50 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors;
+    @apply w-full px-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-xl;
   }
 
   .select {
-    @apply w-full px-4 py-2 bg-light-secondary dark:bg-dark-secondary border border-light-border dark:border-dark-border rounded-xl text-light-text-primary dark:text-dark-text-primary focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors appearance-none;
+    @apply w-full pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors appearance-none rounded-xl;
   }
 
   .badge {
     @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+
+    /* Table Styles */
+    table {
+    @apply overflow-hidden rounded-xl;
+  }
+  
+  thead tr:first-child th:first-child {
+    @apply rounded-tl-xl;
+  }
+  
+  thead tr:first-child th:last-child {
+    @apply rounded-tr-xl;
+  }
+  
+  tbody tr:last-child td:first-child {
+    @apply rounded-bl-xl;
+  }
+  
+  tbody tr:last-child td:last-child {
+    @apply rounded-br-xl;
   }
 
   .badge-success {
