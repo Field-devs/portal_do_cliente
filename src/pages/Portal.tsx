@@ -64,13 +64,13 @@ export default function Portal() {
   }, []);
 
   const navigation = [
-    { id: 1, name: 'Dashboard', icon: BarChart2, path: '/portal', visible: [1] },
-    { id: 2, name: 'Propostas', icon: FileText, path: '/portal/proposals', visible: [1, 2, 3, 4] },
-    { id: 3, name: 'Contratos', icon: FileCheck2, path: '/portal/contracts', visible: [1, 2, 3, 4] },
-    { id: 4, name: 'Planos/Addons', icon: Package, path: '/portal/plans', visible: [1, 2, 3, 4] },
-    { id: 5, name: 'Contas', icon: Briefcase, path: '/portal/partners', visible: [1, 2, 3, 4] },
-    { id: 6, name: 'Usuários', icon: Users, path: '/portal/accounts', visible: [1, 2] },
-    { id: 7, name: 'Financeiro', icon: Wallet, path: '/portal/financial', visible: [1, 2, 3, 4, 5] }
+    { id: 1, name: 'Dashboard', icon: BarChart2, path: '/portal', visible: [1], tooltip: 'Dashboard' },
+    { id: 2, name: 'Propostas', icon: FileText, path: '/portal/proposals', visible: [1, 2, 3, 4], tooltip: 'Propostas' },
+    { id: 3, name: 'Contratos', icon: FileCheck2, path: '/portal/contracts', visible: [1, 2, 3, 4], tooltip: 'Contratos' },
+    { id: 4, name: 'Planos/Addons', icon: Package, path: '/portal/plans', visible: [1, 2, 3, 4], tooltip: 'Planos e Addons' },
+    { id: 5, name: 'Contas', icon: Briefcase, path: '/portal/partners', visible: [1, 2, 3, 4], tooltip: 'Contas' },
+    { id: 6, name: 'Usuários', icon: Users, path: '/portal/accounts', visible: [1, 2], tooltip: 'Usuários' },
+    { id: 7, name: 'Financeiro', icon: Wallet, path: '/portal/financial', visible: [1, 2, 3, 4, 5], tooltip: 'Financeiro' }
   ];
 
   const logoUrl = theme === 'dark'
@@ -133,6 +133,7 @@ export default function Portal() {
               <NavLink
                 key={item.path}
                 to={item.path}
+                title={item.tooltip} // Adicionado tooltip aqui
                 className={`flex ${isExpanded ? 'items-start' : 'items-center justify-center'} px-3 py-2 mx-2 text-sm font-medium rounded-lg transition-colors ${isActive
                   ? 'bg-brand-50 text-brand-600 dark:bg-brand-900/20 dark:text-brand-400'
                   : 'text-gray-600 dark:text-gray-400 hover:bg-brand-50/50 dark:hover:bg-brand-900/10 hover:text-brand-600 dark:hover:text-brand-400'
