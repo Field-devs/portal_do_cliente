@@ -5,7 +5,6 @@ import {
   Plus,
   Search,
   Filter,
-  Calendar,
   FileText,
   Users,
   TrendingUp,
@@ -15,15 +14,12 @@ import {
 import { supabase } from '../../lib/supabase';
 import { usePlanos } from '../../hooks/usePlanos';
 import { ModalForm } from '../../components/Modal/Modal';
-import ProposalForm from '../Forms/Proposal.Form';
 import ActionsButtons from '../../components/ActionsData';
 import { UpdateSingleField } from '../../utils/supageneric';
 import { useAuth } from '../../components/AuthProvider';
 import ProposalForm2 from '../Forms/Proposal.Form2';
-import { AlertDialog, AskDialog } from '../../components/Dialogs/SweetAlert';
-import Plan from '../../Models/Plan';
-import Plans from '../dashboard/Plans';
-import Profile from '../../Models/Perfil';
+import ProposalForm3 from '../Forms/Proposal.Form3';
+import { AlertDialog } from '../../components/Dialogs/SweetAlert';
 
 
 export default function ProposalsList() {
@@ -142,7 +138,7 @@ export default function ProposalsList() {
         title="Nova Proposta"
         maxWidth='2xl'
       >
-        <ProposalForm2
+        <ProposalForm3
           id={propid ?? ''}
           onCancel={() => setOpenProposal(false)}
         />

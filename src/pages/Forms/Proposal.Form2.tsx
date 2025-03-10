@@ -6,6 +6,8 @@ import PlanAddon from "../../Models/Plan.Addon";
 import { AskDialog } from "../../components/Dialogs/SweetAlert";
 import SwitchFrag from "../../components/Fragments/SwitchFrag";
 import Profile from "../../Models/Perfil";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faLock, faLockOpen, faUnlock } from '@fortawesome/free-solid-svg-icons';
 
 export default function ProposalForm2(id: string) {
   const { user } = useAuth();
@@ -120,7 +122,7 @@ export default function ProposalForm2(id: string) {
                 className={`px-4 py-1 border rounded-md ${selectedPlan === plan ? "bg-blue-500 text-white" : "bg-gray-100"}`}
                 onClick={() => setSelectedPlan(plan)}
               >
-                {plan.nome} (R$ {plan.valor},00)
+                <FontAwesomeIcon icon={faLock} className="ml-1  text-red-500" /> {plan.nome} (R$ {plan.valor},00)
               </button>
             ))}
 
@@ -130,7 +132,7 @@ export default function ProposalForm2(id: string) {
                 className={`px-4 py-1 border rounded-md ${selectedPlan === plan ? "bg-blue-500 text-white" : "bg-gray-100"}`}
                 onClick={() => setSelectedPlan(plan)}
               >
-                {plan.nome} (R$ {plan.valor},00)
+                 <FontAwesomeIcon icon={faLockOpen} className="ml-1  text-yellow-500" /> {plan.nome} (R$ {plan.valor},00)
               </button>
             ))}
 
@@ -146,7 +148,7 @@ export default function ProposalForm2(id: string) {
             {addons.filter(addon => viewInactive && !addon.active).map((addon) => (
               <div key={addon.id} className="flex justify-between items-center">
                 <span>
-                  {addon.nome.replace(/([A-Z])/g, ' $1')} (R$ {addon.valor})
+                <FontAwesomeIcon icon={faLock} className="ml-1 text-red-500" /> {addon.nome.replace(/([A-Z])/g, ' $1')} (R$ {addon.valor})
                 </span>
                 <input
                   type="number"
@@ -166,7 +168,7 @@ export default function ProposalForm2(id: string) {
             {addons.filter(addon => addon.active == true).map((addon) => (
               <div key={addon.id} className="flex justify-between items-center">
                 <span>
-                  {addon.nome.replace(/([A-Z])/g, ' $1')} (R$ {addon.valor})
+                <FontAwesomeIcon icon={faLockOpen} className="ml-1  text-yellow-500" /> {addon.nome.replace(/([A-Z])/g, ' $1')} (R$ {addon.valor})
                 </span>
                 <input
                   type="number"
