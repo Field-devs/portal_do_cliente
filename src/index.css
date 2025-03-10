@@ -7,20 +7,26 @@
     @apply antialiased;
   }
 
-  /* Custom Scrollbar Styles */
-  ::-webkit-scrollbar {
-    @apply w-2;
+  /* Custom Scrollbar Styles - WebKit (Chrome, Safari, Edge) */
+  /* Apply to the entire document */
+  *::-webkit-scrollbar {
+    @apply w-2 h-2; /* Added h-2 for horizontal scrollbars */
   }
 
-  ::-webkit-scrollbar-track {
+  *::-webkit-scrollbar-track {
     @apply bg-light-secondary dark:bg-dark-secondary rounded-full;
   }
 
-  ::-webkit-scrollbar-thumb {
+  *::-webkit-scrollbar-thumb {
     @apply bg-light-border dark:bg-dark-border rounded-full hover:bg-gray-400 dark:hover:bg-gray-500 transition-colors;
   }
 
+  *::-webkit-scrollbar-corner {
+    @apply bg-light-secondary dark:bg-dark-secondary; /* Optional: Style the corner where horizontal and vertical scrollbars meet */
+  }
+
   /* Firefox Scrollbar */
+  /* Apply to the entire document */
   * {
     scrollbar-width: thin;
     scrollbar-color: theme('colors.light.border') theme('colors.light.secondary');
@@ -28,6 +34,12 @@
 
   .dark * {
     scrollbar-color: theme('colors.dark.border') theme('colors.dark.secondary');
+  }
+
+  /* force scrollbars on all elements */
+  html,
+  body {
+    overflow: auto;
   }
 }
 

@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Routes, Route, NavLink, useLocation } from 'react-router-dom';
 import { useAuth } from '../components/AuthProvider';
 import { useTheme } from '../components/ThemeProvider';
-import { 
-  FileText, 
-  Users, 
+import {
+  FileText,
+  Users,
   Wallet,
   LogOut,
   Package,
@@ -44,40 +44,36 @@ const getRoleBadgeStyles = (role: string | null) => {
   }
 };
 
-const getRoleDisplayName = (role: string | null) => {
-  switch (role) {
-    case 'super_admin':
-      return 'Super Admin';
-    case 'admin':
-      return 'Admin';
-    case 'client':
-      return 'Cliente';
-    case 'ava':
-      return 'AVA';
-    case 'ava_admin':
-      return 'AVA Admin';
-    default:
-      return role || 'Usuário';
-  }
-};
-
 export default function Portal() {
-  const { user, role, signOut } = useAuth();
+  const { user, profile: role, signOut } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const location = useLocation();
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false); // Começa recolhido
+  const [showHeaderActions, setShowHeaderActions] = useState(true);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollThreshold = 100;
+      setShowHeaderActions(window.scrollY < scrollThreshold);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   const navigation = [
-    { name: 'Dashboard', icon: BarChart2, path: '/portal' },
-    { name: 'Propostas', icon: FileText, path: '/portal/proposals' },
-    { name: 'Contratos', icon: FileCheck2, path: '/portal/contracts' },
-    { name: 'Planos/Addons', icon: Package, path: '/portal/plans' },
-    { name: 'Clientes', icon: Briefcase, path: '/portal/partners' },
-    { name: 'Usuários', icon: Users, path: '/portal/accounts' },
-    { name: 'Financeiro', icon: Wallet, path: '/portal/financial' }
+    { id: 1, name: 'Dashboard', icon: BarChart2, path: '/portal', visible: [1] },
+    { id: 2, name: 'Propostas', icon: FileText, path: '/portal/proposals', visible: [1, 2, 3, 4] },
+    { id: 3, name: 'Contratos', icon: FileCheck2, path: '/portal/contracts', visible: [1, 2, 3, 4] },
+    { id: 4, name: 'Planos/Addons', icon: Package, path: '/portal/plans', visible: [1, 2, 3, 4] },
+    { id: 5, name: 'Contas', icon: Briefcase, path: '/portal/partners', visible: [1, 2, 3, 4] },
+    { id: 6, name: 'Usuários', icon: Users, path: '/portal/accounts', visible: [1, 2] },
+    { id: 7, name: 'Financeiro', icon: Wallet, path: '/portal/financial', visible: [1, 2, 3, 4, 5] }
   ];
 
-  const logoUrl = theme === 'dark' 
+  const logoUrl = theme === 'dark'
     ? "https://storage.wiseapp360.com/typebot/public/workspaces/clwl6fdyf000511ohlamongyl/typebots/cm683siyl000dm4kxlrec9tb8/results/hkmdaw6c6ice8z349zj22v4i/blocks/cz78pvc8stcisz1y8sq2khj1/OutrVertical.png"
     : "https://storage.wiseapp360.com/typebot/public/workspaces/clwl6fdyf000511ohlamongyl/typebots/cm683siyl000dm4kxlrec9tb8/results/jctueeexledouxj5ys19vnq9/blocks/cz78pvc8stcisz1y8sq2khj1/VerticalBlack.png";
 
@@ -101,7 +97,7 @@ export default function Portal() {
         </div>
 
         {/* User Profile */}
-        <div className="p-3 border-b border-light-border dark:border-dark-border">
+        <div className={`p-3 border-b border-light-border dark:border-dark-border ${isExpanded ? 'items-start' : 'items-center'} flex justify-center`}>
           <div className="flex flex-col items-center">
             {user?.foto ? (
               <img
@@ -115,31 +111,32 @@ export default function Portal() {
               </div>
             )}
             {isExpanded && (
-              <div className="mt-2 text-center">
+              <div className="mt-2 text-left"> {/* Alinhamento à esquerda quando expandido */}
                 <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
                   {user?.nome || '-'}
                 </p>
                 <div className={`inline-flex px-2 py-0.5 mt-1 text-xs font-medium rounded-md ${getRoleBadgeStyles(role)}`}>
-                  {getRoleDisplayName(role)}
+                  {user?.perfil_nome}
                 </div>
               </div>
             )}
           </div>
         </div>
-        
+
         {/* Navigation */}
         <nav className="flex-1 overflow-y-auto py-4">
           {navigation.map((item) => {
             const isActive = location.pathname === item.path;
+            if (item.visible && !item.visible.includes(user?.perfil_id)) return null;
+
             return (
               <NavLink
                 key={item.path}
                 to={item.path}
-                className={`flex items-center px-3 py-2 mx-2 text-sm font-medium rounded-lg transition-colors ${
-                  isActive
-                    ? 'bg-brand-50 text-brand-600 dark:bg-brand-900/20 dark:text-brand-400'
-                    : 'text-gray-600 dark:text-gray-400 hover:bg-brand-50/50 dark:hover:bg-brand-900/10 hover:text-brand-600 dark:hover:text-brand-400'
-                }`}
+                className={`flex ${isExpanded ? 'items-start' : 'items-center justify-center'} px-3 py-2 mx-2 text-sm font-medium rounded-lg transition-colors ${isActive
+                  ? 'bg-brand-50 text-brand-600 dark:bg-brand-900/20 dark:text-brand-400'
+                  : 'text-gray-600 dark:text-gray-400 hover:bg-brand-50/50 dark:hover:bg-brand-900/10 hover:text-brand-600 dark:hover:text-brand-400'
+                  }`}
               >
                 <div className="min-w-[2rem] flex justify-center">
                   <item.icon className="h-5 w-5" />
@@ -154,42 +151,41 @@ export default function Portal() {
           })}
         </nav>
 
-        {/* Footer Actions */}
-        <div className="p-3 border-t border-light-border dark:border-dark-border">
-          <div className="flex justify-center items-center space-x-2">
-            <button
-              onClick={toggleTheme}
-              className="p-2 rounded-lg text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-light-secondary dark:hover:bg-dark-secondary"
-              title={theme === 'dark' ? 'Mudar para tema claro' : 'Mudar para tema escuro'}
-            >
-              {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-            </button>
-
-            <NavLink
-              to="/portal/profile"
-              className="p-2 rounded-lg text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-light-secondary dark:hover:bg-dark-secondary"
-              title="Perfil"
-            >
-              <UserCircle className="h-5 w-5" />
-            </NavLink>
-
-            <button
-              onClick={signOut}
-              className="p-2 rounded-lg text-red-500 hover:text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:text-red-300 dark:hover:bg-red-900/20"
-              title="Sair"
-            >
-              <LogOut className="h-5 w-5" />
-            </button>
-          </div>
-        </div>
       </div>
 
       {/* Main Content Area */}
       <div className={`flex-1 transition-all duration-300 ${isExpanded ? 'ml-52' : 'ml-20'}`}>
-        <div className="p-6">
+        {/* Actions inside Main Content (Top Right Corner) */}
+        <div className={`absolute top-4 right-4 z-30 flex justify-center items-center space-x-2`}>
+          <button
+            onClick={toggleTheme}
+            className="p-2 rounded-lg text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-light-secondary dark:hover:bg-dark-secondary"
+            title={theme === 'dark' ? 'Mudar para tema claro' : 'Mudar para tema escuro'}
+          >
+            {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+          </button>
+
+          <NavLink
+            to="/portal/profile"
+            className="p-2 rounded-lg text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-light-secondary dark:hover:bg-dark-secondary"
+            title="Perfil"
+          >
+            <UserCircle className="h-5 w-5" />
+          </NavLink>
+
+          <button
+            onClick={signOut}
+            className="p-2 rounded-lg text-red-500 hover:text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:text-red-300 dark:hover:bg-red-900/20"
+            title="Sair"
+          >
+            <LogOut className="h-5 w-5" />
+          </button>
+        </div>
+
+        {/* Main Content with increased top padding */}
+        <div className="p-6 pt-16">
           <Routes>
-            {/* <Route path="/" element={<AdminDashboard />} /> */}
-            <Route path="/" element={<AccountList />} />
+            <Route path="/" element={<AdminDashboard />} />
             <Route path="contracts" element={<ContractList />} />
             <Route path="plans" element={<PlanList />} />
             <Route path="proposals" element={<ProposalsList />} />
@@ -197,7 +193,6 @@ export default function Portal() {
             <Route path="accounts" element={<AccountList />} />
             <Route path="financial" element={<FinancialDashBoard />} />
             <Route path="profile" element={<Profile />} />
-            
             <Route path="/proposal-confirm" element={<ProposalConfirm />} />
           </Routes>
         </div>
