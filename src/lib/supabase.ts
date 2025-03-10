@@ -27,7 +27,6 @@ const authenticateUser = async (email: string, password: string) => {
 
     if (userError) {
       console.error('Database error:', userError);
-      throw new Error('Usuário não encontrado');
     }
 
     if (!userData) {

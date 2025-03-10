@@ -3,6 +3,7 @@ import { authenticateUser, supabase } from '../lib/supabase';
 import { useNavigate } from 'react-router-dom';
 import { User } from '../Models/Uses';
 import Profile from '../Models/Perfil';
+import { ErrorDialog } from './Dialogs/SweetAlert';
 
 
 interface AuthContextType {
@@ -48,15 +49,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const userData = await authenticateUser(email, password);
       setUser(userData);
-      
-      console.log('User data:', userData);
-
-      
+     
       // Store complete user data including profile photo
       localStorage.setItem('user', JSON.stringify(userData));
       navigate('/portal');
     } catch (error) {
-      console.error('Sign in error:', error);
+      //console.error('Sign in error:', error);
+      ErrorDialog('Credenciais inválidas', 'Erro ao fazer login');
       throw error;
     }
   };

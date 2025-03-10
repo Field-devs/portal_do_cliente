@@ -5,25 +5,31 @@ import {
   Plus,
   Search,
   Filter,
+  Calendar,
   FileText,
   Users,
   TrendingUp,
   Clock,
   CheckCircle,
-  XCircle} from 'lucide-react';
+  XCircle,
+  MoreVertical
+} from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { usePlanos } from '../../hooks/usePlanos';
 import { ModalForm } from '../../components/Modal/Modal';
+import ProposalForm from '../Forms/Proposal.Form';
 import ActionsButtons from '../../components/ActionsData';
 import { UpdateSingleField } from '../../utils/supageneric';
 import { useAuth } from '../../components/AuthProvider';
 import ProposalForm2 from '../Forms/Proposal.Form2';
-import ProposalForm3 from '../Forms/Proposal.Form3';
-import { AlertDialog } from '../../components/Dialogs/SweetAlert';
-
+import { AlertDialog, AskDialog } from '../../components/Dialogs/SweetAlert';
+import Plan from '../../Models/Plan';
+import Plans from '../dashboard/Plans';
+import CircularWait from '../../components/CircularWait';
 
 export default function ProposalsList() {
   const { user } = useAuth();
+
   const [propid, setPropId] = useState<string | null>(null);
   const [propostas, setPropostas] = useState<Proposta[]>([]);
   const [planscount, setPlanscount] = useState<number>(0);
@@ -33,6 +39,7 @@ export default function ProposalsList() {
   const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'accepted' | 'rejected'>('all');
   const [OpenProposal, setOpenProposal] = useState(false);
   const [active, SetActive] = useState(true);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const { loading: planosLoading } = usePlanos();
 
@@ -44,7 +51,6 @@ export default function ProposalsList() {
   const iconContainerClass = "bg-blue-400/10 p-3 rounded-xl";
   const iconClass = "h-6 w-6 text-blue-600 dark:text-blue-400";
   const badgeClass = "text-xs font-medium bg-blue-50 dark:bg-blue-400/10 text-blue-600 dark:text-blue-400 px-2 py-1 rounded-full";
-
 
   useEffect(() => {
     fetchData();
@@ -125,7 +131,7 @@ export default function ProposalsList() {
   if (loading || planosLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand"></div>
+        <CircularWait message="Carregando propostas, por favor aguarde..." />
       </div>
     );
   }
@@ -138,7 +144,7 @@ export default function ProposalsList() {
         title="Nova Proposta"
         maxWidth='2xl'
       >
-        <ProposalForm3
+        <ProposalForm2
           id={propid ?? ''}
           onCancel={() => setOpenProposal(false)}
         />
@@ -149,15 +155,49 @@ export default function ProposalsList() {
         <div className="flex justify-between items-center mb-8">
           <h1 className={titleClass}>Propostas</h1>
 
-          <button
-            onClick={() => HandleOpenProposal()}
-            className="btn-primary flex items-center"
-          >
-            <Plus className="h-5 w-5 mr-2" />
-            Nova Proposta
-          </button>
+          <div className="flex gap-2 items-center">
+            <button
+              onClick={() => HandleOpenProposal()}
+              className="btn-primary flex items-center"
+            >
+              <Plus className="h-5 w-5 mr-2" />
+              Nova Proposta
+            </button>
 
-
+            <div className="relative">
+              <button
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="btn-primary flex items-center px-3"
+              >
+                <MoreVertical className="h-5 w-5" />
+              </button>
+              
+              {isMenuOpen && (
+                <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5">
+                  <div className="py-1">
+                    <button
+                      onClick={() => {/* handle action 1 */}}
+                      className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    >
+                      Exportar Propostas
+                    </button>
+                    <button
+                      onClick={() => {/* handle action 2 */}}
+                      className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    >
+                      Filtros Avançados
+                    </button>
+                    <button
+                      onClick={() => {/* handle action 3 */}}
+                      className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    >
+                      Configurações
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
 
         {/* Metrics Cards */}

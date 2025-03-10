@@ -26,3 +26,26 @@ export const AlertDialog = async (text: string, title: string = "Atenção") => 
     confirmButtonColor: '#3085d6'
   });
 }
+
+export const SuccessDialog = async (text: string, title: string = "Sucesso") => {
+  return MySwal.fire({
+    title: title,
+    text: text,
+    icon: 'success',
+    showCancelButton: false,
+    confirmButtonText: 'Ok',
+    confirmButtonColor: '#3085d6'
+  });
+}
+
+// error
+export const ErrorDialog = async (text: string, title: string = "Erro") => {
+  return MySwal.fire({
+    title: title,
+    text: text,
+    icon: 'error',
+    showCancelButton: false,
+    confirmButtonText: 'Ok',
+    confirmButtonColor: '#3085d6'
+  });
+}
