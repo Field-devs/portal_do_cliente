@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import ActionsButtons from '../../components/ActionsData';
 import { UpdateSingleField } from '../../utils/supageneric';
+import { User } from '../../Models/Uses';
 
 function AccountList() {
   const [users, setUsers] = useState<User[]>([]);
@@ -29,8 +30,7 @@ function AccountList() {
   const [showUserForm, setShowUserForm] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
 
-    const borderRadius = 'rounded-xl'; // Define o raio da borda
-  const cardClass = `bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50 ${borderRadius}`;
+  const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50";
   const titleClass = "text-4xl font-bold text-light-text-primary dark:text-white";
   const metricTitleClass = "text-lg font-medium text-light-text-primary dark:text-white mb-1";
   const metricValueClass = "text-3xl font-bold text-light-text-primary dark:text-white";
@@ -70,10 +70,8 @@ function AccountList() {
   };
 
 
-  const handleOnLock = async(id: string) => {
-    console.log("Locking user with ID:", id);
-    let response = await UpdateSingleField("users", "id", id, "active", false);
-    console.log(response);
+  const handleOnLock = async (id: string, status: boolean) => {
+    let response = await UpdateSingleField("users", "id", id, "active", !status);
     return response;
   };
 
@@ -107,16 +105,16 @@ function AccountList() {
   return (
 
     <div className="p-6">
-    <div className="flex justify-between items-center mb-8">
-      <h1 className={titleClass}>Usuários</h1>
-      <button
-        onClick={() => setShowUserForm(true)}
-        className="btn-primary flex items-center rounded-full" // Adicionado rounded-full aqui
-      >
-        <Plus className="h-5 w-5 mr-2" />
-        Nova Conta
-      </button>
-    </div>
+      <div className="flex justify-between items-center mb-8">
+        <h1 className={titleClass}>Usuários</h1>
+        <button
+          onClick={() => setShowUserForm(true)}
+          className="btn-primary flex items-center"
+        >
+          <Plus className="h-5 w-5 mr-2" />
+          Nova Conta
+        </button>
+      </div>
 
       <ModalForm
         isOpen={showUserForm}
@@ -220,7 +218,7 @@ function AccountList() {
                 placeholder="Buscar por nome, email ou CNPJ..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className={`input pl-12 ${borderRadius}`}
+                className="input pl-12"
               />
             </div>
           </div>
@@ -230,7 +228,7 @@ function AccountList() {
               <select
                 value={roleFilter}
                 onChange={(e) => setRoleFilter(e.target.value === 'all' ? 'all' : Number(e.target.value))}
-                className={`select pl-12 ${borderRadius}`}
+                className="select pl-12"
               >
                 <option value="all">Todos os Perfis</option>
                 <option value="1">Super Admin</option>
@@ -246,7 +244,7 @@ function AccountList() {
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value as 'all' | 'active' | 'inactive')}
-                className={`select pl-12 ${borderRadius}`}
+                className="select pl-12"
               >
                 <option value="all">Todos os Status</option>
                 <option value="active">Ativos</option>
@@ -273,9 +271,6 @@ function AccountList() {
                 </th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                   Perfil
-                </th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
-                  Status
                 </th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                   Data de Criação
@@ -331,11 +326,7 @@ function AccountList() {
                       {user.perfil_nome}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`badge ${user.active ? 'badge-success' : 'badge-error'}`}>
-                      {user.active ? 'Ativo' : 'Inativo'}
-                    </span>
-                  </td>
+
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-base text-light-text-secondary dark:text-gray-300">
                       {new Date(user.dt_add).toLocaleDateString('pt-BR')}
@@ -343,11 +334,13 @@ function AccountList() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right">
                     <div className="flex justify-end space-x-2">
+
                       <ActionsButtons
-                        onEdit={handleEdit} 
-                        onLocker={user.perfil_id == 1 ? null : async () => handleOnLock(user.id)}
+                        onEdit={handleEdit}
+                        onLocker={user.perfil_id == 1 ? null : async () => handleOnLock(user.id, user.active)}
                         active={user.active}
                       />
+
                     </div>
                   </td>
                 </tr>

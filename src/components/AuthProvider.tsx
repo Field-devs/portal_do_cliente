@@ -1,13 +1,14 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import { authenticateUser } from '../lib/supabase';
+import { authenticateUser, supabase } from '../lib/supabase';
 import { useNavigate } from 'react-router-dom';
 import { User } from '../Models/Uses';
+import Profile from '../Models/Perfil';
+import { ErrorDialog } from './Dialogs/SweetAlert';
 
-type UserRole = 'super_admin' | 'admin' | 'ava_admin' | 'ava' | 'client';
 
 interface AuthContextType {
   user: User | null;
-  role: UserRole | null;
+  profile: Profile[] | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
@@ -18,8 +19,9 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [role, setRole] = useState<UserRole | null>(null);
+  const [profile, setProfile] = useState<Profile[] | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -29,17 +31,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
       setUser(parsedUser);
-      
-      // Map perfil_id to role
-      const roleMap: Record<number, UserRole> = {
-        1: 'super_admin',
-        2: 'admin',
-        3: 'ava_admin',
-        4: 'ava',
-        5: 'client'
-      };
-      
-      setRole(roleMap[parsedUser.perfil_id] || null);
       
       // If we're on the login page and have a valid session, redirect to portal
       if (window.location.pathname === '/login') {
@@ -58,23 +49,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const userData = await authenticateUser(email, password);
       setUser(userData);
-
-      // Map perfil_id to role
-      const roleMap: Record<number, UserRole> = {
-        1: 'super_admin',
-        2: 'admin',
-        3: 'ava_admin',
-        4: 'ava',
-        5: 'client'
-      };
-      
-      setRole(roleMap[userData.perfil_id] || null);
-      console.log('User role:', role);
+     
       // Store complete user data including profile photo
       localStorage.setItem('user', JSON.stringify(userData));
       navigate('/portal');
     } catch (error) {
-      console.error('Sign in error:', error);
+      //console.error('Sign in error:', error);
+      ErrorDialog('Credenciais inválidas', 'Erro ao fazer login');
       throw error;
     }
   };
@@ -83,7 +64,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       localStorage.removeItem('user');
       setUser(null);
-      setRole(null);
+      setProfile(null);
       navigate('/login');
     } catch (error) {
       console.error('Sign out error:', error);
@@ -112,7 +93,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, role, loading, signIn, signOut, updateUser }}>
+    <AuthContext.Provider value={{ user, profile: profile, loading, signIn, signOut, updateUser }}>
       {children}
     </AuthContext.Provider>
   );

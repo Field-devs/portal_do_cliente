@@ -1,5 +1,6 @@
 import { supabase } from "../lib/supabase";
 
+//  update users set active = false  where id = ''
 export async function UpdateSingleField(
   tableName: string,
   fieldKey: string,

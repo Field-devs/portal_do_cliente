@@ -11,28 +11,39 @@ import {
   TrendingUp,
   Clock,
   CheckCircle,
-  XCircle
+  XCircle,
+  MoreVertical
 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { usePlanos } from '../../hooks/usePlanos';
 import { ModalForm } from '../../components/Modal/Modal';
-import ProposalForm from '../Forms/ProposalForm';
+import ProposalForm from '../Forms/Proposal.Form';
 import ActionsButtons from '../../components/ActionsData';
-import SwitchFrag from '../../components/Fragments/SwitchFrag';
+import { UpdateSingleField } from '../../utils/supageneric';
+import { useAuth } from '../../components/AuthProvider';
+import ProposalForm2 from '../Forms/Proposal.Form2';
+import { AlertDialog, AskDialog } from '../../components/Dialogs/SweetAlert';
+import Plan from '../../Models/Plan';
+import Plans from '../dashboard/Plans';
+import CircularWait from '../../components/CircularWait';
 
 export default function ProposalsList() {
+  const { user } = useAuth();
+
   const [propid, setPropId] = useState<string | null>(null);
   const [propostas, setPropostas] = useState<Proposta[]>([]);
+  const [planscount, setPlanscount] = useState<number>(0);
+
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'accepted' | 'rejected'>('all');
   const [OpenProposal, setOpenProposal] = useState(false);
   const [active, SetActive] = useState(true);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const { loading: planosLoading } = usePlanos();
 
-  const borderRadius = 'rounded-xl'; // Define o raio da borda
-  const cardClass = `bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50 ${borderRadius}`;
+  const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50";
   const titleClass = "text-4xl font-bold text-light-text-primary dark:text-white";
   const metricTitleClass = "text-lg font-medium text-light-text-primary dark:text-white mb-1";
   const metricValueClass = "text-3xl font-bold text-light-text-primary dark:text-white";
@@ -42,18 +53,27 @@ export default function ProposalsList() {
   const badgeClass = "text-xs font-medium bg-blue-50 dark:bg-blue-400/10 text-blue-600 dark:text-blue-400 px-2 py-1 rounded-full";
 
   useEffect(() => {
-    fetchProposals();
+    fetchData();
   }, []);
 
-  const fetchProposals = async () => {
+  const fetchData = async () => {
     try {
+      // Retorna com as Propostas
       const { data, error } = await supabase
         .from('v_proposta')
         .select('*')
-        .order('dt', { ascending: false });
+        .eq('user_id', user?.id)
+        .order('id', { ascending: false });
 
       if (error) throw error;
       setPropostas(data || []);
+
+      // Retorna com os Planos
+      const { data : planData, error: planosError } = 
+      await supabase.from('plano').select('*').eq("user_id", user?.id);
+      if (planosError) throw planosError;
+      setPlanscount(planData.length);
+
     } catch (error) {
       console.error('Error fetching proposals:', error);
     } finally {
@@ -68,7 +88,7 @@ export default function ProposalsList() {
       );
       setPropostas(filtered);
     } else {
-      fetchProposals();
+      fetchData();
     }
   }, [searchTerm]);
 
@@ -82,15 +102,17 @@ export default function ProposalsList() {
 
 
   const HandleOpenProposal = () => {
+    if (planscount === 0) {
+      AlertDialog("Não há planos cadastrados. Por favor, cadastre um plano antes de abrir uma proposta.");
+      return;
+    }
     setOpenProposal(true);
   };
 
-
-  function handleLocker(id: any): void {
-    supa
-  }
-
-
+  const handleOnLock = async(id: string, status: boolean) => {
+    let response = await UpdateSingleField("proposta", "id", id, "active", !status);
+    return response;
+  };
 
   const handleChange = (checked: boolean) => {
     console.log(active);
@@ -109,7 +131,7 @@ export default function ProposalsList() {
   if (loading || planosLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand"></div>
+        <CircularWait message="Carregando propostas, por favor aguarde..." />
       </div>
     );
   }
@@ -122,7 +144,7 @@ export default function ProposalsList() {
         title="Nova Proposta"
         maxWidth='2xl'
       >
-        <ProposalForm
+        <ProposalForm2
           id={propid ?? ''}
           onCancel={() => setOpenProposal(false)}
         />
@@ -132,13 +154,50 @@ export default function ProposalsList() {
       <div className="p-6">
         <div className="flex justify-between items-center mb-8">
           <h1 className={titleClass}>Propostas</h1>
-          <button
-            onClick={() => HandleOpenProposal()}
-            className="btn-primary flex items-center rounded-full" // Adicionado rounded-full aqui
-          >
-            <Plus className="h-5 w-5 mr-2" />
-            Nova Proposta
-          </button>
+
+          <div className="flex gap-2 items-center">
+            <button
+              onClick={() => HandleOpenProposal()}
+              className="btn-primary flex items-center"
+            >
+              <Plus className="h-5 w-5 mr-2" />
+              Nova Proposta
+            </button>
+
+            <div className="relative">
+              <button
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="btn-primary flex items-center px-3"
+              >
+                <MoreVertical className="h-5 w-5" />
+              </button>
+              
+              {isMenuOpen && (
+                <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5">
+                  <div className="py-1">
+                    <button
+                      onClick={() => {/* handle action 1 */}}
+                      className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    >
+                      Exportar Propostas
+                    </button>
+                    <button
+                      onClick={() => {/* handle action 2 */}}
+                      className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    >
+                      Filtros Avançados
+                    </button>
+                    <button
+                      onClick={() => {/* handle action 3 */}}
+                      className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    >
+                      Configurações
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
 
         {/* Metrics Cards */}
@@ -225,7 +284,7 @@ export default function ProposalsList() {
                   placeholder="Buscar por empresa, email ou CNPJ..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className={`input pl-12 ${borderRadius}`}
+                  className="input pl-12"
                 />
               </div>
             </div>
@@ -235,7 +294,7 @@ export default function ProposalsList() {
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value as typeof statusFilter)}
-                  className={`select pl-12 ${borderRadius}`}
+                  className="select pl-12"
                 >
                   <option value="all">Todos os Status</option>
                   <option value="pending">Pendentes</option>
@@ -251,6 +310,7 @@ export default function ProposalsList() {
         <div className={`${cardClass} mt-6`}>
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-light-border dark:divide-gray-700/50">
+
               <thead>
                 <tr className="bg-light-secondary dark:bg-[#0F172A]/60">
                   <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
@@ -278,10 +338,8 @@ export default function ProposalsList() {
                   </th>
                   <th className="px-6 py-4 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                   </th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider w-[20px]">
-                    Ativo
-                  </th>
                 </tr>
+
               </thead>
               <tbody className="divide-y divide-light-border dark:divide-gray-700/50">
                 {filteredProposals.map((proposta) => (
@@ -329,7 +387,7 @@ export default function ProposalsList() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex justify-center">
-                        <span className={`px-3 py-1 text-sm font-medium rounded-full ${proposta.status === 'PE'
+                        <span className={`px-3 py-1 text-sm font-medium rounded-full w-24 text-center ${proposta.status === 'PE'
                           ? 'badge-warning'
                           : proposta.status === 'AC'
                             ? 'badge-success'
@@ -340,10 +398,13 @@ export default function ProposalsList() {
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <ActionsButtons 
+                          
+                      <ActionsButtons
                         onEdit={() => handleEdit(proposta.id)}
-                        onLocker={() => handleLocker(proposta.id)} 
-                        />
+                        onLocker={() => handleOnLock(proposta.id, proposta.active)}
+                        active={proposta.active}
+                      />
+
                     </td>
 
                   </tr>

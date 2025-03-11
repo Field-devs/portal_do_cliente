@@ -30,7 +30,7 @@ export default function Login() {
     setLoading(true);
     setError('');
     setSuccess('');
-
+    
     try {
       await signIn(email, password);
       navigate('/portal');

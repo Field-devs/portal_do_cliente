@@ -8,3 +8,7 @@ https://vgxuxmfcjylbikovlctc.supabase.co
 
 Api Key:
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZneHV4bWZjanlsYmlrb3ZsY3RjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzk3MzkwNzYsImV4cCI6MjA1NTMxNTA3Nn0.ql8nd7YGcyA2xoAT-GZpqM04y9FIzfubl7VZriApZzE
+
+
+badge - full 
+px-3 py-1 text-sm font-medium rounded-full w-24 text-center

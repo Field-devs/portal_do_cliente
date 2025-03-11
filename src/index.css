@@ -7,26 +7,20 @@
     @apply antialiased;
   }
 
-  /* Custom Scrollbar Styles - WebKit (Chrome, Safari, Edge) */
-  /* Apply to the entire document */
-  *::-webkit-scrollbar {
-    @apply w-2 h-2; /* Added h-2 for horizontal scrollbars */
+  /* Custom Scrollbar Styles */
+  ::-webkit-scrollbar {
+    @apply w-2;
   }
 
-  *::-webkit-scrollbar-track {
+  ::-webkit-scrollbar-track {
     @apply bg-light-secondary dark:bg-dark-secondary rounded-full;
   }
 
-  *::-webkit-scrollbar-thumb {
+  ::-webkit-scrollbar-thumb {
     @apply bg-light-border dark:bg-dark-border rounded-full hover:bg-gray-400 dark:hover:bg-gray-500 transition-colors;
   }
 
-  *::-webkit-scrollbar-corner {
-    @apply bg-light-secondary dark:bg-dark-secondary; /* Optional: Style the corner where horizontal and vertical scrollbars meet */
-  }
-
   /* Firefox Scrollbar */
-  /* Apply to the entire document */
   * {
     scrollbar-width: thin;
     scrollbar-color: theme('colors.light.border') theme('colors.light.secondary');
@@ -34,12 +28,6 @@
 
   .dark * {
     scrollbar-color: theme('colors.dark.border') theme('colors.dark.secondary');
-  }
-
-  /* force scrollbars on all elements */
-  html,
-  body {
-    overflow: auto;
   }
 }
 
@@ -69,36 +57,15 @@
   }
 
   .input {
-    @apply w-full px-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-xl;
+    @apply w-full px-4 py-2 bg-light-secondary dark:bg-dark-secondary border border-light-border dark:border-dark-border rounded-xl text-light-text-primary dark:text-dark-text-primary placeholder-light-text-secondary/50 dark:placeholder-dark-text-secondary/50 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors;
   }
 
   .select {
-    @apply w-full pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors appearance-none rounded-xl;
+    @apply w-full px-4 py-2 bg-light-secondary dark:bg-dark-secondary border border-light-border dark:border-dark-border rounded-xl text-light-text-primary dark:text-dark-text-primary focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors appearance-none;
   }
 
   .badge {
     @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
-  }
-
-    /* Table Styles */
-    table {
-    @apply overflow-hidden rounded-xl;
-  }
-  
-  thead tr:first-child th:first-child {
-    @apply rounded-tl-xl;
-  }
-  
-  thead tr:first-child th:last-child {
-    @apply rounded-tr-xl;
-  }
-  
-  tbody tr:last-child td:first-child {
-    @apply rounded-bl-xl;
-  }
-  
-  tbody tr:last-child td:last-child {
-    @apply rounded-br-xl;
   }
 
   .badge-success {

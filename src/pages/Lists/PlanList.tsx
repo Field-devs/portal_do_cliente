@@ -16,13 +16,12 @@ import { ModalForm } from '../../components/Modal/Modal';
 import PlanForm from '../Forms/PlanForm';
 import AddonForm from '../Forms/AddonForm';
 import ActionsButtons from '../../components/ActionsData';
-import SwitchFrag from '../../components/Fragments/SwitchFrag';
+import { UpdateSingleField } from '../../utils/supageneric';
 
 type ContentType = 'plans' | 'addons';
 
 export default function PlanList() {
   const { user } = useAuth();
-  const [active, SetActive] = useState(true);
   const [plans, setPlans] = useState<Plan[]>([]);
   const [plan, setPlan] = useState<Plan | null>(null);
   const [addons, setAddons] = useState<PlanAddon[]>([]);
@@ -34,10 +33,9 @@ export default function PlanList() {
   const [showPlanForm, setShowPlanForm] = useState(false);
   const [showAddonForm, setShowAddonForm] = useState(false);
 
-  const borderRadius = 'rounded-xl';  // Definindo o raio da borda
-  const cardClass = `bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50 ${borderRadius}`;
+  const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50";
   const titleClass = "text-4xl font-bold text-light-text-primary dark:text-white";
-  const tabClass = (active: boolean) => `flex items-center px-4 py-2 ${borderRadius} transition-colors ${active
+  const tabClass = (active: boolean) => `flex items-center px-4 py-2 rounded-lg transition-colors ${active
       ? 'bg-brand-50 text-brand-600 dark:bg-brand-900/20 dark:text-brand-400'
       : 'text-gray-600 dark:text-gray-400 hover:bg-brand-50/50 dark:hover:bg-brand-900/10 hover:text-brand-600 dark:hover:text-brand-400'
     }`;
@@ -52,7 +50,6 @@ export default function PlanList() {
       const { data: plansData, error: plansError } = await supabase
         .from('plano')
         .select('*')
-        // .eq('active', true)
         .eq('user_id', user?.id)
         .order('dt_add', { ascending: false });
 
@@ -61,7 +58,6 @@ export default function PlanList() {
       const { data: addonsData, error: addonsError } = await supabase
         .from('plano_addon')
         .select('*')
-        .eq('active', true)
         .eq('user_id', user?.id)
         .order('dt_add', { ascending: false });
 
@@ -118,12 +114,13 @@ export default function PlanList() {
     setShowAddonForm(false);
   };
 
-  const handleChange = (id: string) => (checked: boolean) => {
-    setPlans(prevPlans =>
-      prevPlans.map(plan =>
-        plan.id === id ? { ...plan, active: checked } : plan // Usar `checked`, não `!active`
-      )
-    );
+  const handleOnLock = async (id: string, status: boolean) : Promise<boolean> => {
+    if (activeTab === 'plans') {
+      await UpdateSingleField("plano", "id", id, "active", !status);
+    } else if (activeTab === 'addons') {
+      await UpdateSingleField("plano_addon", "id", id, "active", !status);
+    }
+    return true;
   };
 
   const filteredPlans = plans.filter(plan =>
@@ -144,19 +141,19 @@ export default function PlanList() {
 
   return (
     <div className="p-6">
-    <div className="flex justify-between items-center mb-8">
-      <h1 className={titleClass}>{activeTab == "plans" ? "Lista de Planos" : "Lista de Addons" }</h1>
-      <div className="flex space-x-3">
-        <button
-          // onClick={() =>  setShowPlanForm(true)}
-          onClick={() => handleNewClick()}
-          className="btn-primary flex items-center rounded-full" // Adicionado rounded-full aqui
-        >
-          <Plus className="h-5 w-5 mr-2" />
-          {activeTab == "plans" ? "Novo Plano" : "Novo Add-on"}
-        </button>
+      <div className="flex justify-between items-center mb-8">
+        <h1 className={titleClass}>{activeTab == "plans" ? "Lista de Planos" : "Lista de Addons" }</h1>
+        <div className="flex space-x-3">
+          <button
+            // onClick={() =>  setShowPlanForm(true)}
+            onClick={() => handleNewClick()}
+            className="btn-primary flex items-center"
+          >
+            <Plus className="h-5 w-5 mr-2" />
+            {activeTab == "plans" ? "Novo Plano" : "Novo Add-on"}
+          </button>
+        </div>
       </div>
-    </div>
 
       {/* Forms */}
       <ModalForm
@@ -195,7 +192,7 @@ export default function PlanList() {
               placeholder="Buscar por nome..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className={`input pl-12 ${borderRadius}`}
+              className="input pl-12"
             />
           </div>
 
@@ -239,8 +236,6 @@ export default function PlanList() {
                 </th>
                 <th className="px-6 py-4 text-right text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider w-[50px]">
                 </th>
-                <th className="px-6 py-4 text-right text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider w-[20px]">
-                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-light-border dark:divide-gray-700/50">
@@ -282,12 +277,15 @@ export default function PlanList() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right">
                     <div className="flex justify-end space-x-2">
-                      <ActionsButtons onRead={() => handleEdit(item.id)} />
+                      <ActionsButtons 
+                        onEdit={() => handleEdit(item.id)}
+                        onLocker={async () => handleOnLock(item.id, item.active)}
+                        active={item.active}
+                      />
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right">
-                    <SwitchFrag name='active' checked={item.active} onChange={() => handleChange(item.id)} /> 
-                  </td>
+
+                  
                 </tr>
               ))}
             </tbody>
