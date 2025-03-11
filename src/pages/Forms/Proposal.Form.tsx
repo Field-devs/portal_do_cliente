@@ -8,7 +8,7 @@ import ProposalConfirm from "./ProposalConfirm";
 import ProposalFormResume from "./Proposal.Form.Resume";
 
 
-export default function ProposalForm() : FormProps {
+export default function ProposalForm(): FormProps {
   const [step, setStep] = useState(0);
   const [sender, setProsta] = useState<Proposta>();
 
@@ -20,7 +20,7 @@ export default function ProposalForm() : FormProps {
     setStep((prevStep) => prevStep - 1);
   };
 
-  const handlePropostaSubmit = (novaProposta : Proposta) => {
+  const handlePropostaSubmit = (novaProposta: Proposta) => {
     setProsta(novaProposta);
   };
 

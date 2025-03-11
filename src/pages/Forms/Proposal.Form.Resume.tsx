@@ -95,14 +95,14 @@ export default function ProposalFormResume({ onSuccess, sender, onClose }: FormP
         <div className="space-y-4">
           <div className="border-b border-gray-200 dark:border-gray-700/50 pb-4">
             <h4 className="font-medium text-gray-700 dark:text-gray-300 mb-2">Plano Escolhido</h4>
-            <p className="text-lg font-semibold text-gray-900 dark:text-white">{proposta.plano?.nome}</p>
-            <p className="text-sm text-gray-500 dark:text-gray-400">{proposta.plano?.descricao}</p>
+            <p className="text-lg font-semibold text-gray-900 dark:text-white">{0}</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">{"--"}</p>
           </div>
 
           <div className="border-b border-gray-200 dark:border-gray-700/50 pb-4">
             <h4 className="font-medium text-gray-700 dark:text-gray-300 mb-2">Valor</h4>
             <p className="text-lg font-semibold text-gray-900 dark:text-white">
-              {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(proposta.plano?.valor || 0)}
+              {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(0)}
             </p>
           </div>
 
@@ -136,126 +136,7 @@ export default function ProposalFormResume({ onSuccess, sender, onClose }: FormP
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-1">
-        <div className={cardClass}>
-          {/* Reduce margin bottom on header */}
-          <div className="flex items-center space-x-3 mb-1">
-            <div className="bg-brand-50 dark:bg-blue-400/10 p-3 rounded-xl">
-              <User className="h-6 w-6 text-brand dark:text-blue-400" />
-            </div>
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white">
-              Confirmar Dados do Cliente
-            </h3>
-          </div>
 
-          {/* Reduce gap between grid items */}
-          <div className="grid md:grid-cols-2 gap-2 mb-1">
-            {/* Rest of form fields with reduced margin-top */}
-            <div className="md:col-span-2">
-              <label className={labelClass}>Nome</label>
-              <div className="mt-0.5 relative">
-                <User className={iconClass} />
-                <input
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className={inputClass}
-                  required
-                />
-              </div>
-            </div>
-
-            {/* Other fields follow same pattern with reduced spacing */}
-            <div className="md:col-span-2">
-              <label className={labelClass}>Endereço</label>
-              <div className="mt-0.5 relative">
-                <MapPin className={iconClass} />
-                <input
-                  type="text"
-                  value={address}
-                  onChange={(e) => setAddress(e.target.value)}
-                  className={inputClass}
-                  required
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className={labelClass}>Fone</label>
-              <div className="mt-0.5 relative">
-                <Phone className={iconClass} />
-                <input
-                  type="tel"
-                  value={phone}
-                  onChange={(e) => setPhone(formatPhoneNumber(e.target.value))}
-                  placeholder="(00) 00000-0000"
-                  maxLength={15}
-                  className={inputClass}
-                  required
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className={labelClass}>Email</label>
-              <div className="mt-0.5 relative">
-                <Mail className={iconClass} />
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="exemplo@email.com"
-                  className={inputClass}
-                  required
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className={labelClass}>CPF/CNPJ</label>
-              <div className="mt-0.5 relative">
-                <User className={iconClass} />
-                <input
-                  type="text"
-                  value={document}
-                  onChange={(e) => {
-                    const value = e.target.value.replace(/\D/g, '');
-                    if (value.length <= 14) { // Max length for CNPJ
-                      setDocument(formatDocument(value));
-                    }
-                  }}
-                  placeholder="000.000.000-00"
-                  className={inputClass}
-                  maxLength={18} // To accommodate formatted CNPJ
-                  required
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className={labelClass}>Data de Nascimento</label>
-              <div className="mt-0.5 relative">
-                <Calendar className={iconClass} />
-                <input
-                  type="date"
-                  value={birthDay}
-                  onChange={(e) => setBirthDay(e.target.value)}
-                  className={inputClass}
-                  required
-                />
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-        {error && (
-          <div className="bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 p-4 flex items-center text-red-600 dark:text-red-400">
-            <AlertCircle className="h-5 w-5 mr-2 flex-shrink-0" />
-            <p className="text-sm">{error}</p>
-          </div>
-        )}
-      </form>
     </div>
   );
 }
