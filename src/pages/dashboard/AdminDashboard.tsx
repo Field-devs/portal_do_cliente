@@ -59,14 +59,16 @@ interface IDashboardData  {
 
 
 export default function AdminDashboard() {
-  const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-light-border dark:border-gray-700/50";
+  const borderRadius = "rounded-lg";
+
+  const cardClass = `bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm ${borderRadius} p-6 shadow-lg border border-light-border dark:border-gray-700/50`;
   const titleClass = "text-4xl font-bold text-light-text-primary dark:text-white";
   const metricTitleClass = "text-lg font-medium text-light-text-primary dark:text-white mb-1";
   const metricValueClass = "text-3xl font-bold text-light-text-primary dark:text-white";
   const metricSubtextClass = "text-sm text-light-text-secondary dark:text-blue-200";
-  const iconContainerClass = "bg-blue-400/10 p-3 rounded-xl";
+  const iconContainerClass = `bg-blue-400/10 p-3 ${borderRadius}`;
   const iconClass = "h-6 w-6 text-blue-600 dark:text-blue-400";
-  const badgeClass = "text-xs font-medium bg-blue-50 dark:bg-blue-400/10 text-blue-600 dark:text-blue-400 px-2 py-1 rounded-full";
+  const badgeClass = `text-xs font-medium bg-blue-50 dark:bg-blue-400/10 text-blue-600 dark:text-blue-400 px-2 py-1 ${borderRadius}`;
 
   const [userData, setUserData] = useState(null);
 

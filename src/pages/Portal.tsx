@@ -52,13 +52,13 @@ export default function Portal() {
   const [isExpanded, setIsExpanded] = useState(true);
 
   const navigation = [
-    { id: 1, name: 'Dashboard', icon: BarChart2, path: '/portal', visible: [1] },
-    { id: 2, name: 'Propostas', icon: FileText, path: '/portal/proposals', visible: [1, 2, 3, 4] },
-    { id: 3, name: 'Contratos', icon: FileCheck2, path: '/portal/contracts', visible: [1, 2, 3, 4] },
-    { id: 4, name: 'Planos/Addons', icon: Package, path: '/portal/plans', visible: [1, 2, 3, 4] },
-    { id: 5, name: 'Contas', icon: Briefcase, path: '/portal/partners', visible: [1, 2, 3, 4] },
-    { id: 6, name: 'Usuários', icon: Users, path: '/portal/accounts', visible: [1, 2] },
-    { id: 7, name: 'Financeiro', icon: Wallet, path: '/portal/financial', visible: [1, 2, 3, 4, 5] }
+    { id: 1, name: 'Dashboard', icon: BarChart2, path: '/portal', visible: [1], tooltip: 'Dashboard' },
+    { id: 2, name: 'Propostas', icon: FileText, path: '/portal/proposals', visible: [1, 2, 3, 4], tooltip: 'Propostas' },
+    { id: 3, name: 'Contratos', icon: FileCheck2, path: '/portal/contracts', visible: [1, 2, 3, 4], tooltip: 'Contratos' },
+    { id: 4, name: 'Planos/Addons', icon: Package, path: '/portal/plans', visible: [1, 2, 3, 4], tooltip: 'Planos/Addons' },
+    { id: 5, name: 'Contas', icon: Briefcase, path: '/portal/partners', visible: [1, 2, 3, 4], tooltip: 'Contas' },
+    { id: 6, name: 'Usuários', icon: Users, path: '/portal/accounts', visible: [1, 2], tooltip: 'Usuários' },
+    { id: 7, name: 'Financeiro', icon: Wallet, path: '/portal/financial', visible: [1, 2, 3, 4, 5], tooltip: 'Financeiro' }
   ];
 
   const logoUrl = theme === 'dark'
@@ -68,7 +68,7 @@ export default function Portal() {
   return (
     <div className="min-h-screen bg-light-primary dark:bg-dark-primary flex">
       {/* Sidebar Navigation */}
-      <div className={`fixed inset-y-0 left-0 bg-light-card dark:bg-dark-card shadow-lg transition-all duration-300 z-20 flex flex-col border-r border-light-border dark:border-dark-border backdrop-blur-sm ${isExpanded ? 'w-52' : 'w-20'}`}>
+      <div className={`fixed inset-y-0 left-0 bg-light-card dark:bg-dark-card shadow-lg transition-all duration-300 z-20 flex flex-col border-r border-light-border dark:border-dark-border backdrop-blur-sm rounded-tr-lg rounded-br-lg ${isExpanded ? 'w-52' : 'w-20'}`}>
         {/* Logo and Toggle */}
         <div className="h-16 flex items-center justify-between px-3 border-b border-light-border dark:border-dark-border">
           <img
@@ -121,8 +121,8 @@ export default function Portal() {
               <NavLink
                 key={item.path}
                 to={item.path}
-
-                className={`flex items-center px-3 py-2 mx-2 text-sm font-medium rounded-lg transition-colors ${isActive
+                title={item.tooltip}
+                className={`flex ${isExpanded ? 'items-start' : 'items-center justify-center'} px-3 py-2 mx-2 text-sm font-medium rounded-lg transition-colors ${isActive
                     ? 'bg-brand-50 text-brand-600 dark:bg-brand-900/20 dark:text-brand-400'
                     : 'text-gray-600 dark:text-gray-400 hover:bg-brand-50/50 dark:hover:bg-brand-900/10 hover:text-brand-600 dark:hover:text-brand-400'
                   }`}
@@ -144,32 +144,30 @@ export default function Portal() {
         </nav>
 
         {/* Footer Actions */}
-        <div className="p-3 border-t border-light-border dark:border-dark-border">
-          <div className="flex justify-center items-center space-x-2">
-            <button
-              onClick={toggleTheme}
-              className="p-2 rounded-lg text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-light-secondary dark:hover:bg-dark-secondary"
-              title={theme === 'dark' ? 'Mudar para tema claro' : 'Mudar para tema escuro'}
-            >
-              {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-            </button>
+        <div className={`p-3 border-t border-light-border dark:border-dark-border flex ${isExpanded ? 'flex-row' : 'flex-col'} items-center justify-center`}>
+          <button
+            onClick={toggleTheme}
+            className="p-2 rounded-lg text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-light-secondary dark:hover:bg-dark-secondary"
+            title={theme === 'dark' ? 'Mudar para tema claro' : 'Mudar para tema escuro'}
+          >
+            {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+          </button>
 
-            <NavLink
-              to="/portal/profile"
-              className="p-2 rounded-lg text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-light-secondary dark:hover:bg-dark-secondary"
-              title="Perfil"
-            >
-              <UserCircle className="h-5 w-5" />
-            </NavLink>
+          <NavLink
+            to="/portal/profile"
+            className="p-2 rounded-lg text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-light-secondary dark:hover:bg-dark-secondary"
+            title="Perfil"
+          >
+            <UserCircle className="h-5 w-5" />
+          </NavLink>
 
-            <button
-              onClick={signOut}
-              className="p-2 rounded-lg text-red-500 hover:text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:text-red-300 dark:hover:bg-red-900/20"
-              title="Sair"
-            >
-              <LogOut className="h-5 w-5" />
-            </button>
-          </div>
+          <button
+            onClick={signOut}
+            className="p-2 rounded-lg text-red-500 hover:text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:text-red-300 dark:hover:bg-red-900/20"
+            title="Sair"
+          >
+            <LogOut className="h-5 w-5" />
+          </button>
         </div>
       </div>
 

@@ -30,14 +30,16 @@ function AccountList() {
   const [showUserForm, setShowUserForm] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
 
-  const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50";
+  const borderRadius = "rounded-lg";
+
+  const cardClass = `bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50 ${borderRadius}`;
   const titleClass = "text-4xl font-bold text-light-text-primary dark:text-white";
   const metricTitleClass = "text-lg font-medium text-light-text-primary dark:text-white mb-1";
   const metricValueClass = "text-3xl font-bold text-light-text-primary dark:text-white";
   const metricSubtextClass = "text-sm text-light-text-secondary dark:text-blue-200";
-  const iconContainerClass = "bg-blue-400/10 p-3 rounded-xl";
+  const iconContainerClass = `bg-blue-400/10 p-3 ${borderRadius}`;
   const iconClass = "h-6 w-6 text-blue-600 dark:text-blue-400";
-  const badgeClass = "text-xs font-medium bg-blue-50 dark:bg-blue-400/10 text-blue-600 dark:text-blue-400 px-2 py-1 rounded-full";
+  const badgeClass = `text-xs font-medium bg-blue-50 dark:bg-blue-400/10 text-blue-600 dark:text-blue-400 px-2 py-1 ${borderRadius}`;
 
   useEffect(() => {
     fetchUsers();
@@ -88,7 +90,7 @@ function AccountList() {
     const matchesStatus =
       statusFilter === 'all' ||
       (statusFilter === 'active' && user.active) ||
-      (statusFilter === 'inactive' && !user.active);
+      (statusFilter === 'inactive' && user.active == false);
 
     return matchesSearch && matchesRole && matchesStatus;
   });
@@ -109,7 +111,7 @@ function AccountList() {
         <h1 className={titleClass}>Usuários</h1>
         <button
           onClick={() => setShowUserForm(true)}
-          className="btn-primary flex items-center"
+          className={`btn-primary flex items-center ${borderRadius}`}
         >
           <Plus className="h-5 w-5 mr-2" />
           Nova Conta
@@ -177,7 +179,7 @@ function AccountList() {
           </div>
           <h3 className={metricTitleClass}>Usuários Pendentes</h3>
           <p className={metricValueClass}>
-            {users.filter(u => !u.active).length}
+            {users.filter(u => u.active === false).length}
           </p>
           <div className="flex items-center mt-2">
             <Clock className="h-4 w-4 mr-1 text-blue-600 dark:text-blue-400" />
@@ -218,7 +220,7 @@ function AccountList() {
                 placeholder="Buscar por nome, email ou CNPJ..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="input pl-12"
+                className={`input pl-12 ${borderRadius}`}
               />
             </div>
           </div>
@@ -228,7 +230,7 @@ function AccountList() {
               <select
                 value={roleFilter}
                 onChange={(e) => setRoleFilter(e.target.value === 'all' ? 'all' : Number(e.target.value))}
-                className="select pl-12"
+                className={`select pl-12 ${borderRadius}`}
               >
                 <option value="all">Todos os Perfis</option>
                 <option value="1">Super Admin</option>
@@ -244,7 +246,7 @@ function AccountList() {
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value as 'all' | 'active' | 'inactive')}
-                className="select pl-12"
+                className={`select pl-12 ${borderRadius}`}
               >
                 <option value="all">Todos os Status</option>
                 <option value="active">Ativos</option>
@@ -322,7 +324,7 @@ function AccountList() {
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="badge badge-info">
+                    <span className={`badge badge-info ${borderRadius}`}>
                       {user.perfil_nome}
                     </span>
                   </td>

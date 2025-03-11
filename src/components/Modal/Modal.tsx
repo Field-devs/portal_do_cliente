@@ -38,6 +38,8 @@ export function ModalForm({
 
   if (!isOpen) return null;
 
+  const borderRadius = "rounded-lg";
+
   const maxWidthClasses = {
     sm: 'max-w-sm',
     md: 'max-w-md',
@@ -60,18 +62,18 @@ export function ModalForm({
       aria-labelledby={title ? 'modal-title' : undefined}
     >
       <div 
-        className={`bg-[#1E293B]/90 backdrop-blur-sm border border-gray-700/50 p-6 w-full mx-4 ${maxWidthClasses[maxWidth]} max-h-[90vh] overflow-y-auto`}
+        className={`bg-[#1E293B]/90 backdrop-blur-sm border border-gray-700/50 p-6 w-full mx-4 ${borderRadius} ${maxWidthClasses[maxWidth]} max-h-[90vh] overflow-y-auto`}
         onClick={e => e.stopPropagation()}
       >
         {title && (
           <div className="flex items-center space-x-3 mb-6">
             {icon && (
-              <div className="bg-blue-400/10 p-3 rounded-xl">
+              <div className={`bg-blue-400/10 p-3 ${borderRadius}`}>
                 {/* {React.createElement(icon, { className: 'h-6 w-6 text-blue-400' })} */} 
                 {icon}
               </div>
             )}
-            <h2 id="modal-title" className="text-xl font-semibold text-white">
+            <h2 id="modal-title" className="text-3xl font-extrabold text-white tracking-tight">
               {title}
             </h2>
           </div>

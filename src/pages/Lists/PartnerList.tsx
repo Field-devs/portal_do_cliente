@@ -47,7 +47,8 @@ export default function PartnerList() {
   const [showAfilate, setShowAfilate] = useState<boolean>(false);
 
 
-  const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50";
+  const borderRadius = "rounded-lg";
+  const cardClass = `bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50 ${borderRadius}`;
   const titleClass = "text-4xl font-bold text-light-text-primary dark:text-white";
 
   useEffect(() => {
@@ -156,7 +157,7 @@ export default function PartnerList() {
           <div className="flex space-x-4">
             <button
               onClick={() => setTipo('CF')}
-              className={`flex items-center px-4 py-2 rounded-lg transition-colors ${tipo === 'CF'
+              className={`flex items-center px-4 py-2 ${borderRadius} transition-colors ${tipo === 'CF'
                 ? 'bg-brand-50 text-brand-600 dark:bg-brand-900/20 dark:text-brand-400'
                 : 'text-gray-600 dark:text-gray-400 hover:bg-brand-50/50 dark:hover:bg-brand-900/10 hover:text-brand-600 dark:hover:text-brand-400'
                 }`}
@@ -166,7 +167,7 @@ export default function PartnerList() {
             </button>
             <button
               onClick={() => setTipo('AVA')}
-              className={`flex items-center px-4 py-2 rounded-lg transition-colors ${tipo === 'AVA'
+              className={`flex items-center px-4 py-2 ${borderRadius} transition-colors ${tipo === 'AVA'
                 ? 'bg-brand-50 text-brand-600 dark:bg-brand-900/20 dark:text-brand-400'
                 : 'text-gray-600 dark:text-gray-400 hover:bg-brand-50/50 dark:hover:bg-brand-900/10 hover:text-brand-600 dark:hover:text-brand-400'
                 }`}
@@ -176,7 +177,7 @@ export default function PartnerList() {
             </button>
             <button
               onClick={() => setTipo('AF')}
-              className={`flex items-center px-4 py-2 rounded-lg transition-colors ${tipo === 'AF'
+              className={`flex items-center px-4 py-2 ${borderRadius} transition-colors ${tipo === 'AF'
                 ? 'bg-brand-50 text-brand-600 dark:bg-brand-900/20 dark:text-brand-400'
                 : 'text-gray-600 dark:text-gray-400 hover:bg-brand-50/50 dark:hover:bg-brand-900/10 hover:text-brand-600 dark:hover:text-brand-400'
                 }`}
@@ -196,7 +197,7 @@ export default function PartnerList() {
                   placeholder="Buscar por nome, email ou telefone..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors"
+                  className={`w-full pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors ${borderRadius}`}
                 />
               </div>
             </div>
@@ -206,7 +207,7 @@ export default function PartnerList() {
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value as 'all' | 'active' | 'inactive')}
-                  className="pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors appearance-none min-w-[200px]"
+                  className={`pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors appearance-none min-w-[200px] ${borderRadius}`}
                 >
                   <option value="all">Todos os Status</option>
                   <option value="active">Ativos</option>
@@ -281,7 +282,7 @@ export default function PartnerList() {
                           <div className="relative">
                             <button
                               onClick={() => handleCopyToClipboard(item.cupom)}
-                              className="group px-3 py-1.5 inline-flex items-center space-x-2 text-sm leading-5 font-medium rounded-full bg-brand-50 dark:bg-brand-900/20 text-brand-600 dark:text-brand-400 hover:bg-brand-100 dark:hover:bg-brand-900/30 border border-brand-200 dark:border-brand-700/30 transition-colors"
+                              className={`group px-3 py-1.5 inline-flex items-center space-x-2 text-sm leading-5 font-medium rounded-full bg-brand-50 dark:bg-brand-900/20 text-brand-600 dark:text-brand-400 hover:bg-brand-100 dark:hover:bg-brand-900/30 border border-brand-200 dark:border-brand-700/30 transition-colors ${borderRadius}`}
                             >
                               <span>{item.cupom}</span>
                               <Copy className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity" />

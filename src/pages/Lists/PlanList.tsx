@@ -33,9 +33,11 @@ export default function PlanList() {
   const [showPlanForm, setShowPlanForm] = useState(false);
   const [showAddonForm, setShowAddonForm] = useState(false);
 
-  const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50";
+  const borderRadius = "rounded-lg"; // Define um valor padrão para o raio da borda
+
+  const cardClass = `bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50 ${borderRadius}`;
   const titleClass = "text-4xl font-bold text-light-text-primary dark:text-white";
-  const tabClass = (active: boolean) => `flex items-center px-4 py-2 rounded-lg transition-colors ${active
+  const tabClass = (active: boolean) => `flex items-center px-4 py-2 ${borderRadius} transition-colors ${active
       ? 'bg-brand-50 text-brand-600 dark:bg-brand-900/20 dark:text-brand-400'
       : 'text-gray-600 dark:text-gray-400 hover:bg-brand-50/50 dark:hover:bg-brand-900/10 hover:text-brand-600 dark:hover:text-brand-400'
     }`;
@@ -147,7 +149,7 @@ export default function PlanList() {
           <button
             // onClick={() =>  setShowPlanForm(true)}
             onClick={() => handleNewClick()}
-            className="btn-primary flex items-center"
+            className={`btn-primary flex items-center ${borderRadius}`}
           >
             <Plus className="h-5 w-5 mr-2" />
             {activeTab == "plans" ? "Novo Plano" : "Novo Add-on"}
@@ -192,7 +194,7 @@ export default function PlanList() {
               placeholder="Buscar por nome..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="input pl-12"
+              className={`input pl-12 ${borderRadius}`}
             />
           </div>
 
