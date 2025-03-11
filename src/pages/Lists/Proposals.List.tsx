@@ -21,7 +21,7 @@ import ProposalForm from '../Forms/Proposal.Form';
 import ActionsButtons from '../../components/ActionsData';
 import { UpdateSingleField } from '../../utils/supageneric';
 import { useAuth } from '../../components/AuthProvider';
-import ProposalForm2 from '../Forms/Proposal.Form2';
+import ProposalFormPlano from '../Forms/Proposal.Form.Plano';
 import { AlertDialog, AskDialog } from '../../components/Dialogs/SweetAlert';
 import Plan from '../../Models/Plan';
 import Plans from '../dashboard/Plans';
@@ -144,8 +144,8 @@ export default function ProposalsList() {
         title="Nova Proposta"
         maxWidth='2xl'
       >
-        <ProposalForm2
-          id={propid ?? ''}
+        <ProposalForm
+        
           onCancel={() => setOpenProposal(false)}
         />
 

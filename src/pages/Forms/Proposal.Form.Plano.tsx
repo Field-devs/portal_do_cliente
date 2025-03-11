@@ -9,9 +9,12 @@ import Profile from "../../Models/Perfil";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLock, faLockOpen, faUnlock } from '@fortawesome/free-solid-svg-icons';
 import CircularWait from "../../components/CircularWait";
+import FormProps from "../../Models/FormProps";
+import { Proposta } from "../../Models/Propostas";
 
-export default function ProposalForm2(id: string) {
+export default function ProposalFormPlano({ onSubmit }: FormProps) {
   const { user } = useAuth();
+  const [proposta, setProposta] = useState<Proposta>();
 
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [selectedprofile, setSelectedProfile] = useState<Profile>();
@@ -21,8 +24,27 @@ export default function ProposalForm2(id: string) {
   const [addons, setAddons] = useState<PlanAddon[]>([]);
   const [addonQuantities, setAddonQuantities] = useState<Record<number, number>>({});
   const [loading, setLoading] = useState(true);
+  console.log("START");
+
+  useEffect(() => {
+    if (selectedPlan && selectedprofile) {
+      setProposta({
+        perfil_id: selectedprofile.id,
+        plano_id: selectedPlan.id,
+        addons: addons.filter(addon => addonQuantities[addon.id] > 0).map(addon => ({
+          addon_id: addon.id,
+          quantidade: addonQuantities[addon.id]
+        }))
+      });
+    }
+  }, [selectedPlan, selectedprofile]);
 
 
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    console.log(proposta);
+    onSubmit(proposta);
+  };
 
   const fetchData = async () => {
     try {
@@ -92,6 +114,7 @@ export default function ProposalForm2(id: string) {
                   key={profile.id}
                   className={`px-4 py-1 border rounded-md ${selectedprofile === profile ? "bg-blue-500 text-white" : "bg-gray-100"}`}
                   onClick={() => setSelectedProfile(profile)}
+                  value={proposta?.perfil_id}
                 >
                   {profile.nome}
                 </button>
@@ -197,10 +220,10 @@ export default function ProposalForm2(id: string) {
           </div>
         </div>
 
-        <div className="flex justify-between mt-4">
-          <button className="px-4 py-2 border rounded-md hover:bg-gray-100" onClick={handleCancel} >Cancelar</button>
-          <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Dados do Cliente</button>
-        </div>
+        {/* <div className="flex justify-between mt-4"> */}
+          {/* <button className="px-4 py-2 border rounded-md hover:bg-gray-100" onClick={handleCancel} >Cancelar</button> */}
+          {/* <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Dados do Cliente</button> */}
+        {/* </div> */}
       </div>
   );
 }

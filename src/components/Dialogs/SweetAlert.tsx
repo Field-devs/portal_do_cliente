@@ -49,3 +49,4 @@ export const ErrorDialog = async (text: string, title: string = "Erro") => {
     confirmButtonColor: '#3085d6'
   });
 }
+
