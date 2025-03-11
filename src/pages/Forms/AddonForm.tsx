@@ -27,6 +27,8 @@ export default function AddonForm({ onSuccess, onCancel, initialData }: AddonFor
     valor: initialData?.valor || 0
   });
 
+  const borderRadius = "rounded-lg";
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;
     setFormData(prev => ({
@@ -89,8 +91,8 @@ export default function AddonForm({ onSuccess, onCancel, initialData }: AddonFor
     }
   };
 
-  const cardClass = "bg-white dark:bg-[#1E293B]/70 backdrop-blur-sm p-6 border border-gray-200 dark:border-gray-700/50 shadow-lg";
-  const inputClass = "pl-12 block w-full border border-gray-200 dark:border-gray-700/50 bg-white dark:bg-[#0F172A]/60 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-brand focus:border-transparent transition-colors";
+  const cardClass = `bg-white dark:bg-[#1E293B]/70 backdrop-blur-sm p-6 border border-gray-200 dark:border-gray-700/50 shadow-lg ${borderRadius}`;
+  const inputClass = `pl-12 block w-full border border-gray-200 dark:border-gray-700/50 bg-white dark:bg-[#0F172A]/60 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-brand focus:border-transparent transition-colors ${borderRadius}`;
   const labelClass = "block text-sm font-medium text-gray-700 dark:text-gray-300";
   const iconClass = "absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400";
 
@@ -99,7 +101,7 @@ export default function AddonForm({ onSuccess, onCancel, initialData }: AddonFor
       {/* Basic Information */}
       <div className={cardClass}>
         <div className="flex items-center space-x-3 mb-6">
-          <div className="bg-brand-50 dark:bg-blue-400/10 p-3 rounded-xl">
+          <div className={`bg-brand-50 dark:bg-blue-400/10 p-3 ${borderRadius}`}>
             <Package className="h-6 w-6 text-brand dark:text-blue-400" />
           </div>
           <h3 className="text-lg font-medium text-gray-900 dark:text-white">
@@ -163,7 +165,7 @@ export default function AddonForm({ onSuccess, onCancel, initialData }: AddonFor
 
       {/* Error Message */}
       {error && (
-        <div className="bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 p-4 flex items-center text-red-600 dark:text-red-400">
+        <div className={`bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 p-4 flex items-center text-red-600 dark:text-red-400 ${borderRadius}`}>
           <AlertCircle className="h-5 w-5 mr-2 flex-shrink-0" />
           <p className="text-sm">{error}</p>
         </div>
@@ -174,7 +176,7 @@ export default function AddonForm({ onSuccess, onCancel, initialData }: AddonFor
         <button
           type="button"
           onClick={onCancel}
-          className="px-4 py-2 bg-gray-100 dark:bg-[#0F172A]/60 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-[#0F172A]/40 transition-colors"
+          className={`px-4 py-2 bg-gray-100 dark:bg-[#0F172A]/60 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-[#0F172A]/40 transition-colors ${borderRadius}`}
           disabled={loading}
         >
           Cancelar
@@ -182,7 +184,7 @@ export default function AddonForm({ onSuccess, onCancel, initialData }: AddonFor
         <button
           type="submit"
           onClick={handleSubmit}
-          className="px-4 py-2 bg-brand hover:bg-brand/90 text-white transition-colors flex items-center"
+          className={`px-4 py-2 bg-brand hover:bg-brand/90 text-white transition-colors flex items-center ${borderRadius}`}
           disabled={loading}
         >
           {loading ? (

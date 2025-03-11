@@ -68,9 +68,9 @@ export default function Portal() {
   return (
     <div className="min-h-screen bg-light-primary dark:bg-dark-primary flex">
       {/* Sidebar Navigation */}
-      <div className={`fixed inset-y-0 left-0 bg-light-card dark:bg-dark-card shadow-lg transition-all duration-300 z-20 flex flex-col border-r border-light-border dark:border-dark-border backdrop-blur-sm rounded-tr-lg rounded-br-lg ${isExpanded ? 'w-52' : 'w-20'}`}>
+      <div className={`fixed inset-y-0 left-0 bg-light-card dark:bg-dark-card shadow-lg transition-all duration-300 z-20 flex flex-col border-r-0  backdrop-blur-sm rounded-tr-lg rounded-br-lg ${isExpanded ? 'w-52' : 'w-20'}`}>
         {/* Logo and Toggle */}
-        <div className="h-16 flex items-center justify-between px-3 border-b border-light-border dark:border-dark-border">
+        <div className="h-16 flex items-center justify-between px-3 ">
           <img
             src={logoUrl}
             alt="OUTR.ONE"
@@ -85,7 +85,7 @@ export default function Portal() {
         </div>
 
         {/* User Profile */}
-        <div className="p-3 border-b border-light-border dark:border-dark-border">
+        <div className="p-3 ">
           <div className="flex flex-col items-center">
             {user?.foto ? (
               <img
@@ -144,7 +144,7 @@ export default function Portal() {
         </nav>
 
         {/* Footer Actions */}
-        <div className={`p-3 border-t border-light-border dark:border-dark-border flex ${isExpanded ? 'flex-row' : 'flex-col'} items-center justify-center`}>
+        <div className={`p-3 flex ${isExpanded ? 'flex-row' : 'flex-col'} items-center justify-center`}>
           <button
             onClick={toggleTheme}
             className="p-2 rounded-lg text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-light-secondary dark:hover:bg-dark-secondary"

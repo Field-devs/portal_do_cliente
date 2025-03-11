@@ -22,6 +22,7 @@ export default function ProposalForm2(id: string) {
   const [addonQuantities, setAddonQuantities] = useState<Record<number, number>>({});
   const [loading, setLoading] = useState(true);
 
+  const borderRadius = "rounded-lg";
 
 
   const fetchData = async () => {
@@ -80,7 +81,7 @@ export default function ProposalForm2(id: string) {
 
     loading ? <CircularWait message="Carregando..." /> :
 
-      <div className="max-w-4xl mx-auto p-3 bg-white shadow-md rounded-lg">
+      <div className={`max-w-4xl mx-auto p-3 bg-white shadow-md ${borderRadius}`}>
 
         <div className="grid grid-cols-1 gap-1">
           {/* Coluna de Planos */}
@@ -90,7 +91,7 @@ export default function ProposalForm2(id: string) {
               {profiles.map((profile) => (
                 <button
                   key={profile.id}
-                  className={`px-4 py-1 border rounded-md ${selectedprofile === profile ? "bg-blue-500 text-white" : "bg-gray-100"}`}
+                  className={`px-4 py-1 ${borderRadius} ${selectedprofile === profile ? "bg-blue-500 text-white" : "bg-gray-100"}`}
                   onClick={() => setSelectedProfile(profile)}
                 >
                   {profile.nome}
@@ -126,7 +127,7 @@ export default function ProposalForm2(id: string) {
                 <button
                   key={plan.id}
                   disabled={true}
-                  className={`px-4 py-1 ${selectedPlan === plan ? "bg-blue-500 text-white" : ""}`}
+                  className={`px-4 py-1 ${borderRadius} ${selectedPlan === plan ? "bg-blue-500 text-white" : ""}`}
                   onClick={() => setSelectedPlan(plan)}
                 >
                   <FontAwesomeIcon icon={faLock} className="ml-1  text-red-500" /> {plan.nome} (R$ {plan.valor},00)
@@ -136,7 +137,7 @@ export default function ProposalForm2(id: string) {
               {plans.filter(plan => plan.active == true).map((plan) => (
                 <button
                   key={plan.id}
-                  className={`px-4 py-1 border rounded-md font-bold ${selectedPlan === plan ? "bg-blue-500 text-white" : "bg-gray-100"}`}
+                  className={`px-4 py-1 border ${borderRadius} font-bold ${selectedPlan === plan ? "bg-blue-500 text-white" : "bg-gray-100"}`}
                   onClick={() => setSelectedPlan(plan)}
                 >
                   <FontAwesomeIcon icon={faLockOpen} className="ml-1 text-yellow-500" /> {plan.nome} (R$ {plan.valor},00)
@@ -162,14 +163,14 @@ export default function ProposalForm2(id: string) {
               ))}
 
               {addons.filter(addon => addon.active == true).map((addon) => (
-                <div key={addon.id} className="flex justify-between items-center font-bold ">
+                <div key={addon.id} className={`flex justify-between items-center font-bold ${borderRadius}`}>
                   <span>
                     <FontAwesomeIcon icon={faLockOpen} className="ml-1  text-yellow-500" /> {addon.nome.replace(/([A-Z])/g, ' $1')} (R$ {addon.valor})
                   </span>
                   <input
                     type="number"
                     min="0"
-                    className="w-12 border rounded text-center"
+                    className={`w-12 border ${borderRadius} text-center`}
                     value={addonQuantities[addon.id] || 0}
                     onChange={(e) =>
                       setAddonQuantities({
@@ -198,8 +199,8 @@ export default function ProposalForm2(id: string) {
         </div>
 
         <div className="flex justify-between mt-4">
-          <button className="px-4 py-2 border rounded-md hover:bg-gray-100" onClick={handleCancel} >Cancelar</button>
-          <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Dados do Cliente</button>
+          <button className={`px-4 py-2 border ${borderRadius} hover:bg-gray-100`} onClick={handleCancel} >Cancelar</button>
+          <button className={`px-4 py-2 bg-blue-500 text-white ${borderRadius} hover:bg-blue-600`}>Dados do Cliente</button>
         </div>
       </div>
   );

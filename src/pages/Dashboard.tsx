@@ -15,6 +15,7 @@ interface DashboardProps {
 export default function Dashboard({ userType }: DashboardProps) {
   const { signOut, user } = useAuth();
   const navigate = useNavigate();
+  const borderRadius = "rounded-lg";
 
   const handleSignOut = async () => {
     await signOut();
@@ -81,19 +82,19 @@ export default function Dashboard({ userType }: DashboardProps) {
             <div className="flex items-center space-x-4">
               <button
                 onClick={() => navigate('/profile')}
-                className="p-2 rounded-full hover:bg-gray-100"
+                className={`p-2 rounded-full hover:bg-gray-100 ${borderRadius}`}
               >
                 <User className="h-6 w-6 text-gray-600" />
               </button>
               <button
                 onClick={() => navigate('/settings')}
-                className="p-2 rounded-full hover:bg-gray-100"
+                className={`p-2 rounded-full hover:bg-gray-100 ${borderRadius}`}
               >
                 <Settings className="h-6 w-6 text-gray-600" />
               </button>
               <button
                 onClick={handleSignOut}
-                className="p-2 rounded-full hover:bg-gray-100"
+                className={`p-2 rounded-full hover:bg-gray-100 ${borderRadius}`}
               >
                 <LogOut className="h-6 w-6 text-gray-600" />
               </button>
@@ -109,7 +110,7 @@ export default function Dashboard({ userType }: DashboardProps) {
             <Route
               path="/"
               element={
-                <div className="bg-white rounded-lg shadow p-6">
+                <div className={`bg-white ${borderRadius} shadow p-6`}>
                   <h1 className="text-2xl font-bold mb-4">Welcome, {user?.email}</h1>
                   <p className="text-gray-600">
                     You are logged in as {userType.replace('_', ' ').toUpperCase()}

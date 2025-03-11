@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../../components/AuthProvider';
+import { supabase } from '../../lib/supabase';
 import {
   Plus,
   Search,
@@ -9,7 +10,6 @@ import {
   Layout,
   Phone
 } from 'lucide-react';
-import { supabase } from '../../lib/supabase';
 import Plan from '../../Models/Plan';
 import PlanAddon from '../../Models/Plan.Addon';
 import { ModalForm } from '../../components/Modal/Modal';
@@ -41,6 +41,16 @@ export default function PlanList() {
       ? 'bg-brand-50 text-brand-600 dark:bg-brand-900/20 dark:text-brand-400'
       : 'text-gray-600 dark:text-gray-400 hover:bg-brand-50/50 dark:hover:bg-brand-900/10 hover:text-brand-600 dark:hover:text-brand-400'
     }`;
+
+  // New toggle button style
+  const toggleBase = 'relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 focus:outline-none focus-visible:ring-2  focus-visible:ring-white focus-visible:ring-opacity-75';
+  const toggleActive = 'bg-brand';
+  const toggleInactive = 'bg-gray-200 dark:bg-gray-700';
+  const toggleCircleBase = 'inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition duration-200 ease-in-out';
+  const toggleCircleActive = 'translate-x-5';
+  const toggleCircleInactive = 'translate-x-0';
+  const textColor = "text-light-text-primary dark:text-dark-text-primary";
+  const inputClass = `input pl-12 ${borderRadius}`;
 
   useEffect(() => {
     fetchData();
@@ -194,7 +204,7 @@ export default function PlanList() {
               placeholder="Buscar por nome..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className={`input pl-12 ${borderRadius}`}
+              className={inputClass}
             />
           </div>
 
@@ -247,7 +257,7 @@ export default function PlanList() {
                   className="hover:bg-light-secondary dark:hover:bg-[#0F172A]/40 transition-colors"
                 >
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-base font-medium text-light-text-primary dark:text-gray-100">
+                    <div className={`text-base font-medium ${textColor}`}>
                       {item.nome}
                     </div>
                   </td>
@@ -265,7 +275,7 @@ export default function PlanList() {
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-base text-right text-light-text-secondary dark:text-gray-300">
+                    <div className={`text-base text-right ${textColor}`}>
                       {new Intl.NumberFormat('pt-BR', {
                         style: 'currency',
                         currency: 'BRL'
@@ -273,7 +283,7 @@ export default function PlanList() {
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-base text-light-text-secondary dark:text-gray-300">
+                    <div className={`text-base ${textColor}`}>
                       {new Date(item.dt_add).toLocaleDateString('pt-BR')}
                     </div>
                   </td>

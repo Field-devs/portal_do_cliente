@@ -28,6 +28,16 @@ export default function ProposalForm({onSuccess, onCancel, sender, id : string})
   const [filterAutomacoes, setFilterAutomacoes] = useState(1);
   const [total, setTotal] = useState(0);
   
+  const borderRadius = "rounded-lg";
+
+    // Definindo as classes de estilo com base no tema
+  const bgClass = "bg-light-card dark:bg-dark-card";
+  const textClass = "text-light-text-primary dark:text-dark-text-primary";
+  const inputClass = `mt-1 block w-full ${borderRadius} border-gray-300 shadow-sm focus:border-brand focus:ring-brand dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100`;
+  const buttonClass = `px-4 py-2 ${borderRadius} transition-colors`;
+  const buttonPrimaryClass = `${buttonClass} bg-brand text-white hover:bg-brand/90`;
+  const buttonSecondaryClass = `${buttonClass} text-gray-700 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600`;
+
   useEffect(() => {
     const fetchData = async () => {
       const { data, error } = await supabase.from('proposta').select('*').eq('id', sender.id);
@@ -200,7 +210,7 @@ export default function ProposalForm({onSuccess, onCancel, sender, id : string})
     }
 
   }
-  const classSelect = "mt-1 text-center block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand dark:bg-gray-700 dark:border-gray-600 text-white font-bold";
+  const classSelect = `mt-1 text-center block w-full ${borderRadius} border-gray-300 shadow-sm focus:border-brand focus:ring-brand dark:bg-gray-700 dark:border-gray-600 text-white font-bold`;
 
 
 
@@ -208,10 +218,10 @@ export default function ProposalForm({onSuccess, onCancel, sender, id : string})
     <>
       {isFormOpen && (
         <div className="space-y-6 max-w-4xl mx-auto">
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+          <div className={`${bgClass} ${borderRadius} p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto`}>
             <div className="flex justify-between items-center mb-6">
               {etapa < 2 && (
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Nova Proposta</h2>
+                <h2 className={`text-xl font-semibold ${textClass}`}>Nova Proposta</h2>
               )}
               <button
                 onClick={() => setIsFormOpen(false)}
@@ -227,14 +237,14 @@ export default function ProposalForm({onSuccess, onCancel, sender, id : string})
 
                 <div>
                   {/* Plan Selection */}
-                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Filtragem do Plano</h2>
+                  <h2 className={`text-xl font-semibold ${textClass}`}>Filtragem do Plano</h2>
                   <div className="grid grid-cols-1 gap-4">
-                    <div className="border rounded-lg p-4 dark:border-gray-600">
+                    <div className={`border ${borderRadius} p-4 dark:border-gray-600`}>
 
                       <div className="grid grid-cols-3 gap-4">
                         {/* Caixa de Entrada */}
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                          <label className={`block text-sm font-medium ${textClass}`}>
                             Caixas de Entrada
                           </label>
                           <select
@@ -249,7 +259,7 @@ export default function ProposalForm({onSuccess, onCancel, sender, id : string})
 
                         {/* Atendentes */}
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                          <label className={`block text-sm font-medium ${textClass}`}>
                             Atendentes
                           </label>
                           <select
@@ -264,7 +274,7 @@ export default function ProposalForm({onSuccess, onCancel, sender, id : string})
 
                         {/* Automações */}
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                          <label className={`block text-sm font-medium ${textClass}`}>
                             Automações
                           </label>
                           <select
@@ -283,15 +293,15 @@ export default function ProposalForm({onSuccess, onCancel, sender, id : string})
 
                     </div>
                   </div>
-                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Plano Disponível</h2>
+                  <h2 className={`text-xl font-semibold ${textClass}`}>Plano Disponível</h2>
 
                   <div className="grid grid-cols-1 gap-4">
                     {planos.map(plano => (
-                      <div key={plano.id} className="border rounded-lg p-4 dark:border-gray-600">
+                      <div key={plano.id} className={`border ${borderRadius} p-4 dark:border-gray-600`}>
                         <div className="flex items-center space-x-4">
 
                           <div className="flex-1">
-                            <p className="font-medium text-gray-900 dark:text-white">{plano.nome}</p>
+                            <p className={`font-medium ${textClass}`}>{plano.nome}</p>
                             <p className="text-sm text-gray-500 dark:text-gray-400">{plano.descricao}</p>
                             <div className="mt-2 space-y-1">
 
@@ -358,10 +368,10 @@ export default function ProposalForm({onSuccess, onCancel, sender, id : string})
                 <div>
                   {/* Company Information */}
                   <div className="space-y-4">
-                    <h3 className="text-lg font-medium text-gray-900 dark:text-white">Informações da Empresa</h3>
+                    <h3 className={`text-lg font-medium ${textClass}`}>Informações da Empresa</h3>
                     <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        <label className={`block text-sm font-medium ${textClass}`}>
                           Nome
                         </label>
                         <input
@@ -369,13 +379,13 @@ export default function ProposalForm({onSuccess, onCancel, sender, id : string})
                           name="nome"
                           value={formData.nome}
                           onChange={handleInputChange}
-                          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand dark:bg-gray-700 dark:border-gray-600"
+                          className={`mt-1 block w-full ${borderRadius} border-gray-300 shadow-sm focus:border-brand focus:ring-brand dark:bg-gray-700 dark:border-gray-600 text-white`}
                           required
                         />
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        <label className={`block text-sm font-medium ${textClass}`}>
                           Email
                         </label>
                         <input
@@ -383,13 +393,13 @@ export default function ProposalForm({onSuccess, onCancel, sender, id : string})
                           name="email"
                           value={formData.email}
                           onChange={handleInputChange}
-                          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand dark:bg-gray-700 dark:border-gray-600"
+                          className={`mt-1 block w-full ${borderRadius} border-gray-300 shadow-sm focus:border-brand focus:ring-brand dark:bg-gray-700 dark:border-gray-600 text-white`}
                           required
                         />
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        <label className={`block text-sm font-medium ${textClass}`}>
                           Validade
                         </label>
                         <input
@@ -397,7 +407,7 @@ export default function ProposalForm({onSuccess, onCancel, sender, id : string})
                           name="validade"
                           value={formData.validade}
                           onChange={handleInputChange}
-                          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand dark:bg-gray-700 dark:border-gray-600"
+                          className={`mt-1 block w-full ${borderRadius} border-gray-300 shadow-sm focus:border-brand focus:ring-brand dark:bg-gray-700 dark:border-gray-600 text-white`}
                           required
                           min="1" // Minimum value
                           step="1" // Increment step
@@ -427,10 +437,10 @@ export default function ProposalForm({onSuccess, onCancel, sender, id : string})
                 <div>
                   {/* Company Information */}
                   <div className="space-y-4">
-                    <h3 className="text-lg font-medium text-gray-900 dark:text-white">Proposta Criada com Sucesso!</h3>
+                    <h3 className={`text-lg font-medium ${textClass}`}>Proposta Criada com Sucesso!</h3>
 
                     <div style={{ marginBottom: '50px' }}>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                      <label className={`block text-sm font-medium ${textClass}`}>
                         O Contrato foi Criado,  enviado o link para o emal do CLIENTE.
                       </label>
 
@@ -441,7 +451,7 @@ export default function ProposalForm({onSuccess, onCancel, sender, id : string})
                       <button
                         type="button"
                         onClick={() => setEtapa(etapa + 1)}
-                        className="px-4 py-2 bg-brand text-white rounded-md hover:bg-brand/90"
+                        className={`${buttonPrimaryClass}`}
                       >
                         Copiar o Link da Proposta
                       </button>
@@ -449,7 +459,7 @@ export default function ProposalForm({onSuccess, onCancel, sender, id : string})
                       <button
                         type="button"
                         onClick={() => setEtapa(etapa + 1)}
-                        className="px-4 py-2 bg-brand text-white rounded-md hover:bg-brand/90"
+                        className={`${buttonPrimaryClass}`}
                       >
                         Reenviar por Email
                       </button>
@@ -458,7 +468,7 @@ export default function ProposalForm({onSuccess, onCancel, sender, id : string})
                       <button
                         type="button"
                         onClick={onCancel}
-                        className="px-4 py-2 bg-brand text-white rounded-md hover:bg-brand/90"
+                        className={`${buttonPrimaryClass}`}
                       >
                         Finalizar
                       </button>
@@ -477,7 +487,7 @@ export default function ProposalForm({onSuccess, onCancel, sender, id : string})
                     {/* Total Value */}
                     <div className="border-t pt-4 mt-6">
                       <div className="flex justify-between items-center">
-                        <p className="text-lg font-medium text-gray-900 dark:text-white">Valor Total:</p>
+                        <p className={`text-lg font-medium ${textClass}`}>Valor Total:</p>
                         <p className="text-2xl font-bold text-brand">
                           {new Intl.NumberFormat('pt-BR', {
                             style: 'currency',
@@ -497,7 +507,7 @@ export default function ProposalForm({onSuccess, onCancel, sender, id : string})
                   <button
                     type="button"
                     onClick={onCancel}
-                    className="px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+                    className={buttonSecondaryClass}
                   >
                     Cancelar
                   </button>
@@ -508,7 +518,7 @@ export default function ProposalForm({onSuccess, onCancel, sender, id : string})
                   <button
                     type="button"
                     onClick={() => setEtapa(etapa - 1)}
-                    className="px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+                    className={buttonSecondaryClass}
                   >
                     Voltar
                   </button>
@@ -519,7 +529,7 @@ export default function ProposalForm({onSuccess, onCancel, sender, id : string})
                   <button
                     type="button"
                     onClick={() => setEtapa(etapa + 1)}
-                    className="px-4 py-2 bg-brand text-white rounded-md hover:bg-brand/90"
+                    className={buttonPrimaryClass}
                   >
                     Dados do Cliente
                   </button>
@@ -530,7 +540,7 @@ export default function ProposalForm({onSuccess, onCancel, sender, id : string})
                     type="button"
                     // onClick={() => setEtapa(etapa + 1)}
                     onClick={() => handleSubmit()}
-                    className="px-4 py-2 bg-brand text-white rounded-md hover:bg-brand/90"
+                    className={buttonPrimaryClass}
                   >
                     Confirmar Proposta
                   </button>

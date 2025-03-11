@@ -40,7 +40,9 @@ export default function PartnerForm() {
   const [editingPartner, setEditingPartner] = useState<Partner | null>(null);
   const [showCopyTooltip, setShowCopyTooltip] = useState<string | null>(null);
 
-  const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50";
+  const borderRadius = "rounded-lg";
+
+  const cardClass = `bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50 ${borderRadius}`;
   const titleClass = "text-4xl font-bold text-light-text-primary dark:text-white";
 
   useEffect(() => {
@@ -80,7 +82,7 @@ export default function PartnerForm() {
         <h1 className={titleClass}>Clientes</h1>
           <button
             onClick={() => setIsFormOpen(true)}
-            className="flex items-center px-4 py-2 bg-brand hover:bg-brand/90 text-white transition-colors"
+            className={`flex items-center px-4 py-2 bg-brand hover:bg-brand/90 text-white transition-colors ${borderRadius}`}
         >
             <Plus className="h-5 w-5 mr-2" />
             {activeTab === 'commercial' ? 'Novo AVA' : 'Novo Afiliado'}
@@ -94,7 +96,7 @@ export default function PartnerForm() {
           <div className="flex space-x-4">
             <button
               onClick={() => setActiveTab('cf')}
-              className={`flex items-center px-4 py-2 rounded-lg transition-colors ${activeTab === 'cf'
+              className={`flex items-center px-4 py-2 ${borderRadius} transition-colors ${activeTab === 'cf'
                   ? 'bg-brand-50 text-brand-600 dark:bg-brand-900/20 dark:text-brand-400'
                   : 'text-gray-600 dark:text-gray-400 hover:bg-brand-50/50 dark:hover:bg-brand-900/10 hover:text-brand-600 dark:hover:text-brand-400'
                 }`}
@@ -104,7 +106,7 @@ export default function PartnerForm() {
             </button>
             <button
               onClick={() => setActiveTab('ava')}
-              className={`flex items-center px-4 py-2 rounded-lg transition-colors ${activeTab === 'ava'
+              className={`flex items-center px-4 py-2 ${borderRadius} transition-colors ${activeTab === 'ava'
                   ? 'bg-brand-50 text-brand-600 dark:bg-brand-900/20 dark:text-brand-400'
                   : 'text-gray-600 dark:text-gray-400 hover:bg-brand-50/50 dark:hover:bg-brand-900/10 hover:text-brand-600 dark:hover:text-brand-400'
                 }`}
@@ -114,7 +116,7 @@ export default function PartnerForm() {
             </button>
             <button
               onClick={() => setActiveTab('commercial')}
-              className={`flex items-center px-4 py-2 rounded-lg transition-colors ${activeTab === 'commercial'
+              className={`flex items-center px-4 py-2 ${borderRadius} transition-colors ${activeTab === 'commercial'
                   ? 'bg-brand-50 text-brand-600 dark:bg-brand-900/20 dark:text-brand-400'
                   : 'text-gray-600 dark:text-gray-400 hover:bg-brand-50/50 dark:hover:bg-brand-900/10 hover:text-brand-600 dark:hover:text-brand-400'
                 }`}
@@ -134,7 +136,7 @@ export default function PartnerForm() {
                   placeholder="Buscar por nome, email ou telefone..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors"
+                  className={`w-full pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors ${borderRadius}`}
                 />
               </div>
             </div>
@@ -144,7 +146,7 @@ export default function PartnerForm() {
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value as 'all' | 'active' | 'inactive')}
-                  className="pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors appearance-none min-w-[200px]"
+                  className={`pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors appearance-none min-w-[200px] ${borderRadius}`}
                 >
                   <option value="all">Todos os Status</option>
                   <option value="active">Ativos</option>

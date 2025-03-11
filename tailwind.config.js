@@ -1,5 +1,5 @@
 /** @type {import('tailwindcss').Config} */
-export default {
+module.exports = {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   darkMode: 'class',
   theme: {
@@ -97,10 +97,22 @@ export default {
         'xl': '1rem',
         '2xl': '1.5rem',
         '3xl': '2rem'
+      },
+       /* Spinner */
+      extend: {
+        keyframes: {
+          spin: {
+            '0%': { transform: 'rotate(0deg)' },
+            '100%': { transform: 'rotate(360deg)' },
+          }
+        },
+        animation: {
+          'fast-spin': 'spin 0.5s linear infinite',
+        }
       }
     },
   },
   plugins: [
-    require('tailwind-scrollbar')({ nocompatible: true })
+    require('tailwind-scrollbar')({ nocompatible: true }),
   ],
-};
+}

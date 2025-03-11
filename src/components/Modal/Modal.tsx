@@ -53,6 +53,10 @@ export function ModalForm({
     '7xl': 'max-w-7xl',
   };
 
+  const modalBgClass = "bg-light-card dark:bg-[#1E293B]/90";
+  const modalBorderClass = "border-light-border dark:border-gray-700/50";
+  const modalTitleClass = "text-3xl font-extrabold text-light-text-primary dark:text-white tracking-tight";
+
   return (
     <div 
       className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
@@ -62,7 +66,7 @@ export function ModalForm({
       aria-labelledby={title ? 'modal-title' : undefined}
     >
       <div 
-        className={`bg-[#1E293B]/90 backdrop-blur-sm border border-gray-700/50 p-6 w-full mx-4 ${borderRadius} ${maxWidthClasses[maxWidth]} max-h-[90vh] overflow-y-auto`}
+        className={`${modalBgClass} ${modalBorderClass} p-6 w-full mx-4 ${borderRadius} ${maxWidthClasses[maxWidth]} max-h-[90vh] overflow-y-auto`}
         onClick={e => e.stopPropagation()}
       >
         {title && (
@@ -73,7 +77,7 @@ export function ModalForm({
                 {icon}
               </div>
             )}
-            <h2 id="modal-title" className="text-3xl font-extrabold text-white tracking-tight">
+            <h2 id="modal-title" className={modalTitleClass}>
               {title}
             </h2>
           </div>

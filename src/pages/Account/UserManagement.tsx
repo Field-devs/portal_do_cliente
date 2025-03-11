@@ -1,6 +1,14 @@
 import React, { useState } from 'react';
-import { Plus, Edit, Trash2 } from 'lucide-react';
-import { User } from '../../Models/Uses';
+import { Plus, Edit, Trash2, User } from 'lucide-react';
+
+interface User {
+  id: string;
+  NOME: string;
+  EMAIL: string;
+  perfil_id: string;
+  STATUS: boolean;
+  FOTO_PERFIL: string;
+}
 
 interface UserManagementProps {
   userType: string;
@@ -8,20 +16,19 @@ interface UserManagementProps {
 
 export default function UserManagement({ userType }: UserManagementProps) {
   const [users] = useState<User[]>([]);
+  const borderRadius = "rounded-lg";
 
   return (
-    <div className="bg-white shadow-md rounded-lg">
-      <div className="p-6 border-b border-gray-200">
-        <div className="flex justify-between items-center">
+    <div className={`bg-white shadow-md ${borderRadius}`}>
+      <div className={`p-6 border-b border-gray-200 flex justify-between items-center ${borderRadius}`}>
           <h2 className="text-xl font-semibold text-gray-800">User Management</h2>
           {userType === 'admin' && (
-            <button className="flex items-center px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+            <button className={`flex items-center px-4 py-2 bg-blue-500 text-white ${borderRadius} hover:bg-blue-600`}>
               <Plus className="h-5 w-5 mr-2" />
               Add User
             </button>
           )}
         </div>
-      </div>
       
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
@@ -71,14 +78,14 @@ export default function UserManagement({ userType }: UserManagementProps) {
                   <div className="text-sm text-gray-900">{user.EMAIL}</div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                  <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 ${borderRadius}`}>
                     {user.perfil_id}
                   </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
                     user.STATUS ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                  }`}>
+                  } ${borderRadius}`}>
                     {user.STATUS ? 'Active' : 'Inactive'}
                   </span>
                 </td>

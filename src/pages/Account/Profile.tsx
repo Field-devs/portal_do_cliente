@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../components/AuthProvider';
-
-
-import {
+import { supabase } from '../../lib/supabase';
+import { 
   Mail,
   Phone,
   User,
@@ -14,17 +13,23 @@ import {
   X,
   Lock,
   Building2,
-  CreditCard
+  CreditCard,
+  Shield
 } from 'lucide-react';
-import { supabase } from '../../lib/supabase';
+import { set } from 'date-fns';
 
-const DEFAULT_AVATARS = [
-  'https://storage.wiseapp360.com/typebot/public/workspaces/clwl6fdyf000511ohlamongyl/typebots/cm683siyl000dm4kxlrec9tb8/results/f0ox8dmw82jbx0s2w686ioyk/blocks/flm69ulnpr4b67h01xj47t14/DALL·E 2025-02-07 11.13.12 - A vibrant nature scene inspired by Brazilian modernism. The landscape features rolling green hills, oversized tropical plants, and a bright blue sky. _resultado.png',
-  'https://storage.wiseapp360.com/typebot/public/workspaces/clwl6fdyf000511ohlamongyl/typebots/cm683siyl000dm4kxlrec9tb8/results/vxxbc2o3tnyo8ub0k1muog8b/blocks/flm69ulnpr4b67h01xj47t14/DALL·E 2025-02-07 11.13.39 - A surreal and colorful nature scene inspired by Brazilian modernism. The landscape features rolling hills, lush oversized tropical plants, and a brigh_resultado.png',
-  'https://storage.wiseapp360.com/typebot/public/workspaces/clwl6fdyf000511ohlamongyl/typebots/cm683siyl000dm4kxlrec9tb8/results/nc55e09j550mc3fpifs3iiap/blocks/flm69ulnpr4b67h01xj47t14/Gemini_Generated_Image_33q76d33q76d33q7_resultado.png',
-  'https://storage.wiseapp360.com/typebot/public/workspaces/clwl6fdyf000511ohlamongyl/typebots/cm683siyl000dm4kxlrec9tb8/results/lfixyv779fwk3y09zpdx096y/blocks/flm69ulnpr4b67h01xj47t14/Gemini_Generated_Image_e9z11me9z11me9z1_resultado.png',
-  'https://storage.wiseapp360.com/typebot/public/workspaces/clwl6fdyf000511ohlamongyl/typebots/cm683siyl000dm4kxlrec9tb8/results/iv734529009a3ha4si1pmnqz/blocks/flm69ulnpr4b67h01xj47t14/Gemini_Generated_Image_rmjurvrmjurvrmju_resultado.png'
-];
+interface UserFormProps {
+  onSuccess: () => void;
+  onCancel: () => void;
+  initialData?: {
+    id: string;
+    nome: string;
+    email: string;
+    empresa?: string;
+    cnpj?: string;
+    perfil_id: number;
+  };
+}
 
 export default function Profile() {
   const { user, updateUser } = useAuth();
@@ -50,6 +55,8 @@ export default function Profile() {
     newPassword: '',
     confirmPassword: ''
   });
+
+    const borderRadius = "rounded-lg";
 
   const handlePhotoSelect = async (photoUrl: string) => {
     setSelectedPhoto(photoUrl);
@@ -172,20 +179,20 @@ export default function Profile() {
     }
   };
 
-  const inputClasses = "w-full px-3 py-2 border rounded-md shadow-sm text-gray-900 dark:text-white bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-brand focus:border-brand transition-colors";
+  const inputClasses = `w-full px-3 py-2 border ${borderRadius} shadow-sm text-gray-900 dark:text-white bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-brand focus:border-brand transition-colors`;
   const labelClasses = "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1";
   const readOnlyClasses = "text-gray-900 dark:text-white py-2";
 
   return (
     <div className="p-6">
-      <div className="max-w-2xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow">
+      <div className={`max-w-2xl mx-auto bg-white dark:bg-gray-800 ${borderRadius} shadow`}>
         <div className="p-6 border-b border-gray-200 dark:border-gray-700">
           <div className="flex justify-between items-center">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Perfil</h2>
             {!isEditing && (
               <button
                 onClick={() => setIsEditing(true)}
-                className="flex items-center px-4 py-2 text-sm bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-100 rounded-md transition-colors"
+                className={`flex items-center px-4 py-2 text-sm bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-100 ${borderRadius} transition-colors`}
               >
                 <Edit2 className="h-4 w-4 mr-2" />
                 Editar Perfil
@@ -211,7 +218,7 @@ export default function Profile() {
               )}
               <button
                 onClick={() => setShowPhotoSelector(true)}
-                className="absolute bottom-0 right-0 bg-brand dark:bg-dark-button-edit text-white p-2 rounded-full hover:bg-brand/90 dark:hover:bg-dark-button-editHover transition-colors shadow-lg"
+                className={`absolute bottom-0 right-0 bg-brand dark:bg-dark-button-edit text-white p-2 rounded-full hover:bg-brand/90 dark:hover:bg-dark-button-editHover transition-colors shadow-lg ${borderRadius}`}
               >
                 <Camera className="h-4 w-4" />
               </button>
@@ -221,7 +228,7 @@ export default function Profile() {
           {/* Photo Selector Modal */}
           {showPhotoSelector && (
             <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-              <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md">
+              <div className={`bg-white dark:bg-gray-800 ${borderRadius} p-6 w-full max-w-md`}>
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="text-lg font-medium text-gray-900 dark:text-dark-text-primary">
                     Escolha uma foto de perfil
@@ -260,7 +267,7 @@ export default function Profile() {
 
           {/* Error Message */}
           {error && (
-            <div className="text-red-600 text-sm flex items-center bg-red-50 dark:bg-red-900/20 p-3 rounded-md">
+            <div className={`text-red-600 text-sm flex items-center bg-red-50 dark:bg-red-900/20 p-3 ${borderRadius}`}>
               <AlertCircle className="h-4 w-4 mr-2" />
               {error}
             </div>
@@ -268,7 +275,7 @@ export default function Profile() {
 
           {/* Success Message */}
           {success && (
-            <div className="text-green-600 text-sm flex items-center bg-green-50 dark:bg-green-900/20 p-3 rounded-md">
+            <div className={`text-green-600 text-sm flex items-center bg-green-50 dark:bg-green-900/20 p-3 ${borderRadius}`}>
               <CheckCircle className="h-4 w-4 mr-2" />
               {isChangingPassword ? 'Senha atualizada com sucesso!' : 'Perfil atualizado com sucesso!'}
             </div>
@@ -393,14 +400,14 @@ export default function Profile() {
                 <button
                   type="button"
                   onClick={() => setIsEditing(false)}
-                  className="px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
+                  className={`px-4 py-2 text-gray-700 bg-gray-100 ${borderRadius} hover:bg-gray-200`}
                   disabled={loading}
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-brand text-white rounded-md hover:bg-brand/90 flex items-center"
+                  className={`px-4 py-2 bg-brand text-white ${borderRadius} hover:bg-brand/90 flex items-center`}
                   disabled={loading}
                 >
                   {loading ? (
@@ -417,7 +424,7 @@ export default function Profile() {
           </form>
 
           {/* Password Change Section */}
-          <div className="border-t border-gray-200 dark:border-gray-700 mt-6">
+          <div className={`border-t border-gray-200 dark:border-gray-700 mt-6 ${borderRadius}`}>
             <div className="pt-6">
               <div className="flex justify-between items-center mb-6">
                 <h3 className="text-lg font-medium text-gray-900 dark:text-white">
@@ -426,7 +433,7 @@ export default function Profile() {
                 {!isChangingPassword && (
                   <button
                     onClick={() => setIsChangingPassword(true)}
-                    className="flex items-center px-4 py-2 text-sm bg-[#FF8C00] text-white hover:bg-[#FF8C00]/90 rounded-md transition-colors dark:bg-[#FF8C00] dark:text-white dark:hover:bg-[#FF8C00]/80 focus:outline-none focus:ring-2 focus:ring-[#FF8C00] focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+                    className={`flex items-center px-4 py-2 text-sm bg-[#FF8C00] text-white hover:bg-[#FF8C00]/90 ${borderRadius} transition-colors dark:bg-[#FF8C00] dark:text-white dark:hover:bg-[#FF8C00]/80 focus:outline-none focus:ring-2 focus:ring-[#FF8C00] focus:ring-offset-2 dark:focus:ring-offset-gray-800`}
                   >
                     <Lock className="h-4 w-4 mr-2" />
                     Alterar Senha
@@ -496,14 +503,14 @@ export default function Profile() {
                           confirmPassword: ''
                         });
                       }}
-                      className="px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
+                      className={`px-4 py-2 text-gray-700 bg-gray-100 ${borderRadius} hover:bg-gray-200`}
                       disabled={loading}
                     >
                       Cancelar
                     </button>
                     <button
                       type="submit"
-                      className="px-4 py-2 bg-brand text-white rounded-md hover:bg-brand/90 flex items-center"
+                      className={`px-4 py-2 bg-brand text-white ${borderRadius} hover:bg-brand/90 flex items-center`}
                       disabled={loading}
                     >
                       {loading ? (

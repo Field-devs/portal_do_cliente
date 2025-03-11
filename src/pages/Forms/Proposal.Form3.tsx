@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { supabase } from "../../lib/supabase";
+import { supabase from "../../lib/supabase";
 import { useAuth } from "../../components/AuthProvider";
 import { AskDialog } from "../../components/Dialogs/SweetAlert";
 
@@ -9,6 +9,8 @@ export default function ProposalForm3(id: string) {
   const [name, setName] = useState('');
   const [address, setAddress] = useState('');
   const [birthDay, setBirthDay] = useState('');
+
+  const borderRadius = "rounded-lg";
 
   const handleCancel = async () => {
     await AskDialog("Você tem certeza que deseja cancelar a edição da proposta atual ?").then((result) => {
@@ -28,7 +30,7 @@ export default function ProposalForm3(id: string) {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-3 bg-white shadow-md rounded-lg">
+    <div className={`max-w-4xl mx-auto p-3 bg-white shadow-md ${borderRadius}`}>
       <h1 className="text-2xl font-bold">Confirmar Dados</h1>
 
       <div className="mt-4">
@@ -37,7 +39,7 @@ export default function ProposalForm3(id: string) {
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+          className={`mt-1 block w-full border border-gray-300 ${borderRadius} shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm`}
         />
       </div>
 
@@ -47,7 +49,7 @@ export default function ProposalForm3(id: string) {
           type="text"
           value={address}
           onChange={(e) => setAddress(e.target.value)}
-          className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+          className={`mt-1 block w-full border border-gray-300 ${borderRadius} shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm`}
         />
       </div>
 
@@ -57,13 +59,13 @@ export default function ProposalForm3(id: string) {
           type="date"
           value={birthDay}
           onChange={(e) => setBirthDay(e.target.value)}
-          className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+          className={`mt-1 block w-full border border-gray-300 ${borderRadius} shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm`}
         />
       </div>
 
       <div className="flex justify-between mt-4">
-        <button className="px-4 py-2 border rounded-md hover:bg-gray-100" onClick={handleCancel}>Cancelar</button>
-        <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={handleSubmit}>Confirmar</button>
+        <button className={`px-4 py-2 border ${borderRadius} hover:bg-gray-100`} onClick={handleCancel}>Cancelar</button>
+        <button className={`px-4 py-2 bg-blue-500 text-white ${borderRadius} hover:bg-blue-600`} onClick={handleSubmit}>Confirmar</button>
       </div>
     </div>
   );

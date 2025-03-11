@@ -1,12 +1,38 @@
+/* Animação de rotação rápida */
 .fast-spin {
     animation: spin 0.5s linear infinite;
+    /* Cor de destaque (ex: azul) */
+    border-color: theme('colors.brand.500'); /* Usando a cor "brand" do Tailwind */
+    border-top-color: transparent; /* Tornar a parte superior transparente para criar o efeito de rotação */
+    border-width: 2px; /* Espessura da borda */
   }
   
-@keyframes spin {
-0% {
-    transform: rotate(0deg);
-}
-100% {
-    transform: rotate(360deg);
-}
-}
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  
+  /* Opcional: Estilos para o container do spinner (centralizar, etc.) */
+  .spinner-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Adicione outras propriedades conforme necessário */
+  }
+  
+  /* Opcional: Defina um tamanho fixo para o spinner */
+  .fast-spin {
+    width: 2rem;   /* Ajuste o tamanho conforme necessário */
+    height: 2rem;  /* Ajuste o tamanho conforme necessário */
+    border-radius: 50%; /* Garante que seja um círculo */
+  }
+  
+  /* Ajustes para o modo dark (se necessário) */
+  .dark .fast-spin {
+      border-color: theme('colors.brand.400');
+      border-top-color: transparent;
+  }

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Edit, Check, X, AlertTriangle, Package, PlusSquare } from 'lucide-react';
 
 type ContentType = 'plans' | 'addons';
@@ -111,6 +111,8 @@ export default function Plans() {
   const [plans, setPlans] = useState(defaultPlans);
   const [addons, setAddons] = useState(defaultAddons);
 
+  const borderRadius = "rounded-lg";
+
   const handleEditPlan = (plan: Plan) => {
     setEditingPlan(plan);
     setOriginalPrice(plan.price);
@@ -157,7 +159,7 @@ export default function Plans() {
         <div className="flex space-x-8">
           <button
             onClick={() => setActiveContent('plans')}
-            className={`flex items-center pb-4 px-1 ${
+            className={`flex items-center pb-4 px-1 ${borderRadius} ${
               activeContent === 'plans'
                 ? 'border-b-2 border-brand text-brand dark:text-white'
                 : 'text-gray-500 hover:text-brand dark:hover:text-white'
@@ -168,7 +170,7 @@ export default function Plans() {
           </button>
           <button
             onClick={() => setActiveContent('addons')}
-            className={`flex items-center pb-4 px-1 ${
+            className={`flex items-center pb-4 px-1 ${borderRadius} ${
               activeContent === 'addons'
                 ? 'border-b-2 border-brand text-brand dark:text-white'
                 : 'text-gray-500 hover:text-brand dark:hover:text-white'
@@ -185,7 +187,7 @@ export default function Plans() {
           {plans.map((plan) => (
             <div
               key={plan.id}
-              className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden"
+              className={`bg-white dark:bg-gray-800 ${borderRadius} shadow-lg overflow-hidden`}
             >
               <div className="p-6 bg-brand text-white">
                 {editingPlan?.id === plan.id ? (
@@ -238,7 +240,7 @@ export default function Plans() {
                                 inboxes: parseInt(e.target.value)
                               }
                             })}
-                            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand"
+                            className={`block w-full ${borderRadius} border-gray-300 shadow-sm focus:border-brand focus:ring-brand`}
                             min="0"
                             max="999"
                           />
@@ -254,7 +256,7 @@ export default function Plans() {
                                 keepCurrentInboxes: e.target.checked
                               }
                             })}
-                            className="h-4 w-4 text-brand focus:ring-brand border-gray-300 rounded"
+                            className={`h-4 w-4 ${borderRadius} text-brand focus:ring-brand border-gray-300`}
                           />
                           <label className="text-sm text-gray-600 dark:text-gray-400">
                             Manter tamanho atual das caixas
@@ -276,7 +278,7 @@ export default function Plans() {
                             agents: parseInt(e.target.value)
                           }
                         })}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand"
+                        className={`mt-1 block w-full ${borderRadius} border-gray-300 shadow-sm focus:border-brand focus:ring-brand`}
                         min="0"
                         max="999"
                       />
@@ -295,7 +297,7 @@ export default function Plans() {
                             automations: parseInt(e.target.value)
                           }
                         })}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand"
+                        className={`mt-1 block w-full ${borderRadius} border-gray-300 shadow-sm focus:border-brand focus:ring-brand`}
                         min="0"
                         max="999"
                       />
@@ -313,7 +315,7 @@ export default function Plans() {
                             kanban: e.target.value === 'true'
                           }
                         })}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand"
+                        className={`mt-1 block w-full ${borderRadius} border-gray-300 shadow-sm focus:border-brand focus:ring-brand`}
                       >
                         <option value="true">Sim</option>
                         <option value="false">Não</option>
@@ -322,13 +324,13 @@ export default function Plans() {
                     <div className="flex justify-end space-x-2">
                       <button
                         onClick={handleSavePlan}
-                        className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                        className={`px-4 py-2 bg-green-600 text-white ${borderRadius} hover:bg-green-700`}
                       >
                         <Check className="h-5 w-5" />
                       </button>
                       <button
                         onClick={handleCancelEdit}
-                        className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50"
+                        className={`px-4 py-2 border border-gray-300 ${borderRadius} hover:bg-gray-50`}
                       >
                         <X className="h-5 w-5" />
                       </button>
@@ -363,7 +365,7 @@ export default function Plans() {
                     </ul>
                     <button
                       onClick={() => handleEditPlan(plan)}
-                      className="w-full px-4 py-2 text-brand border border-brand rounded-md hover:bg-brand hover:text-white transition-colors"
+                      className={`w-full px-4 py-2 text-brand border border-brand ${borderRadius} hover:bg-brand hover:text-white transition-colors`}
                     >
                       <Edit className="h-4 w-4 inline-block mr-2" />
                       Editar
@@ -379,7 +381,7 @@ export default function Plans() {
           {addons.map((addon) => (
             <div
               key={addon.addon_id}
-              className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden"
+              className={`bg-white dark:bg-gray-800 ${borderRadius} shadow-lg overflow-hidden`}
             >
               <div className="p-6 bg-brand text-white">
                 {editingAddon?.id === addon.addon_id ? (
@@ -427,7 +429,7 @@ export default function Plans() {
                             ...editingAddon,
                             value: e.target.value === 'true'
                           })}
-                          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand"
+                          className={`mt-1 block w-full ${borderRadius} border-gray-300 shadow-sm focus:border-brand focus:ring-brand`}
                         >
                           <option value="true">Sim</option>
                           <option value="false">Não</option>
@@ -440,7 +442,7 @@ export default function Plans() {
                             ...editingAddon,
                             value: parseInt(e.target.value)
                           })}
-                          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand focus:ring-brand"
+                          className={`mt-1 block w-full ${borderRadius} border-gray-300 shadow-sm focus:border-brand focus:ring-brand`}
                           min="0"
                           max="999"
                         />
@@ -449,13 +451,13 @@ export default function Plans() {
                     <div className="flex justify-end space-x-2">
                       <button
                         onClick={handleSaveAddon}
-                        className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                        className={`px-4 py-2 bg-green-600 text-white ${borderRadius} hover:bg-green-700`}
                       >
                         <Check className="h-5 w-5" />
                       </button>
                       <button
                         onClick={handleCancelEdit}
-                        className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50"
+                        className={`px-4 py-2 border border-gray-300 ${borderRadius} hover:bg-gray-50`}
                       >
                         <X className="h-5 w-5" />
                       </button>
@@ -466,7 +468,7 @@ export default function Plans() {
                     <p className="text-gray-600 dark:text-gray-400 mb-6">{addon.description}</p>
                     <button
                       onClick={() => handleEditAddon(addon)}
-                      className="w-full px-4 py-2 text-brand border border-brand rounded-md hover:bg-brand hover:text-white transition-colors"
+                      className={`w-full px-4 py-2 text-brand border border-brand ${borderRadius} hover:bg-brand hover:text-white transition-colors`}
                     >
                       <Edit className="h-4 w-4 inline-block mr-2" />
                       Editar
@@ -482,7 +484,7 @@ export default function Plans() {
       {/* Price Change Confirmation Modal */}
       {showPriceConfirmation && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4">
+          <div className={`bg-white dark:bg-gray-800 ${borderRadius} p-6 max-w-md w-full mx-4`}>
             <div className="flex items-center text-yellow-600 mb-4">
               <AlertTriangle className="h-6 w-6 mr-2" />
               <h3 className="text-lg font-medium">Confirmar alteração de preço</h3>
@@ -507,13 +509,13 @@ export default function Plans() {
             <div className="flex justify-end space-x-3">
               <button
                 onClick={handleCancelEdit}
-                className="px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
+                className={`px-4 py-2 text-gray-700 bg-gray-100 ${borderRadius} hover:bg-gray-200`}
               >
                 Cancelar
               </button>
               <button
                 onClick={confirmSavePlan}
-                className="px-4 py-2 bg-yellow-600 text-white rounded-md hover:bg-yellow-700"
+                className={`px-4 py-2 bg-yellow-600 text-white ${borderRadius} hover:bg-yellow-700`}
               >
                 Confirmar
               </button>

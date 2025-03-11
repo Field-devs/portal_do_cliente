@@ -26,14 +26,16 @@
     scrollbar-color: theme('colors.light.border') theme('colors.light.secondary');
   }
 
+  /* Estilos do Scrollbar para Modo Dark */
   .dark * {
+    scrollbar-width: thin;
     scrollbar-color: theme('colors.dark.border') theme('colors.dark.secondary');
   }
 }
 
 @layer components {
   .card {
-    @apply bg-light-card dark:bg-dark-card backdrop-blur-sm rounded-xl shadow-lg border border-light-border dark:border-dark-border;
+    @apply bg-light-card dark:bg-dark-card backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-light-border dark:border-dark-border;
   }
 
   .title {
@@ -83,4 +85,24 @@
   .badge-info {
     @apply bg-status-info-light-bg dark:bg-status-info-dark-bg text-status-info-light-text dark:text-status-info-dark-text border border-status-info-light-border dark:border-status-info-dark-border;
   }
+
+/* Spinner */
+.fast-spin {
+  @apply animate-spin border-2 border-brand-500 rounded-full h-5 w-5;
+  border-top-color: transparent;
+}
+.dark .fast-spin {
+  border-color: theme('colors.brand.400');
+  border-top-color: transparent;
+}
+
+/* Estilos do Scrollbar para Modo Dark */
+.dark ::-webkit-scrollbar-track {
+    @apply bg-dark-secondary;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+    @apply bg-dark-border;
+}
+
 }
