@@ -19,15 +19,16 @@ const SwitchFrag: React.FC<SwitchProps> = ({ checked, onClick }) => {
   return (
     <button
       onClick={toggleChecked}
-      className={`relative w-12 h-6 flex items-center bg-gray-700 rounded-full p-1 transition-all duration-300 ${selected ? "bg-green-400" : "bg-gray-700"}`}
+      className={`relative w-10 h-5 flex items-center rounded-full p-0.5 transition-all duration-200 focus:outline-none ${selected ? "bg-blue-500" : "bg-gray-300"}`}
+      aria-checked={selected}
+      role="switch"
     >
-      <div
-        className="w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300"
-        style={{ transform: selected ? "translateX(24px)" : "translateX(0)" }}
-      />
+      <span
+        className={`absolute w-4 h-4 bg-white rounded-full shadow-sm transition-transform duration-200 ${selected ? "translate-x-5" : "translate-x-0"}`}
+        aria-hidden="true"
+      ></span>
     </button>
   );
 }
-
 
 export default SwitchFrag;
