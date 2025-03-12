@@ -11,7 +11,7 @@ import { validateEmail } from "../../utils/Validation";
 
 export default function ProposalForm({ id }: FormProps) {
   const [step, setStep] = useState(0);
-  const [proposta, setProposta] = useState<PropostaDTO>({desconto:0, total:0} as PropostaDTO);
+  const [proposta, setProposta] = useState<PropostaDTO>({ desconto: 0, total: 0 } as PropostaDTO);
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
 
@@ -44,8 +44,10 @@ export default function ProposalForm({ id }: FormProps) {
     if (response.value === true) {
       setLoading(true);
       const newproposta = { ...proposta };
+
       delete newproposta.addons; // Remove o campo addons
-      console.log(newproposta);
+      delete newproposta.total; // Remove o campo addons
+
       const propostaToInsert = { ...newproposta, user_id: user?.id };
       setProposta(propostaToInsert); // Atualiza o estado com o objeto modificado
       const { error: insertError } = await supabase.from("proposta").insert([propostaToInsert]);
@@ -54,7 +56,9 @@ export default function ProposalForm({ id }: FormProps) {
         setLoading(false);
         return;
       }
+      setProposta(proposta)
       handleNext();
+      console.log(proposta);
     }
   };
 

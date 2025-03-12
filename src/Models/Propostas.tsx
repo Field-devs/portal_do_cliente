@@ -23,6 +23,7 @@ interface Proposta {
   suporte_humano: boolean;
   whatsapp_oficial: boolean;
   total: number;
+  total_addons: number;
   validade: number;
   mail_send: boolean;
   pay: boolean;
@@ -60,6 +61,7 @@ interface PropostaDTO {
   subtotal: number | 0;
   desconto: number | 0;
   total: number | 0;
+  total_addons: number | 0;
   validade: number;
   mail_send: boolean;
   pay: boolean;

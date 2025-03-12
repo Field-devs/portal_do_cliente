@@ -6,7 +6,6 @@ import { formatCurrency } from "../../utils/formatters";
 export default function ProposalFormResume({ proposta, setProposta }: { proposta: PropostaDTO, setProposta: (data: PropostaDTO) => void }) {
   const [copied, setCopied] = useState(false);
   console.log(proposta);
-
   const copyToClipboard = async () => {
     try {
       //await navigator.clipboard.writeText(window.location.href);
@@ -39,10 +38,25 @@ export default function ProposalFormResume({ proposta, setProposta }: { proposta
         </div>
 
         <div className="space-y-4">
+
+
           <div className="border-b border-gray-200 dark:border-gray-700/50 pb-4">
             <h4 className="font-medium text-gray-700 dark:text-gray-300 mb-2">Plano Escolhido</h4>
             <p className="text-lg font-semibold text-gray-900 dark:text-white">{proposta.plano_nome} </p>
-            <p className="text-sm text-gray-500 dark:text-gray-400">{"--"}</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">{"ERRO AO LER SUPABASE"}</p>
+          </div>
+
+          <div className="border-b border-gray-200 dark:border-gray-700/50 pb-4">
+            <h4 className="font-medium text-gray-700 dark:text-gray-300 mb-2">Valor</h4>
+            <p className="text-lg font-semibold text-gray-900 dark:text-white">
+              {formatCurrency(proposta.total)}
+            </p>
+          </div>
+
+          <div className="border-b border-gray-200 dark:border-gray-700/50 pb-4">
+            <h4 className="font-medium text-gray-700 dark:text-gray-300 mb-2">Addons</h4>
+            <p className="text-lg font-semibold text-gray-900 dark:text-white">{proposta.total_addons} </p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">{"ERRO AO LER SUPABASE"}</p>
           </div>
 
           <div className="border-b border-gray-200 dark:border-gray-700/50 pb-4">

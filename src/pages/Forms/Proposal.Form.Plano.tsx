@@ -30,6 +30,8 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
         plano_id: selectedPlan.id,
         plano_nome: selectedPlan.nome,
         subtotal: selectedPlan.valor,
+        total: selectedPlan.valor + totalAddons,
+
 
         addons: addons.filter(addon => addonQuantities[addon.id] > 0).map(addon => ({
           addon_id: addon.id,
@@ -77,8 +79,9 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
   
   useEffect(() => {
     setProposta({
-      total: proposta.total + totalAddons
-      })
+      ...proposta,
+      total: proposta.subtotal + totalAddons
+    });
   }, [totalAddons]);
 
   const handleInactive = async () => {

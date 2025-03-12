@@ -7,7 +7,6 @@ export default function ProposalFormCliente({ proposta, setProposta }: { propost
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setProposta({ ...proposta, [name]: value });
-    console.log(proposta);
   };
 
   return (
