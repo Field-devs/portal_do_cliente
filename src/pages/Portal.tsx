@@ -25,7 +25,7 @@ import FinancialDashBoard from './dashboard/FinancialDashBoard';
 import PlanList from './Lists/PlanList';
 import Profile from './Account/Profile';
 import ContractList from './Lists/Contract.List';
-import ProposalConfirm from './Forms/ProposalConfirm';
+import ProposalFormConfirm from './Forms/Proposal.Form.Confirm';
 
 const getRoleBadgeStyles = (role: string | null) => {
   switch (role) {
@@ -173,9 +173,6 @@ export default function Portal() {
         </div>
       </div>
 
-
-
-
       {/* Main Content Area */}
       <div className={`flex-1 transition-all duration-300 ${isExpanded ? 'ml-52' : 'ml-20'}`}>
         <div className="p-6">
@@ -190,7 +187,8 @@ export default function Portal() {
             <Route path="financial" element={<FinancialDashBoard />} />
             <Route path="profile" element={<Profile />} />
 
-            <Route path="/proposal-confirm" element={<ProposalConfirm />} />
+            {/* <Route path="/proposal-confirm:id" element={<ProposalFormConfirm />} /> */}
+            <Route path="form/:id" element={<ProposalFormConfirm />} />
           </Routes>
         </div>
       </div>

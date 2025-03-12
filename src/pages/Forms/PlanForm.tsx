@@ -108,6 +108,7 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
   const inputClass = "pl-12 block w-full border border-gray-200 dark:border-gray-700/50 bg-white dark:bg-[#0F172A]/60 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-brand focus:border-transparent transition-colors";
   const labelClass = "block text-sm font-medium text-gray-700 dark:text-gray-300";
   const iconClass = "absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400";
+
   const handleChange = () =>  {
     console.log("marcado");
   };

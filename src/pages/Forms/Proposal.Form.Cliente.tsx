@@ -1,4 +1,5 @@
-import {Proposta} from "../../Models/Propostas";
+import { Mail } from "lucide-react";
+import { Proposta } from "../../Models/Propostas";
 
 
 export default function ProposalFormCliente({ proposta, setProposta }: { proposta: Proposta, setProposta: (data: Proposta) => void }) {
@@ -25,10 +26,11 @@ export default function ProposalFormCliente({ proposta, setProposta }: { propost
       </div>
 
       <div className="mt-4">
-        <label className="block text-sm font-medium text-gray-700">Endereço</label>
+        <label className="block text-sm font-medium text-gray-700">Email</label>
         <input
-          type="text"
           name="email"
+          type="email"
+          autoComplete="email"
           value={proposta.email}
           onChange={(e) => handleChange(e)}
           className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"

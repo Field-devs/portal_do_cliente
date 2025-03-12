@@ -58,6 +58,7 @@ interface PropostaDTO {
   suporte_humano: boolean;
   whatsapp_oficial: boolean;
   total: number;
+  desconto: number;
   validade: number;
   mail_send: boolean;
   pay: boolean;

@@ -1,4 +1,3 @@
-import React from 'react';
 
 export default function CircularWait({ message }: { message: string }) {
   return (
