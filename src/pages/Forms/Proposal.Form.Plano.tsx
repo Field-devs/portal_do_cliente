@@ -107,7 +107,7 @@ export default function ProposalFormPlano({ onSubmit }: FormProps) {
         <div className="grid grid-cols-1 gap-1">
           {/* Coluna de Planos */}
           <div>
-            <h3 className="font-semibold">Perfil de Acesso</h3>
+            <h3 className="font-semibold">Tipo de Cliente</h3>
             <div className="flex flex-row mt-2">
               {profiles.map((profile) => (
                 <button
@@ -152,7 +152,6 @@ export default function ProposalFormPlano({ onSubmit }: FormProps) {
                   className={`px-4 py-1 ${selectedPlan === plan ? "bg-blue-500 text-white" : ""}`}
                   onClick={() => setSelectedPlan(plan)}
                 >
-                  <FontAwesomeIcon icon={faLock} className="ml-1  text-red-500" /> {plan.nome} (R$ {plan.valor},00)
                 </button>
               ))}
 
@@ -162,7 +161,6 @@ export default function ProposalFormPlano({ onSubmit }: FormProps) {
                   className={`px-4 py-1 border rounded-md font-bold ${selectedPlan === plan ? "bg-blue-500 text-white" : "bg-gray-100"}`}
                   onClick={() => setSelectedPlan(plan)}
                 >
-                  <FontAwesomeIcon icon={faLockOpen} className="ml-1 text-yellow-500" /> {plan.nome} (R$ {plan.valor},00)
                 </button>
               ))}
 
@@ -177,21 +175,12 @@ export default function ProposalFormPlano({ onSubmit }: FormProps) {
 
               {addons.filter(addon => viewInactive && !addon.active).map((addon) => (
                 <div key={addon.id} className="flex justify-between items-center">
-                  <span>
-                    <FontAwesomeIcon icon={faLock} className="ml-1 text-red-500" /> {addon.nome.replace(/([A-Z])/g, ' $1')} (R$ {addon.valor})
-                  </span>
-
                 </div>
               ))}
 
               {addons.filter(addon => addon.active == true).map((addon) => (
                 <div key={addon.id} className="flex justify-between items-center font-bold ">
-                  <span>
-                    <FontAwesomeIcon icon={faLockOpen} className="ml-1  text-yellow-500" /> {addon.nome.replace(/([A-Z])/g, ' $1')} (R$ {addon.valor})
-                  </span>
                   <input
-                    type="number"
-                    min="0"
                     className="w-12 border rounded text-center"
                     value={addonQuantities[addon.id] || 0}
                     onChange={(e) =>

@@ -6,37 +6,13 @@ import { Proposta } from "../../Models/Propostas";
 export default function ProposalFormCliente({ sender }: FormProps) {
   const [proposta, setProposta] = useState<Proposta>(sender);
   const [name, setName] = useState('');
-  const [address, setAddress] = useState('');
-  const [birthDay, setBirthDay] = useState('');
   const [, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
-  const [document, setDocument] = useState('');
   
-  console.log(proposta);
 
-  const formatPhoneNumber = (value: string) => {
-    const numbers = value.replace(/\D/g, '');
-    if (numbers.length <= 11) {
-      return numbers.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
-    }
-    return value;
-  };
 
-  const formatDocument = (value: string) => {
-    // Remove any non-digit characters
-    const numbers = value.replace(/\D/g, '');
 
-    // Format based on length (CPF or CNPJ)
-    if (numbers.length <= 11) {
-      // CPF format: 000.000.000-00
-      return numbers.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
-    } else {
-      // CNPJ format: 00.000.000/0000-00
-      return numbers.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5');
-    }
-  };
 
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -75,10 +51,10 @@ export default function ProposalFormCliente({ sender }: FormProps) {
         </div>
 
         {/* Reduce gap between grid items */}
-        <div className="grid md:grid-cols-2 gap-2 mb-1">
+        <div className="grid md:grid-cols-1 gap-2 mb-1">
           {/* Rest of form fields with reduced margin-top */}
           <div className="md:col-span-2">
-            <label className={labelClass}>Nome</label>
+            <label className={labelClass}>Nome*</label>
             <div className="mt-0.5 relative">
               <User className={iconClass} />
               <input
@@ -91,39 +67,8 @@ export default function ProposalFormCliente({ sender }: FormProps) {
             </div>
           </div>
 
-          {/* Other fields follow same pattern with reduced spacing */}
-          <div className="md:col-span-2">
-            <label className={labelClass}>Endereço</label>
-            <div className="mt-0.5 relative">
-              <MapPin className={iconClass} />
-              <input
-                type="text"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-                className={inputClass}
-                required
-              />
-            </div>
-          </div>
-
           <div>
-            <label className={labelClass}>Fone</label>
-            <div className="mt-0.5 relative">
-              <Phone className={iconClass} />
-              <input
-                type="tel"
-                value={phone}
-                onChange={(e) => setPhone(formatPhoneNumber(e.target.value))}
-                placeholder="(00) 00000-0000"
-                maxLength={15}
-                className={inputClass}
-                required
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className={labelClass}>Email</label>
+            <label className={labelClass}>Email*</label>
             <div className="mt-0.5 relative">
               <Mail className={iconClass} />
               <input
@@ -137,40 +82,6 @@ export default function ProposalFormCliente({ sender }: FormProps) {
             </div>
           </div>
 
-          <div>
-            <label className={labelClass}>CPF/CNPJ</label>
-            <div className="mt-0.5 relative">
-              <User className={iconClass} />
-              <input
-                type="text"
-                value={document}
-                onChange={(e) => {
-                  const value = e.target.value.replace(/\D/g, '');
-                  if (value.length <= 14) { // Max length for CNPJ
-                    setDocument(formatDocument(value));
-                  }
-                }}
-                placeholder="000.000.000-00"
-                className={inputClass}
-                maxLength={18} // To accommodate formatted CNPJ
-                required
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className={labelClass}>Data de Nascimento</label>
-            <div className="mt-0.5 relative">
-              <Calendar className={iconClass} />
-              <input
-                type="date"
-                value={birthDay}
-                onChange={(e) => setBirthDay(e.target.value)}
-                className={inputClass}
-                required
-              />
-            </div>
-          </div>
 
         </div>
       </div>

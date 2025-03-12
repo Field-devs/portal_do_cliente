@@ -282,8 +282,7 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
 
           <label className="flex items-center space-x-3 p-4 bg-white dark:bg-[#0F172A]/60 border border-gray-200 dark:border-gray-700/50 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#0F172A]/40 transition-colors group">
             <input
-              // type="checkbox"
-              disabled={true}
+              type="checkbox"
               checked={formData.kanban}
               onChange={() => handleToggleChange('kanban')}
               className="h-5 w-5 rounded border-gray-200 dark:border-gray-700/50 text-brand focus:ring-brand focus:ring-offset-0 bg-white dark:bg-[#0F172A]/60 transition-colors"
@@ -291,7 +290,7 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
             <div className="flex items-center space-x-3">
               <Layout className="h-5 w-5 text-gray-400 group-hover:text-gray-500 dark:group-hover:text-gray-300 transition-colors" />
               <span className="text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-gray-200 transition-colors">
-                Kanban (Recurso Padrao)
+                Kanban
               </span>
             </div>
           </label>

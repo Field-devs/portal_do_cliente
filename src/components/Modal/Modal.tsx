@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { LucideIcon  } from 'lucide-react';
 import { useEscapeKey } from '../../hooks/useEscapeKey';
 
 interface ModalProps {
@@ -12,12 +11,12 @@ interface ModalProps {
   maxWidth?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | '6xl' | '7xl';
 }
 
-export function ModalForm({ 
-  isOpen, 
-  onClose, 
-  children, 
+export function ModalForm({
+  isOpen,
+  onClose,
+  children,
   title,
-  icon, 
+  icon,
   maxWidth = '2xl'
 }: ModalProps) {
 
@@ -52,14 +51,14 @@ export function ModalForm({
   };
 
   return (
-    <div 
+    <div
       className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
       aria-labelledby={title ? 'modal-title' : undefined}
     >
-      <div 
+      <div
         className={`bg-[#1E293B]/90 backdrop-blur-sm border border-gray-700/50 p-6 w-full mx-4 ${maxWidthClasses[maxWidth]} max-h-[90vh] overflow-y-auto`}
         onClick={e => e.stopPropagation()}
       >
@@ -67,7 +66,7 @@ export function ModalForm({
           <div className="flex items-center space-x-3 mb-6">
             {icon && (
               <div className="bg-blue-400/10 p-3 rounded-xl">
-                {/* {React.createElement(icon, { className: 'h-6 w-6 text-blue-400' })} */} 
+                {/* {React.createElement(icon, { className: 'h-6 w-6 text-blue-400' })} */}
                 {icon}
               </div>
             )}
