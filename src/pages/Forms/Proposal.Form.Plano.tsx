@@ -6,11 +6,10 @@ import PlanAddon from "../../Models/Plan.Addon";
 import { AskDialog } from "../../components/Dialogs/SweetAlert";
 import SwitchFrag from "../../components/Fragments/SwitchFrag";
 import Profile from "../../Models/Perfil";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLock, faLockOpen, faUnlock } from '@fortawesome/free-solid-svg-icons';
 import CircularWait from "../../components/CircularWait";
 import FormProps from "../../Models/FormProps";
 import { Proposta } from "../../Models/Propostas";
+import { Listbox } from '@headlessui/react'
 
 export default function ProposalFormPlano({ onSubmit }: FormProps) {
   const { user } = useAuth();
@@ -82,17 +81,6 @@ export default function ProposalFormPlano({ onSubmit }: FormProps) {
     0
   );
 
-  const handleCancel = async () => {
-    await AskDialog("Você tem certeza que deseja cancelar a edição da proposta atual ?").then((result) => {
-      if (result.isConfirmed) {
-        console.log("Confirmed");
-        return true;
-      } else {
-        console.log("Cancelled");
-        return false;
-      }
-    });
-  };
 
   const handleInactive = async () => {
     setViewInactive(!viewInactive);
@@ -143,29 +131,52 @@ export default function ProposalFormPlano({ onSubmit }: FormProps) {
           {/* Coluna de Planos */}
           <div>
             <h3 className="font-semibold">Plano</h3>
-            <div className="flex flex-col space-y-2 mt-2">
+            <Listbox value={selectedPlan} onChange={setSelectedPlan}>
+              <div className="relative mt-2">
+                <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left border focus:outline-none focus-visible:border-blue-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2">
+                  <span className="block truncate">
+                    {selectedPlan?.nome || 'Selecione um plano'}
+                  </span>
+                </Listbox.Button>
+                <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 focus:outline-none">
 
-              {plans.filter(plan => viewInactive && !plan.active).map((plan) => (
-                <button
-                  key={plan.id}
-                  disabled={true}
-                  className={`px-4 py-1 ${selectedPlan === plan ? "bg-blue-500 text-white" : ""}`}
-                  onClick={() => setSelectedPlan(plan)}
-                >
-                </button>
-              ))}
+                  {plans.filter(plan => plan.active === true).map((plan) => (
+                    <Listbox.Option
+                      key={plan.id}
+                      value={plan}
+                      className={({ active }) =>
+                        `relative cursor-default select-none py-2 pl-10 pr-4 ${active ? 'bg-blue-100 text-blue-900' : 'text-gray-900'
+                        }`
+                      }
+                    >
+                      {({ selected }) => (
+                        <span className={`block truncate font-normal'}`}>
+                          {plan.nome}
+                        </span>
+                      )}
+                    </Listbox.Option>
+                  ))}
 
-              {plans.filter(plan => plan.active == true).map((plan) => (
-                <button
-                  key={plan.id}
-                  className={`px-4 py-1 border rounded-md font-bold ${selectedPlan === plan ? "bg-blue-500 text-white" : "bg-gray-100"}`}
-                  onClick={() => setSelectedPlan(plan)}
-                >
-                </button>
-              ))}
+                  {plans.filter(plan => plan.active === true).map((plan) => (
+                    <Listbox.Option
+                      key={plan.id}
+                      value={plan}
+                      className={({ active }) =>
+                        `relative cursor-default select-none py-2 pl-10 pr-4 ${active ? 'bg-blue-100 text-blue-900' : 'text-gray-900'
+                        }`
+                      }
+                    >
+                      {({ selected }) => (
+                        <span className={`block truncate ${selected ? 'font-bold' : 'font-normal'}`}>
+                          {plan.nome}
+                        </span>
+                      )}
+                    </Listbox.Option>
+                  ))}
 
-
-            </div>
+                </Listbox.Options>
+              </div>
+            </Listbox>
           </div>
 
           {/* Coluna de Add-ons */}
@@ -175,11 +186,18 @@ export default function ProposalFormPlano({ onSubmit }: FormProps) {
 
               {addons.filter(addon => viewInactive && !addon.active).map((addon) => (
                 <div key={addon.id} className="flex justify-between items-center">
+                  <span>
+                    {addon.nome.replace(/([A-Z])/g, ' $1')} (R$ {addon.valor})
+                  </span>
+
                 </div>
               ))}
 
               {addons.filter(addon => addon.active == true).map((addon) => (
-                <div key={addon.id} className="flex justify-between items-center font-bold ">
+                <div key={addon.id} className="flex justify-between items-center">
+                  <span>
+                    {addon.nome.replace(/([A-Z])/g, ' $1')} (R$ {addon.valor})
+                  </span>
                   <input
                     className="w-12 border rounded text-center"
                     value={addonQuantities[addon.id] || 0}
@@ -210,8 +228,8 @@ export default function ProposalFormPlano({ onSubmit }: FormProps) {
         </div>
 
         {/* <div className="flex justify-between mt-4"> */}
-          {/* <button className="px-4 py-2 border rounded-md hover:bg-gray-100" onClick={handleCancel} >Cancelar</button> */}
-          {/* <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Dados do Cliente</button> */}
+        {/* <button className="px-4 py-2 border rounded-md hover:bg-gray-100" onClick={handleCancel} >Cancelar</button> */}
+        {/* <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Dados do Cliente</button> */}
         {/* </div> */}
       </div>
   );
