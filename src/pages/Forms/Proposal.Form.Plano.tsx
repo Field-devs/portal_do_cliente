@@ -3,18 +3,14 @@ import { supabase } from "../../lib/supabase";
 import Plan from "../../Models/Plan";
 import { useAuth } from "../../components/AuthProvider";
 import PlanAddon from "../../Models/Plan.Addon";
-import { AskDialog } from "../../components/Dialogs/SweetAlert";
 import SwitchFrag from "../../components/Fragments/SwitchFrag";
 import Profile from "../../Models/Perfil";
 import CircularWait from "../../components/CircularWait";
-import FormProps from "../../Models/FormProps";
 import { Proposta } from "../../Models/Propostas";
 import { Listbox } from '@headlessui/react'
 
-export default function ProposalFormPlano({ onSubmit }: FormProps) {
+export default function ProposalFormPlano({ proposta, setProposta }: { proposta: Proposta, setProposta: (data: Proposta) => void }) {
   const { user } = useAuth();
-  const [proposta, setProposta] = useState<Proposta>();
-
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [selectedprofile, setSelectedProfile] = useState<Profile>();
   const [viewInactive, setViewInactive] = useState(false);
@@ -23,13 +19,19 @@ export default function ProposalFormPlano({ onSubmit }: FormProps) {
   const [addons, setAddons] = useState<PlanAddon[]>([]);
   const [addonQuantities, setAddonQuantities] = useState<Record<number, number>>({});
   const [loading, setLoading] = useState(true);
-  console.log("START");
+  
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setProposta({ ...proposta, [name]: value });
+  };
+
 
   useEffect(() => {
     if (selectedPlan && selectedprofile) {
       setProposta({
         perfil_id: selectedprofile.id,
         plano_id: selectedPlan.id,
+
         addons: addons.filter(addon => addonQuantities[addon.id] > 0).map(addon => ({
           addon_id: addon.id,
           quantidade: addonQuantities[addon.id]
@@ -39,11 +41,6 @@ export default function ProposalFormPlano({ onSubmit }: FormProps) {
   }, [selectedPlan, selectedprofile]);
 
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    console.log(proposta);
-    onSubmit(proposta);
-  };
 
   const fetchData = async () => {
     try {
@@ -108,6 +105,7 @@ export default function ProposalFormPlano({ onSubmit }: FormProps) {
                     <Listbox.Option
                       key={profile.id}
                       value={profile}
+                      onChange={() => handleChange}
                       className={({ active }) =>
                         `relative cursor-default select-none py-2 pl-10 pr-4 ${
                           active ? 'bg-blue-100 text-blue-900' : 'text-gray-900'
@@ -160,6 +158,7 @@ export default function ProposalFormPlano({ onSubmit }: FormProps) {
                     <Listbox.Option
                       key={plan.id}
                       value={plan}
+                      onChange={() => handleChange}
                       className={({ active }) =>
                         `relative cursor-default select-none py-2 pl-10 pr-4 ${active ? 'bg-blue-100 text-blue-900' : 'text-gray-900'
                         }`
@@ -177,6 +176,7 @@ export default function ProposalFormPlano({ onSubmit }: FormProps) {
                     <Listbox.Option
                       key={plan.id}
                       value={plan}
+                      onChange={() => handleChange}
                       className={({ active }) =>
                         `relative cursor-default select-none py-2 pl-10 pr-4 ${active ? 'bg-blue-100 text-blue-900' : 'text-gray-900'
                         }`
@@ -217,6 +217,7 @@ export default function ProposalFormPlano({ onSubmit }: FormProps) {
                   <input
                     className="w-12 border rounded text-center"
                     value={addonQuantities[addon.id] || 0}
+                    onChange={() => handleChange}
                     onChange={(e) =>
                       setAddonQuantities({
                         ...addonQuantities,

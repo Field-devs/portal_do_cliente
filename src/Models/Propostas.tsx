@@ -2,7 +2,7 @@ interface Proposta {
   Id: string; // uuid
   user_id: string; // uuid
   dt: string; // TIMESTAMP (ISO 8601 string)
-  perfil_id: number;
+  perfil_id: string;
   plano_id: string; // uuid
   plano_nome: string;
   nome: string;
@@ -33,7 +33,4 @@ interface Proposta {
   user_add: string | null;
   user_update: string | null;
 }
-
 export default Proposta;
-
-export type { Proposta, PropostaForm };
