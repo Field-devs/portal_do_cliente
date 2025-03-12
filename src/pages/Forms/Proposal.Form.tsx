@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ProposalFormPlano from "./Proposal.Form.Plano";
 import ProposalFormCliente from "./Proposal.Form.Cliente";
 import FormProps from "../../Models/FormProps";
 import { PropostaDTO } from "../../Models/Propostas";
-import { set } from "date-fns";
 import ProposalFormResume from "./Proposal.Form.Resume";
 import { supabase } from "../../lib/supabase";
 import { useAuth } from "../../components/AuthProvider";
+import { AlertDialog } from "../../components/Dialogs/Dialogs";
 
 
 export default function ProposalForm({ id }: FormProps) {
@@ -16,12 +16,22 @@ export default function ProposalForm({ id }: FormProps) {
 
 
   const handleNext = () => {
-    setStep((prevStep) => prevStep + 1);
+    if (validationForm())
+      setStep((prevStep) => prevStep + 1);
   };
 
   const handleBack = () => {
     setStep((prevStep) => prevStep - 1);
   };
+
+  const validationForm = () => {
+    if ((!proposta.nome || proposta.nome.trim() === "") && (!proposta.email || proposta.email.trim() === "") && (step == 1))  {
+      AlertDialog("Todos os campos são obrigatórios");
+      return false;
+    }
+    return true;
+  };
+
 
   const handleSubmit = async () => {
     const newproposta = { ...proposta };

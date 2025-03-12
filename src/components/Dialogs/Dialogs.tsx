@@ -50,3 +50,5 @@ export const ErrorDialog = async (text: string, title: string = "Erro") => {
   });
 }
 
+
+

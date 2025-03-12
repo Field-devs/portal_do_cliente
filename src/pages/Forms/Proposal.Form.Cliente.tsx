@@ -1,4 +1,4 @@
-import Proposta from "../../Models/Propostas";
+import {Proposta} from "../../Models/Propostas";
 
 
 export default function ProposalFormCliente({ proposta, setProposta }: { proposta: Proposta, setProposta: (data: Proposta) => void }) {

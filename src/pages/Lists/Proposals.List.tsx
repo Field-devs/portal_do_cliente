@@ -22,7 +22,7 @@ import ActionsButtons from '../../components/ActionsData';
 import { UpdateSingleField } from '../../utils/supageneric';
 import { useAuth } from '../../components/AuthProvider';
 import ProposalFormPlano from '../Forms/Proposal.Form.Plano';
-import { AlertDialog, AskDialog } from '../../components/Dialogs/Dialogs';
+import { AlertDialog, AskDialog, ErrorDialog } from '../../components/Dialogs/Dialogs';
 import Plan from '../../Models/Plan';
 import Plans from '../dashboard/Plans';
 import CircularWait from '../../components/CircularWait';
@@ -72,10 +72,11 @@ export default function ProposalsList() {
       const { data : planData, error: planosError } = 
       await supabase.from('plano').select('*').eq("user_id", user?.id);
       if (planosError) throw planosError;
+      console.log(planData);
       setPlanscount(planData.length);
 
     } catch (error) {
-      console.error('Error fetching proposals:', error);
+      ErrorDialog("Erro ao carregar propostas", "Tente novamente mais tarde.");
     } finally {
       setLoading(false);
     }
@@ -114,10 +115,6 @@ export default function ProposalsList() {
     return response;
   };
 
-  const handleChange = (checked: boolean) => {
-    console.log(active);
-    SetActive(checked ? true : false);
-  };
 
   const handleEdit = (row: string) => {
     setPropId(row);
