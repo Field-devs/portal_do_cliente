@@ -6,15 +6,13 @@ import PlanAddon from "../../Models/Plan.Addon";
 import SwitchFrag from "../../components/Fragments/SwitchFrag";
 import Profile from "../../Models/Perfil";
 import CircularWait from "../../components/CircularWait";
-import FormProps from "../../Models/FormProps";
-import { Proposta } from "../../Models/Propostas";
+import { PropostaDTO } from "../../Models/Propostas";
 import { Listbox } from '@headlessui/react'
 import { formatCurrency } from "../../utils/formatters";
 
-export default function ProposalFormPlano({ onSubmit }: FormProps) {
+export default function ProposalFormPlano({ proposta, setProposta }: { proposta: PropostaDTO, setProposta: (data: PropostaDTO) => void }) {
+  
   const { user } = useAuth();
-  const [proposta, setProposta] = useState<Proposta>();
-
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [selectedprofile, setSelectedProfile] = useState<Profile>();
   const [viewInactive, setViewInactive] = useState(false);
@@ -30,6 +28,8 @@ export default function ProposalFormPlano({ onSubmit }: FormProps) {
       setProposta({
         perfil_id: selectedprofile.id,
         plano_id: selectedPlan.id,
+        plano_nome: selectedPlan.nome,
+        subtotal: selectedPlan.valor,
 
         addons: addons.filter(addon => addonQuantities[addon.id] > 0).map(addon => ({
           addon_id: addon.id,
@@ -37,6 +37,7 @@ export default function ProposalFormPlano({ onSubmit }: FormProps) {
         }))
       });
     }
+
   }, [selectedPlan, selectedprofile]);
 
   const fetchData = async () => {
@@ -69,12 +70,16 @@ export default function ProposalFormPlano({ onSubmit }: FormProps) {
     fetchData();
   }, []);
 
-
+  
   const totalAddons = addons.reduce(
-    (sum, addon) => sum + (addonQuantities[addon.id] || 0) * addon.valor,
-    0
+    (sum, addon) => sum + (addonQuantities[addon.id] || 0) * addon.valor,0
   );
-
+  
+  useEffect(() => {
+    setProposta({
+      total: proposta.total + totalAddons
+      })
+  }, [totalAddons]);
 
   const handleInactive = async () => {
     setViewInactive(!viewInactive);

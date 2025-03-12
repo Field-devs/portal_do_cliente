@@ -1,8 +1,8 @@
 import { Mail } from "lucide-react";
-import { Proposta } from "../../Models/Propostas";
+import { Proposta, PropostaDTO } from "../../Models/Propostas";
 
 
-export default function ProposalFormCliente({ proposta, setProposta }: { proposta: Proposta, setProposta: (data: Proposta) => void }) {
+export default function ProposalFormCliente({ proposta, setProposta }: { proposta: PropostaDTO, setProposta: (data: PropostaDTO) => void }) {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

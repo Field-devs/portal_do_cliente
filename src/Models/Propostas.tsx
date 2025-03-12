@@ -57,8 +57,9 @@ interface PropostaDTO {
   kanban: boolean;
   suporte_humano: boolean;
   whatsapp_oficial: boolean;
-  total: number;
-  desconto: number;
+  subtotal: number | 0;
+  desconto: number | 0;
+  total: number | 0;
   validade: number;
   mail_send: boolean;
   pay: boolean;

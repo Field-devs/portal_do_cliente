@@ -1,14 +1,16 @@
 import { useState } from "react";
 import { User, Copy, X, CheckCircle } from 'lucide-react';
-import Proposta from "../../Models/Propostas";
+import { Proposta, PropostaDTO } from "../../Models/Propostas";
+import { formatCurrency } from "../../utils/formatters";
 
-export default function ProposalFormResume({ proposta, setProposta }: { proposta: Proposta, setProposta: (data: Proposta) => void }) {
+export default function ProposalFormResume({ proposta, setProposta }: { proposta: PropostaDTO, setProposta: (data: PropostaDTO) => void }) {
   const [copied, setCopied] = useState(false);
-
+  console.log(proposta);
 
   const copyToClipboard = async () => {
     try {
-      await navigator.clipboard.writeText(window.location.href);
+      //await navigator.clipboard.writeText(window.location.href);
+      await navigator.clipboard.writeText(window.location.href + `?id=${proposta.user_id}`);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
@@ -39,14 +41,14 @@ export default function ProposalFormResume({ proposta, setProposta }: { proposta
         <div className="space-y-4">
           <div className="border-b border-gray-200 dark:border-gray-700/50 pb-4">
             <h4 className="font-medium text-gray-700 dark:text-gray-300 mb-2">Plano Escolhido</h4>
-            <p className="text-lg font-semibold text-gray-900 dark:text-white">{0}</p>
+            <p className="text-lg font-semibold text-gray-900 dark:text-white">{proposta.plano_nome} </p>
             <p className="text-sm text-gray-500 dark:text-gray-400">{"--"}</p>
           </div>
 
           <div className="border-b border-gray-200 dark:border-gray-700/50 pb-4">
             <h4 className="font-medium text-gray-700 dark:text-gray-300 mb-2">Valor</h4>
             <p className="text-lg font-semibold text-gray-900 dark:text-white">
-              {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(0)}
+              {formatCurrency(proposta.total)}
             </p>
           </div>
 
