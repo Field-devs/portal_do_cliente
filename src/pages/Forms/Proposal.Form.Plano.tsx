@@ -94,20 +94,36 @@ export default function ProposalFormPlano({ onSubmit }: FormProps) {
 
         <div className="grid grid-cols-1 gap-1">
           {/* Coluna de Planos */}
-          <div>
+          <div className="relative z-50"> {/* Added z-50 to ensure dropdown appears on top */}
             <h3 className="font-semibold">Tipo de Cliente</h3>
-            <div className="flex flex-row mt-2">
-              {profiles.map((profile) => (
-                <button
-                  key={profile.id}
-                  className={`px-4 py-1 border rounded-md ${selectedprofile === profile ? "bg-blue-500 text-white" : "bg-gray-100"}`}
-                  onClick={() => setSelectedProfile(profile)}
-                  value={proposta?.perfil_id}
-                >
-                  {profile.nome}
-                </button>
-              ))}
-            </div>
+            <Listbox value={selectedprofile} onChange={setSelectedProfile}>
+              <div className="relative mt-2">
+                <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left border focus:outline-none focus-visible:border-blue-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2">
+                  <span className="block truncate">
+                    {selectedprofile?.nome || 'Selecione um tipo de cliente'}
+                  </span>
+                </Listbox.Button>
+                <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 focus:outline-none">
+                  {profiles.map((profile) => (
+                    <Listbox.Option
+                      key={profile.id}
+                      value={profile}
+                      className={({ active }) =>
+                        `relative cursor-default select-none py-2 pl-10 pr-4 ${
+                          active ? 'bg-blue-100 text-blue-900' : 'text-gray-900'
+                        }`
+                      }
+                    >
+                      {({ selected }) => (
+                        <span className={`block truncate ${selected ? 'font-bold' : 'font-normal'}`}>
+                          {profile.nome}
+                        </span>
+                      )}
+                    </Listbox.Option>
+                  ))}
+                </Listbox.Options>
+              </div>
+            </Listbox>
           </div>
         </div>
 
