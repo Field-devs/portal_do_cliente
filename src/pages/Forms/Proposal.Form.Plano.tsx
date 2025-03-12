@@ -11,7 +11,7 @@ import { Listbox } from '@headlessui/react'
 import { formatCurrency } from "../../utils/formatters";
 
 export default function ProposalFormPlano({ proposta, setProposta }: { proposta: PropostaDTO, setProposta: (data: PropostaDTO) => void }) {
-  
+
   const { user } = useAuth();
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [selectedprofile, setSelectedProfile] = useState<Profile>();
@@ -22,7 +22,11 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
   const [addonQuantities, setAddonQuantities] = useState<Record<number, number>>({});
   const [loading, setLoading] = useState(true);
 
-  
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setProposta({ ...proposta, [name]: value });
+  };
+
   useEffect(() => {
     if (selectedPlan && selectedprofile) {
       setProposta({
@@ -72,11 +76,11 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
     fetchData();
   }, []);
 
-  
+
   const totalAddons = addons.reduce(
-    (sum, addon) => sum + (addonQuantities[addon.id] || 0) * addon.valor,0
+    (sum, addon) => sum + (addonQuantities[addon.id] || 0) * addon.valor, 0
   );
-  
+
   useEffect(() => {
     setProposta({
       ...proposta,
@@ -111,8 +115,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
                       key={profile.id}
                       value={profile}
                       className={({ active }) =>
-                        `relative cursor-default select-none py-2 pl-10 pr-4 ${
-                          active ? 'bg-blue-100 text-blue-900' : 'text-gray-900'
+                        `relative cursor-default select-none py-2 pl-10 pr-4 ${active ? 'bg-blue-100 text-blue-900' : 'text-gray-900'
                         }`
                       }
                     >
@@ -218,10 +221,37 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
           </div>
         </div>
 
+
+
+
+        <div className="grid grid-cols-12 gap-6">
+            <div className="col-span-3">
+            <h3 className="font-semibold">Desconto</h3>
+            <input
+              name="desconto"
+              className="w-full border rounded p-2"
+              value={proposta.desconto}
+              onChange={(e) => handleChange({ ...e, target: { ...e.target, value: Number(e.target.value) } })}
+            />
+            </div>
+
+          <div className="col-span-3">
+            <h3 className="font-semibold">Validade (dias)</h3>
+            <input
+              className="w-full border rounded p-2"
+              name="validade"
+              value={proposta.validade}
+              onChange={handleChange}
+            />
+          </div>
+        </div>
+
+
+
         <div className="mt-6 rounded-md border">
           <div className="p-4">
             <h3 className="font-semibold">Resumo da Assinatura</h3>
-            <p className="mt-2">Plano: {selectedPlan?.nome} - { formatCurrency(selectedPlan?.valor)}</p>
+            <p className="mt-2">Plano: {selectedPlan?.nome} - {formatCurrency(selectedPlan?.valor)}</p>
             <p>Add-ons: {formatCurrency(totalAddons)}</p>
             <h2 className="text-xl font-bold mt-2">
               Valor Total: {formatCurrency((selectedPlan?.valor || 0) + totalAddons)}/mês
