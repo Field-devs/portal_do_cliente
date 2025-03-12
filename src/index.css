@@ -7,29 +7,28 @@
     @apply antialiased;
   }
 
-  /* Custom Scrollbar Styles */
+  /* Scrollbar Styles - Minimalista e Redondo com cor específica */
   ::-webkit-scrollbar {
-    @apply w-2;
+    @apply w-2 h-2; /* Largura e altura iguais para barras horizontais */
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-light-secondary dark:bg-dark-secondary rounded-full;
+    @apply bg-[#1E40AF]/10 rounded-full; /* Trilho quase transparente, cor #1E40AF */
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-light-border dark:bg-dark-border rounded-full hover:bg-gray-400 dark:hover:bg-gray-500 transition-colors;
+    @apply bg-[#1E40AF]/30 rounded-full hover:bg-[#1E40AF]/50 transition-colors; /* Manípulo mais discreto, cor #1E40AF */
   }
 
   /* Firefox Scrollbar */
   * {
     scrollbar-width: thin;
-    scrollbar-color: theme('colors.light.border') theme('colors.light.secondary');
+    scrollbar-color: rgba(30, 64, 175, 0.2) rgba(30, 64, 175, 0.05); /* Cores ainda mais suaves, cor #1E40AF */
   }
 
   /* Estilos do Scrollbar para Modo Dark */
   .dark * {
-    scrollbar-width: thin;
-    scrollbar-color: theme('colors.dark.border') theme('colors.dark.secondary');
+    scrollbar-color: rgba(30, 64, 175, 0.2) rgba(30, 64, 175, 0.05); /* Cor #1E40AF */
   }
 }
 
@@ -95,14 +94,4 @@
   border-color: theme('colors.brand.400');
   border-top-color: transparent;
 }
-
-/* Estilos do Scrollbar para Modo Dark */
-.dark ::-webkit-scrollbar-track {
-    @apply bg-dark-secondary;
-}
-
-.dark ::-webkit-scrollbar-thumb {
-    @apply bg-dark-border;
-}
-
 }
