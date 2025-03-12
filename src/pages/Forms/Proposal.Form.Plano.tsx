@@ -6,7 +6,7 @@ import PlanAddon from "../../Models/Plan.Addon";
 import SwitchFrag from "../../components/Fragments/SwitchFrag";
 import Profile from "../../Models/Perfil";
 import CircularWait from "../../components/CircularWait";
-import { Proposta } from "../../Models/Propostas";
+import Proposta from "../../Models/Propostas";
 import { Listbox } from '@headlessui/react'
 
 export default function ProposalFormPlano({ proposta, setProposta }: { proposta: Proposta, setProposta: (data: Proposta) => void }) {

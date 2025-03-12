@@ -4,25 +4,16 @@ const getInitialArray = (startIndex: number, length: number = 10) => {
 };
 
 
-// const CopyToClipboard = async (couponCode: string) => {
-
-//     try {
-//       await navigator.clipboard.writeText(couponCode);
-//       setShowCopyTooltip(couponCode);
-//       setTimeout(() => setShowCopyTooltip(null), 2000);
-//     } catch (err) {
-//       console.error('Failed to copy:', err);
-//     }
-//   };
-//   const handleCopyToClipboard = async (couponCode: string) => {
-//     try {
-//       await navigator.clipboard.writeText(couponCode);
-//       setShowCopyTooltip(couponCode);
-//       setTimeout(() => setShowCopyTooltip(null), 2000);
-//     } catch (err) {
-//       console.error('Failed to copy:', err);
-//     }
-//   };
+const copyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+    //   setCopied(true);
+    //   setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy:', err);
+    }
+  };
 
 
-export { getInitialArray };
+
+export { getInitialArray, copyToClipboard };

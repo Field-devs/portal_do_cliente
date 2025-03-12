@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './components/AuthProvider';
 import { ThemeProvider } from './components/ThemeProvider';
@@ -13,49 +12,51 @@ function App() {
   return (
     <BrowserRouter>
       <ThemeProvider>
-        <AuthProvider>
-        <PermissionsProvider>
-          
-          <Routes>
-            {/* Public routes */}
-            <Route path="/login" element={<Login />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
+        {/* <ToastProvider> */}
+          <AuthProvider>
+            <PermissionsProvider>
 
-            {/* Protected routes */}
-            <Route
-              path="/portal/*"
-              element={
-                <ProtectedRoute>
-                  <Portal />
-                </ProtectedRoute>
-              }
-            />
+              <Routes>
+                {/* Public routes */}
+                <Route path="/login" element={<Login />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route path="/reset-password" element={<ResetPassword />} />
 
-            {/* Redirect root to portal if authenticated, otherwise to login */}
-            <Route
-              path="/"
-              element={
-                <ProtectedRoute>
-                  <Navigate to="/portal" replace />
-                </ProtectedRoute>
-              }
-            />
+                {/* Protected routes */}
+                <Route
+                  path="/portal/*"
+                  element={
+                    <ProtectedRoute>
+                      <Portal />
+                    </ProtectedRoute>
+                  }
+                />
 
-            {/* Catch all route - redirect to portal if authenticated, otherwise to login */}
-            <Route
-              path="*"
-              element={
-                <ProtectedRoute>
-                  <Navigate to="/portal" replace />
-                </ProtectedRoute>
-              }
-            />
-            
-          </Routes>
+                {/* Redirect root to portal if authenticated, otherwise to login */}
+                <Route
+                  path="/"
+                  element={
+                    <ProtectedRoute>
+                      <Navigate to="/portal" replace />
+                    </ProtectedRoute>
+                  }
+                />
 
-        </PermissionsProvider>
-        </AuthProvider>
+                {/* Catch all route - redirect to portal if authenticated, otherwise to login */}
+                <Route
+                  path="*"
+                  element={
+                    <ProtectedRoute>
+                      <Navigate to="/portal" replace />
+                    </ProtectedRoute>
+                  }
+                />
+
+              </Routes>
+
+            </PermissionsProvider>
+          </AuthProvider>
+        {/* </ToastProvider> */}
       </ThemeProvider>
     </BrowserRouter>
   );

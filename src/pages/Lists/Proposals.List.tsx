@@ -22,7 +22,7 @@ import ActionsButtons from '../../components/ActionsData';
 import { UpdateSingleField } from '../../utils/supageneric';
 import { useAuth } from '../../components/AuthProvider';
 import ProposalFormPlano from '../Forms/Proposal.Form.Plano';
-import { AlertDialog, AskDialog } from '../../components/Dialogs/SweetAlert';
+import { AlertDialog, AskDialog } from '../../components/Dialogs/Dialogs';
 import Plan from '../../Models/Plan';
 import Plans from '../dashboard/Plans';
 import CircularWait from '../../components/CircularWait';

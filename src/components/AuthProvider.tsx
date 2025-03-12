@@ -3,7 +3,7 @@ import { authenticateUser, supabase } from '../lib/supabase';
 import { useNavigate } from 'react-router-dom';
 import { User } from '../Models/Uses';
 import Profile from '../Models/Perfil';
-import { ErrorDialog } from './Dialogs/SweetAlert';
+import { ErrorDialog } from './Dialogs/Dialogs';
 
 
 interface AuthContextType {
@@ -49,7 +49,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const userData = await authenticateUser(email, password);
       setUser(userData);
-     
+      
       // Store complete user data including profile photo
       localStorage.setItem('user', JSON.stringify(userData));
       navigate('/portal');

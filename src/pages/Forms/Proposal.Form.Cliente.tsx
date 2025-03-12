@@ -1,4 +1,3 @@
-import FormProps from "../../Models/FormProps";
 import Proposta from "../../Models/Propostas";
 
 
@@ -7,6 +6,7 @@ export default function ProposalFormCliente({ proposta, setProposta }: { propost
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setProposta({ ...proposta, [name]: value });
+    console.log(proposta);
   };
 
   return (
@@ -17,6 +17,7 @@ export default function ProposalFormCliente({ proposta, setProposta }: { propost
         <label className="block text-sm font-medium text-gray-700">Nome</label>
         <input
           type="text"
+          name="nome"
           value={proposta.nome}
           onChange={(e) => handleChange(e)}
           className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
@@ -27,6 +28,7 @@ export default function ProposalFormCliente({ proposta, setProposta }: { propost
         <label className="block text-sm font-medium text-gray-700">Endereço</label>
         <input
           type="text"
+          name="email"
           value={proposta.email}
           onChange={(e) => handleChange(e)}
           className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"

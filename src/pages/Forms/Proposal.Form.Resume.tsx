@@ -1,43 +1,10 @@
 import { useState } from "react";
-import FormProps from "../../Models/FormProps";
-import { User, Copy, X, CheckCircle, MapPin, Calendar, AlertCircle, Save, Phone, Mail } from 'lucide-react';
-import { Proposta } from "../../Models/Propostas";
+import { User, Copy, X, CheckCircle } from 'lucide-react';
+import Proposta from "../../Models/Propostas";
 
-export default function ProposalFormResume({ onSuccess, sender, onClose }: FormProps) {
-  const [proposta] = useState<Proposta>(sender);
-  const [name, setName] = useState('');
-  const [address, setAddress] = useState('');
-  const [birthDay, setBirthDay] = useState('');
-  const [, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [phone, setPhone] = useState('');
-  const [email, setEmail] = useState('');
-  const [document, setDocument] = useState('');
+export default function ProposalFormResume({ proposta, setProposta }: { proposta: Proposta, setProposta: (data: Proposta) => void }) {
   const [copied, setCopied] = useState(false);
-  
-  console.log(proposta);
 
-  const formatPhoneNumber = (value: string) => {
-    const numbers = value.replace(/\D/g, '');
-    if (numbers.length <= 11) {
-      return numbers.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
-    }
-    return value;
-  };
-
-  const formatDocument = (value: string) => {
-    // Remove any non-digit characters
-    const numbers = value.replace(/\D/g, '');
-
-    // Format based on length (CPF or CNPJ)
-    if (numbers.length <= 11) {
-      // CPF format: 000.000.000-00
-      return numbers.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
-    } else {
-      // CNPJ format: 00.000.000/0000-00
-      return numbers.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5');
-    }
-  };
 
   const copyToClipboard = async () => {
     try {
@@ -46,23 +13,6 @@ export default function ProposalFormResume({ onSuccess, sender, onClose }: FormP
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
       console.error('Failed to copy:', err);
-    }
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-
-    try {
-      // Handle form submission logic here
-      console.log("Form submitted with data:", { name, address, birthDay });
-      onSuccess();
-    } catch (error) {
-      console.error('Error submitting form:', error);
-      setError('Erro ao enviar formulário. Por favor, tente novamente.');
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -84,12 +34,6 @@ export default function ProposalFormResume({ onSuccess, sender, onClose }: FormP
               Resumo da Proposta
             </h3>
           </div>
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300"
-          >
-            <X className="h-5 w-5" />
-          </button>
         </div>
 
         <div className="space-y-4">
@@ -123,14 +67,6 @@ export default function ProposalFormResume({ onSuccess, sender, onClose }: FormP
                   Copiar Link
                 </>
               )}
-            </button>
-
-            <button
-              type="button"
-              onClick={onSuccess}
-              className={`${buttonClass} bg-brand text-white hover:bg-brand-600`}
-            >
-              Concluir
             </button>
           </div>
         </div>
