@@ -6,13 +6,15 @@ import PlanAddon from "../../Models/Plan.Addon";
 import SwitchFrag from "../../components/Fragments/SwitchFrag";
 import Profile from "../../Models/Perfil";
 import CircularWait from "../../components/CircularWait";
+import FormProps from "../../Models/FormProps";
+import { Proposta } from "../../Models/Propostas";
 import { Listbox } from '@headlessui/react'
 import { formatCurrency } from "../../utils/formatters";
-import { DollarSign } from "lucide-react";
-import { Proposta } from "../../Models/Propostas";
 
-export default function ProposalFormPlano({ proposta, setProposta }: { proposta: Proposta, setProposta: (data: Proposta) => void }) {
+export default function ProposalFormPlano({ onSubmit }: FormProps) {
   const { user } = useAuth();
+  const [proposta, setProposta] = useState<Proposta>();
+
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [selectedprofile, setSelectedProfile] = useState<Profile>();
   const [viewInactive, setViewInactive] = useState(false);
@@ -21,20 +23,13 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
   const [addons, setAddons] = useState<PlanAddon[]>([]);
   const [addonQuantities, setAddonQuantities] = useState<Record<number, number>>({});
   const [loading, setLoading] = useState(true);
-  const iconClass = "absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400";
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setProposta({ ...proposta, [name]: value });
-  };
-
-
+  
   useEffect(() => {
     if (selectedPlan && selectedprofile) {
       setProposta({
         perfil_id: selectedprofile.id,
         plano_id: selectedPlan.id,
-
 
         addons: addons.filter(addon => addonQuantities[addon.id] > 0).map(addon => ({
           addon_id: addon.id,
@@ -43,8 +38,6 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
       });
     }
   }, [selectedPlan, selectedprofile]);
-
-
 
   const fetchData = async () => {
     try {
@@ -109,9 +102,9 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
                     <Listbox.Option
                       key={profile.id}
                       value={profile}
-                      onChange={() => handleChange}
                       className={({ active }) =>
-                        `relative cursor-default select-none py-2 pl-10 pr-4 ${active ? 'bg-blue-100 text-blue-900' : 'text-gray-900'
+                        `relative cursor-default select-none py-2 pl-10 pr-4 ${
+                          active ? 'bg-blue-100 text-blue-900' : 'text-gray-900'
                         }`
                       }
                     >
@@ -157,29 +150,11 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
                 </Listbox.Button>
                 <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 focus:outline-none">
 
-                  {plans.filter(plan => plan.active === true).map((plan) => (
+                  {plans.map((plan) => (
                     <Listbox.Option
                       key={plan.id}
                       value={plan}
-                      onChange={() => handleChange}
-                      className={({ active }) =>
-                        `relative cursor-default select-none py-2 pl-10 pr-4 ${active ? 'bg-blue-100 text-blue-900' : 'text-gray-900'
-                        }`
-                      }
-                    >
-                      {({ selected }) => (
-                        <span className={`block truncate font-normal'}`}>
-                          {plan.nome}
-                        </span>
-                      )}
-                    </Listbox.Option>
-                  ))}
-
-                  {plans.filter(plan => plan.active === true).map((plan) => (
-                    <Listbox.Option
-                      key={plan.id}
-                      value={plan}
-                      onChange={() => handleChange}
+                      onChange={setSelectedPlan}
                       className={({ active }) =>
                         `relative cursor-default select-none py-2 pl-10 pr-4 ${active ? 'bg-blue-100 text-blue-900' : 'text-gray-900'
                         }`
@@ -206,7 +181,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
               {addons.filter(addon => viewInactive && !addon.active).map((addon) => (
                 <div key={addon.id} className="flex justify-between items-center">
                   <span>
-                    {addon.nome.replace(/([A-Z])/g, ' $1')} ({formatCurrency(addon.valor)})
+                    {addon.nome.replace(/([A-Z])/g, ' $1')} (R$ {addon.valor})
                   </span>
 
                 </div>
@@ -220,7 +195,6 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
                   <input
                     className="w-12 border rounded text-center"
                     value={addonQuantities[addon.id] || 0}
-                    onChange={() => handleChange}
                     onChange={(e) =>
                       setAddonQuantities({
                         ...addonQuantities,
@@ -239,42 +213,18 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
         <div className="mt-6 rounded-md border">
           <div className="p-4">
             <h3 className="font-semibold">Resumo da Assinatura</h3>
-            <p className="mt-2">Plano: {selectedPlan?.nome} - {formatCurrency(selectedPlan?.valor) || 0}</p>
-            <p>Add-ons: R$ {totalAddons.toFixed(2)}</p>
+            <p className="mt-2">Plano: {selectedPlan?.nome} - { formatCurrency(selectedPlan?.valor)}</p>
+            <p>Add-ons: {formatCurrency(totalAddons)}</p>
+            <h2 className="text-xl font-bold mt-2">
+              Valor Total: {formatCurrency((selectedPlan?.valor || 0) + totalAddons)}/mês
+            </h2>
           </div>
-
-          <input
-            type="number"
-            name="desconto"
-            // value={proposta.desconto}
-            onChange={handleChange}
-            min="0"
-            min="0"
-            // className={inputClass}
-            required
-          />
-
-
-          <select
-            name="validade"
-            value={proposta.validade}
-            // onChange={handleChange}
-            className="w-full border rounded py-2 pl-3 pr-10 text-left focus:outline-none focus-visible:border-blue-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2"
-          >
-            {[...Array(10).keys()].map((num) => (
-              <option key={num + 1} value={num + 1}>
-                {num + 1}
-              </option>
-            ))}
-          </select>
-
-
-          <h2 className="text-xl font-bold mt-2">
-            Valor Total: {formatCurrency(((selectedPlan?.valor || 0) + totalAddons).toFixed(2))}/mês
-          </h2>
-
         </div>
-      </div >
 
+        {/* <div className="flex justify-between mt-4"> */}
+        {/* <button className="px-4 py-2 border rounded-md hover:bg-gray-100" onClick={handleCancel} >Cancelar</button> */}
+        {/* <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Dados do Cliente</button> */}
+        {/* </div> */}
+      </div>
   );
 }
