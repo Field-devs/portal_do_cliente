@@ -8,7 +8,6 @@ import { supabase } from "../../lib/supabase";
 import { useAuth } from "../../components/AuthProvider";
 import { AlertDialog, AskDialog, ErrorDialog } from "../../components/Dialogs/Dialogs";
 import { validateEmail } from "../../utils/Validation";
-import CircularWait from "../../components/CircularWait";
 
 export default function ProposalForm({ id }: FormProps) {
   const [step, setStep] = useState(0);
@@ -65,10 +64,10 @@ export default function ProposalForm({ id }: FormProps) {
       {step === 0 && <ProposalFormPlano proposta={proposta} setProposta={setProposta} />}
       {step === 1 && <ProposalFormCliente proposta={proposta} setProposta={setProposta} />}
       {step === 2 && <ProposalFormResume proposta={proposta} setProposta={setProposta} />}
-      <div className="flex justify-between mt-4">
+      <div className="flex justify-end mt-4 space-x-2">
         {step > 0 && <button className="px-4 py-2 border rounded-md hover:bg-gray-100" onClick={handleBack}>Voltar</button>}
-        {step == 0 && <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={handleNext}>Clientes</button>}
-        {step == 1 && <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={handleSubmit}>Confirmar</button>}
+        {step == 0 && <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={handleNext}>Avançar</button>}
+        {step == 1 && <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={handleSubmit}>Confirmar Proposta</button>}
         {/* {step == 2 && <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={handleSubmit}>Salvar</button>} */}
       </div>
     </>

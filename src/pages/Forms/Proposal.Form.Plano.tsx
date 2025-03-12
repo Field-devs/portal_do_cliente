@@ -220,11 +220,6 @@ export default function ProposalFormPlano({ onSubmit }: FormProps) {
             </h2>
           </div>
         </div>
-
-        {/* <div className="flex justify-between mt-4"> */}
-        {/* <button className="px-4 py-2 border rounded-md hover:bg-gray-100" onClick={handleCancel} >Cancelar</button> */}
-        {/* <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Dados do Cliente</button> */}
-        {/* </div> */}
       </div>
   );
 }
