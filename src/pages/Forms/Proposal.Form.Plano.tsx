@@ -58,8 +58,16 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
       if (data) {
         setAddons(data);
       }
+      // SuperAdmin
 
-      var { data } = await supabase.from("perfil").select("*").gt("id", 2);
+
+
+      var { data } = await supabase.from("perfil").select("*")
+        .gt("id", user?.perfil_id)
+        .neq("id", 1)
+        .neq("id", user?.perfil_id == 3 ? 0 : 4)
+        ;
+
       if (data) {
         setProfiles(data);
         setSelectedProfile(data[0]);

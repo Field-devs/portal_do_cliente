@@ -188,7 +188,8 @@ export default function Portal() {
             <Route path="profile" element={<Profile />} />
 
             {/* <Route path="/proposal-confirm:id" element={<ProposalFormConfirm />} /> */}
-            <Route path="form/:id" element={<ProposalFormConfirm />} />
+            <Route path="form/" element={<ProposalFormConfirm />} />
+            {/* <Route path="form/:id" element={<ProposalFormConfirm />} /> */}
           </Routes>
         </div>
       </div>
