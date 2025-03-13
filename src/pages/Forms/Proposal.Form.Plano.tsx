@@ -65,6 +65,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
       var { data } = await supabase.from("perfil").select("*")
         .gt("id", user?.perfil_id)
         .neq("id", 1)
+        .neq("id", 2)
         .neq("id", user?.perfil_id == 3 ? 0 : 4)
         ;
 
@@ -107,8 +108,28 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
       <div className="max-w-4xl mx-auto p-3 bg-white shadow-md rounded-lg">
 
         <div className="grid grid-cols-1 gap-1">
-          {/* Coluna de Planos */}
+
+          <div className="grid grid-cols-2 gap-6">
+            <div>
+              <h1 className="text-2xl font-bold">Proposta</h1>
+            </div>
+            <div>
+              <div className="flex flex-col items-end my-4 gap-1">
+                <span className="font-medium">Ver Inativos</span>
+                <SwitchFrag
+                  onClick={handleInactive}
+                  checked={viewInactive}
+                />
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+
+        <div className="grid grid-cols-2 gap-6">
           <div className="relative z-50"> {/* Added z-50 to ensure dropdown appears on top */}
+
             <h3 className="font-semibold">Tipo de Cliente</h3>
             <Listbox value={selectedprofile} onChange={setSelectedProfile}>
               <div className="relative mt-2">
@@ -137,26 +158,10 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
                 </Listbox.Options>
               </div>
             </Listbox>
-          </div>
-        </div>
 
-        <div className="grid grid-cols-2 gap-6">
-          <div>
-            <h1 className="text-2xl font-bold">Proposta</h1>
           </div>
-          <div>
-            <div className="flex flex-col items-end my-4 gap-1">
-              <span className="font-medium">Ver Inativos</span>
-              <SwitchFrag
-                onClick={handleInactive}
-                checked={viewInactive}
-              />
-            </div>
-          </div>
-        </div>
 
 
-        <div className="grid grid-cols-2 gap-6">
           {/* Coluna de Planos */}
           <div>
             <h3 className="font-semibold">Plano</h3>
@@ -233,7 +238,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
 
 
         <div className="grid grid-cols-12 gap-6">
-            <div className="col-span-3">
+          <div className="col-span-3">
             <h3 className="font-semibold">Desconto</h3>
             <input
               name="desconto"
@@ -241,7 +246,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
               value={proposta.desconto}
               onChange={(e) => handleChange({ ...e, target: { ...e.target, value: Number(e.target.value) } })}
             />
-            </div>
+          </div>
 
           <div className="col-span-3">
             <h3 className="font-semibold">Validade (dias)</h3>

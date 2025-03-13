@@ -66,19 +66,19 @@ export function ModalForm({
       aria-labelledby={title ? 'modal-title' : undefined}
     >
       <div
-        className={`bg-[#1E293B]/90 backdrop-blur-sm border border-gray-700/50 p-6 w-full mx-4 ${maxWidthClasses[maxWidth]} max-h-[90vh] overflow-y-auto`}
+        className={`bg-white backdrop-blur-sm border border-gray-700/50 p-6 w-full mx-4 ${maxWidthClasses[maxWidth]} max-h-[90vh] overflow-y-auto`}
         onClick={e => e.stopPropagation()}
       >
         {title && (
-          <div className="flex items-center space-x-3 mb-6">
+          <div className="flex items-center space-x-1 mb-1">
             {icon && (
-              <div className="bg-blue-400/10 p-3 rounded-xl">
+              <div className="p-3 rounded-xl">
                 {/* {React.createElement(icon, { className: 'h-6 w-6 text-blue-400' })} */}
                 {icon}
               </div>
             )}
             <h2 id="modal-title" className="text-xl font-semibold text-white">
-              {title}
+              {/* {title} */}
             </h2>
           </div>
         )}

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎉 Quase Lá! Ative Seu Portal WiseApp, [Nome do Cliente]!</title>
+    <title>🎉 Quase Lá! Ative Seu Portal WiseApp, {{ $json.nome }}!</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -167,27 +167,27 @@
             <img src="https://storage.wiseapp360.com/typebot/public/workspaces/clwl6fdyf000511ohlamongyl/typebots/cm683siyl000dm4kxlrec9tb8/results/tajq5g29353sy132meecvg3a/blocks/cz78pvc8stcisz1y8sq2khj1/Wiseapp%20logo.png"
                 alt="WiseApp Logo">
         </div>
-        <h1>🎉 Quase Lá! Ative Seu Portal WiseApp, [Nome do Cliente]!</h1>
+        <h1>🎉 Quase Lá! Ative Seu Portal WiseApp, <strong>{{ $json.nome }}</strong> !</h1>
         <div class="content">
             <p>Você está a um passo de transformar a gestão da sua equipe! Finalize seu cadastro e ative o serviço para
                 entrar no seu Portal WiseApp.</p>
         </div>
 
         <div style="text-align: center;">
-            <a href="[LINK PARA O FORMULÁRIO DE CADASTRO]" class="button">Complete seu cadastro e faça seu pagamento 🚀</a>
+            <a href="http://localhost:3000/proposal-confirm?id={{ $json.id }}" class="button" style="background-color: #fff; color: #0080FF; border: 2px solid #0080FF;">Complete seu cadastro e faça seu pagamento 🚀</a>
         </div>
 
         <div class="section">
             <h3>Seu Plano:</h3>
             <ul class="list">
                 <li>
-                    <span class="highlight">Plano:</span> [Nome do Plano]
+                    <span class="highlight">Plano:</span>{{ $json.plano_nome }}
                 </li>
                 <li>
-                    <span class="highlight">Add-ons:</span> [Add-on 1], [Add-on 2], [Add-on 3]
+                    <span class="highlight">Add-ons:</span>{{ $json.caixa_add_title }} {{ $json.atendentes_title }} {{ $json.atendentes_title }}
                 </li>
                 <li>
-                    <span class="highlight">Valor Total:</span> R$ [Valor Total]
+                    <span class="highlight">Valor Total:</span> R$ {{ $json.total }}
                 </li>
             </ul>
         </div>
