@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useEscapeKey } from '../../hooks/useEscapeKey';
+import { AskDialog } from '../Dialogs/Dialogs';
 
 interface ModalProps {
   isOpen: boolean;
@@ -53,9 +54,11 @@ export function ModalForm({
   return (
     <div
       className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
-      onClick={(e) => {
+      onMouseDown={async (e) => {
         if (e.target === e.currentTarget) {
-          onClose();
+          let response = await AskDialog('Deseja realmente fechar o Formulário?', 'Fechar');
+          if (response.value === true)
+            onClose();
         }
       }}
       role="dialog"
