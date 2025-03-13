@@ -17,6 +17,7 @@ import PlanForm from '../Forms/PlanForm';
 import AddonForm from '../Forms/AddonForm';
 import ActionsButtons from '../../components/ActionsData';
 import { UpdateSingleField } from '../../utils/supageneric';
+import CircularWait from '../../components/CircularWait';
 
 type ContentType = 'plans' | 'addons';
 
@@ -53,7 +54,7 @@ export default function PlanList() {
         .eq('user_id', user?.id)
         .order('dt_add', { ascending: false });
 
-      if (plansError) throw plansError;
+        if (plansError) throw plansError;
 
       const { data: addonsData, error: addonsError } = await supabase
         .from('plano_addon')
@@ -65,6 +66,7 @@ export default function PlanList() {
 
       setPlans(plansData || []);
       setAddons(addonsData || []);
+      setLoading(false);
     } catch (err) {
       console.error('Error fetching data:', err);
     } finally {
@@ -87,8 +89,6 @@ export default function PlanList() {
         setShowAddonForm(true);
       }
     }
-
-
   };
 
   const handleNewClick = () => {
@@ -135,7 +135,7 @@ export default function PlanList() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand"></div>
+        <CircularWait message="Planos e Addons" />
       </div>
     );
   }

@@ -18,6 +18,7 @@ import ActionsButtons from '../../components/ActionsData';
 import { UpdateSingleField } from '../../utils/supageneric';
 import ComboFrag from '../../components/Fragments/ComboFrag';
 import { useAuth } from '../../components/AuthProvider';
+import CircularWait from '../../components/CircularWait';
 
 export default function ContractList() {
   const { user, profile: role, signOut } = useAuth();
@@ -37,10 +38,10 @@ export default function ContractList() {
   const badgeClass = "text-xs font-medium bg-blue-50 dark:bg-blue-400/10 text-blue-600 dark:text-blue-400 px-2 py-1 rounded-full";
 
   const optContract = [
-    {key: "AT",label: "Ativo"},
-    {key: "IN",label: "Inativo"},
-    {key: "CA",label: "Cancelado"},
-    {key: "SP",label: "Suspenso"},
+    { key: "AT", label: "Ativo" },
+    { key: "IN", label: "Inativo" },
+    { key: "CA", label: "Cancelado" },
+    { key: "SP", label: "Suspenso" },
   ];
 
   useEffect(() => {
@@ -49,6 +50,7 @@ export default function ContractList() {
 
   const fetchData = async () => {
     try {
+      setLoading(true);
       const { data, error } = await supabase
         .from('v_contrato')
         .select('*')
@@ -58,6 +60,7 @@ export default function ContractList() {
 
       if (error) throw error;
       setContracts(data || []);
+      setLoading(false);
     } catch (err) {
       console.error('Error fetching data:', err);
     } finally {
@@ -114,15 +117,16 @@ export default function ContractList() {
     return matchesSearch && matchesStatus && matchesDate();
   });
 
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand"></div>
+        <CircularWait message="Contratos" />
       </div>
     );
   }
 
-  const handleStatusChange = async(id: string, status: string) => {
+  const handleStatusChange = async (id: string, status: string) => {
     //console.log("handleStatusChange", id, status);
     let response = await UpdateSingleField("contrato", "id", id, "status", status);
     return response;
@@ -308,20 +312,20 @@ export default function ContractList() {
                       {contract.plano_nome}
                     </div>
                   </td>
-                  
+
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-base text-light-text-secondary dark:text-gray-300">
                       -
                     </div>
                   </td>
-                  
+
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex justify-center">
-                    <ComboFrag 
-                      options={optContract} 
-                      value={contract.status}
-                      onChange={(value:string) => handleStatusChange(contract.id, value)}
-                     />
+                      <ComboFrag
+                        options={optContract}
+                        value={contract.status}
+                        onChange={(value: string) => handleStatusChange(contract.id, value)}
+                      />
                     </div>
                   </td>
 

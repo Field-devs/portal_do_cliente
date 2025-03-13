@@ -64,15 +64,15 @@ export default function ProposalsList() {
         .select('*')
         .eq('user_id', user?.id)
         .order('id', { ascending: false });
+      console.log(data);
 
       if (error) throw error;
       setPropostas(data || []);
 
       // Retorna com os Planos
-      const { data : planData, error: planosError } = 
-      await supabase.from('plano').select('*').eq("user_id", user?.id);
+      const { data: planData, error: planosError } =
+        await supabase.from('plano').select('*').eq("user_id", user?.id);
       if (planosError) throw planosError;
-      console.log(planData);
       setPlanscount(planData.length);
 
     } catch (error) {
@@ -110,7 +110,7 @@ export default function ProposalsList() {
     setOpenProposal(true);
   };
 
-  const handleOnLock = async(id: string, status: boolean) => {
+  const handleOnLock = async (id: string, status: boolean) => {
     let response = await UpdateSingleField("proposta", "id", id, "active", !status);
     return response;
   };
@@ -128,7 +128,7 @@ export default function ProposalsList() {
   if (loading || planosLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <CircularWait message="Carregando propostas, por favor aguarde..." />
+        <CircularWait message="Propostas" />
       </div>
     );
   }
@@ -142,7 +142,7 @@ export default function ProposalsList() {
         maxWidth='2xl'
       >
         <ProposalForm
-        
+
           onCancel={() => setOpenProposal(false)}
         />
 
@@ -168,24 +168,24 @@ export default function ProposalsList() {
               >
                 <MoreVertical className="h-5 w-5" />
               </button>
-              
+
               {isMenuOpen && (
                 <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5">
                   <div className="py-1">
                     <button
-                      onClick={() => {/* handle action 1 */}}
+                      onClick={() => {/* handle action 1 */ }}
                       className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
                     >
                       Exportar Propostas
                     </button>
                     <button
-                      onClick={() => {/* handle action 2 */}}
+                      onClick={() => {/* handle action 2 */ }}
                       className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
                     >
                       Filtros Avançados
                     </button>
                     <button
-                      onClick={() => {/* handle action 3 */}}
+                      onClick={() => {/* handle action 3 */ }}
                       className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
                     >
                       Configurações
@@ -310,30 +310,31 @@ export default function ProposalsList() {
 
               <thead>
                 <tr className="bg-light-secondary dark:bg-[#0F172A]/60">
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-6 py-2 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                     Data
                   </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
-                    CNPJ/CPF
+                  <th className="px-6 py-2 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                    Tipo
                   </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+
+                  <th className="px-6 py-2 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                     Cliente
                   </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-6 py-2 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                     Email
                   </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-6 py-2 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                     Fone
                   </th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-6 py-2 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                     Validade
                   </th>
-                  <th className="px-6 py-4 text-right text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-6 py-2 text-right text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                     Valor
                   </th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-6 py-2 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                   </th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-6 py-2 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                   </th>
                 </tr>
 
@@ -344,37 +345,40 @@ export default function ProposalsList() {
                     key={proposta.id}
                     className="hover:bg-light-secondary dark:hover:bg-[#0F172A]/40 transition-colors"
                   >
-                    <td className="px-6 py-4 whitespace-nowrap">
+
+                    <td className="px-6 py-2 whitespace-nowrap">
                       <div className="text-base text-light-text-secondary dark:text-gray-300">
                         {new Date(proposta.dt).toLocaleDateString('pt-BR')}
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+
+                    <td className="px-6 py-2 whitespace-nowrap">
                       <div className="text-base text-light-text-secondary dark:text-gray-300">
-                        {formatCNPJCPF(proposta.cnpjcpf)}
+                        {proposta.perfil_nome}
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+
+                    <td className="px-6 py-2 whitespace-nowrap">
                       <div className="text-base font-medium text-light-text-primary dark:text-gray-100">
                         {proposta.nome}
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-6 py-2 whitespace-nowrap">
                       <div className="text-base text-light-text-secondary dark:text-gray-300">
                         {proposta.email}
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-6 py-2 whitespace-nowrap">
                       <div className="text-base text-light-text-secondary dark:text-gray-300">
                         {formatPhone(proposta.fone)}
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-center">
+                    <td className="px-6 py-2 whitespace-nowrap text-center">
                       <div className="text-base text-light-text-secondary dark:text-gray-300">
                         {proposta.validade} {proposta.validade === 1 ? 'Dia' : 'Dias'}
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right">
+                    <td className="px-6 py-2 whitespace-nowrap text-right">
                       <div className="text-base font-medium text-light-text-primary dark:text-gray-100">
                         {new Intl.NumberFormat('pt-BR', {
                           style: 'currency',
@@ -382,7 +386,7 @@ export default function ProposalsList() {
                         }).format(proposta.total)}
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-6 py-2 whitespace-nowrap">
                       <div className="flex justify-center">
                         <span className={`px-3 py-1 text-sm font-medium rounded-full w-24 text-center ${proposta.status === 'PE'
                           ? 'badge-warning'
@@ -394,8 +398,8 @@ export default function ProposalsList() {
                         </span>
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                          
+                    <td className="px-6 py-2 whitespace-nowrap">
+
                       <ActionsButtons
                         onEdit={() => handleEdit(proposta.id)}
                         onLocker={() => handleOnLock(proposta.id, proposta.active)}

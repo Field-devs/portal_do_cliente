@@ -33,6 +33,7 @@ interface Proposta {
   dt_update: string | null; // TIMESTAMP (ISO 8601 string)
   user_add: string | null;
   user_update: string | null;
+  perfil_nome: string;
 }
 
 interface PropostaDTO {

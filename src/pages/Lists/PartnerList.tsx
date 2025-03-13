@@ -17,6 +17,7 @@ import ActionsButtons from '../../components/ActionsData';
 import AVAForm from '../Forms/AVAForm';
 import { UpdateSingleField } from '../../utils/supageneric';
 import { format } from 'date-fns';
+import CircularWait from '../../components/CircularWait';
 
 type PartnerType = 'CF' | 'AVA' | 'AF';
 
@@ -61,10 +62,10 @@ export default function PartnerList() {
     } else if (tipo === 'AF') {
       setTitle('Afiliados');
     }
-
   }, [tipo]);
 
   const fetchClientes = async () => {
+    setLoading(true);
     try {
       const { data, error } = await supabase
         .from('cliente')
@@ -116,14 +117,6 @@ export default function PartnerList() {
   // };
 
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500/80"></div>
-      </div>
-    );
-  }
-
   const handleOnLock = async (id: string, status: boolean) : Promise<boolean> => {
       UpdateSingleField("cliente", "id", id, "active", !status);
       return true;
@@ -132,6 +125,14 @@ export default function PartnerList() {
   function handleEdit(value: Partner): void {
     setEditingPartner(value);
     setShowAfilate(true);
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <CircularWait message="Contas" />
+      </div>
+    );
   }
 
   return (

@@ -145,7 +145,7 @@ export default function Portal() {
 
         {/* Footer Actions */}
         <div className="p-3 border-t border-light-border dark:border-dark-border">
-          <div className="flex justify-center items-center space-x-2">
+          <div className={`flex ${isExpanded ? 'justify-center items-center space-x-2' : 'flex-col items-center space-y-2'}`}>
             <button
               onClick={toggleTheme}
               className="p-2 rounded-lg text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-light-secondary dark:hover:bg-dark-secondary"

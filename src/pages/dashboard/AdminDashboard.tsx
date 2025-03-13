@@ -1,6 +1,6 @@
-import { 
-  Users, 
-  FileText, 
+import {
+  Users,
+  FileText,
   DollarSign,
   TrendingUp,
   UserPlus,
@@ -21,6 +21,7 @@ import {
 import { supabase } from '../../lib/supabase';
 import { useEffect, useState } from 'react';
 import { da } from 'date-fns/locale';
+import CircularWait from '../../components/CircularWait';
 
 const revenueData = [
   { month: 'Jan', revenue: 12000, projected: 15000 },
@@ -39,10 +40,10 @@ const acquisitionData = [
   { month: 'Jun', cf: 25, ava: 12 },
 ];
 
-interface IDashboardData  {
+interface IDashboardData {
   totalProp: number;
   totalPropPerc: number;
-  
+
   activeCli: number;
   activeCliNews: number;
 
@@ -51,10 +52,7 @@ interface IDashboardData  {
 
   activeParc: number;
   activeParcNew: number;
-
-
-  receitaProjecao : JSON[] | any;
-
+  receitaProjecao: JSON[] | any;
 }
 
 
@@ -69,23 +67,25 @@ export default function AdminDashboard() {
   const badgeClass = "text-xs font-medium bg-blue-50 dark:bg-blue-400/10 text-blue-600 dark:text-blue-400 px-2 py-1 rounded-full";
 
   const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   async function fetchData() {
+    setLoading(true);
     const { data, error } = await supabase
       .rpc('fn_dashboard').single();
-      if (error) {
-        console.error("Error fetching data:", error);
-      }
-      if (data) {
-        setUserData(data);
-
-      }
+    if (error) {
+      console.error("Error fetching data:", error);
+    }
+    if (data) {
+      setUserData(data);
+    }
+    setLoading(false);
   }
-  
-  let DashboardData : IDashboardData = {
+
+  let DashboardData: IDashboardData = {
     totalProp: userData?.r_total_prop || 0,
     totalPropPerc: userData?.r_total_prop_perc || 0,
-    
+
     activeCli: userData?.r_active_cli || 0,
     activeCliNews: userData?.r_active_cli_news || 0,
 
@@ -95,15 +95,23 @@ export default function AdminDashboard() {
     activeParc: userData?.r_active_parc || 0,
     activeParcNew: userData?.r_active_parc_new || 0,
 
-    
-    receitaProjecao : userData?.r_receita_projecao,
-//    receitaProjecao : userData ? JSON.parse(userData.receitaProjecao) : [],
+
+    receitaProjecao: userData?.r_receita_projecao,
+    //    receitaProjecao : userData ? JSON.parse(userData.receitaProjecao) : [],
   }
 
 
   useEffect(() => {
     fetchData();
   }, []);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <CircularWait message="DashBoard Financeiro" />
+      </div>
+    );
+  }
 
   return (
     <div className="p-6">
@@ -196,9 +204,9 @@ export default function AdminDashboard() {
               <BarChart data={DashboardData.receitaProjecao}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#1E293B" />
                 <XAxis dataKey="month" stroke="#64748B" />
-                <YAxis 
+                <YAxis
                   stroke="#64748B"
-                  tickFormatter={(value) => 
+                  tickFormatter={(value) =>
                     new Intl.NumberFormat('pt-BR', {
                       style: 'currency',
                       currency: 'BRL',
@@ -206,7 +214,7 @@ export default function AdminDashboard() {
                     }).format(value)
                   }
                 />
-                <Tooltip 
+                <Tooltip
                   formatter={(value: number) =>
                     new Intl.NumberFormat('pt-BR', {
                       style: 'currency',
@@ -244,7 +252,7 @@ export default function AdminDashboard() {
                 <CartesianGrid strokeDasharray="3 3" stroke="#1E293B" />
                 <XAxis dataKey="month" stroke="#64748B" />
                 <YAxis stroke="#64748B" />
-                <Tooltip 
+                <Tooltip
                   contentStyle={{
                     backgroundColor: '#0F172A',
                     border: 'none',
@@ -252,19 +260,19 @@ export default function AdminDashboard() {
                     color: '#F1F5F9'
                   }}
                 />
-                <Line 
-                  type="monotone" 
-                  dataKey="cf" 
-                  name="CFs" 
-                  stroke="#2563EB" 
+                <Line
+                  type="monotone"
+                  dataKey="cf"
+                  name="CFs"
+                  stroke="#2563EB"
                   strokeWidth={2}
                   dot={{ r: 4, fill: "#2563EB" }}
                 />
-                <Line 
-                  type="monotone" 
-                  dataKey="ava" 
-                  name="AVAs" 
-                  stroke="#93C5FD" 
+                <Line
+                  type="monotone"
+                  dataKey="ava"
+                  name="AVAs"
+                  stroke="#93C5FD"
                   strokeWidth={2}
                   dot={{ r: 4, fill: "#93C5FD" }}
                 />

@@ -3,7 +3,7 @@ import { authenticateUser, supabase } from '../lib/supabase';
 import { useNavigate } from 'react-router-dom';
 import { User } from '../Models/Uses';
 import Profile from '../Models/Perfil';
-import { ErrorDialog } from './Dialogs/Dialogs';
+import { AskDialog, ErrorDialog } from './Dialogs/Dialogs';
 
 
 interface AuthContextType {
@@ -62,12 +62,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signOut = async () => {
     try {
-      localStorage.removeItem('user');
-      setUser(null);
-      setProfile(null);
-      navigate('/login');
+      if ((await AskDialog('Deseja realmente sair da Aplicação ?', 'Sair')).isConfirmed) {
+        localStorage.removeItem('user');
+        setUser(null);
+        setProfile(null);
+        navigate('/login');
+      }
     } catch (error) {
-      console.error('Sign out error:', error);
+      ErrorDialog('Erro ao sair da aplicação', 'Erro');
       throw error;
     }
   };

@@ -23,6 +23,7 @@ import {
   BarChart,
   Bar
 } from 'recharts';
+import CircularWait from '../../components/CircularWait';
 
 interface Invoice {
   proposta_id: string;
@@ -174,7 +175,7 @@ export default function FinancialDashBoard() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand"></div>
+        <CircularWait message="DashBoard Financeiro" />
       </div>
     );
   }

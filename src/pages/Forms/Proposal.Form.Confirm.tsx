@@ -51,8 +51,8 @@ export default function ProposalFormConfirm() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen py-2">
-      <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+    <div className="flex flex-col items-center justify-center min-h-screen py-2 bg-gray-100">
+      <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full max-w-4xl">
         <h2 className="text-2xl font-bold mb-4">Confirmação de Cadastro</h2>
 
         <div className="mb-4">
