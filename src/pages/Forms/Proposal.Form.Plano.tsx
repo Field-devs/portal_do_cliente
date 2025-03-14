@@ -43,6 +43,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
         }))
       });
     }
+    console.log(proposta.desconto);
 
   }, [selectedPlan, selectedprofile]);
 
@@ -58,10 +59,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
       if (data) {
         setAddons(data);
       }
-      // SuperAdmin
-
-
-
+      
       var { data } = await supabase.from("perfil").select("*")
         .gt("id", user?.perfil_id)
         .neq("id", 1)
@@ -93,7 +91,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
   useEffect(() => {
     setProposta({
       ...proposta,
-      total: proposta.subtotal + totalAddons
+      total: proposta.subtotal + totalAddons - proposta.desconto,
     });
   }, [totalAddons]);
 
@@ -244,7 +242,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
               name="desconto"
               className="w-full border rounded p-2"
               value={proposta.desconto}
-              onChange={(e) => handleChange({ ...e, target: { ...e.target, value: Number(e.target.value) } })}
+              onChange={() => handleChange}
             />
           </div>
 
