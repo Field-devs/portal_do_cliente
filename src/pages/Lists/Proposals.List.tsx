@@ -1,11 +1,9 @@
 import { useState, useEffect } from 'react';
 import Proposta from '../../Models/Propostas';
-import { formatPhone, formatCNPJCPF } from '../../utils/formatters';
 import {
   Plus,
   Search,
   Filter,
-  Calendar,
   FileText,
   Users,
   TrendingUp,
@@ -21,10 +19,7 @@ import ProposalForm from '../Forms/Proposal.Form';
 import ActionsButtons from '../../components/ActionsData';
 import { UpdateSingleField } from '../../utils/supageneric';
 import { useAuth } from '../../components/AuthProvider';
-import ProposalFormPlano from '../Forms/Proposal.Form.Plano';
-import { AlertDialog, AskDialog, ErrorDialog } from '../../components/Dialogs/Dialogs';
-import Plan from '../../Models/Plan';
-import Plans from '../dashboard/Plans';
+import { AlertDialog,ErrorDialog } from '../../components/Dialogs/Dialogs';
 import CircularWait from '../../components/CircularWait';
 
 export default function ProposalsList() {

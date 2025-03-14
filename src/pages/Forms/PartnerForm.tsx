@@ -6,13 +6,8 @@ import {
   Building2,
   Users,
   UserCheck,
-  Copy,
-  CheckCircle
 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
-import { format } from 'date-fns';
-import CommercialAffiliateForm from './CommercialAffiliateForm';
-import { formatPhone, formatCNPJCPF } from '../../utils/formatters';
 
 type PartnerType = 'cf' | 'ava' | 'commercial';
 

@@ -7,7 +7,8 @@ import {
   UserCheck,
   Copy,
   CheckCircle,
-  UserPlus
+  UserPlus,
+  Plus
 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import CommercialAffiliateForm from '../Forms/CommercialAffiliateForm';
@@ -107,14 +108,9 @@ export default function PartnerList() {
       return matchesSearch && matchesStatus;
     });
 
-  // const handleClickNew = () => {
-  //   if (tipo === 'AF') {
-  //     setShowAfilate(true);
-  //   } else if (tipo === 'AVA') {
-  //     setShowAVA(true);
-  //   }
-  //   console.log(tipo);
-  // };
+  const handleClickNew = () => {
+      setShowAfilate(true);
+  };
 
 
   const handleOnLock = async (id: string, status: boolean) : Promise<boolean> => {
@@ -139,7 +135,7 @@ export default function PartnerList() {
     <div className="p-6">
       <div className="flex justify-between items-center mb-8">
         <h1 className={titleClass}>{title}</h1>
-        {/* {tipo == 'AF' && (
+        {tipo == 'AF' && (
           <button
             onClick={() => handleClickNew()}
             className="flex items-center px-4 py-2 bg-brand hover:bg-brand/90 text-white transition-colors"
@@ -147,7 +143,7 @@ export default function PartnerList() {
             <Plus className="h-5 w-5 mr-2" />
             {tipo === 'AF' ? 'Adicionar Afiliado' : 'Adicionar AVA'}
           </button>
-        )} */}
+        )}
       </div>
 
       {/* Search and Tabs */}

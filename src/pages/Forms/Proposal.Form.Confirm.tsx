@@ -1,175 +1,375 @@
-import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import React, { useState } from 'react';
+import { useAuth } from '../../components/AuthProvider';
+import { supabase } from '../../lib/supabase';
+import {
+  Mail,
+  User,
+  Phone,
+  Percent,
+  DollarSign,
+  Calendar,
+  AlertCircle,
+  Loader2,
+  Save,
+  UserCheck
+} from 'lucide-react';
+import { OUTR_BLACK_IMAGE_URL } from '../../utils/consts';
 
-export default function ProposalFormConfirm() {
-  const { id } = useParams();
-  const [proposalData, setProposalData] = useState<any>(null);
+interface CommercialAffiliateFormProps {
+  onSuccess: () => void;
+  onCancel: () => void;
+  initialData?: {
+    id: string;
+    nome: string;
+    email: string;
+    fone: number;
+    desconto: number;
+    comissao: number;
+    vencimento: string;
+    active: boolean;
+  };
+}
 
-  useEffect(() => {
-    // Fetch data based on ID (replace with your actual API call)
-    const fetchData = async () => {
-      try {
-        // const response = await fetch(`/api/proposals/${id}`);
-        // const data = await response.json();
-        // setProposalData(data);
-        // Mock data for testing
-        setProposalData({
-          plano_nome: "Plano Premium",
-          nome: "John Doe",
-          email: "john.doe@example.com",
-          nasc: "1990-01-01",
-          fone: "123-456-7890",
-          endereco: "123 Main St",
-          cnpjcpf: "12345678901234",
-          nome_finan: "Jane Doe",
-          fone_finan: "098-765-4321",
-          email_finan: "jane.doe@example.com",
-          endereco_finan: "456 Elm St",
-          cnpj_cpf_finan: "43210987654321",
-          caixas_entrada_qtde: 5,
-          atendentes_qtde: 3,
-          automacoes_qtde: 2,
-          kanban: true,
-          suporte_humano: false,
-          whatsapp_oficial: true,
-          subtotal: 1000.00,
-          desconto: 100.00,
-          total_addons: 200.00,
-          total: 1100.00,
-          validade: 1,
-        });
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
+// Common CSS classes
+const labelClass = "block text-sm font-medium text-black";
+const inputClass = "pl-12 block w-full border border-gray-700/50 bg-white text-black focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors";
+const iconGroupClass = "flex items-center space-x-3 mb-6";
+const iconGroupTitleClass = "h-6 w-6 text-blue-400";
+const iconInputClass = "absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400";
 
-    fetchData();
-  }, [id]);
+export default function ProposalFormaConfirm({ onSuccess, onCancel, initialData }: CommercialAffiliateFormProps) {
+  const { user } = useAuth();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  if (!proposalData) {
-    return <div>Loading...</div>;
-  }
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+  };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen py-2 bg-gray-100">
-      <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full max-w-4xl">
-        <h2 className="text-2xl font-bold mb-4">Confirmação de Cadastro</h2>
+    <div className="flex justify-center items-center mt-20">
 
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">Plano:</label>
-          <p>{proposalData.plano_nome}</p>
+      <form onSubmit={handleSubmit} className="space-y-6 max-w-8xl" >
+        {/* Cabecalho 1 */}
+        <div className={iconGroupClass}>
+          <img src={OUTR_BLACK_IMAGE_URL} alt="Logo" width="48" height="48" />
+          <h4 className="text-2xl font-medium text-blue-800">
+            CONFIRMAÇÃO DE PROPOSTA
+          </h4>
+        </div>
+        {/* Informacoes Basicas */}
+        <div className="bg-white backdrop-blur-sm p-10 border border-gray-700/50">
+
+          {/* Cabecalho 1 */}
+          <div className={iconGroupClass}>
+            <div className="bg-blue-400/10 p-3 rounded-xl">
+              <UserCheck className={iconGroupTitleClass} />
+            </div>
+            <h3 className="text-lg font-medium text-blue-800">
+              Informações do Cliente
+            </h3>
+          </div>
+
+          {/* CNPJ/Nome */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            {/* CPF/CNPJ */}
+            <div>
+              <label className={labelClass}>
+                CNPJ/CPF
+              </label>
+              <div className="mt-1 relative">
+                <User className={iconInputClass} />
+                <input
+                  type="text"
+                  name="nome"
+                  onChange={handleInputChange}
+                  className={inputClass}
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Nome */}
+            <div className="col-span-3">
+              <label className={labelClass}>
+                Nome
+              </label>
+              <div className="mt-1 relative">
+                <User className={iconInputClass} />
+                <input
+                  type="text"
+                  name="nome"
+                  onChange={handleInputChange}
+                  className={inputClass}
+                  required
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Email/Fone/Nascimento */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Email */}
+            <div>
+              <label className={labelClass}>
+                Email
+              </label>
+              <div className="mt-1 relative">
+                <Mail className={iconInputClass} />
+                <input
+                  type="email"
+                  name="email"
+                  onChange={handleInputChange}
+                  className={inputClass}
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Telefone */}
+            <div>
+              <label className={labelClass}>
+                Fone
+              </label>
+              <div className="mt-1 relative">
+                <Phone className={iconInputClass} />
+                <input
+                  type="tel"
+                  name="telefone"
+                  onChange={handleInputChange}
+                  placeholder="(00) 00000-0000"
+                  className={inputClass}
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Data de Nascimento */}
+            <div>
+              <label className={labelClass}>
+                Data de Nascimento
+              </label>
+              <div className="mt-1 relative">
+                <Calendar className={iconInputClass} />
+                <input
+                  type="date"
+                  name="vencimento"
+                  onChange={handleInputChange}
+                  min={new Date().toISOString().split('T')[0]}
+                  className={inputClass}
+                  required
+                />
+              </div>
+            </div>
+          </div>
+
+
+          {/* Endereco */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* CEP */}
+            <div>
+              <label className={labelClass}>
+                CEP
+              </label>
+              <div className="mt-1 relative">
+                <input
+                  type="text"
+                  name="cep"
+                  onChange={handleInputChange}
+                  className={inputClass}
+                  required
+                />
+              </div>
+            </div>
+            {/* Logradouro */}
+            <div className="col-span-2">
+              <label className={labelClass}>
+                Logradouro
+              </label>
+              <div className="mt-1 relative">
+                <input
+                  type="text"
+                  name="lograroudo"
+                  onChange={handleInputChange}
+                  className={inputClass}
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Cidade / UF */}
+
+            {/* Cidade */}
+            <div className="col-span-2">
+              <label className={labelClass}>
+                Cidade
+              </label>
+              <div className="mt-1 relative">
+                <input
+                  type="text"
+                  name="cidade"
+                  onChange={handleInputChange}
+                  className={inputClass}
+                  required
+                />
+              </div>
+            </div>
+
+            {/* UF */}
+            <div>
+              <label className={labelClass}>
+                UF
+              </label>
+              <div className="mt-1 relative">
+                <input
+                  type="text"
+                  name="cidade"
+                  onChange={handleInputChange}
+                  className={inputClass}
+                  required
+                />
+              </div>
+
+            </div>
+
+
+          </div>
+
+
         </div>
 
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">Nome:</label>
-          <p>{proposalData.nome}</p>
-        </div>
+        {/* Informacoes Financeiras */}
+        <div className="bg-white backdrop-blur-sm p-10 border border-gray-700/50">
 
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">Email:</label>
-          <p>{proposalData.email}</p>
-        </div>
+          {/* Cabecalho 1 */}
+          <div className={iconGroupClass}>
+            <div className="bg-blue-400/10 p-3 rounded-xl">
+              <DollarSign className={iconGroupTitleClass} />
+            </div>
+            <h3 className="text-lg font-medium text-blue-800">
+              Responsável Financeiro
+            </h3>
+          </div>
 
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">Data de Nascimento:</label>
-          <p>{proposalData.nasc}</p>
-        </div>
+          {/* CNPJ/Nome */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            {/* CPF/CNPJ */}
+            <div>
+              <label className={labelClass}>
+                CNPJ/CPF
+              </label>
+              <div className="mt-1 relative">
+                <User className={iconInputClass} />
+                <input
+                  type="text"
+                  name="nome"
+                  onChange={handleInputChange}
+                  className={inputClass}
+                  required
+                />
+              </div>
+            </div>
 
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">Telefone:</label>
-          <p>{proposalData.fone}</p>
-        </div>
+            {/* Nome */}
+            <div className="col-span-3">
+              <label className={labelClass}>
+                Nome
+              </label>
+              <div className="mt-1 relative">
+                <User className={iconInputClass} />
+                <input
+                  type="text"
+                  name="nome"
+                  onChange={handleInputChange}
+                  className={inputClass}
+                  required
+                />
+              </div>
+            </div>
+          </div>
 
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">Endereço:</label>
-          <p>{proposalData.endereco}</p>
-        </div>
+          {/* Email/Fone/Vencimento */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Email */}
+            <div>
+              <label className={labelClass}>
+                Email
+              </label>
+              <div className="mt-1 relative">
+                <Mail className={iconInputClass} />
+                <input
+                  type="email"
+                  name="email"
+                  onChange={handleInputChange}
+                  className={inputClass}
+                  required
+                />
+              </div>
+            </div>
 
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">CNPJ/CPF:</label>
-          <p>{proposalData.cnpjcpf}</p>
-        </div>
+            {/* Telefone */}
+            <div>
+              <label className={labelClass}>
+                Fone
+              </label>
+              <div className="mt-1 relative">
+                <Phone className={iconInputClass} />
+                <input
+                  type="tel"
+                  name="telefone"
+                  onChange={handleInputChange}
+                  placeholder="(00) 00000-0000"
+                  className={inputClass}
+                  required
+                />
+              </div>
+            </div>
 
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">Responsável Financeiro:</label>
-          <p>{proposalData.nome_finan}</p>
-        </div>
 
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">Telefone Financeiro:</label>
-          <p>{proposalData.fone_finan}</p>
-        </div>
+          </div>
 
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">Email Financeiro:</label>
-          <p>{proposalData.email_finan}</p>
         </div>
+        {/* Error Message */}
+        {error && (
+          <div className="bg-red-500/10 border border-red-500/20 p-4 flex items-center text-red-400">
+            <AlertCircle className="h-5 w-5 mr-2 flex-shrink-0" />
+            <p className="text-sm">{error}</p>
+          </div>
+        )}
 
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">Endereço Financeiro:</label>
-          <p>{proposalData.endereco_finan}</p>
+        {/* Action Buttons */}
+        <div className="flex justify-end space-x-3 pt-4">
+          <button
+            type="button"
+            onClick={onCancel}
+            className="px-4 py-2 bg-[#0F172A]/60 text-black hover:bg-[#0F172A]/40 transition-colors"
+            disabled={loading}
+          >
+            Cancelar
+          </button>
+          <button
+            type="submit"
+            className="px-4 py-2 bg-blue-500/80 hover:bg-blue-600/80 text-white transition-colors flex items-center"
+            disabled={loading}
+          >
+            {loading ? (
+              <>
+                <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+                Salvando...
+              </>
+            ) : (
+              <>
+                <Save className="h-5 w-5 mr-2" />
+                {initialData ? 'Atualizar Afiliado' : 'Criar Afiliado'}
+              </>
+            )}
+          </button>
         </div>
-
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">CNPJ/CPF Financeiro:</label>
-          <p>{proposalData.cnpj_cpf_finan}</p>
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">Caixas de Entrada:</label>
-          <p>{proposalData.caixas_entrada_qtde}</p>
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">Atendentes:</label>
-          <p>{proposalData.atendentes_qtde}</p>
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">Automações:</label>
-          <p>{proposalData.automacoes_qtde}</p>
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">Kanban:</label>
-          <p>{proposalData.kanban ? "Sim" : "Não"}</p>
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">Suporte Humano:</label>
-          <p>{proposalData.suporte_humano ? "Sim" : "Não"}</p>
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">WhatsApp Oficial:</label>
-          <p>{proposalData.whatsapp_oficial ? "Sim" : "Não"}</p>
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">Subtotal:</label>
-          <p>{proposalData.subtotal}</p>
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">Desconto:</label>
-          <p>{proposalData.desconto}</p>
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">Total Addons:</label>
-          <p>{proposalData.total_addons}</p>
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">Total:</label>
-          <p>{proposalData.total}</p>
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">Validade:</label>
-          <p>{proposalData.validade}</p>
-        </div>
-      </div>
+      </form>
     </div>
   );
 }
