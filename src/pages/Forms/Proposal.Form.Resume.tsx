@@ -9,7 +9,9 @@ export default function ProposalFormResume({ proposta, setProposta }: { proposta
 
   const copyToClipboard = async () => {
     try {
-      await navigator.clipboard.writeText(window.location.href + `confirmation/${proposta.user_id}`);
+      const url = window.location.href.replace('/portal/proposals', '') + `/confirmation/${proposta.user_id ?? "0"}`;
+      //const url = window.location.href + `/confirmation/${proposta.user_id ?? "0"}`;
+      await navigator.clipboard.writeText(url);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {

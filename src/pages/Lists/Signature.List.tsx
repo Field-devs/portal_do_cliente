@@ -112,6 +112,7 @@ export default function SignatureList() {
         default:
           return true;
       }
+      
     };
 
     return matchesSearch && matchesStatus && matchesDate();

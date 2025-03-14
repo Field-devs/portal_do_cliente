@@ -15,7 +15,8 @@ import {
   BarChart2,
   UserCircle,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Cog
 } from 'lucide-react';
 import AdminDashboard from './dashboard/AdminDashboard';
 import ProposalsList from './Lists/Proposals.List';
@@ -25,7 +26,7 @@ import FinancialDashBoard from './dashboard/FinancialDashBoard';
 import PlanList from './Lists/Plan.List';
 import Profile from './Account/Profile';
 import SignatureList from './Lists/Signature.List';
-import ProposalFormConfirm from './Forms/Proposal.Form.Confirm';
+import ProposalFormConfirm from './Forms/Proposal/Proposal.Form.Confirm';
 
 const getRoleBadgeStyles = (role: string | null) => {
   switch (role) {
@@ -123,8 +124,8 @@ export default function Portal() {
                 to={item.path}
 
                 className={`flex items-center px-3 py-2 mx-2 text-sm font-medium rounded-lg transition-colors ${isActive
-                    ? 'bg-brand-50 text-brand-600 dark:bg-brand-900/20 dark:text-brand-400'
-                    : 'text-gray-600 dark:text-gray-400 hover:bg-brand-50/50 dark:hover:bg-brand-900/10 hover:text-brand-600 dark:hover:text-brand-400'
+                  ? 'bg-brand-50 text-brand-600 dark:bg-brand-900/20 dark:text-brand-400'
+                  : 'text-gray-600 dark:text-gray-400 hover:bg-brand-50/50 dark:hover:bg-brand-900/10 hover:text-brand-600 dark:hover:text-brand-400'
                   }`}
               >
 
@@ -146,12 +147,22 @@ export default function Portal() {
         {/* Footer Actions */}
         <div className="p-3 border-t border-light-border dark:border-dark-border">
           <div className={`flex ${isExpanded ? 'justify-center items-center space-x-2' : 'flex-col items-center space-y-2'}`}>
+
             <button
               onClick={toggleTheme}
               className="p-2 rounded-lg text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-light-secondary dark:hover:bg-dark-secondary"
               title={theme === 'dark' ? 'Mudar para tema claro' : 'Mudar para tema escuro'}
             >
               {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+            </button>
+
+            {/* Configuracoes */}
+            <button
+              // onClick={toggleTheme}
+              className="p-2 rounded-lg text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-light-secondary dark:hover:bg-dark-secondary"
+              title={'Configurações do Sistema'}
+            >
+              {theme === 'dark' ? <Cog className="h-5 w-5" /> : <Cog className="h-5 w-5" />}
             </button>
 
             <NavLink
