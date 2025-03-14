@@ -3,13 +3,13 @@ import { User, Copy, X, CheckCircle } from 'lucide-react';
 import { Proposta, PropostaDTO } from "../../Models/Propostas";
 import { formatCurrency } from "../../utils/formatters";
 
-export default function ProposalFormResume({ proposta, setProposta }: { proposta: PropostaDTO, setProposta: (data: PropostaDTO) => void }) {
+export default function ProposalFormResume({ idProposta, proposta, setProposta }: { idProposta : string, proposta: PropostaDTO, setProposta: (data: PropostaDTO) => void }) {
   const [copied, setCopied] = useState(false);
 
 
   const copyToClipboard = async () => {
     try {
-      const url = window.location.href.replace('/portal/proposals', '') + `/confirmation/${proposta.user_id ?? "0"}`;
+      const url = window.location.href.replace('/portal/proposals', '') + `/confirmation/${idProposta ?? "0"}`;
       //const url = window.location.href + `/confirmation/${proposta.user_id ?? "0"}`;
       await navigator.clipboard.writeText(url);
       setCopied(true);
