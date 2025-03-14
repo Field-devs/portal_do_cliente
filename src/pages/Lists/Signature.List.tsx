@@ -20,7 +20,7 @@ import ComboFrag from '../../components/Fragments/ComboFrag';
 import { useAuth } from '../../components/AuthProvider';
 import CircularWait from '../../components/CircularWait';
 
-export default function ContractList() {
+export default function SignatureList() {
   const { user, profile: role, signOut } = useAuth();
   const [contracts, setContracts] = useState<Contract[]>([]);
   const [loading, setLoading] = useState(true);
@@ -135,7 +135,7 @@ export default function ContractList() {
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-8">
-        <h1 className={titleClass}>Contratos</h1>
+        <h1 className={titleClass}>Assinaturas</h1>
       </div>
 
       {/* Metrics Cards */}
@@ -148,7 +148,7 @@ export default function ContractList() {
             </div>
             <span className={badgeClass}>Total Atual</span>
           </div>
-          <h3 className={metricTitleClass}>Contratos Ativos</h3>
+          <h3 className={metricTitleClass}>Assinaturas Ativas</h3>
           <p className={metricValueClass}>
             {contracts.filter(c => c.status_title.toLowerCase() === 'ativo').length}
           </p>
@@ -166,7 +166,7 @@ export default function ContractList() {
             </div>
             <span className={badgeClass}>Aguardando</span>
           </div>
-          <h3 className={metricTitleClass}>Contratos Pendentes</h3>
+          <h3 className={metricTitleClass}>Assinaturas Pendentes</h3>
           <p className={metricValueClass}>
             {contracts.filter(c => c.status_title.toLowerCase() === 'pendente').length}
           </p>
@@ -184,7 +184,7 @@ export default function ContractList() {
             </div>
             <span className={badgeClass}>Suspensos</span>
           </div>
-          <h3 className={metricTitleClass}>Contratos Suspensos</h3>
+          <h3 className={metricTitleClass}>Assinaturas Suspensas</h3>
           <p className={metricValueClass}>
             {contracts.filter(c => c.status_title.toLowerCase() === 'suspenso').length}
           </p>
@@ -202,7 +202,7 @@ export default function ContractList() {
             </div>
             <span className={badgeClass}>Cancelados</span>
           </div>
-          <h3 className={metricTitleClass}>Contratos Cancelados</h3>
+          <h3 className={metricTitleClass}>Assinaturas Canceladas</h3>
           <p className={metricValueClass}>
             {contracts.filter(c => c.status_title.toLowerCase() === 'cancelado').length}
           </p>

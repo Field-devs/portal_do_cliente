@@ -19,12 +19,12 @@ import {
 } from 'lucide-react';
 import AdminDashboard from './dashboard/AdminDashboard';
 import ProposalsList from './Lists/Proposals.List';
-import PartnerList from './Lists/PartnerList';
+import PartnerList from './Lists/Partner.List';
 import AccountList from './Account/AccountList';
 import FinancialDashBoard from './dashboard/FinancialDashBoard';
-import PlanList from './Lists/PlanList';
+import PlanList from './Lists/Plan.List';
 import Profile from './Account/Profile';
-import ContractList from './Lists/Contract.List';
+import SignatureList from './Lists/Signature.List';
 import ProposalFormConfirm from './Forms/Proposal.Form.Confirm';
 
 const getRoleBadgeStyles = (role: string | null) => {
@@ -54,7 +54,7 @@ export default function Portal() {
   const navigation = [
     { id: 1, name: 'Dashboard', icon: BarChart2, path: '/portal', visible: [1] },
     { id: 2, name: 'Propostas', icon: FileText, path: '/portal/proposals', visible: [1, 2, 3, 4] },
-    { id: 3, name: 'Contratos', icon: FileCheck2, path: '/portal/contracts', visible: [1, 2, 3, 4] },
+    { id: 3, name: 'Assinaturas', icon: FileCheck2, path: '/portal/signature', visible: [1, 2, 3, 4] },
     { id: 4, name: 'Planos/Addons', icon: Package, path: '/portal/plans', visible: [1, 2, 3, 4] },
     { id: 5, name: 'Contas', icon: Briefcase, path: '/portal/partners', visible: [1, 2, 3, 4] },
     { id: 6, name: 'Usuários', icon: Users, path: '/portal/accounts', visible: [1, 2] },
@@ -179,7 +179,7 @@ export default function Portal() {
           <Routes>
             {/* <Route path="/" element={<AdminDashboard />} /> */}
             <Route path="/" element={<AdminDashboard />} />
-            <Route path="contracts" element={<ContractList />} />
+            <Route path="signature" element={<SignatureList />} />
             <Route path="plans" element={<PlanList />} />
             <Route path="proposals" element={<ProposalsList />} />
             <Route path="partners" element={<PartnerList />} />
