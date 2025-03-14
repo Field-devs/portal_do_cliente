@@ -16,6 +16,7 @@ import {
 import { OUTR_BLACK_IMAGE_URL } from '../../utils/consts';
 
 interface CommercialAffiliateFormProps {
+  id : string;
   onSuccess: () => void;
   onCancel: () => void;
   initialData?: {
@@ -37,7 +38,7 @@ const iconGroupClass = "flex items-center space-x-3 mb-6";
 const iconGroupTitleClass = "h-6 w-6 text-blue-400";
 const iconInputClass = "absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400";
 
-export default function ProposalFormaConfirm({ onSuccess, onCancel, initialData }: CommercialAffiliateFormProps) {
+export default function ProposalFormaConfirm({ id, onCancel, initialData }: CommercialAffiliateFormProps) {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -61,6 +62,8 @@ export default function ProposalFormaConfirm({ onSuccess, onCancel, initialData 
             CONFIRMAÇÃO DE PROPOSTA
           </h4>
         </div>
+
+
         {/* Informacoes Basicas */}
         <div className="bg-white backdrop-blur-sm p-10 border border-gray-700/50">
 
@@ -85,7 +88,7 @@ export default function ProposalFormaConfirm({ onSuccess, onCancel, initialData 
                 <User className={iconInputClass} />
                 <input
                   type="text"
-                  name="nome"
+                  name="cnpj"
                   onChange={handleInputChange}
                   className={inputClass}
                   required
@@ -109,6 +112,8 @@ export default function ProposalFormaConfirm({ onSuccess, onCancel, initialData 
                 />
               </div>
             </div>
+
+
           </div>
 
           {/* Email/Fone/Nascimento */}
@@ -157,7 +162,7 @@ export default function ProposalFormaConfirm({ onSuccess, onCancel, initialData 
                 <Calendar className={iconInputClass} />
                 <input
                   type="date"
-                  name="vencimento"
+                  name="nascimento"
                   onChange={handleInputChange}
                   min={new Date().toISOString().split('T')[0]}
                   className={inputClass}
@@ -169,9 +174,9 @@ export default function ProposalFormaConfirm({ onSuccess, onCancel, initialData 
 
 
           {/* Endereco */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-7 md:grid-cols-5 gap-6">
             {/* CEP */}
-            <div>
+            <div className="col-span-1">
               <label className={labelClass}>
                 CEP
               </label>
@@ -185,15 +190,48 @@ export default function ProposalFormaConfirm({ onSuccess, onCancel, initialData 
                 />
               </div>
             </div>
+
             {/* Logradouro */}
-            <div className="col-span-2">
+            <div className="col-span-3">
               <label className={labelClass}>
                 Logradouro
               </label>
               <div className="mt-1 relative">
                 <input
                   type="text"
-                  name="lograroudo"
+                  name="logradouro"
+                  onChange={handleInputChange}
+                  className={inputClass}
+                  required
+                />
+              </div>
+            </div>
+
+
+            {/* Numero */}
+            <div className="col-span-1">
+              <label className={labelClass}>
+                nº
+              </label>
+              <div className="mt-1 relative">
+                <input
+                  type="number"
+                  name="numero"
+                  onChange={handleInputChange}
+                  className={inputClass}
+                  required
+                />
+              </div>
+            </div>
+            {/* Bairro */}
+            <div className="col-span-2">
+              <label className={labelClass}>
+                Bairro
+              </label>
+              <div className="mt-1 relative">
+                <input
+                  type="text"
+                  name="bairro"
                   onChange={handleInputChange}
                   className={inputClass}
                   required
@@ -227,7 +265,7 @@ export default function ProposalFormaConfirm({ onSuccess, onCancel, initialData 
               <div className="mt-1 relative">
                 <input
                   type="text"
-                  name="cidade"
+                  name="uf"
                   onChange={handleInputChange}
                   className={inputClass}
                   required
@@ -236,22 +274,38 @@ export default function ProposalFormaConfirm({ onSuccess, onCancel, initialData 
 
             </div>
 
+            {/* Referencia */}
+            <div className="col-span-5">
+              <label className={labelClass}>
+                Referencia
+              </label>
+              <div className="mt-1 relative">
+                <input
+                  type="text"
+                  name="referencia  "
+                  onChange={handleInputChange}
+                  className={inputClass}
+                  required
+                />
+              </div>
+
+            </div>
 
           </div>
 
 
         </div>
 
-        {/* Informacoes Financeiras */}
+        {/* Informacoes Basicas */}
         <div className="bg-white backdrop-blur-sm p-10 border border-gray-700/50">
 
           {/* Cabecalho 1 */}
           <div className={iconGroupClass}>
             <div className="bg-blue-400/10 p-3 rounded-xl">
-              <DollarSign className={iconGroupTitleClass} />
+              <UserCheck className={iconGroupTitleClass} />
             </div>
             <h3 className="text-lg font-medium text-blue-800">
-              Responsável Financeiro
+            Responsável Financeiro
             </h3>
           </div>
 
@@ -266,7 +320,7 @@ export default function ProposalFormaConfirm({ onSuccess, onCancel, initialData 
                 <User className={iconInputClass} />
                 <input
                   type="text"
-                  name="nome"
+                  name="cnpj"
                   onChange={handleInputChange}
                   className={inputClass}
                   required
@@ -290,9 +344,11 @@ export default function ProposalFormaConfirm({ onSuccess, onCancel, initialData 
                 />
               </div>
             </div>
+
+
           </div>
 
-          {/* Email/Fone/Vencimento */}
+          {/* Email/Fone/Nascimento */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Email */}
             <div>
@@ -332,7 +388,132 @@ export default function ProposalFormaConfirm({ onSuccess, onCancel, initialData 
 
           </div>
 
+
+          {/* Endereco */}
+          <div className="grid grid-cols-7 md:grid-cols-5 gap-6">
+            {/* CEP */}
+            <div className="col-span-1">
+              <label className={labelClass}>
+                CEP
+              </label>
+              <div className="mt-1 relative">
+                <input
+                  type="text"
+                  name="cep"
+                  onChange={handleInputChange}
+                  className={inputClass}
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Logradouro */}
+            <div className="col-span-3">
+              <label className={labelClass}>
+                Logradouro
+              </label>
+              <div className="mt-1 relative">
+                <input
+                  type="text"
+                  name="logradouro"
+                  onChange={handleInputChange}
+                  className={inputClass}
+                  required
+                />
+              </div>
+            </div>
+
+
+            {/* Numero */}
+            <div className="col-span-1">
+              <label className={labelClass}>
+                nº
+              </label>
+              <div className="mt-1 relative">
+                <input
+                  type="number"
+                  name="numero"
+                  onChange={handleInputChange}
+                  className={inputClass}
+                  required
+                />
+              </div>
+            </div>
+            {/* Bairro */}
+            <div className="col-span-2">
+              <label className={labelClass}>
+                Bairro
+              </label>
+              <div className="mt-1 relative">
+                <input
+                  type="text"
+                  name="bairro"
+                  onChange={handleInputChange}
+                  className={inputClass}
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Cidade / UF */}
+
+            {/* Cidade */}
+            <div className="col-span-2">
+              <label className={labelClass}>
+                Cidade
+              </label>
+              <div className="mt-1 relative">
+                <input
+                  type="text"
+                  name="cidade"
+                  onChange={handleInputChange}
+                  className={inputClass}
+                  required
+                />
+              </div>
+            </div>
+
+            {/* UF */}
+            <div>
+              <label className={labelClass}>
+                UF
+              </label>
+              <div className="mt-1 relative">
+                <input
+                  type="text"
+                  name="uf"
+                  onChange={handleInputChange}
+                  className={inputClass}
+                  required
+                />
+              </div>
+
+            </div>
+
+            {/* Referencia */}
+            <div className="col-span-5">
+              <label className={labelClass}>
+                Referencia
+              </label>
+              <div className="mt-1 relative">
+                <input
+                  type="text"
+                  name="referencia  "
+                  onChange={handleInputChange}
+                  className={inputClass}
+                  required
+                />
+              </div>
+
+            </div>
+
+          </div>
+
+
         </div>
+
+
+
         {/* Error Message */}
         {error && (
           <div className="bg-red-500/10 border border-red-500/20 p-4 flex items-center text-red-400">

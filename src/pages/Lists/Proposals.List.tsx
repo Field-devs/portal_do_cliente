@@ -21,6 +21,7 @@ import { UpdateSingleField } from '../../utils/supageneric';
 import { useAuth } from '../../components/AuthProvider';
 import { AlertDialog,ErrorDialog } from '../../components/Dialogs/Dialogs';
 import CircularWait from '../../components/CircularWait';
+import { formatPhone } from '../../utils/formatters';
 
 export default function ProposalsList() {
   const { user } = useAuth();
@@ -59,7 +60,6 @@ export default function ProposalsList() {
         .select('*')
         .eq('user_id', user?.id)
         .order('id', { ascending: false });
-      console.log(data);
 
       if (error) throw error;
       setPropostas(data || []);

@@ -5,11 +5,11 @@ import { formatCurrency } from "../../utils/formatters";
 
 export default function ProposalFormResume({ proposta, setProposta }: { proposta: PropostaDTO, setProposta: (data: PropostaDTO) => void }) {
   const [copied, setCopied] = useState(false);
-  console.log(proposta);
+
+
   const copyToClipboard = async () => {
     try {
-      //await navigator.clipboard.writeText(window.location.href);
-      await navigator.clipboard.writeText(window.location.href + `?id=${proposta.user_id}`);
+      await navigator.clipboard.writeText(window.location.href + `confirmation/${proposta.user_id}`);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
