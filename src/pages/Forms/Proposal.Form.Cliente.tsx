@@ -1,7 +1,6 @@
 import { Mail } from "lucide-react";
 import { Proposta, PropostaDTO } from "../../Models/Propostas";
 
-
 export default function ProposalFormCliente({ proposta, setProposta }: { proposta: PropostaDTO, setProposta: (data: PropostaDTO) => void }) {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -9,36 +8,39 @@ export default function ProposalFormCliente({ proposta, setProposta }: { propost
     setProposta({ ...proposta, [name]: value });
   };
 
-  return (
-    <div className="max-w-4xl mx-auto p-3 bg-white shadow-md rounded-lg">
-      <h1 className="text-2xl font-bold">Confirmar Dados</h1>
+  // Common CSS classes
+  const containerClass = "max-w-4xl mx-auto p-3 bg-white shadow-md rounded-lg";
+  const titleClass = "text-3xl font-bold";
+  const labelClass = "block text-sm font-medium text-gray-700";
+  const inputClass = "mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm";
+  const sectionClass = "mt-4";
 
-      <div className="mt-4">
-        <label className="block text-sm font-medium text-gray-700">Nome</label>
+  return (
+    <div className={containerClass}>
+      <h1 className={titleClass}>Confirmar Dados</h1>
+
+      <div className={sectionClass}>
+        <label className={labelClass}>Nome</label>
         <input
           type="text"
           name="nome"
           value={proposta.nome}
           onChange={(e) => handleChange(e)}
-          className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+          className={inputClass}
         />
       </div>
 
-      <div className="mt-4">
-        <label className="block text-sm font-medium text-gray-700">Email</label>
+      <div className={sectionClass}>
+        <label className={labelClass}>Email</label>
         <input
           name="email"
           type="email"
           autoComplete="email"
           value={proposta.email}
           onChange={(e) => handleChange(e)}
-          className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+          className={inputClass}
         />
       </div>
-
-
-
-
     </div>
   );
 }

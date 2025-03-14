@@ -12,21 +12,13 @@ import {
   UserCheck
 } from 'lucide-react';
 import CircularWait from '../../../components/CircularWait';
+import Cliente from '../../../Models/Cliente';
 
 interface CommercialAffiliateFormProps {
   onSuccess: () => void;
   onCancel: () => void;
   IsFinan: boolean;
-  initialData?: {
-    id: string;
-    nome: string;
-    email: string;
-    fone: number;
-    desconto: number;
-    comissao: number;
-    vencimento: string;
-    active: boolean;
-  };
+  sender : Cliente;
 }
 
 // Common CSS classes
@@ -36,19 +28,15 @@ const iconGroupClass = "flex items-center space-x-3 mb-6";
 const iconGroupTitleClass = "h-6 w-6 text-blue-400";
 const iconInputClass = "absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400";
 
-export default function ProposalFormConfirmClient({ IsFinan, onCancel, initialData }: CommercialAffiliateFormProps) {
+export default function ProposalFormConfirmClient({ IsFinan, onCancel, sender }: CommercialAffiliateFormProps) {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [prefix] = useState<string>(IsFinan ? "finan_" : "");
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
   };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-  };
-
 
 
   return (
@@ -81,10 +69,10 @@ export default function ProposalFormConfirmClient({ IsFinan, onCancel, initialDa
                 <User className={iconInputClass} />
                 <input
                   type="text"
-                  name="cnpj"
+                  name={prefix + "cnpjcpf"}
+                  value={IsFinan ?  sender?.fin_cnpjcpf  : sender.cnpjcpf}
                   onChange={handleInputChange}
                   className={inputClass}
-                  required
                 />
               </div>
             </div>
@@ -98,10 +86,10 @@ export default function ProposalFormConfirmClient({ IsFinan, onCancel, initialDa
                 <User className={iconInputClass} />
                 <input
                   type="text"
-                  name="nome"
+                  name={prefix + "nome"}
+                  value={IsFinan ?  sender.fin_nome : sender.nome}
                   onChange={handleInputChange}
                   className={inputClass}
-                  required
                 />
               </div>
             </div>
@@ -120,10 +108,10 @@ export default function ProposalFormConfirmClient({ IsFinan, onCancel, initialDa
                 <Mail className={iconInputClass} />
                 <input
                   type="email"
-                  name="email"
+                  name={prefix + "email"}
+                  value={IsFinan ?  sender.fin_email : sender.email}
                   onChange={handleInputChange}
                   className={inputClass}
-                  required
                 />
               </div>
             </div>
@@ -137,7 +125,8 @@ export default function ProposalFormConfirmClient({ IsFinan, onCancel, initialDa
                 <Phone className={iconInputClass} />
                 <input
                   type="tel"
-                  name="telefone"
+                  name={prefix + "fone"}
+                  value={IsFinan ?  sender.fin_fone : sender.fone}
                   onChange={handleInputChange}
                   placeholder="(00) 00000-0000"
                   className={inputClass}
@@ -160,7 +149,8 @@ export default function ProposalFormConfirmClient({ IsFinan, onCancel, initialDa
               <div className="mt-1 relative">
                 <input
                   type="text"
-                  name="cep"
+                  name={prefix + "cep"}
+                  value={IsFinan ?  sender.fin_cep : sender.cep}
                   onChange={handleInputChange}
                   className={inputClass}
                   required
@@ -176,7 +166,8 @@ export default function ProposalFormConfirmClient({ IsFinan, onCancel, initialDa
               <div className="mt-1 relative">
                 <input
                   type="text"
-                  name="logradouro"
+                  name={prefix + "logradouro"}
+                  value={IsFinan ?  sender.fin_logradouro : sender.logradouro}
                   onChange={handleInputChange}
                   className={inputClass}
                   required
@@ -193,7 +184,8 @@ export default function ProposalFormConfirmClient({ IsFinan, onCancel, initialDa
               <div className="mt-1 relative">
                 <input
                   type="number"
-                  name="numero"
+                  name={prefix + "numero"}
+                  value={IsFinan ?  sender.fin_numero : sender.numero}
                   onChange={handleInputChange}
                   className={inputClass}
                   required
@@ -208,7 +200,8 @@ export default function ProposalFormConfirmClient({ IsFinan, onCancel, initialDa
               <div className="mt-1 relative">
                 <input
                   type="text"
-                  name="bairro"
+                  name={prefix + "bairro"}
+                  value={IsFinan ?  sender.fin_bairro : sender.bairro}
                   onChange={handleInputChange}
                   className={inputClass}
                   required
@@ -226,7 +219,8 @@ export default function ProposalFormConfirmClient({ IsFinan, onCancel, initialDa
               <div className="mt-1 relative">
                 <input
                   type="text"
-                  name="cidade"
+                  name={prefix + "cidade"}
+                  value={IsFinan ?  sender.fin_cidade : sender.cidade}
                   onChange={handleInputChange}
                   className={inputClass}
                   required
@@ -242,7 +236,8 @@ export default function ProposalFormConfirmClient({ IsFinan, onCancel, initialDa
               <div className="mt-1 relative">
                 <input
                   type="text"
-                  name="uf"
+                  name={prefix + "uf"}
+                  value={IsFinan ?  sender.fin_uf : sender.uf}
                   onChange={handleInputChange}
                   className={inputClass}
                   required
@@ -259,7 +254,8 @@ export default function ProposalFormConfirmClient({ IsFinan, onCancel, initialDa
               <div className="mt-1 relative">
                 <input
                   type="text"
-                  name="referencia  "
+                  name={prefix + "referencia"}
+                  value={IsFinan ?  sender.fin_referencia : sender.referencia}
                   onChange={handleInputChange}
                   className={inputClass}
                   required

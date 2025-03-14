@@ -10,7 +10,9 @@ import {
   Clock,
   CheckCircle,
   XCircle,
-  MoreVertical
+  MoreVertical,
+  Link,
+  CreditCard
 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { usePlanos } from '../../hooks/usePlanos';
@@ -328,8 +330,13 @@ export default function ProposalsList() {
                     Valor
                   </th>
                   <th className="px-6 py-2 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  Status
                   </th>
+                  {/* <th className="px-6 py-2 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  Links
+                  </th> */}
                   <th className="px-6 py-2 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  Ações
                   </th>
                 </tr>
 
@@ -393,15 +400,27 @@ export default function ProposalsList() {
                         </span>
                       </div>
                     </td>
-                    <td className="px-6 py-2 whitespace-nowrap">
 
+                    {/* <td className="px-6 py-2 whitespace-nowrap">
+                      <div className="flex justify-center space-x-2">
+                        <a href={`/confirmation/${proposta.id}`} title="Link de Confirmação">
+                          <Link className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                        </a>
+                        <a href={`/payment/${proposta.id}`} title="Link de Pagamento">
+                          <CreditCard className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                        </a>
+                      </div>
+                    </td> */}
+
+                    <td className="px-6 py-2 whitespace-nowrap">
                       <ActionsButtons
                         onEdit={() => handleEdit(proposta.id)}
                         onLocker={() => handleOnLock(proposta.id, proposta.active)}
                         active={proposta.active}
                       />
-
                     </td>
+
+  
 
                   </tr>
                 ))}
