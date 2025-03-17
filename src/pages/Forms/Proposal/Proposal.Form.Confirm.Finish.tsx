@@ -31,7 +31,7 @@ export default function RegistrationSuccess() {
         </div>
 
         <button
-          // onClick={() => navigate(createPageUrl("Home"))}
+            onClick={() => navigate("/")}
           className="w-full py-2 px-4 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
         >
           Voltar para Home

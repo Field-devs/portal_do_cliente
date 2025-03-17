@@ -56,7 +56,8 @@ async function SaveProposal(proposta: Proposta) {
     user_add: proposta.user_add,
     user_update: proposta.user_update,
     user_id: proposta.user_id,
-    dt: proposta.dt
+    dt: proposta.dt,
+    status:"AP"
   };
   
   const { data, error } = await supabase

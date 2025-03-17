@@ -362,17 +362,17 @@ export default function ProposalsList() {
 
                     <td className="px-6 py-2 whitespace-nowrap">
                       <div className="text-base font-medium text-light-text-primary dark:text-gray-100">
-                        {proposta.nome}
+                        {proposta.emp_nome}
                       </div>
                     </td>
                     <td className="px-6 py-2 whitespace-nowrap">
                       <div className="text-base text-light-text-secondary dark:text-gray-300">
-                        {proposta.email}
+                        {proposta.emp_email}
                       </div>
                     </td>
                     <td className="px-6 py-2 whitespace-nowrap">
                       <div className="text-base text-light-text-secondary dark:text-gray-300">
-                        {formatPhone(proposta.fone)}
+                        {formatPhone(proposta.emp_fone)}
                       </div>
                     </td>
                     <td className="px-6 py-2 whitespace-nowrap text-center">

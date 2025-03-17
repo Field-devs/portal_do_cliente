@@ -46,6 +46,9 @@ interface Proposta {
   dt_update: string | null; // TIMESTAMP (ISO 8601 string)
   user_add: string | null;
   user_update: string | null;
+
+  status : string;
+
 }
 
 interface PropostaDTO {
@@ -95,6 +98,7 @@ interface PropostaDTO {
   dt_update: string | null; // TIMESTAMP (ISO 8601 string)
   user_add: string | null;
   user_update: string | null;
+  status : string;
 }
 
 
