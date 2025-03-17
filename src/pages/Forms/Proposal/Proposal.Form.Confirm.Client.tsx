@@ -17,7 +17,7 @@ import Cliente from '../../../Models/Cliente';
 interface CommercialAffiliateFormProps {
   onSuccess: () => void;
   onCancel: () => void;
-  IsFinan: boolean;
+  Tipo: string;
   sender : Cliente;
 }
 
@@ -28,11 +28,13 @@ const iconGroupClass = "flex items-center space-x-3 mb-6";
 const iconGroupTitleClass = "h-6 w-6 text-blue-400";
 const iconInputClass = "absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400";
 
-export default function ProposalFormConfirmClient({ IsFinan, onCancel, sender }: CommercialAffiliateFormProps) {
+export default function ProposalFormConfirmClient({ Tipo, onCancel, sender }: CommercialAffiliateFormProps) {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [prefix] = useState<string>(IsFinan ? "finan_" : "");
+  const [prefix] = useState<string>("");
+  
+
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -54,7 +56,7 @@ export default function ProposalFormConfirmClient({ IsFinan, onCancel, sender }:
               <UserCheck className={iconGroupTitleClass} />
             </div>
             <h3 className="text-lg font-medium text-blue-800">
-              {IsFinan ? 'Responsavel Financeiro' : 'Dados do Cliente'}
+              {Tipo == "EMP" ? 'Dados da Empresa' : 'Dados do Cliente'}
             </h3>
           </div>
 
@@ -70,7 +72,7 @@ export default function ProposalFormConfirmClient({ IsFinan, onCancel, sender }:
                 <input
                   type="text"
                   name={prefix + "cnpjcpf"}
-                  value={IsFinan ?  sender?.fin_cnpjcpf  : sender.cnpjcpf}
+                  value={sender[prefix + "cnpjcpf"]}
                   onChange={handleInputChange}
                   className={inputClass}
                 />

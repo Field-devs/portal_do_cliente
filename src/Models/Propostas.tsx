@@ -63,7 +63,7 @@ interface PropostaDTO {
   desconto: number | 0;
   total: number | 0;
   total_addons: number | 0;
-  validade: number;
+  validade: number | 15;
   mail_send: boolean;
   pay: boolean;
   active: boolean;

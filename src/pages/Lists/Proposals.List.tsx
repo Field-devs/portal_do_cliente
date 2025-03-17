@@ -406,7 +406,8 @@ export default function ProposalsList() {
                         <a href={`/confirmation/${proposta.id}`} target='blank' title="Link de Confirmação">
                           <Link className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                         </a>
-                        {proposta.status === 'AT' && (
+
+                        {proposta.status === 'AT' && proposta.active && (
                           <a href={`/payment/${proposta.id}`} target='blank' title="Link de Pagamento">
                             <CreditCard className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                           </a>

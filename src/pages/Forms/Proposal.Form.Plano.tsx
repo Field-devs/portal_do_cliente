@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { supabase } from "../../lib/supabase";
 import Plan from "../../Models/Plan";
 import { useAuth } from "../../components/AuthProvider";
@@ -9,6 +9,7 @@ import CircularWait from "../../components/CircularWait";
 import { PropostaDTO } from "../../Models/Propostas";
 import { Listbox } from '@headlessui/react'
 import { formatCurrency } from "../../utils/formatters";
+import { CalcPercent } from "../../utils/Finan";
 
 export default function ProposalFormPlano({ proposta, setProposta }: { proposta: PropostaDTO, setProposta: (data: PropostaDTO) => void }) {
 
@@ -21,10 +22,18 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
   const [addons, setAddons] = useState<PlanAddon[]>([]);
   const [addonQuantities, setAddonQuantities] = useState<Record<number, number>>({});
   const [loading, setLoading] = useState(true);
+  const [subtotal, setSubtotal] = useState(0);
+  const [total, setTotal] = useState(0);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setProposta({ ...proposta, [name]: value });
+  };
+
+  const handleDiscountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    const formattedValue = value.replace(/\D/g, ''); // Remove non-numeric characters
+    setProposta({ ...proposta, [name]: formattedValue ? `${formattedValue}%` : '' });
   };
 
   useEffect(() => {
@@ -33,19 +42,30 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
         perfil_id: selectedprofile.id,
         plano_id: selectedPlan.id,
         plano_nome: selectedPlan.nome,
-        subtotal: selectedPlan.valor,
-        total: selectedPlan.valor + totalAddons,
-
-
+        desconto: 0,
+        total: 0,
+        subtotal: 0,
         addons: addons.filter(addon => addonQuantities[addon.id] > 0).map(addon => ({
           addon_id: addon.id,
           quantidade: addonQuantities[addon.id]
         }))
       });
+      console.log(proposta);
+      calcProposta();
     }
-    console.log(proposta.desconto);
-
   }, [selectedPlan, selectedprofile]);
+
+  function calcProposta() {
+    if (!selectedPlan) return;
+    const newSubtotal = selectedPlan.valor + totalAddons;
+    setSubtotal(newSubtotal);
+    console.log(newSubtotal);
+    // remove simbola in desconto
+    const desconto = parseFloat(proposta.desconto.toString().replace("%", "") || "0");
+    setTotal(newSubtotal - CalcPercent(newSubtotal, parseFloat(desconto)));
+    console.log("desconto", desconto);
+    console.log(total);
+  }
 
   const fetchData = async () => {
     try {
@@ -59,7 +79,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
       if (data) {
         setAddons(data);
       }
-      
+
       var { data } = await supabase.from("perfil").select("*")
         .gt("id", user?.perfil_id)
         .neq("id", 1)
@@ -83,7 +103,6 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
     fetchData();
   }, []);
 
-
   const totalAddons = addons.reduce(
     (sum, addon) => sum + (addonQuantities[addon.id] || 0) * addon.valor, 0
   );
@@ -93,20 +112,17 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
       ...proposta,
       total: proposta.subtotal + totalAddons - proposta.desconto,
     });
-  }, [totalAddons]);
+    calcProposta();
+  }, [totalAddons, proposta.desconto]);
 
   const handleInactive = async () => {
     setViewInactive(!viewInactive);
   }
 
   return (
-
     loading ? <CircularWait message="Carregando..." small={true} /> :
-
       <div className="max-w-4xl mx-auto p-3 bg-white shadow-md rounded-lg">
-
         <div className="grid grid-cols-1 gap-1">
-
           <div className="grid grid-cols-2 gap-6">
             <div>
               <h1 className="text-2xl font-bold">Proposta</h1>
@@ -121,13 +137,10 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
               </div>
             </div>
           </div>
-
         </div>
 
-
         <div className="grid grid-cols-2 gap-6">
-          <div className="relative z-50"> {/* Added z-50 to ensure dropdown appears on top */}
-
+          <div className="relative z-50">
             <h3 className="font-semibold">Tipo de Cliente</h3>
             <Listbox value={selectedprofile} onChange={setSelectedProfile}>
               <div className="relative mt-2">
@@ -156,11 +169,8 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
                 </Listbox.Options>
               </div>
             </Listbox>
-
           </div>
 
-
-          {/* Coluna de Planos */}
           <div>
             <h3 className="font-semibold">Plano</h3>
             <Listbox value={selectedPlan} onChange={setSelectedPlan}>
@@ -171,7 +181,6 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
                   </span>
                 </Listbox.Button>
                 <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 focus:outline-none">
-
                   {plans.map((plan) => (
                     <Listbox.Option
                       key={plan.id}
@@ -189,26 +198,21 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
                       )}
                     </Listbox.Option>
                   ))}
-
                 </Listbox.Options>
               </div>
             </Listbox>
           </div>
 
-          {/* Coluna de Add-ons */}
           <div>
             <h3 className="font-semibold">Add-ons</h3>
             <div className="grid grid-cols-1 gap-2 mt-1">
-
               {addons.filter(addon => viewInactive && !addon.active).map((addon) => (
                 <div key={addon.id} className="flex justify-between items-center">
                   <span>
                     {addon.nome.replace(/([A-Z])/g, ' $1')} (R$ {addon.valor})
                   </span>
-
                 </div>
               ))}
-
               {addons.filter(addon => addon.active == true).map((addon) => (
                 <div key={addon.id} className="flex justify-between items-center">
                   <span>
@@ -226,14 +230,9 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
                   />
                 </div>
               ))}
-
-
             </div>
           </div>
         </div>
-
-
-
 
         <div className="grid grid-cols-12 gap-6">
           <div className="col-span-3">
@@ -242,7 +241,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
               name="desconto"
               className="w-full border rounded p-2"
               value={proposta.desconto}
-              onChange={() => handleChange}
+              onChange={handleDiscountChange}
             />
           </div>
 
@@ -257,15 +256,14 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
           </div>
         </div>
 
-
-
         <div className="mt-6 rounded-md border">
           <div className="p-4">
             <h3 className="font-semibold">Resumo da Assinatura</h3>
             <p className="mt-2">Plano: {selectedPlan?.nome} - {formatCurrency(selectedPlan?.valor)}</p>
             <p>Add-ons: {formatCurrency(totalAddons)}</p>
             <h2 className="text-xl font-bold mt-2">
-              Valor Total: {formatCurrency((selectedPlan?.valor || 0) + totalAddons)}/mês
+              {/* Valor Total: {formatCurrency((selectedPlan?.valor || 0) + totalAddons)}/mês */}
+              Valor Total: {formatCurrency(total)}/mês
             </h2>
           </div>
         </div>
