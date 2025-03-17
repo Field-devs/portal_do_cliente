@@ -64,7 +64,7 @@ export default function ProposalsList() {
         .from('v_proposta')
         .select('*')
         .eq('user_id', user?.id)
-        .order('id', { ascending: false });
+        .order('dt', { ascending: false });
 
       if (error) throw error;
       setPropostas(data || []);
