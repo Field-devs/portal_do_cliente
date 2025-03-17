@@ -11,6 +11,7 @@ interface CrudButtonsProps {
 }
 
 const ActionsButtons: React.FC<CrudButtonsProps> = ({ onCreate, onEdit, onDelete, onLocker, active }) => {
+  console.log(onEdit);
 
   const [activeActual, setActiveActual] = React.useState(active);
   const handleOnLock = async () => {
@@ -29,7 +30,6 @@ const ActionsButtons: React.FC<CrudButtonsProps> = ({ onCreate, onEdit, onDelete
   return (
 
     <div className="flex space-x-2">
-
       {/* Botao de Criação  */}
       {
         onCreate && (

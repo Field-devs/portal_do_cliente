@@ -420,13 +420,7 @@ export default function ProposalsList() {
 
                     <td className="px-6 py-2 whitespace-nowrap">
                       <ActionsButtons
-                        onEdit={() => {
-                          if (proposta.status !== 'AC' && proposta.status !== 'AP') {
-                            handleEdit(proposta.id);
-                          } else {
-                            null;
-                          }
-                        }}
+                        onEdit={() => handleEdit(proposta.id)}
                         onLocker={() => handleOnLock(proposta.id, proposta.active)}
                         active={proposta.active}
                       />

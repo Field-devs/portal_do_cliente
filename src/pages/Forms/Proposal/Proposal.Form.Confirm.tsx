@@ -33,7 +33,7 @@ interface CommercialAffiliateFormProps {
 
 export default function ProposalFormConfirm({ onCancel, initialData }: CommercialAffiliateFormProps) {
   const { id } = useParams<{ id: string }>();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [proposta, setProposta] = useState<Proposta>({} as Proposta);
   const [finish, setFinish] = useState(false);
   const [accepted, setAccepted] = useState(false);
