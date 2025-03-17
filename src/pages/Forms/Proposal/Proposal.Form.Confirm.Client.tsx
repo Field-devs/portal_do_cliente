@@ -1,14 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../../components/AuthProvider';
-import { supabase } from '../../../lib/supabase';
 import {
   Mail,
   User,
   Phone,
-  Calendar,
   AlertCircle,
-  Loader2,
-  Save,
   UserCheck
 } from 'lucide-react';
 import CircularWait from '../../../components/CircularWait';
@@ -18,7 +14,7 @@ interface CommercialAffiliateFormProps {
   onSuccess: () => void;
   onCancel: () => void;
   Tipo: string;
-  sender : Cliente;
+  sender: Cliente;
 }
 
 // Common CSS classes
@@ -32,8 +28,14 @@ export default function ProposalFormConfirmClient({ Tipo, onCancel, sender }: Co
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [prefix] = useState<string>("");
-  
+  const [prefix, setPrefix] = useState<string>("");
+  const [docType, setDocType] = useState<string>("");
+
+
+  useEffect(() => {
+    setPrefix(Tipo == "EMP" ? "emp_" : Tipo == "RES" ? "res_" : "fin_");      
+    setDocType(Tipo == "EMP" ? "cnpj" : "cpf");
+}, []);
 
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -56,7 +58,7 @@ export default function ProposalFormConfirmClient({ Tipo, onCancel, sender }: Co
               <UserCheck className={iconGroupTitleClass} />
             </div>
             <h3 className="text-lg font-medium text-blue-800">
-              {Tipo == "EMP" ? 'Dados da Empresa' : 'Dados do Cliente'}
+              {Tipo == "EMP" ? 'Dados da Empresa' : Tipo == "RES" ? 'Responsavel pela Empresa' : 'Responsável Financeiro'}
             </h3>
           </div>
 
@@ -65,14 +67,14 @@ export default function ProposalFormConfirmClient({ Tipo, onCancel, sender }: Co
             {/* CPF/CNPJ */}
             <div>
               <label className={labelClass}>
-                CNPJ/CPF
+                {Tipo == "EMP" ? 'CNPJ' : 'CPF'}
               </label>
               <div className="mt-1 relative">
                 <User className={iconInputClass} />
                 <input
                   type="text"
                   name={prefix + "cnpjcpf"}
-                  value={sender[prefix + "cnpjcpf"]}
+                  value={sender[docType]}
                   onChange={handleInputChange}
                   className={inputClass}
                 />
@@ -89,7 +91,7 @@ export default function ProposalFormConfirmClient({ Tipo, onCancel, sender }: Co
                 <input
                   type="text"
                   name={prefix + "nome"}
-                  value={IsFinan ?  sender.fin_nome : sender.nome}
+                  value={sender.nome}
                   onChange={handleInputChange}
                   className={inputClass}
                 />
@@ -111,7 +113,7 @@ export default function ProposalFormConfirmClient({ Tipo, onCancel, sender }: Co
                 <input
                   type="email"
                   name={prefix + "email"}
-                  value={IsFinan ?  sender.fin_email : sender.email}
+                  // value={IsFinan ?  sender.fin_email : sender.email}
                   onChange={handleInputChange}
                   className={inputClass}
                 />
@@ -128,7 +130,7 @@ export default function ProposalFormConfirmClient({ Tipo, onCancel, sender }: Co
                 <input
                   type="tel"
                   name={prefix + "fone"}
-                  value={IsFinan ?  sender.fin_fone : sender.fone}
+                  // value={IsFinan ?  sender.fin_fone : sender.fone}
                   onChange={handleInputChange}
                   placeholder="(00) 00000-0000"
                   className={inputClass}
@@ -136,10 +138,7 @@ export default function ProposalFormConfirmClient({ Tipo, onCancel, sender }: Co
                 />
               </div>
             </div>
-
-
           </div>
-
 
           {/* Endereco */}
           <div className="grid grid-cols-7 md:grid-cols-5 gap-6">
@@ -152,7 +151,7 @@ export default function ProposalFormConfirmClient({ Tipo, onCancel, sender }: Co
                 <input
                   type="text"
                   name={prefix + "cep"}
-                  value={IsFinan ?  sender.fin_cep : sender.cep}
+                  // value={IsFinan ?  sender.fin_cep : sender.cep}
                   onChange={handleInputChange}
                   className={inputClass}
                   required
@@ -169,7 +168,7 @@ export default function ProposalFormConfirmClient({ Tipo, onCancel, sender }: Co
                 <input
                   type="text"
                   name={prefix + "logradouro"}
-                  value={IsFinan ?  sender.fin_logradouro : sender.logradouro}
+                  // value={IsFinan ?  sender.fin_logradouro : sender.logradouro}
                   onChange={handleInputChange}
                   className={inputClass}
                   required
@@ -187,7 +186,7 @@ export default function ProposalFormConfirmClient({ Tipo, onCancel, sender }: Co
                 <input
                   type="number"
                   name={prefix + "numero"}
-                  value={IsFinan ?  sender.fin_numero : sender.numero}
+                  // value={IsFinan ?  sender.fin_numero : sender.numero}
                   onChange={handleInputChange}
                   className={inputClass}
                   required
@@ -203,15 +202,13 @@ export default function ProposalFormConfirmClient({ Tipo, onCancel, sender }: Co
                 <input
                   type="text"
                   name={prefix + "bairro"}
-                  value={IsFinan ?  sender.fin_bairro : sender.bairro}
+                  // value={IsFinan ?  sender.fin_bairro : sender.bairro}
                   onChange={handleInputChange}
                   className={inputClass}
                   required
                 />
               </div>
             </div>
-
-            {/* Cidade / UF */}
 
             {/* Cidade */}
             <div className="col-span-2">
@@ -222,7 +219,7 @@ export default function ProposalFormConfirmClient({ Tipo, onCancel, sender }: Co
                 <input
                   type="text"
                   name={prefix + "cidade"}
-                  value={IsFinan ?  sender.fin_cidade : sender.cidade}
+                  // value={IsFinan ?  sender.fin_cidade : sender.cidade}
                   onChange={handleInputChange}
                   className={inputClass}
                   required
@@ -239,7 +236,7 @@ export default function ProposalFormConfirmClient({ Tipo, onCancel, sender }: Co
                 <input
                   type="text"
                   name={prefix + "uf"}
-                  value={IsFinan ?  sender.fin_uf : sender.uf}
+                  //value={IsFinan ?  sender.fin_uf : sender.uf}
                   onChange={handleInputChange}
                   className={inputClass}
                   required
@@ -257,21 +254,15 @@ export default function ProposalFormConfirmClient({ Tipo, onCancel, sender }: Co
                 <input
                   type="text"
                   name={prefix + "referencia"}
-                  value={IsFinan ?  sender.fin_referencia : sender.referencia}
+                  //value={IsFinan ?  sender.fin_referencia : sender.referencia}
                   onChange={handleInputChange}
                   className={inputClass}
                   required
                 />
               </div>
-
             </div>
-
           </div>
-
-
         </div>
-
-
 
         {/* Error Message */}
         {error && (

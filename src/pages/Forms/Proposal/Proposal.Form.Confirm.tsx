@@ -91,10 +91,36 @@ export default function ProposalFormConfirm({ onCancel, initialData }: Commercia
 
           </div>
 
-          <ProposalFormConfirmClient sender={cliente} />
-          <ProposalFormConfirmClient sender={cliente} IsFinan={true} />
+          <ProposalFormConfirmClient Tipo='EMP' sender={cliente} />
+          <ProposalFormConfirmClient Tipo='RES' sender={cliente} />
+          <ProposalFormConfirmClient Tipo='FIN' sender={cliente} />
+
+          {/* Termo de Adesao */}
+          <div className="mt-6">
+            <label className="flex items-center">
+              <input
+                type="checkbox"
+                className="form-checkbox h-5 w-5 text-blue-600"
+                required
+              />
+              <span className="ml-2 text-sm text-black">
+                Eu li e aceito o{" "}
+                <a
+                  href="#"
+                  className="text-blue-600 underline"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    // Logic to open the form to show the terms
+                  }}
+                >
+                  Termo de Adesão
+                </a>
+              </span>
+            </label>
+          </div>
 
           {/* Action Buttons */}
+
           <div className="flex justify-end space-x-3 pt-4">
             <button
               type="button"
