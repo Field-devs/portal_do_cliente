@@ -20,7 +20,6 @@ const ActionsButtons: React.FC<CrudButtonsProps> = ({ onCreate, onEdit, onDelete
 
   const handleEdit = () => {
     onEdit();
-    console.log("Editando");
   };
 
   const handleDelete = () => {

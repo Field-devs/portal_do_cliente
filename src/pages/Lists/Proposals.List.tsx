@@ -53,7 +53,7 @@ export default function ProposalsList() {
   useEffect(() => {
     fetchData();
     const intervalId = setInterval(fetchData, 3000); // 60000 milliseconds = 1 minute
-  
+
     return () => clearInterval(intervalId); // Cleanup interval on component unmount
   }, []);
 
@@ -420,7 +420,13 @@ export default function ProposalsList() {
 
                     <td className="px-6 py-2 whitespace-nowrap">
                       <ActionsButtons
-                        onEdit={() => handleEdit(proposta.id)}
+                        onEdit={() => {
+                          if (proposta.status !== 'AC' && proposta.status !== 'AP') {
+                            handleEdit(proposta.id);
+                          } else {
+                            null;
+                          }
+                        }}
                         onLocker={() => handleOnLock(proposta.id, proposta.active)}
                         active={proposta.active}
                       />
