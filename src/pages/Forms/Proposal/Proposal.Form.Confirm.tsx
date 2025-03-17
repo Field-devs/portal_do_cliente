@@ -8,10 +8,12 @@ import {
 
 import { OUTR_BLACK_IMAGE_URL } from '../../../utils/consts';
 import ProposalFormConfirmClient from './Proposal.Form.Confirm.Client';
+
 import { AskDialog } from '../../../components/Dialogs/Dialogs';
 import CircularWait from '../../../components/CircularWait';
 import { GetProposal, SaveProposal } from './Proposal.Form.Confirm.Logical';
 import { Proposta } from '../../../Models/Propostas';
+import RegistrationSuccess from './Proposal.Form.Confirm.Finish';
 
 interface CommercialAffiliateFormProps {
   onSuccess: () => void;
@@ -32,6 +34,8 @@ export default function ProposalFormConfirm({ onCancel, initialData }: Commercia
   const { id } = useParams<{ id: string }>();
   const [loading, setLoading] = useState(false);
   const [proposta, setProposta] = useState<Proposta>({} as Proposta);
+  const [finish, setFinish] = useState(false);
+  const [accepted, setAccepted] = useState(false);
 
   useEffect(() => {
     const fetchProposal = async () => {
@@ -58,14 +62,23 @@ export default function ProposalFormConfirm({ onCancel, initialData }: Commercia
   const handleSubmit = async (e: React.FormEvent) => {
     let response = await AskDialog("Deseja realmente confirmar esta proposta? Voce não poderá mais editar esta proposta depois de confirmada.", "Confirmar Proposta", "Sim", "Não");
     setLoading(true);
-    SaveProposal(proposta);
-    setLoading(false);
-    //e.preventDefault();
-  };
+    await SaveProposal(proposta).then((response) => {
+      console.log(response);
+      if (response) {
+        setTimeout(() => {
+          setLoading(false);
+          setFinish(true);
+        }, 2000);
+      } 
+      else {
+        setLoading(false);
+      }
+        
+  })};
 
   return (
     loading ? <CircularWait messagefull="Confirmando a Proposta..." small={false} /> :
-
+    finish ? <RegistrationSuccess /> :
       <div className="flex justify-center items-center mt-20">
 
         <form onSubmit={handleSubmit} className="space-y-6 max-w-8xl" >
@@ -92,7 +105,7 @@ export default function ProposalFormConfirm({ onCancel, initialData }: Commercia
 
 
           </div>
-
+    
           <ProposalFormConfirmClient Tipo='EMP' sender={proposta} setSender={setProposta} />
           <ProposalFormConfirmClient Tipo='RES' sender={proposta} setSender={setProposta}  />
           <ProposalFormConfirmClient Tipo='FIN' sender={proposta} setSender={setProposta} />
@@ -103,17 +116,16 @@ export default function ProposalFormConfirm({ onCancel, initialData }: Commercia
               <input
                 type="checkbox"
                 className="form-checkbox h-5 w-5 text-blue-600"
+                checked={accepted}
+                onChange={() => setAccepted(!accepted)}
                 required
               />
               <span className="ml-2 text-sm text-black">
                 Eu li e aceito o{" "}
                 <a
-                  href="#"
+                  href="https://storage.wiseapp360.com/typebot/public/workspaces/clwl6fdyf000511ohlamongyl/typebots/cm683siyl000dm4kxlrec9tb8/results/hvstcq9bln1xt3x3pzrip009/blocks/cz78pvc8stcisz1y8sq2khj1/Termo%20de%20Ades%C3%A3o%20Wiseapp%20V1.pdf"
+                  target='_blank'
                   className="text-blue-600 underline"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    // Logic to open the form to show the terms
-                  }}
                 >
                   Termo de Adesão
                 </a>
@@ -133,11 +145,10 @@ export default function ProposalFormConfirm({ onCancel, initialData }: Commercia
               Cancelar
             </button>
             <button
-              //type="submit"
               type="button"
               onClick={handleSubmit}
               className="px-4 py-2 bg-blue-500/80 hover:bg-blue-600/80 text-white transition-colors flex items-center"
-              disabled={loading}
+              disabled={loading || !accepted}
             >
               {loading ? (
                 <>

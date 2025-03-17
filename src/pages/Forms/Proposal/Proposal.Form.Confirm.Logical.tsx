@@ -59,7 +59,6 @@ async function SaveProposal(proposta: Proposta) {
     dt: proposta.dt
   };
   
-  console.log(proposMap);
   const { data, error } = await supabase
     .from('proposta')
     .update(proposMap)
@@ -67,10 +66,10 @@ async function SaveProposal(proposta: Proposta) {
   if (error) {
     ErrorDialog("Erro ao salvar proposta");
   }
-  if (data) {
-    return data;
+  else 
+  {
+    return true;
   }
-  return undefined;
 }
 
 
