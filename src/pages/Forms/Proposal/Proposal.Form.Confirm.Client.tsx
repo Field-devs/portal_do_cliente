@@ -135,8 +135,8 @@ export default function ProposalFormConfirmClient({ Tipo, onCancel, sender, setS
                 <Phone className={iconInputClass} />
                 <input
                   type="tel"
-                  name={prefix + "fone"}
-                  // value={IsFinan ?  sender.fin_fone : sender.fone}
+                  name={GetFieldName("fone")}
+                  value={sender[GetFieldName("fone")]}
                   placeholder="(00) 00000-0000"
                   className={inputClass}
                   onChange={handleInputChange}
@@ -157,8 +157,8 @@ export default function ProposalFormConfirmClient({ Tipo, onCancel, sender, setS
                 <div className="mt-1 relative">
                   <input
                     type="text"
-                    name={prefix + "cep"}
-                    // value={IsFinan ?  sender.fin_cep : sender.cep}
+                    name={GetFieldName("cep")}
+                    value={sender[GetFieldName("cep")]}
                     className={inputClass}
                     onChange={handleInputChange}
                     required
@@ -174,8 +174,8 @@ export default function ProposalFormConfirmClient({ Tipo, onCancel, sender, setS
                 <div className="mt-1 relative">
                   <input
                     type="text"
-                    name={prefix + "logradouro"}
-                    // value={IsFinan ?  sender.fin_logradouro : sender.logradouro}
+                    name={GetFieldName("logradouro")}
+                    value={sender[GetFieldName("logradouro")]}
                     className={inputClass}
                     onChange={handleInputChange}
                     required
@@ -192,9 +192,9 @@ export default function ProposalFormConfirmClient({ Tipo, onCancel, sender, setS
                 <div className="mt-1 relative">
                   <input
                     type="number"
-                    name={prefix + "numero"}
-                    // value={IsFinan ?  sender.fin_numero : sender.numero}
-                    onChange={handleInputChange}
+                    name={GetFieldName("numero")}
+                    value={sender[GetFieldName("numero")]}
+                      onChange={handleInputChange}
                     className={inputClass}
                     required
                   />
@@ -208,8 +208,8 @@ export default function ProposalFormConfirmClient({ Tipo, onCancel, sender, setS
                 <div className="mt-1 relative">
                   <input
                     type="text"
-                    name={prefix + "bairro"}
-                    // value={IsFinan ?  sender.fin_bairro : sender.bairro}
+                    name={GetFieldName("bairro")}
+                    value={sender[GetFieldName("bairro")]}
                     onChange={handleInputChange}
                     className={inputClass}
                     required
@@ -225,8 +225,8 @@ export default function ProposalFormConfirmClient({ Tipo, onCancel, sender, setS
                 <div className="mt-1 relative">
                   <input
                     type="text"
-                    name={prefix + "cidade"}
-                    // value={IsFinan ?  sender.fin_cidade : sender.cidade}
+                    name={GetFieldName("cidade")}
+                    value={sender[GetFieldName("cidade")]}
                     onChange={handleInputChange}
                     className={inputClass}
                     required
@@ -242,8 +242,8 @@ export default function ProposalFormConfirmClient({ Tipo, onCancel, sender, setS
                 <div className="mt-1 relative">
                   <input
                     type="text"
-                    name={prefix + "uf"}
-                    //value={IsFinan ?  sender.fin_uf : sender.uf}
+                    name={GetFieldName("uf")}
+                    value={sender[GetFieldName("uf")]}
                     onChange={handleInputChange}
                     className={inputClass}
                     required
@@ -260,8 +260,8 @@ export default function ProposalFormConfirmClient({ Tipo, onCancel, sender, setS
                 <div className="mt-1 relative">
                   <input
                     type="text"
-                    name={prefix + "referencia"}
-                    //value={IsFinan ?  sender.fin_referencia : sender.referencia}
+                    name={GetFieldName("referencia")}
+                    value={sender[GetFieldName("referencia")]}
                     onChange={handleInputChange}
                     className={inputClass}
                     required
