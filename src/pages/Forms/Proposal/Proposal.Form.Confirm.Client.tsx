@@ -49,6 +49,38 @@ export default function ProposalFormConfirmClient({ Tipo, onCancel, sender, setS
     return prefix + name;
   }
 
+  const validateForm = () => {
+    const requiredFields = [
+      GetFieldName(docType),
+      GetFieldName("nome"),
+      GetFieldName("email"),
+      GetFieldName("fone"),
+    ];
+  
+    if (Tipo === "EMP") {
+      requiredFields.push(
+        GetFieldName("cep"),
+        GetFieldName("logradouro"),
+        GetFieldName("numero"),
+        GetFieldName("bairro"),
+        GetFieldName("cidade"),
+        GetFieldName("uf"),
+        GetFieldName("referencia")
+      );
+    }
+  
+    let isValid = true;
+    requiredFields.forEach(field => {
+      if (!sender[field]) {
+        isValid = false;
+        document.getElementsByName(field)[0].classList.add("border-red-500");
+      } else {
+        document.getElementsByName(field)[0].classList.remove("border-red-500");
+      }
+    });
+  
+    return isValid;
+  };
 
   return (
     loading ? <CircularWait message="Carregando..." small={true} /> :

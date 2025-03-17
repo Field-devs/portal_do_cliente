@@ -32,11 +32,11 @@ export default function ProposalForm({ id }: FormProps) {
 
   const validationForm = () => {
     if (step === 1) {
-      if ((!propostaDTO.nome || propostaDTO.nome.trim() === "") && (!propostaDTO.email || propostaDTO.email.trim() === "")) {
+      if ((!propostaDTO.emp_nome || propostaDTO.emp_nome.trim() === "") && (!propostaDTO.emp_email || propostaDTO.emp_email.trim() === "")) {
         AlertDialog("Todos os campos são obrigatórios");
         return false;
       }
-      if (validateEmail(propostaDTO.email) === false) {
+      if (validateEmail(propostaDTO.emp_email) === false) {
         AlertDialog("Email inválido");
         return false;
       }

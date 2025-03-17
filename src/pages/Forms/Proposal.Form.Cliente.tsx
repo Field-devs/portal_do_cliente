@@ -23,8 +23,8 @@ export default function ProposalFormCliente({ proposta, setProposta }: { propost
         <label className={labelClass}>Nome</label>
         <input
           type="text"
-          name="nome"
-          value={proposta.nome}
+          name="emp_nome"
+          value={proposta.emp_nome}
           onChange={(e) => handleChange(e)}
           className={inputClass}
         />
@@ -33,10 +33,9 @@ export default function ProposalFormCliente({ proposta, setProposta }: { propost
       <div className={sectionClass}>
         <label className={labelClass}>Email</label>
         <input
-          name="email"
           type="email"
-          autoComplete="email"
-          value={proposta.email}
+          name="emp_email"
+          value={proposta.emp_email}
           onChange={(e) => handleChange(e)}
           className={inputClass}
         />

@@ -45,8 +45,8 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
         desconto: 0,
         total: 0,
         subtotal: 0,
-        nome: "DIXON",
-        email: "dixon@gmail.com",
+        emp_nome: "EMPRESA TESTE",
+        emp_email: "dixon@gmail.com",
 
         addons: addons.filter(addon => addonQuantities[addon.id] > 0).map(addon => ({
           addon_id: addon.id,
