@@ -7,7 +7,7 @@ export default function ProposalFormCliente({ proposta, setProposta }: { propost
     const { name, value } = e.target;
     setProposta({ ...proposta, [name]: value });
   };
-
+  console.log(proposta);
   // Common CSS classes
   const containerClass = "max-w-4xl mx-auto p-3 bg-white shadow-md rounded-lg";
   const titleClass = "text-3xl font-bold";

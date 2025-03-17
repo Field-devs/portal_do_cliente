@@ -45,12 +45,14 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
         desconto: 0,
         total: 0,
         subtotal: 0,
+        nome: "DIXON",
+        email: "dixon@gmail.com",
+
         addons: addons.filter(addon => addonQuantities[addon.id] > 0).map(addon => ({
           addon_id: addon.id,
           quantidade: addonQuantities[addon.id]
         }))
       });
-      console.log(proposta);
       calcProposta();
     }
   }, [selectedPlan, selectedprofile]);
@@ -59,12 +61,9 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
     if (!selectedPlan) return;
     const newSubtotal = selectedPlan.valor + totalAddons;
     setSubtotal(newSubtotal);
-    console.log(newSubtotal);
     // remove simbola in desconto
     const desconto = parseFloat(proposta.desconto.toString().replace("%", "") || "0");
     setTotal(newSubtotal - CalcPercent(newSubtotal, parseFloat(desconto)));
-    console.log("desconto", desconto);
-    console.log(total);
   }
 
   const fetchData = async () => {

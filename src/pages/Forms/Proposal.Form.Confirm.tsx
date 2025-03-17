@@ -15,6 +15,21 @@ import {
 } from 'lucide-react';
 import { OUTR_BLACK_IMAGE_URL } from '../../utils/consts';
 
+// Common CSS classes
+const labelClass = "block text-sm font-medium text-black";
+const inputClass = "pl-12 block w-full border border-gray-700/50 bg-white text-black focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors";
+const iconGroupClass = "flex items-center space-x-3 mb-6";
+const iconGroupTitleClass = "h-6 w-6 text-blue-400";
+const iconInputClass = "absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400";
+const formClass = "space-y-6 max-w-8xl";
+const sectionClass = "bg-white backdrop-blur-sm p-10 border border-gray-700/50";
+const gridClass = "grid grid-cols-1 md:grid-cols-4 gap-6";
+const gridClass3 = "grid grid-cols-1 md:grid-cols-3 gap-6";
+const gridClass5 = "grid grid-cols-7 md:grid-cols-5 gap-6";
+const buttonClass = "px-4 py-2 bg-[#0F172A]/60 text-black hover:bg-[#0F172A]/40 transition-colors";
+const submitButtonClass = "px-4 py-2 bg-blue-500/80 hover:bg-blue-600/80 text-white transition-colors flex items-center";
+const errorClass = "bg-red-500/10 border border-red-500/20 p-4 flex items-center text-red-400";
+
 interface CommercialAffiliateFormProps {
   id : string;
   onSuccess: () => void;
@@ -31,13 +46,6 @@ interface CommercialAffiliateFormProps {
   };
 }
 
-// Common CSS classes
-const labelClass = "block text-sm font-medium text-black";
-const inputClass = "pl-12 block w-full border border-gray-700/50 bg-white text-black focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors";
-const iconGroupClass = "flex items-center space-x-3 mb-6";
-const iconGroupTitleClass = "h-6 w-6 text-blue-400";
-const iconInputClass = "absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400";
-
 export default function ProposalFormaConfirm({ id, onCancel, initialData }: CommercialAffiliateFormProps) {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
@@ -53,8 +61,7 @@ export default function ProposalFormaConfirm({ id, onCancel, initialData }: Comm
 
   return (
     <div className="flex justify-center items-center mt-20">
-
-      <form onSubmit={handleSubmit} className="space-y-6 max-w-8xl" >
+      <form onSubmit={handleSubmit} className={formClass}>
         {/* Cabecalho 1 */}
         <div className={iconGroupClass}>
           <img src={OUTR_BLACK_IMAGE_URL} alt="Logo" width="48" height="48" />
@@ -63,10 +70,8 @@ export default function ProposalFormaConfirm({ id, onCancel, initialData }: Comm
           </h4>
         </div>
 
-
         {/* Informacoes Basicas */}
-        <div className="bg-white backdrop-blur-sm p-10 border border-gray-700/50">
-
+        <div className={sectionClass}>
           {/* Cabecalho 1 */}
           <div className={iconGroupClass}>
             <div className="bg-blue-400/10 p-3 rounded-xl">
@@ -78,7 +83,7 @@ export default function ProposalFormaConfirm({ id, onCancel, initialData }: Comm
           </div>
 
           {/* CNPJ/Nome */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div className={gridClass}>
             {/* CPF/CNPJ */}
             <div>
               <label className={labelClass}>
@@ -112,12 +117,10 @@ export default function ProposalFormaConfirm({ id, onCancel, initialData }: Comm
                 />
               </div>
             </div>
-
-
           </div>
 
           {/* Email/Fone/Nascimento */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className={gridClass3}>
             {/* Email */}
             <div>
               <label className={labelClass}>
@@ -172,9 +175,8 @@ export default function ProposalFormaConfirm({ id, onCancel, initialData }: Comm
             </div>
           </div>
 
-
           {/* Endereco */}
-          <div className="grid grid-cols-7 md:grid-cols-5 gap-6">
+          <div className={gridClass5}>
             {/* CEP */}
             <div className="col-span-1">
               <label className={labelClass}>
@@ -207,7 +209,6 @@ export default function ProposalFormaConfirm({ id, onCancel, initialData }: Comm
               </div>
             </div>
 
-
             {/* Numero */}
             <div className="col-span-1">
               <label className={labelClass}>
@@ -223,6 +224,7 @@ export default function ProposalFormaConfirm({ id, onCancel, initialData }: Comm
                 />
               </div>
             </div>
+
             {/* Bairro */}
             <div className="col-span-2">
               <label className={labelClass}>
@@ -238,8 +240,6 @@ export default function ProposalFormaConfirm({ id, onCancel, initialData }: Comm
                 />
               </div>
             </div>
-
-            {/* Cidade / UF */}
 
             {/* Cidade */}
             <div className="col-span-2">
@@ -271,7 +271,6 @@ export default function ProposalFormaConfirm({ id, onCancel, initialData }: Comm
                   required
                 />
               </div>
-
             </div>
 
             {/* Referencia */}
@@ -282,35 +281,30 @@ export default function ProposalFormaConfirm({ id, onCancel, initialData }: Comm
               <div className="mt-1 relative">
                 <input
                   type="text"
-                  name="referencia  "
+                  name="referencia"
                   onChange={handleInputChange}
                   className={inputClass}
                   required
                 />
               </div>
-
             </div>
-
           </div>
-
-
         </div>
 
         {/* Informacoes Basicas */}
-        <div className="bg-white backdrop-blur-sm p-10 border border-gray-700/50">
-
+        <div className={sectionClass}>
           {/* Cabecalho 1 */}
           <div className={iconGroupClass}>
             <div className="bg-blue-400/10 p-3 rounded-xl">
               <UserCheck className={iconGroupTitleClass} />
             </div>
             <h3 className="text-lg font-medium text-blue-800">
-            Responsável Financeiro
+              Responsável Financeiro
             </h3>
           </div>
 
           {/* CNPJ/Nome */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div className={gridClass}>
             {/* CPF/CNPJ */}
             <div>
               <label className={labelClass}>
@@ -344,12 +338,10 @@ export default function ProposalFormaConfirm({ id, onCancel, initialData }: Comm
                 />
               </div>
             </div>
-
-
           </div>
 
           {/* Email/Fone/Nascimento */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className={gridClass3}>
             {/* Email */}
             <div>
               <label className={labelClass}>
@@ -384,13 +376,10 @@ export default function ProposalFormaConfirm({ id, onCancel, initialData }: Comm
                 />
               </div>
             </div>
-
-
           </div>
 
-
           {/* Endereco */}
-          <div className="grid grid-cols-7 md:grid-cols-5 gap-6">
+          <div className={gridClass5}>
             {/* CEP */}
             <div className="col-span-1">
               <label className={labelClass}>
@@ -423,7 +412,6 @@ export default function ProposalFormaConfirm({ id, onCancel, initialData }: Comm
               </div>
             </div>
 
-
             {/* Numero */}
             <div className="col-span-1">
               <label className={labelClass}>
@@ -439,6 +427,7 @@ export default function ProposalFormaConfirm({ id, onCancel, initialData }: Comm
                 />
               </div>
             </div>
+
             {/* Bairro */}
             <div className="col-span-2">
               <label className={labelClass}>
@@ -454,8 +443,6 @@ export default function ProposalFormaConfirm({ id, onCancel, initialData }: Comm
                 />
               </div>
             </div>
-
-            {/* Cidade / UF */}
 
             {/* Cidade */}
             <div className="col-span-2">
@@ -487,7 +474,6 @@ export default function ProposalFormaConfirm({ id, onCancel, initialData }: Comm
                   required
                 />
               </div>
-
             </div>
 
             {/* Referencia */}
@@ -498,25 +484,19 @@ export default function ProposalFormaConfirm({ id, onCancel, initialData }: Comm
               <div className="mt-1 relative">
                 <input
                   type="text"
-                  name="referencia  "
+                  name="referencia"
                   onChange={handleInputChange}
                   className={inputClass}
                   required
                 />
               </div>
-
             </div>
-
           </div>
-
-
         </div>
-
-
 
         {/* Error Message */}
         {error && (
-          <div className="bg-red-500/10 border border-red-500/20 p-4 flex items-center text-red-400">
+          <div className={errorClass}>
             <AlertCircle className="h-5 w-5 mr-2 flex-shrink-0" />
             <p className="text-sm">{error}</p>
           </div>
@@ -527,14 +507,14 @@ export default function ProposalFormaConfirm({ id, onCancel, initialData }: Comm
           <button
             type="button"
             onClick={onCancel}
-            className="px-4 py-2 bg-[#0F172A]/60 text-black hover:bg-[#0F172A]/40 transition-colors"
+            className={buttonClass}
             disabled={loading}
           >
             Cancelar
           </button>
           <button
             type="submit"
-            className="px-4 py-2 bg-blue-500/80 hover:bg-blue-600/80 text-white transition-colors flex items-center"
+            className={submitButtonClass}
             disabled={loading}
           >
             {loading ? (

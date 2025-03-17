@@ -11,10 +11,15 @@ import { validateEmail } from "../../utils/Validation";
 
 export default function ProposalForm({ id }: FormProps) {
   const [step, setStep] = useState(0);
-  const [propostaDTO, setPropostaDTO] = useState<PropostaDTO>({ desconto: 0, total: 0, validade: 15 } as PropostaDTO);
+  
+  const [propostaDTO, setPropostaDTO] = useState<PropostaDTO>({ 
+    desconto: 0, total: 0, validade: 15 } as PropostaDTO);
+
   const [idproposta, setIdProposta] = useState();
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
+
+  console.log(propostaDTO);
 
   const handleNext = () => {
     if (validationForm())
@@ -49,6 +54,10 @@ export default function ProposalForm({ id }: FormProps) {
       delete newproposta.addons; // Remove o campo addons
       delete newproposta.total; // Remove o campo addons
 
+      // Remover o % de desconto
+      if (newproposta.desconto) {
+        newproposta.desconto = parseFloat(newproposta.desconto.toString().replace('%', ''));
+      }
       const propostaToInsert = { ...newproposta, user_id: user?.id };
       setPropostaDTO(propostaToInsert); // Atualiza o estado com o objeto modificado
 
