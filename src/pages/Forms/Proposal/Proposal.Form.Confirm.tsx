@@ -91,9 +91,9 @@ export default function ProposalFormConfirm({ onCancel, initialData }: Commercia
 
           </div>
 
-          <ProposalFormConfirmClient Tipo='EMP' sender={cliente} />
-          <ProposalFormConfirmClient Tipo='RES' sender={cliente} />
-          <ProposalFormConfirmClient Tipo='FIN' sender={cliente} />
+          <ProposalFormConfirmClient Tipo='EMP' sender={cliente} setSender={setCliente} />
+          <ProposalFormConfirmClient Tipo='RES' sender={cliente} setSender={setCliente}  />
+          <ProposalFormConfirmClient Tipo='FIN' sender={cliente} setSender={setCliente} />
 
           {/* Termo de Adesao */}
           <div className="mt-6">
