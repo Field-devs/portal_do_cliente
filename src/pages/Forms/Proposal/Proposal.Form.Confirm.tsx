@@ -50,6 +50,7 @@ export default function ProposalFormConfirm({ onCancel, initialData }: Commercia
     fetchProposal();
   }, [id]);
 
+  
   // Common CSS classes
   const iconGroupClass = "flex items-center space-x-3 mb-6";
   const iconGroupTitleClass = "h-6 w-6 text-blue-400";

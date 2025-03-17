@@ -98,4 +98,4 @@ interface PropostaDTO {
 }
 
 
-export type {Proposta, PropostaDTO};
+export type { Proposta, PropostaDTO };
