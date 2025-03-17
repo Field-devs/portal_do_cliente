@@ -8,14 +8,14 @@ import {
   UserCheck
 } from 'lucide-react';
 import CircularWait from '../../../components/CircularWait';
-import Cliente from '../../../Models/Cliente';
+import { Proposta } from '../../../Models/Propostas';
 
 interface CommercialAffiliateFormProps {
   onSuccess: () => void;
   onCancel: () => void;
   Tipo: string;
-  sender: Cliente;
-  setSender: React.Dispatch<React.SetStateAction<Cliente>>;
+  sender: Proposta;
+  setSender: React.Dispatch<React.SetStateAction<Proposta>>;
 }
 
 // Common CSS classes
@@ -49,38 +49,6 @@ export default function ProposalFormConfirmClient({ Tipo, onCancel, sender, setS
     return prefix + name;
   }
 
-  const validateForm = () => {
-    const requiredFields = [
-      GetFieldName(docType),
-      GetFieldName("nome"),
-      GetFieldName("email"),
-      GetFieldName("fone"),
-    ];
-  
-    if (Tipo === "EMP") {
-      requiredFields.push(
-        GetFieldName("cep"),
-        GetFieldName("logradouro"),
-        GetFieldName("numero"),
-        GetFieldName("bairro"),
-        GetFieldName("cidade"),
-        GetFieldName("uf"),
-        GetFieldName("referencia")
-      );
-    }
-  
-    let isValid = true;
-    requiredFields.forEach(field => {
-      if (!sender[field]) {
-        isValid = false;
-        document.getElementsByName(field)[0].classList.add("border-red-500");
-      } else {
-        document.getElementsByName(field)[0].classList.remove("border-red-500");
-      }
-    });
-  
-    return isValid;
-  };
 
   return (
     loading ? <CircularWait message="Carregando..." small={true} /> :
@@ -129,7 +97,7 @@ export default function ProposalFormConfirmClient({ Tipo, onCancel, sender, setS
                 <input
                   type="text"
                   name={GetFieldName("nome")}
-                  value={sender.nome}
+                  value={sender[GetFieldName("nome")]}
                   onChange={handleInputChange}
                   className={inputClass}
                 />
@@ -284,22 +252,7 @@ export default function ProposalFormConfirmClient({ Tipo, onCancel, sender, setS
 
               </div>
 
-              {/* Referencia */}
-              <div className="col-span-5">
-                <label className={labelClass}>
-                  Referencia
-                </label>
-                <div className="mt-1 relative">
-                  <input
-                    type="text"
-                    name={GetFieldName("referencia")}
-                    value={sender[GetFieldName("referencia")]}
-                    onChange={handleInputChange}
-                    className={inputClass}
-                    required
-                  />
-                </div>
-              </div>
+
             </div>
           )}
         </div>

@@ -9,9 +9,8 @@ import {
 import { OUTR_BLACK_IMAGE_URL } from '../../../utils/consts';
 import ProposalFormConfirmClient from './Proposal.Form.Confirm.Client';
 import { AskDialog } from '../../../components/Dialogs/Dialogs';
-import Cliente from '../../../Models/Cliente';
 import CircularWait from '../../../components/CircularWait';
-import { GetProposal } from './Proposal.Form.Confirm.Logical';
+import { GetProposal, SaveProposal } from './Proposal.Form.Confirm.Logical';
 import { Proposta } from '../../../Models/Propostas';
 
 interface CommercialAffiliateFormProps {
@@ -32,20 +31,20 @@ interface CommercialAffiliateFormProps {
 export default function ProposalFormConfirm({ onCancel, initialData }: CommercialAffiliateFormProps) {
   const { id } = useParams<{ id: string }>();
   const [loading, setLoading] = useState(false);
-  const [cliente, setCliente] = useState<Cliente>({} as Cliente);
   const [proposta, setProposta] = useState<Proposta>({} as Proposta);
 
   useEffect(() => {
     const fetchProposal = async () => {
-      let response = await GetProposal(id);
-      console.log(response);
-      if (response) {
-        // Seta campos de cliente
-        setCliente({
-          nome: response.nome,
-          email: response.email,
-          fone: response.fone,
-        });
+      setLoading(true);
+      try {
+        let response = await GetProposal(id);
+        if (response) {
+          setProposta(response);
+        }
+      } catch (error) {
+        console.error("Failed to fetch proposal:", error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchProposal();
@@ -58,6 +57,8 @@ export default function ProposalFormConfirm({ onCancel, initialData }: Commercia
   const handleSubmit = async (e: React.FormEvent) => {
     let response = await AskDialog("Deseja realmente confirmar esta proposta? Voce não poderá mais editar esta proposta depois de confirmada.", "Confirmar Proposta", "Sim", "Não");
     setLoading(true);
+    SaveProposal(proposta);
+    setLoading(false);
     //e.preventDefault();
   };
 
@@ -91,9 +92,9 @@ export default function ProposalFormConfirm({ onCancel, initialData }: Commercia
 
           </div>
 
-          <ProposalFormConfirmClient Tipo='EMP' sender={cliente} setSender={setCliente} />
-          <ProposalFormConfirmClient Tipo='RES' sender={cliente} setSender={setCliente}  />
-          <ProposalFormConfirmClient Tipo='FIN' sender={cliente} setSender={setCliente} />
+          <ProposalFormConfirmClient Tipo='EMP' sender={proposta} setSender={setProposta} />
+          <ProposalFormConfirmClient Tipo='RES' sender={proposta} setSender={setProposta}  />
+          <ProposalFormConfirmClient Tipo='FIN' sender={proposta} setSender={setProposta} />
 
           {/* Termo de Adesao */}
           <div className="mt-6">
