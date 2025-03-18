@@ -3,6 +3,7 @@ import { useAuth } from '../../components/AuthProvider';
 import {
   Plus,
   Search,
+  Filter,
   Package,
   PlusSquare,
   HeadphonesIcon,
@@ -31,6 +32,7 @@ export default function PlanList() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState<ContentType>('plans');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive'>('all');
   const [showPlanForm, setShowPlanForm] = useState(false);
   const [showAddonForm, setShowAddonForm] = useState(false);
 
@@ -125,11 +127,17 @@ export default function PlanList() {
   };
 
   const filteredPlans = plans.filter(plan =>
-    plan.nome.toLowerCase().includes(searchTerm.toLowerCase())
+    plan.nome.toLowerCase().includes(searchTerm.toLowerCase()) &&
+    (statusFilter === 'all' || 
+    (statusFilter === 'active' && plan.active) || 
+    (statusFilter === 'inactive' && !plan.active))
   );
 
   const filteredAddons = addons.filter(addon =>
-    addon.nome.toLowerCase().includes(searchTerm.toLowerCase())
+    addon.nome.toLowerCase().includes(searchTerm.toLowerCase()) &&
+    (statusFilter === 'all' || 
+    (statusFilter === 'active' && addon.active) || 
+    (statusFilter === 'inactive' && !addon.active))
   );
 
   if (loading) {
@@ -186,15 +194,33 @@ export default function PlanList() {
       {/* Search and Tabs */}
       <div className={cardClass}>
         <div className="flex flex-col space-y-6">
-          <div className="relative">
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Buscar por nome..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-lg shadow-sm"
-            />
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="flex-1">
+              <div className="relative">
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Buscar por nome..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-lg shadow-sm"
+                />
+              </div>
+            </div>
+            <div className="flex items-center space-x-4">
+              <div className="relative">
+                <Filter className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <select
+                  value={statusFilter}
+                  onChange={(e) => setStatusFilter(e.target.value as 'all' | 'active' | 'inactive')}
+                  className="pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors appearance-none min-w-[200px] rounded-lg shadow-sm"
+                >
+                  <option value="all">Todos os Status</option>
+                  <option value="active">Ativos</option>
+                  <option value="inactive">Inativos</option>
+                </select>
+              </div>
+            </div>
           </div>
 
           <div className="flex space-x-4">

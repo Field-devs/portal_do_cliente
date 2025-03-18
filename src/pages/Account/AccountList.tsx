@@ -27,7 +27,6 @@ function AccountList() {
   const [searchTerm, setSearchTerm] = useState('');
   const [roleFilter, setRoleFilter] = useState<number | 'all'>('all');
   const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive'>('all');
-  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const [showUserForm, setShowUserForm] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
 
@@ -66,7 +65,10 @@ function AccountList() {
   };
 
   const handleEdit = () => {
-    setEditingUser(user);
+    const selectedUser = users.find(u => u.id === user?.id);
+    if (selectedUser) {
+      setEditingUser(selectedUser);
+    }
     setShowUserForm(true);
   };
 
@@ -120,11 +122,18 @@ function AccountList() {
       <ModalForm
         isOpen={showUserForm}
         onClose={handleFormClose}
-        title={editingUser ? "Editar Usuário" : "Nova Conta"}
+        title={editingUser ? `Editar Usuário: ${editingUser.nome}` : "Nova Conta"}
         maxWidth="2xl"
       >
         <UserForm
-          initialData={editingUser || undefined}
+          initialData={editingUser ? {
+            id: editingUser.id,
+            nome: editingUser.nome,
+            email: editingUser.email || '',
+            empresa: editingUser.empresa || '',
+            cnpj: editingUser.cnpj || '',
+            perfil_id: editingUser.perfil_id
+          } : undefined}
           onSuccess={() => {
             handleFormClose();
             fetchUsers();
@@ -338,7 +347,10 @@ function AccountList() {
                     <div className="flex justify-center space-x-2">
 
                       <ActionsButtons
-                        onEdit={handleEdit}
+                        onEdit={() => {
+                          setEditingUser(user);
+                          setShowUserForm(true);
+                        }}
                         onLocker={user.perfil_id == 1 ? null : async () => handleOnLock(user.id, user.active)}
                         active={user.active}
                       />

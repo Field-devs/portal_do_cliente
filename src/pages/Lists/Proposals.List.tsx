@@ -12,7 +12,8 @@ import {
   XCircle,
   MoreVertical,
   Link,
-  CreditCard
+  CreditCard,
+  Calendar
 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { usePlanos } from '../../hooks/usePlanos';
@@ -35,6 +36,11 @@ export default function ProposalsList() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'accepted' | 'rejected'>('all');
+  const [dateFilter, setDateFilter] = useState<'year' | 'month' | '15days' | 'day' | 'custom'>('year');
+  const [customDateRange, setCustomDateRange] = useState({
+    start: '',
+    end: ''
+  });
   const [OpenProposal, setOpenProposal] = useState(false);
   const [active, SetActive] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -122,7 +128,35 @@ export default function ProposalsList() {
   };
 
   const filteredProposals = propostas.filter(() => {
-    return propostas;
+    const now = new Date();
+    const oneYearAgo = new Date(now.getFullYear() - 1, now.getMonth(), now.getDate());
+    const oneMonthAgo = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
+    const fifteenDaysAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 15);
+    const oneDayAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
+
+    return propostas.filter(proposta => {
+      const propostaDate = new Date(proposta.dt);
+      
+      switch (dateFilter) {
+        case 'year':
+          return propostaDate >= oneYearAgo;
+        case 'month':
+          return propostaDate >= oneMonthAgo;
+        case '15days':
+          return propostaDate >= fifteenDaysAgo;
+        case 'day':
+          return propostaDate >= oneDayAgo;
+        case 'custom':
+          const startDate = customDateRange.start ? new Date(customDateRange.start) : null;
+          const endDate = customDateRange.end ? new Date(customDateRange.end) : null;
+          if (startDate && endDate) {
+            return propostaDate >= startDate && propostaDate <= endDate;
+          }
+          return true;
+        default:
+          return true;
+      }
+    });
   });
 
   if (loading || planosLoading) {
@@ -299,6 +333,36 @@ export default function ProposalsList() {
                   <option value="rejected">Recusadas</option>
                 </select>
               </div>
+              <div className="relative">
+                <Calendar className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <select
+                  value={dateFilter}
+                  onChange={(e) => setDateFilter(e.target.value as typeof dateFilter)}
+                  className="pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors appearance-none min-w-[200px] rounded-lg shadow-sm"
+                >
+                  <option value="year">Último Ano</option>
+                  <option value="month">Último Mês</option>
+                  <option value="15days">Últimos 15 Dias</option>
+                  <option value="day">Último Dia</option>
+                  <option value="custom">Personalizado</option>
+                </select>
+              </div>
+              {dateFilter === 'custom' && (
+                <div className="flex space-x-2">
+                  <input
+                    type="date"
+                    value={customDateRange.start}
+                    onChange={(e) => setCustomDateRange(prev => ({ ...prev, start: e.target.value }))}
+                    className="pl-4 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-lg shadow-sm"
+                  />
+                  <input
+                    type="date"
+                    value={customDateRange.end}
+                    onChange={(e) => setCustomDateRange(prev => ({ ...prev, end: e.target.value }))}
+                    className="pl-4 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-lg shadow-sm"
+                  />
+                </div>
+              )}
             </div>
           </div>
         </div>
