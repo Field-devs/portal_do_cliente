@@ -4,7 +4,7 @@ import {
   DollarSign,
   TrendingUp,
   UserPlus,
-  Building,
+  Building2,
   UserCheck
 } from 'lucide-react';
 import {
@@ -20,59 +20,37 @@ import {
 } from 'recharts';
 import { supabase } from '../../lib/supabase';
 import { useEffect, useState } from 'react';
-import { da } from 'date-fns/locale';
 import CircularWait from '../../components/CircularWait';
-
-const revenueData = [
-  { month: 'Jan', revenue: 12000, projected: 15000 },
-  { month: 'Fev', revenue: 19000, projected: 22000 },
-  { month: 'Mar', revenue: 25000, projected: 28000 },
-  { month: 'Abr', revenue: 32000, projected: 35000 },
-  { month: 'Mai', revenue: 40000, projected: 42000 },
-  { month: 'Jun', revenue: 45000, projected: 48000 },
-];
-const acquisitionData = [
-  { month: 'Jan', cf: 5, ava: 2 },
-  { month: 'Fev', cf: 8, ava: 3 },
-  { month: 'Mar', cf: 12, ava: 5 },
-  { month: 'Abr', cf: 15, ava: 7 },
-  { month: 'Mai', cf: 20, ava: 10 },
-  { month: 'Jun', cf: 25, ava: 12 },
-];
 
 interface IDashboardData {
   totalProp: number;
   totalPropPerc: number;
-
   activeCli: number;
   activeCliNews: number;
-
   totalCashMonth: number;
   totalCashMonthLastMonth: number;
-
   activeParc: number;
   activeParcNew: number;
-  receitaProjecao: JSON[] | any;
+  receitaProjecao: any[];
 }
 
-
 export default function AdminDashboard() {
-  const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-light-border dark:border-gray-700/50";
+  const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  // Consistent class names using Tailwind config
+  const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50 rounded-lg";
   const titleClass = "text-4xl font-bold text-light-text-primary dark:text-white";
   const metricTitleClass = "text-lg font-medium text-light-text-primary dark:text-white mb-1";
   const metricValueClass = "text-3xl font-bold text-light-text-primary dark:text-white";
   const metricSubtextClass = "text-sm text-light-text-secondary dark:text-blue-200";
-  const iconContainerClass = "bg-blue-400/10 p-3 rounded-xl";
+  const iconContainerClass = "bg-blue-400/10 p-3 rounded-lg";
   const iconClass = "h-6 w-6 text-blue-600 dark:text-blue-400";
-  const badgeClass = "text-xs font-medium bg-blue-50 dark:bg-blue-400/10 text-blue-600 dark:text-blue-400 px-2 py-1 rounded-full";
-
-  const [userData, setUserData] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const badgeClass = "text-xs font-medium bg-blue-50 dark:bg-blue-400/10 text-blue-600 dark:text-blue-400 px-2 py-1 rounded-lg";
 
   async function fetchData() {
     setLoading(true);
-    const { data, error } = await supabase
-      .rpc('fn_dashboard').single();
+    const { data, error } = await supabase.rpc('fn_dashboard').single();
     if (error) {
       console.error("Error fetching data:", error);
     }
@@ -85,21 +63,14 @@ export default function AdminDashboard() {
   let DashboardData: IDashboardData = {
     totalProp: userData?.r_total_prop || 0,
     totalPropPerc: userData?.r_total_prop_perc || 0,
-
     activeCli: userData?.r_active_cli || 0,
     activeCliNews: userData?.r_active_cli_news || 0,
-
     totalCashMonth: userData?.r_total_cash_month || 0,
     totalCashMonthLastMonth: userData?.r_total_cash_month_last_month || 0,
-
     activeParc: userData?.r_active_parc || 0,
     activeParcNew: userData?.r_active_parc_new || 0,
-
-
-    receitaProjecao: userData?.r_receita_projecao,
-    //    receitaProjecao : userData ? JSON.parse(userData.receitaProjecao) : [],
-  }
-
+    receitaProjecao: userData?.r_receita_projecao || []
+  };
 
   useEffect(() => {
     fetchData();
@@ -108,7 +79,7 @@ export default function AdminDashboard() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <CircularWait message="DashBoard Financeiro" />
+        <CircularWait message="Dashboard" />
       </div>
     );
   }
@@ -162,7 +133,9 @@ export default function AdminDashboard() {
             <span className={badgeClass}>Este Mês</span>
           </div>
           <h3 className={metricTitleClass}>Receita Mensal</h3>
-          <p className={metricValueClass}>R$ {DashboardData.totalCashMonth}</p>
+          <p className={metricValueClass}>
+            R$ {DashboardData.totalCashMonth}
+          </p>
           <div className="flex items-center mt-2">
             <TrendingUp className="h-4 w-4 mr-1 text-blue-600 dark:text-blue-400" />
             <span className={metricSubtextClass}>+{DashboardData.totalCashMonthLastMonth}% vs último mês</span>
@@ -173,7 +146,7 @@ export default function AdminDashboard() {
         <div className={cardClass}>
           <div className="flex items-center justify-between mb-4">
             <div className={iconContainerClass}>
-              <Building className={iconClass} />
+              <Building2 className={iconClass} />
             </div>
             <span className={badgeClass}>Total Atual</span>
           </div>
@@ -248,7 +221,14 @@ export default function AdminDashboard() {
           </div>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={acquisitionData}>
+              <LineChart data={[
+                { month: 'Jan', cf: 5, ava: 2 },
+                { month: 'Fev', cf: 8, ava: 3 },
+                { month: 'Mar', cf: 12, ava: 5 },
+                { month: 'Abr', cf: 15, ava: 7 },
+                { month: 'Mai', cf: 20, ava: 10 },
+                { month: 'Jun', cf: 25, ava: 12 }
+              ]}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#1E293B" />
                 <XAxis dataKey="month" stroke="#64748B" />
                 <YAxis stroke="#64748B" />

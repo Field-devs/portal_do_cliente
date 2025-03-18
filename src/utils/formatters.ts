@@ -34,6 +34,12 @@ export function formatPhone(value: string | undefined | null) {
   return numbers.replace(/^(\d{2})(\d{4})(\d{4}).*/, '($1) $2-$3');
 }
 
+// Format CEP: 00000-000 
+export function formatCEP(value: string): string {
+  const numbers = value.replace(/\D/g, '');
+  return numbers.replace(/^(\d{5})(\d{3}).*/, '$1-$2');
+}
+
 // Format currency to BRL
 export function formatCurrency(value: number): string {
   return new Intl.NumberFormat('pt-BR', {

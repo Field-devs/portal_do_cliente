@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../components/AuthProvider';
+import { useTheme } from '../../components/ThemeProvider';
 import { Mail, Lock, AlertCircle, Loader2, Eye, EyeOff, CheckCircle } from 'lucide-react';
 
 export default function Login() {
@@ -11,6 +12,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const { signIn } = useAuth();
+  const { theme } = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -46,9 +48,12 @@ export default function Login() {
     <div className="min-h-screen bg-light-primary dark:bg-dark-primary flex flex-col justify-center py-12 sm:px-6 lg:px-8 transition-colors">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <img
-          src="https://storage.wiseapp360.com/typebot/public/workspaces/clwl6fdyf000511ohlamongyl/typebots/cm683siyl000dm4kxlrec9tb8/results/m2n2jfpdc8sedkee07cafp0r/blocks/cz78pvc8stcisz1y8sq2khj1/0cc329_44c4841586af44c5916565126e60942f~mv2.png"
+          src={theme === 'dark' 
+            ? "https://storage.wiseapp360.com/typebot/public/workspaces/clwl6fdyf000511ohlamongyl/typebots/cm683siyl000dm4kxlrec9tb8/results/o8d794yn1ogm3tkwnoovqwxy/blocks/cz78pvc8stcisz1y8sq2khj1/logo_branco.png"
+            : "https://storage.wiseapp360.com/typebot/public/workspaces/clwl6fdyf000511ohlamongyl/typebots/cm683siyl000dm4kxlrec9tb8/results/rek15xuf3h8w9f5s2fmkpylh/blocks/cz78pvc8stcisz1y8sq2khj1/VerticalBlack.png"
+          }
           alt="OUTR.ONE"
-          className="mx-auto h-16 w-auto"
+          className="mx-auto h-24 w-auto"
         />
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-white">
           Portal do Cliente

@@ -49,7 +49,7 @@ export default function PartnerList() {
   const [showAfilate, setShowAfilate] = useState<boolean>(false);
 
 
-  const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50";
+  const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50 rounded-lg";
   const titleClass = "text-4xl font-bold text-light-text-primary dark:text-white";
 
   useEffect(() => {
@@ -138,7 +138,7 @@ export default function PartnerList() {
         {tipo == 'AF' && (
           <button
             onClick={() => handleClickNew()}
-            className="flex items-center px-4 py-2 bg-brand hover:bg-brand/90 text-white transition-colors"
+            className="flex items-center px-4 py-2 bg-brand hover:bg-brand/90 text-white transition-colors rounded-lg"
           >
             <Plus className="h-5 w-5 mr-2" />
             {tipo === 'AF' ? 'Adicionar Afiliado' : 'Adicionar AVA'}
@@ -153,7 +153,7 @@ export default function PartnerList() {
           <div className="flex space-x-4">
             <button
               onClick={() => setTipo('CF')}
-              className={`flex items-center px-4 py-2 rounded-lg transition-colors ${tipo === 'CF'
+              className={`flex items-center px-4 py-2 rounded-lg transition-colors ${tipo === 'CF' 
                 ? 'bg-brand-50 text-brand-600 dark:bg-brand-900/20 dark:text-brand-400'
                 : 'text-gray-600 dark:text-gray-400 hover:bg-brand-50/50 dark:hover:bg-brand-900/10 hover:text-brand-600 dark:hover:text-brand-400'
                 }`}
@@ -193,7 +193,7 @@ export default function PartnerList() {
                   placeholder="Buscar por nome, email ou telefone..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors"
+                  className="w-full pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-lg shadow-sm"
                 />
               </div>
             </div>
@@ -203,7 +203,7 @@ export default function PartnerList() {
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value as 'all' | 'active' | 'inactive')}
-                  className="pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors appearance-none min-w-[200px]"
+                  className="pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors appearance-none min-w-[200px] rounded-lg shadow-sm"
                 >
                   <option value="all">Todos os Status</option>
                   <option value="active">Ativos</option>
@@ -216,11 +216,11 @@ export default function PartnerList() {
       </div>
 
       {/* Content */}
-      <div className={`${cardClass} mt-12`}>
+      <div className={`${cardClass} mt-12 overflow-hidden`}>
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-light-border dark:divide-gray-700/50">
+          <table className="min-w-full divide-y divide-light-border dark:divide-gray-700/50 rounded-lg overflow-hidden">
             <thead>
-              <tr className="bg-light-secondary dark:bg-[#0F172A]/60">
+              <tr className="bg-light-secondary dark:bg-[#0F172A]/60 rounded-t-lg">
                 <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                   Nome
                 </th>

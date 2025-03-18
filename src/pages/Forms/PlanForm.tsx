@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../components/AuthProvider';
 import { supabase } from '../../lib/supabase';
-import SwitchFrag from '../../components/Fragments/SwitchFrag';
 import {
   Users,
   Bot,
@@ -29,8 +28,8 @@ interface PlanFormProps {
     automacoes: number;
     suporte_humano: boolean;
     kanban: boolean;
-    active: boolean;
     whatsapp_oficial: boolean;
+    active: boolean;
   };
 }
 
@@ -48,9 +47,17 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
     automacoes: initialData?.automacoes || 1,
     suporte_humano: initialData?.suporte_humano || false,
     kanban: initialData?.kanban || true,
-    active : initialData?.active || true,
-    whatsapp_oficial: initialData?.whatsapp_oficial || false
+    whatsapp_oficial: initialData?.whatsapp_oficial || false,
+    active: initialData?.active || true
   });
+
+  const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50 rounded-lg";
+  const labelClass = "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1";
+  const inputClass = "w-full pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-lg shadow-sm";
+  const iconGroupClass = "flex items-center space-x-3 mb-6";
+  const iconGroupTitleClass = "h-6 w-6 text-brand dark:text-blue-400";
+  const iconInputClass = "absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400";
+  const featureClass = "flex items-center space-x-3 p-4 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 rounded-lg hover:bg-light-border/50 dark:hover:bg-[#0F172A]/40 transition-colors";
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;
@@ -77,8 +84,7 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
     try {
       const planData = {
         ...formData,
-        user_id: user.id,
-        active: true
+        user_id: user.id
       };
 
       if (initialData?.id) {
@@ -95,6 +101,7 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
 
         if (error) throw error;
       }
+
       onSuccess();
     } catch (error) {
       console.error('Error saving plan:', error);
@@ -104,24 +111,13 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
     }
   };
 
-  const cardClass = "bg-white dark:bg-[#1E293B]/70 backdrop-blur-sm p-6 border border-gray-200 dark:border-gray-700/50 shadow-lg";
-  const inputClass = "pl-12 block w-full border border-gray-200 dark:border-gray-700/50 bg-white dark:bg-[#0F172A]/60 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-brand focus:border-transparent transition-colors";
-  const labelClass = "block text-sm font-medium text-gray-700 dark:text-gray-300";
-  const iconClass = "absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400";
-
-  const handleChange = () =>  {
-    console.log("marcado");
-  };
-
-
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-     
       {/* Basic Information */}
       <div className={cardClass}>
-        <div className="flex items-center space-x-3 mb-6">
-          <div className="bg-brand-50 dark:bg-blue-400/10 p-3 rounded-xl">
-            <Package className="h-6 w-6 text-brand dark:text-blue-400" />
+        <div className={iconGroupClass}>
+          <div className="bg-blue-400/10 p-3 rounded-xl">
+            <Package className={iconGroupTitleClass} />
           </div>
           <h3 className="text-lg font-medium text-gray-900 dark:text-white">
             Informações do Plano
@@ -131,11 +127,9 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
         <div className="space-y-4">
           {/* Nome */}
           <div>
-            <label className={labelClass}>
-              Nome do Plano
-            </label>
+            <label className={labelClass}>Nome do Plano</label>
             <div className="mt-1 relative">
-              <FileText className={iconClass} />
+              <FileText className={iconInputClass} />
               <input
                 type="text"
                 name="nome"
@@ -149,25 +143,21 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
 
           {/* Descrição */}
           <div>
-            <label className={labelClass}>
-              Descrição
-            </label>
+            <label className={labelClass}>Descrição</label>
             <textarea
               name="descricao"
               value={formData.descricao}
               onChange={handleInputChange}
               rows={3}
-              className={`${inputClass} pl-4`}
+              className={`${inputClass} pl-4 resize-none`}
             />
           </div>
 
           {/* Valor */}
           <div>
-            <label className={labelClass}>
-              Valor Base
-            </label>
+            <label className={labelClass}>Valor Base</label>
             <div className="mt-1 relative">
-              <DollarSign className={iconClass} />
+              <DollarSign className={iconInputClass} />
               <input
                 type="number"
                 name="valor"
@@ -185,9 +175,9 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
 
       {/* Resources */}
       <div className={cardClass}>
-        <div className="flex items-center space-x-3 mb-6">
-          <div className="bg-brand-50 dark:bg-blue-400/10 p-3 rounded-xl">
-            <Package className="h-6 w-6 text-brand dark:text-blue-400" />
+        <div className={iconGroupClass}>
+          <div className="bg-blue-400/10 p-3 rounded-xl">
+            <Package className={iconGroupTitleClass} />
           </div>
           <h3 className="text-lg font-medium text-gray-900 dark:text-white">
             Recursos Inclusos
@@ -197,11 +187,9 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Caixas de Entrada */}
           <div>
-            <label className={labelClass}>
-              Caixas de Entrada
-            </label>
+            <label className={labelClass}>Caixas de Entrada</label>
             <div className="mt-1 relative">
-              <Package className={iconClass} />
+              <Package className={iconInputClass} />
               <input
                 type="number"
                 name="caixas_entrada"
@@ -216,11 +204,9 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
 
           {/* Atendentes */}
           <div>
-            <label className={labelClass}>
-              Atendentes
-            </label>
+            <label className={labelClass}>Atendentes</label>
             <div className="mt-1 relative">
-              <Users className={iconClass} />
+              <Users className={iconInputClass} />
               <input
                 type="number"
                 name="atendentes"
@@ -235,11 +221,9 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
 
           {/* Automações */}
           <div>
-            <label className={labelClass}>
-              Automações
-            </label>
+            <label className={labelClass}>Automações</label>
             <div className="mt-1 relative">
-              <Bot className={iconClass} />
+              <Bot className={iconInputClass} />
               <input
                 type="number"
                 name="automacoes"
@@ -256,9 +240,9 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
 
       {/* Features */}
       <div className={cardClass}>
-        <div className="flex items-center space-x-3 mb-6">
-          <div className="bg-brand-50 dark:bg-blue-400/10 p-3 rounded-xl">
-            <Package className="h-6 w-6 text-brand dark:text-blue-400" />
+        <div className={iconGroupClass}>
+          <div className="bg-blue-400/10 p-3 rounded-xl">
+            <Package className={iconGroupTitleClass} />
           </div>
           <h3 className="text-lg font-medium text-gray-900 dark:text-white">
             Recursos Adicionais
@@ -266,46 +250,46 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
         </div>
 
         <div className="space-y-4">
-          <label className="flex items-center space-x-3 p-4 bg-white dark:bg-[#0F172A]/60 border border-gray-200 dark:border-gray-700/50 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#0F172A]/40 transition-colors group">
+          <label className={featureClass}>
             <input
               type="checkbox"
               checked={formData.suporte_humano}
               onChange={() => handleToggleChange('suporte_humano')}
-              className="h-5 w-5 rounded border-gray-200 dark:border-gray-700/50 text-brand focus:ring-brand focus:ring-offset-0 bg-white dark:bg-[#0F172A]/60 transition-colors"
+              className="h-5 w-5 rounded border-light-border dark:border-gray-700/50 text-brand focus:ring-brand focus:ring-offset-0"
             />
             <div className="flex items-center space-x-3">
-              <HeadphonesIcon className="h-5 w-5 text-gray-400 group-hover:text-gray-500 dark:group-hover:text-gray-300 transition-colors" />
-              <span className="text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-gray-200 transition-colors">
+              <HeadphonesIcon className="h-5 w-5 text-gray-400" />
+              <span className="text-gray-700 dark:text-gray-300">
                 Suporte Humano
               </span>
             </div>
           </label>
 
-          <label className="flex items-center space-x-3 p-4 bg-white dark:bg-[#0F172A]/60 border border-gray-200 dark:border-gray-700/50 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#0F172A]/40 transition-colors group">
+          <label className={featureClass}>
             <input
               type="checkbox"
               checked={formData.kanban}
               onChange={() => handleToggleChange('kanban')}
-              className="h-5 w-5 rounded border-gray-200 dark:border-gray-700/50 text-brand focus:ring-brand focus:ring-offset-0 bg-white dark:bg-[#0F172A]/60 transition-colors"
+              className="h-5 w-5 rounded border-light-border dark:border-gray-700/50 text-brand focus:ring-brand focus:ring-offset-0"
             />
             <div className="flex items-center space-x-3">
-              <Layout className="h-5 w-5 text-gray-400 group-hover:text-gray-500 dark:group-hover:text-gray-300 transition-colors" />
-              <span className="text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-gray-200 transition-colors">
+              <Layout className="h-5 w-5 text-gray-400" />
+              <span className="text-gray-700 dark:text-gray-300">
                 Kanban
               </span>
             </div>
           </label>
 
-          <label className="flex items-center space-x-3 p-4 bg-white dark:bg-[#0F172A]/60 border border-gray-200 dark:border-gray-700/50 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#0F172A]/40 transition-colors group">
+          <label className={featureClass}>
             <input
               type="checkbox"
               checked={formData.whatsapp_oficial}
               onChange={() => handleToggleChange('whatsapp_oficial')}
-              className="h-5 w-5 rounded border-gray-200 dark:border-gray-700/50 text-brand focus:ring-brand focus:ring-offset-0 bg-white dark:bg-[#0F172A]/60 transition-colors"
+              className="h-5 w-5 rounded border-light-border dark:border-gray-700/50 text-brand focus:ring-brand focus:ring-offset-0"
             />
             <div className="flex items-center space-x-3">
-              <Phone className="h-5 w-5 text-gray-400 group-hover:text-gray-500 dark:group-hover:text-gray-300 transition-colors" />
-              <span className="text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-gray-200 transition-colors">
+              <Phone className="h-5 w-5 text-gray-400" />
+              <span className="text-gray-700 dark:text-gray-300">
                 WhatsApp Oficial
               </span>
             </div>
@@ -315,7 +299,7 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
 
       {/* Error Message */}
       {error && (
-        <div className="bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 p-4 flex items-center text-red-600 dark:text-red-400">
+        <div className="bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 p-4 flex items-center text-red-600 dark:text-red-400 rounded-lg">
           <AlertCircle className="h-5 w-5 mr-2 flex-shrink-0" />
           <p className="text-sm">{error}</p>
         </div>
@@ -326,14 +310,14 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
         <button
           type="button"
           onClick={onCancel}
-          className="px-4 py-2 bg-gray-100 dark:bg-[#0F172A]/60 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-[#0F172A]/40 transition-colors"
+          className="px-4 py-2 bg-light-secondary dark:bg-[#0F172A]/60 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-[#0F172A]/40 transition-colors rounded-lg"
           disabled={loading}
         >
           Cancelar
         </button>
         <button
           type="submit"
-          className="px-4 py-2 bg-brand hover:bg-brand/90 text-white transition-colors flex items-center"
+          className="btn-primary flex items-center rounded-lg"
           disabled={loading}
         >
           {loading ? (

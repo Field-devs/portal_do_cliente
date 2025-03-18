@@ -31,14 +31,14 @@ function AccountList() {
   const [showUserForm, setShowUserForm] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
 
-  const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50";
+  const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50 rounded-lg";
   const titleClass = "text-4xl font-bold text-light-text-primary dark:text-white";
   const metricTitleClass = "text-lg font-medium text-light-text-primary dark:text-white mb-1";
   const metricValueClass = "text-3xl font-bold text-light-text-primary dark:text-white";
   const metricSubtextClass = "text-sm text-light-text-secondary dark:text-blue-200";
-  const iconContainerClass = "bg-blue-400/10 p-3 rounded-xl";
+  const iconContainerClass = "bg-blue-400/10 p-3 rounded-lg";
   const iconClass = "h-6 w-6 text-blue-600 dark:text-blue-400";
-  const badgeClass = "text-xs font-medium bg-blue-50 dark:bg-blue-400/10 text-blue-600 dark:text-blue-400 px-2 py-1 rounded-full";
+  const badgeClass = "text-xs font-medium bg-blue-50 dark:bg-blue-400/10 text-blue-600 dark:text-blue-400 px-2 py-1 rounded-lg";
 
   useEffect(() => {
     fetchUsers();
@@ -219,7 +219,7 @@ function AccountList() {
                 placeholder="Buscar por nome, email ou CNPJ..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="input pl-12"
+                className="w-full pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-lg shadow-sm"
               />
             </div>
           </div>
@@ -229,7 +229,7 @@ function AccountList() {
               <select
                 value={roleFilter}
                 onChange={(e) => setRoleFilter(e.target.value === 'all' ? 'all' : Number(e.target.value))}
-                className="select pl-12"
+                className="pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors appearance-none min-w-[200px] rounded-lg shadow-sm"
               >
                 <option value="all">Todos os Perfis</option>
                 <option value="1">Super Admin</option>
@@ -245,7 +245,7 @@ function AccountList() {
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value as 'all' | 'active' | 'inactive')}
-                className="select pl-12"
+                className="pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors appearance-none min-w-[200px] rounded-lg shadow-sm"
               >
                 <option value="all">Todos os Status</option>
                 <option value="active">Ativos</option>
@@ -256,11 +256,11 @@ function AccountList() {
         </div>
       </div>
 
-      <div className={`${cardClass} mt-6`}>
+      <div className={`${cardClass} mt-6 overflow-hidden`}>
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-light-border dark:divide-gray-700/50">
+          <table className="min-w-full divide-y divide-light-border dark:divide-gray-700/50 rounded-lg overflow-hidden">
             <thead>
-              <tr className="bg-light-secondary dark:bg-[#0F172A]/60">
+              <tr className="bg-light-secondary dark:bg-[#0F172A]/60 rounded-t-lg">
                 <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                   Nome
                 </th>
@@ -276,7 +276,8 @@ function AccountList() {
                 <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                   Data de Criação
                 </th>
-                <th className="px-6 py-4 text-right text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                <th className="px-6 py-4 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  Ações
                 </th>
               </tr>
             </thead>
@@ -333,8 +334,8 @@ function AccountList() {
                       {new Date(user.dt_add).toLocaleDateString('pt-BR')}
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right">
-                    <div className="flex justify-end space-x-2">
+                  <td className="px-6 py-4 whitespace-nowrap text-center">
+                    <div className="flex justify-center space-x-2">
 
                       <ActionsButtons
                         onEdit={handleEdit}

@@ -32,6 +32,13 @@ interface AVAFormProps {
   };
 }
 
+const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50 rounded-lg";
+const labelClass = "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1";
+const inputClass = "w-full pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-lg shadow-sm";
+const iconGroupClass = "flex items-center space-x-3 mb-6";
+const iconGroupTitleClass = "h-6 w-6 text-brand dark:text-blue-400";
+const iconInputClass = "absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400";
+
 export default function AVAForm({ onSuccess, onCancel, initialData }: AVAFormProps) {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
@@ -121,154 +128,151 @@ export default function AVAForm({ onSuccess, onCancel, initialData }: AVAFormPro
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      {/* Basic Information */}
-      <div className="bg-[#1E293B]/70 backdrop-blur-sm p-6 border border-gray-700/50">
-        <div className="flex items-center space-x-3 mb-6">
-          <div className="bg-blue-400/10 p-3 rounded-xl">
-            <UserCheck className="h-6 w-6 text-blue-400" />
+    <div className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Informacoes Basicas */}
+        <div className={cardClass}>
+          <div className={iconGroupClass}>
+            <div className="bg-blue-400/10 p-3 rounded-xl">
+              <UserCheck className={iconGroupTitleClass} />
+            </div>
+            <h3 className="text-lg font-medium text-gray-900 dark:text-white">
+              Informações do Cliente
+            </h3>
           </div>
-          <h3 className="text-lg font-medium text-white">
-            Informações do AVA
-          </h3>
+
+          <div className="grid grid-cols-12 md:grid-cols-12 gap-6">
+            {/* CNPJ */}
+            <div className='col-span-5 md:col-span-5'>
+              <label className="block text-sm font-medium text-gray-300">
+                CNPJ
+              </label>
+              <div className="mt-1 relative">
+                <MonitorX className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <input
+                  type="cnpj"
+                  name="cnpj"
+                  value={formData.cnpj}
+                  onChange={handleInputChange}
+                  className={inputClass}
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Nome */}
+            <div className='col-span-7 md:col-span-7'>
+              <label className="block text-sm font-medium text-gray-300">
+                Nome
+              </label>
+              <div className="mt-1 relative">
+                <User className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <input
+                  type="text"
+                  name="nome"
+                  value={formData.nome}
+                  onChange={handleInputChange}
+                  className={inputClass}
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Fone */}
+            <div className='col-span-6 md:col-span-6'>
+              <label className="block text-sm font-medium text-gray-300">
+                Fone
+              </label>
+              <div className="mt-1 relative">
+                <Phone className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <input
+                  type="tel"
+                  name="telefone"
+                  value={formData.fone}
+                  onChange={handleInputChange}
+                  placeholder="(00) 00000-0000"
+                  className={inputClass}
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Email */}
+            <div className='col-span-6 md:col-span-6'>
+              <label className="block text-sm font-medium text-gray-300">
+                Email
+              </label>
+              <div className="mt-1 relative">
+                <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  className={inputClass}
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Endereco */}
+            <div className='col-span-12 md:col-span-12'>
+              <label className="block text-sm font-medium text-gray-300">
+                Endereço
+              </label>
+              <div className="mt-1 relative">
+                <User className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <input
+                  type="text"
+                  name="endereco"
+                  value={formData.endereco}
+                  onChange={handleInputChange}
+                  className={inputClass}
+                  required
+                />
+              </div>
+            </div>
+          </div>
         </div>
 
-
-        <div className="grid grid-cols-12 md:grid-cols-12 gap-6">
-          {/* CNPJ */}
-          <div className='col-span-5 md:col-span-5'>
-            <label className="block text-sm font-medium text-gray-300">
-              CNPJ
-            </label>
-            <div className="mt-1 relative">
-              <MonitorX className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-              <input
-                type="cnpj"
-                name="cnpj"
-                value={formData.cnpj}
-                onChange={handleInputChange}
-                className="pl-12 block w-full border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
-                required
-              />
-            </div>
+        {/* Error Message */}
+        {error && (
+          <div className="bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 p-4 flex items-center text-red-600 dark:text-red-400 rounded-lg">
+            <AlertCircle className="h-5 w-5 mr-2 flex-shrink-0" />
+            <p className="text-sm">{error}</p>
           </div>
+        )}
 
-          {/* Nome */}
-          <div className='col-span-7 md:col-span-7'>
-            <label className="block text-sm font-medium text-gray-300">
-              Nome
-            </label>
-            <div className="mt-1 relative">
-              <User className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-              <input
-                type="text"
-                name="nome"
-                value={formData.nome}
-                onChange={handleInputChange}
-                className="pl-12 block w-full border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
-                required
-              />
-            </div>
-          </div>
-
-
-
-          {/* Fone */}
-          <div className='col-span-6 md:col-span-6'>
-            <label className="block text-sm font-medium text-gray-300">
-              Fone
-            </label>
-            <div className="mt-1 relative">
-              <Phone className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-              <input
-                type="tel"
-                name="telefone"
-                value={formData.fone}
-                onChange={handleInputChange}
-                placeholder="(00) 00000-0000"
-                className="pl-12 block w-full border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
-                required
-              />
-            </div>
-          </div>
-
-
-          {/* Email */}
-          <div className='col-span-6 md:col-span-6'>
-            <label className="block text-sm font-medium text-gray-300">
-              Email
-            </label>
-            <div className="mt-1 relative">
-              <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                className="pl-12 block w-full border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
-                required
-              />
-            </div>
-          </div>
-
-          {/* Endereco */}
-          <div className='col-span-12 md:col-span-12'>
-            <label className="block text-sm font-medium text-gray-300">
-              Endereço
-            </label>
-            <div className="mt-1 relative">
-              <User className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-              <input
-                type="text"
-                name="endereco"
-                value={formData.endereco}
-                onChange={handleInputChange}
-                className="pl-12 block w-full border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
-                required
-              />
-            </div>
-          </div>
-
-
+        {/* Action Buttons */}
+        <div className="flex justify-end space-x-3 pt-4">
+          <button
+            type="button"
+            onClick={onCancel}
+            className="px-4 py-2 bg-light-secondary dark:bg-[#0F172A]/60 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-[#0F172A]/40 transition-colors rounded-lg"
+            disabled={loading}
+          >
+            Cancelar
+          </button>
+          <button
+            type="button"
+            onClick={handleSubmit}
+            className="btn-primary flex items-center rounded-lg"
+            disabled={loading}
+          >
+            {loading ? (
+              <>
+                <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+                Salvando...
+              </>
+            ) : (
+              <>
+                <Save className="h-5 w-5 mr-2" />
+                {initialData ? 'Confirmar' : 'Confirmar'}
+              </>
+            )}
+          </button>
         </div>
-      </div>
-
-      {/* Error Message */}
-      {error && (
-        <div className="bg-red-500/10 border border-red-500/20 p-4 flex items-center text-red-400">
-          <AlertCircle className="h-5 w-5 mr-2 flex-shrink-0" />
-          <p className="text-sm">{error}</p>
-        </div>
-      )}
-
-      {/* Action Buttons */}
-      <div className="flex justify-end space-x-3 pt-4">
-        <button
-          type="button"
-          onClick={onCancel}
-          className="px-4 py-2 bg-[#0F172A]/60 text-gray-300 hover:bg-[#0F172A]/40 transition-colors"
-          disabled={loading}
-        >
-          Cancelar
-        </button>
-        <button
-          type="submit"
-          className="px-4 py-2 bg-blue-500/80 hover:bg-blue-600/80 text-white transition-colors flex items-center"
-          disabled={loading}
-        >
-          {loading ? (
-            <>
-              <Loader2 className="h-5 w-5 mr-2 animate-spin" />
-              Salvando...
-            </>
-          ) : (
-            <>
-              <Save className="h-5 w-5 mr-2" />
-              {initialData ? 'Atualizar Afiliado' : 'Criar AVA'}
-            </>
-          )}
-        </button>
-      </div>
-    </form>
+      </form>
+    </div>
   );
 }

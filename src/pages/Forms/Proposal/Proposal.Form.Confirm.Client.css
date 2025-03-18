@@ -1,3 +1,64 @@
-.border-red-500 {
-  border-color: #f56565;
+/* Common form styles */
+.form-container {
+  @apply bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50 rounded-lg;
+}
+
+.form-title {
+  @apply text-2xl font-bold text-light-text-primary dark:text-white mb-6;
+}
+
+.form-label {
+  @apply block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1;
+}
+
+.form-input {
+  @apply w-full pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-lg shadow-sm;
+}
+
+.form-select {
+  @apply w-full pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-lg shadow-sm appearance-none;
+}
+
+.form-button {
+  @apply px-4 py-2 flex items-center justify-center rounded-lg text-sm font-medium transition-colors;
+}
+
+.form-button-primary {
+  @apply form-button bg-brand hover:bg-brand/90 text-white;
+}
+
+.form-button-secondary {
+  @apply form-button bg-light-secondary dark:bg-[#0F172A]/60 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-[#0F172A]/40;
+}
+
+.form-section {
+  @apply mt-6 space-y-4;
+}
+
+.form-grid {
+  @apply grid grid-cols-1 md:grid-cols-2 gap-6;
+}
+
+.form-icon-wrapper {
+  @apply absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400;
+}
+
+.form-header {
+  @apply flex items-center space-x-3 mb-6;
+}
+
+.form-header-icon {
+  @apply bg-blue-400/10 p-3 rounded-xl;
+}
+
+.form-header-title {
+  @apply text-lg font-medium text-gray-900 dark:text-white;
+}
+
+.form-error {
+  @apply bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 p-4 flex items-center text-red-600 dark:text-red-400 rounded-lg;
+}
+
+.form-actions {
+  @apply flex justify-end space-x-3 pt-4;
 }

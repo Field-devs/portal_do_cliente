@@ -34,7 +34,7 @@ export default function PlanList() {
   const [showPlanForm, setShowPlanForm] = useState(false);
   const [showAddonForm, setShowAddonForm] = useState(false);
 
-  const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50";
+  const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50 rounded-lg";
   const titleClass = "text-4xl font-bold text-light-text-primary dark:text-white";
   const tabClass = (active: boolean) => `flex items-center px-4 py-2 rounded-lg transition-colors ${active
       ? 'bg-brand-50 text-brand-600 dark:bg-brand-900/20 dark:text-brand-400'
@@ -148,7 +148,7 @@ export default function PlanList() {
           <button
             // onClick={() =>  setShowPlanForm(true)}
             onClick={() => handleNewClick()}
-            className="btn-primary flex items-center"
+            className="btn-primary flex items-center rounded-lg"
           >
             <Plus className="h-5 w-5 mr-2" />
             {activeTab == "plans" ? "Novo Plano" : "Novo Add-on"}
@@ -193,7 +193,7 @@ export default function PlanList() {
               placeholder="Buscar por nome..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="input pl-12"
+              className="w-full pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-lg shadow-sm"
             />
           </div>
 
@@ -218,11 +218,11 @@ export default function PlanList() {
       </div>
 
       {/* Content */}
-      <div className={`${cardClass} mt-6`}>
+      <div className={`${cardClass} mt-6 overflow-hidden`}>
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-light-border dark:divide-gray-700/50">
+          <table className="min-w-full divide-y divide-light-border dark:divide-gray-700/50 rounded-lg overflow-hidden">
             <thead>
-              <tr className="bg-light-secondary dark:bg-[#0F172A]/60">
+              <tr className="bg-light-secondary dark:bg-[#0F172A]/60 rounded-t-lg">
                 <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                   Nome
                 </th>
@@ -235,7 +235,8 @@ export default function PlanList() {
                 <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider w-[20px]">
                   Data de Criação
                 </th>
-                <th className="px-6 py-4 text-right text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider w-[50px]">
+                <th className="px-6 py-4 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider w-[50px]">
+                  Ações
                 </th>
               </tr>
             </thead>
