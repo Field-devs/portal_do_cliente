@@ -148,7 +148,7 @@ export default function PlanList() {
           <button
             // onClick={() =>  setShowPlanForm(true)}
             onClick={() => handleNewClick()}
-            className="btn-primary flex items-center"
+            className="btn-primary flex items-center rounded-lg"
           >
             <Plus className="h-5 w-5 mr-2" />
             {activeTab == "plans" ? "Novo Plano" : "Novo Add-on"}
@@ -193,7 +193,7 @@ export default function PlanList() {
               placeholder="Buscar por nome..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="input pl-12"
+              className="input pl-12 rounded-lg"
             />
           </div>
 

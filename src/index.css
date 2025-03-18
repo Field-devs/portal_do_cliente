@@ -13,11 +13,11 @@
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-light-secondary dark:bg-dark-secondary rounded-full;
+    @apply bg-light-secondary dark:bg-dark-secondary rounded-md;
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-light-border dark:bg-dark-border rounded-full hover:bg-gray-400 dark:hover:bg-gray-500 transition-colors;
+    @apply bg-light-border dark:bg-dark-border rounded-md hover:bg-gray-400 dark:hover:bg-gray-500 transition-colors;
   }
 
   /* Firefox Scrollbar */
@@ -33,7 +33,7 @@
 
 @layer components {
   .card {
-    @apply bg-light-card dark:bg-dark-card backdrop-blur-sm rounded-xl shadow-lg border border-light-border dark:border-dark-border;
+    @apply bg-light-card dark:bg-dark-card backdrop-blur-sm rounded-lg shadow-lg border border-light-border dark:border-dark-border;
   }
 
   .title {
@@ -49,23 +49,23 @@
   }
 
   .btn-primary {
-    @apply px-4 py-2 bg-brand hover:bg-brand/90 text-white rounded-xl transition-colors;
+    @apply px-4 py-2 bg-brand hover:bg-brand/90 text-white rounded-lg transition-colors;
   }
 
   .btn-secondary {
-    @apply px-4 py-2 bg-light-secondary dark:bg-dark-secondary text-light-text-primary dark:text-dark-text-primary rounded-xl hover:bg-light-border/50 dark:hover:bg-dark-border/50 transition-colors;
+    @apply px-4 py-2 bg-light-secondary dark:bg-dark-secondary text-light-text-primary dark:text-dark-text-primary rounded-lg hover:bg-light-border/50 dark:hover:bg-dark-border/50 transition-colors;
   }
 
   .input {
-    @apply w-full px-4 py-2 bg-light-secondary dark:bg-dark-secondary border border-light-border dark:border-dark-border rounded-xl text-light-text-primary dark:text-dark-text-primary placeholder-light-text-secondary/50 dark:placeholder-dark-text-secondary/50 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors;
+    @apply w-full px-4 py-2 bg-light-secondary dark:bg-dark-secondary border border-light-border dark:border-dark-border rounded-lg text-light-text-primary dark:text-dark-text-primary placeholder-light-text-secondary/50 dark:placeholder-dark-text-secondary/50 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors;
   }
 
   .select {
-    @apply w-full px-4 py-2 bg-light-secondary dark:bg-dark-secondary border border-light-border dark:border-dark-border rounded-xl text-light-text-primary dark:text-dark-text-primary focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors appearance-none;
+    @apply w-full px-4 py-2 bg-light-secondary dark:bg-dark-secondary border border-light-border dark:border-dark-border rounded-lg text-light-text-primary dark:text-dark-text-primary focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors appearance-none;
   }
 
   .badge {
-    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-lg text-xs font-medium;
   }
 
   .badge-success {

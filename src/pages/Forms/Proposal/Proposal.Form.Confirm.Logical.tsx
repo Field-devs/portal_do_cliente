@@ -7,7 +7,7 @@ async function GetProposal(id: string): Promise<Proposta | undefined> {
     .rpc('fn_proposta_confirm', { p_id: id })
     .single();
   if (error) {
-    ErrorDialog("Erro ao buscar proposta");
+    return undefined;
   }
   if (data) {
     return data as Proposta;
@@ -57,7 +57,7 @@ async function SaveProposal(proposta: Proposta) {
     user_update: proposta.user_update,
     user_id: proposta.user_id,
     dt: proposta.dt,
-    status:"AP"
+    status:"AC" // Aceita
   };
   
   const { data, error } = await supabase

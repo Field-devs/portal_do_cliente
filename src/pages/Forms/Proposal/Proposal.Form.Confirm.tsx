@@ -14,6 +14,7 @@ import CircularWait from '../../../components/CircularWait';
 import { GetProposal, SaveProposal } from './Proposal.Form.Confirm.Logical';
 import { Proposta } from '../../../Models/Propostas';
 import RegistrationSuccess from './Proposal.Form.Confirm.Finish';
+import ProposalFinishError from './Proposal.Form.Confirm.Error';
 
 interface CommercialAffiliateFormProps {
   onSuccess: () => void;
@@ -32,10 +33,11 @@ interface CommercialAffiliateFormProps {
 
 export default function ProposalFormConfirm({ onCancel, initialData }: CommercialAffiliateFormProps) {
   const { id } = useParams<{ id: string }>();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [proposta, setProposta] = useState<Proposta>({} as Proposta);
   const [finish, setFinish] = useState(false);
   const [accepted, setAccepted] = useState(false);
+  const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
     const fetchProposal = async () => {
@@ -45,8 +47,14 @@ export default function ProposalFormConfirm({ onCancel, initialData }: Commercia
         if (response) {
           setProposta(response);
         }
+        else 
+        {
+          setLoading(false);
+          setFinish(false);
+          setNotFound(true);
+        }
       } catch (error) {
-        console.error("Failed to fetch proposal:", error);
+        console.error('Erro ao buscar proposta:', error);
       } finally {
         setLoading(false);
       }
@@ -63,7 +71,6 @@ export default function ProposalFormConfirm({ onCancel, initialData }: Commercia
     let response = await AskDialog("Deseja realmente confirmar esta proposta? Voce não poderá mais editar esta proposta depois de confirmada.", "Confirmar Proposta", "Sim", "Não");
     setLoading(true);
     await SaveProposal(proposta).then((response) => {
-      console.log(response);
       if (response) {
         setTimeout(() => {
           setLoading(false);
@@ -79,6 +86,7 @@ export default function ProposalFormConfirm({ onCancel, initialData }: Commercia
   return (
     loading ? <CircularWait messagefull="Confirmando a Proposta..." small={false} /> :
     finish ? <RegistrationSuccess /> :
+    notFound ? <ProposalFinishError /> :
       <div className="flex justify-center items-center mt-20">
 
         <form onSubmit={handleSubmit} className="space-y-6 max-w-8xl" >

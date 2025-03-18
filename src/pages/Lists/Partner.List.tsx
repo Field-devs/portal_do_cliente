@@ -138,7 +138,7 @@ export default function PartnerList() {
         {tipo == 'AF' && (
           <button
             onClick={() => handleClickNew()}
-            className="flex items-center px-4 py-2 bg-brand hover:bg-brand/90 text-white transition-colors"
+            className="flex items-center px-4 py-2 bg-brand hover:bg-brand/90 text-white transition-colors rounded-lg"
           >
             <Plus className="h-5 w-5 mr-2" />
             {tipo === 'AF' ? 'Adicionar Afiliado' : 'Adicionar AVA'}
@@ -153,7 +153,7 @@ export default function PartnerList() {
           <div className="flex space-x-4">
             <button
               onClick={() => setTipo('CF')}
-              className={`flex items-center px-4 py-2 rounded-lg transition-colors ${tipo === 'CF'
+              className={`flex items-center px-4 py-2 rounded-lg transition-colors ${tipo === 'CF' 
                 ? 'bg-brand-50 text-brand-600 dark:bg-brand-900/20 dark:text-brand-400'
                 : 'text-gray-600 dark:text-gray-400 hover:bg-brand-50/50 dark:hover:bg-brand-900/10 hover:text-brand-600 dark:hover:text-brand-400'
                 }`}
@@ -193,7 +193,7 @@ export default function PartnerList() {
                   placeholder="Buscar por nome, email ou telefone..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors"
+                  className="w-full pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-lg"
                 />
               </div>
             </div>

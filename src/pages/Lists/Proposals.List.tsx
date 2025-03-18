@@ -53,7 +53,7 @@ export default function ProposalsList() {
   useEffect(() => {
     fetchData();
     const intervalId = setInterval(fetchData, 3000); // 60000 milliseconds = 1 minute
-  
+
     return () => clearInterval(intervalId); // Cleanup interval on component unmount
   }, []);
 
@@ -64,7 +64,7 @@ export default function ProposalsList() {
         .from('v_proposta')
         .select('*')
         .eq('user_id', user?.id)
-        .order('id', { ascending: false });
+        .order('dt', { ascending: false });
 
       if (error) throw error;
       setPropostas(data || []);
@@ -155,7 +155,7 @@ export default function ProposalsList() {
           <div className="flex gap-2 items-center">
             <button
               onClick={() => HandleOpenProposal()}
-              className="btn-primary flex items-center"
+              className="btn-primary flex items-center rounded-lg"
             >
               <Plus className="h-5 w-5 mr-2" />
               Nova Proposta
@@ -281,7 +281,7 @@ export default function ProposalsList() {
                   placeholder="Buscar por empresa, email ou CNPJ..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="input pl-12"
+                  className="w-full pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-lg"
                 />
               </div>
             </div>

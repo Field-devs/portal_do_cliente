@@ -63,14 +63,15 @@ export default function FinancialDashBoard() {
   const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'paid' | 'overdue'>('all');
   const [dateFilter, setDateFilter] = useState<'all' | 'thisMonth' | 'lastMonth' | 'thisYear'>('all');
 
-  const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50";
+  // Consistent class names using Tailwind config
+  const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50 rounded-lg";
   const titleClass = "text-4xl font-bold text-light-text-primary dark:text-white";
   const metricTitleClass = "text-lg font-medium text-light-text-primary dark:text-white mb-1";
   const metricValueClass = "text-3xl font-bold text-light-text-primary dark:text-white";
   const metricSubtextClass = "text-sm text-light-text-secondary dark:text-blue-200";
-  const iconContainerClass = "bg-blue-400/10 p-3 rounded-xl";
+  const iconContainerClass = "bg-blue-400/10 p-3 rounded-lg";
   const iconClass = "h-6 w-6 text-blue-600 dark:text-blue-400";
-  const badgeClass = "text-xs font-medium bg-blue-50 dark:bg-blue-400/10 text-blue-600 dark:text-blue-400 px-2 py-1 rounded-full";
+  const badgeClass = "text-xs font-medium bg-blue-50 dark:bg-blue-400/10 text-blue-600 dark:text-blue-400 px-2 py-1 rounded-lg";
 
   useEffect(() => {
     fetchFinancialData();
@@ -175,7 +176,7 @@ export default function FinancialDashBoard() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <CircularWait message="DashBoard Financeiro" />
+        <CircularWait message="Dashboard Financeiro" />
       </div>
     );
   }
@@ -186,7 +187,7 @@ export default function FinancialDashBoard() {
         <h1 className={titleClass}>Financeiro</h1>
         <button
           onClick={() => {}}
-          className="flex items-center px-4 py-2 bg-brand hover:bg-brand/90 text-white transition-colors"
+          className="btn-primary flex items-center rounded-lg"
         >
           <Download className="h-5 w-5 mr-2" />
           Exportar
@@ -335,7 +336,7 @@ export default function FinancialDashBoard() {
                 placeholder="Buscar por cliente ou número da fatura..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors"
+                className="input pl-12"
               />
             </div>
           </div>
@@ -345,7 +346,7 @@ export default function FinancialDashBoard() {
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value as typeof statusFilter)}
-                className="pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors appearance-none min-w-[200px]"
+                className="select pl-12"
               >
                 <option value="all">Todos os Status</option>
                 <option value="pending">Pendentes</option>
@@ -358,7 +359,7 @@ export default function FinancialDashBoard() {
               <select
                 value={dateFilter}
                 onChange={(e) => setDateFilter(e.target.value as typeof dateFilter)}
-                className="pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors appearance-none min-w-[200px]"
+                className="select pl-12"
               >
                 <option value="all">Todas as Datas</option>
                 <option value="thisMonth">Este Mês</option>
@@ -421,12 +422,12 @@ export default function FinancialDashBoard() {
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-3 py-1 text-sm font-medium rounded-full ${
+                    <span className={`px-3 py-1 text-sm font-medium rounded-lg ${
                       invoice.status === 'paid'
-                        ? 'bg-green-50 dark:bg-green-500/20 text-green-600 dark:text-green-400 border border-green-200 dark:border-green-500/30'
+                        ? 'badge-success'
                         : invoice.status === 'pending'
-                        ? 'bg-yellow-50 dark:bg-yellow-500/20 text-yellow-600 dark:text-yellow-400 border border-yellow-200 dark:border-yellow-500/30'
-                        : 'bg-red-50 dark:bg-red-500/20 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-500/30'
+                        ? 'badge-warning'
+                        : 'badge-error'
                     }`}>
                       {invoice.status === 'paid' ? 'Paga' :
                        invoice.status === 'pending' ? 'Pendente' :

@@ -97,9 +97,9 @@ export default function AddonForm({ onSuccess, onCancel, initialData }: AddonFor
   return (
     <div className="space-y-6">
       {/* Basic Information */}
-      <div className={cardClass}>
+      <div className="bg-[#1E293B]/70 backdrop-blur-sm p-6 border border-gray-700/50 rounded-lg">
         <div className="flex items-center space-x-3 mb-6">
-          <div className="bg-brand-50 dark:bg-blue-400/10 p-3 rounded-xl">
+          <div className="bg-blue-400/10 p-3 rounded-lg">
             <Package className="h-6 w-6 text-brand dark:text-blue-400" />
           </div>
           <h3 className="text-lg font-medium text-gray-900 dark:text-white">
@@ -174,7 +174,7 @@ export default function AddonForm({ onSuccess, onCancel, initialData }: AddonFor
         <button
           type="button"
           onClick={onCancel}
-          className="px-4 py-2 bg-gray-100 dark:bg-[#0F172A]/60 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-[#0F172A]/40 transition-colors"
+          className="px-4 py-2 bg-gray-100 dark:bg-[#0F172A]/60 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-[#0F172A]/40 transition-colors rounded-lg"
           disabled={loading}
         >
           Cancelar
@@ -182,7 +182,7 @@ export default function AddonForm({ onSuccess, onCancel, initialData }: AddonFor
         <button
           type="submit"
           onClick={handleSubmit}
-          className="px-4 py-2 bg-brand hover:bg-brand/90 text-white transition-colors flex items-center"
+          className="px-4 py-2 bg-brand hover:bg-brand/90 text-white transition-colors flex items-center rounded-lg"
           disabled={loading}
         >
           {loading ? (

@@ -120,7 +120,7 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
       {/* Basic Information */}
       <div className={cardClass}>
         <div className="flex items-center space-x-3 mb-6">
-          <div className="bg-brand-50 dark:bg-blue-400/10 p-3 rounded-xl">
+          <div className="bg-brand-50 dark:bg-blue-400/10 p-3 rounded-lg">
             <Package className="h-6 w-6 text-brand dark:text-blue-400" />
           </div>
           <h3 className="text-lg font-medium text-gray-900 dark:text-white">
@@ -186,7 +186,7 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
       {/* Resources */}
       <div className={cardClass}>
         <div className="flex items-center space-x-3 mb-6">
-          <div className="bg-brand-50 dark:bg-blue-400/10 p-3 rounded-xl">
+          <div className="bg-brand-50 dark:bg-blue-400/10 p-3 rounded-lg">
             <Package className="h-6 w-6 text-brand dark:text-blue-400" />
           </div>
           <h3 className="text-lg font-medium text-gray-900 dark:text-white">
@@ -257,7 +257,7 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
       {/* Features */}
       <div className={cardClass}>
         <div className="flex items-center space-x-3 mb-6">
-          <div className="bg-brand-50 dark:bg-blue-400/10 p-3 rounded-xl">
+          <div className="bg-brand-50 dark:bg-blue-400/10 p-3 rounded-lg">
             <Package className="h-6 w-6 text-brand dark:text-blue-400" />
           </div>
           <h3 className="text-lg font-medium text-gray-900 dark:text-white">
@@ -326,14 +326,14 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
         <button
           type="button"
           onClick={onCancel}
-          className="px-4 py-2 bg-gray-100 dark:bg-[#0F172A]/60 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-[#0F172A]/40 transition-colors"
+          className="px-4 py-2 bg-gray-100 dark:bg-[#0F172A]/60 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-[#0F172A]/40 transition-colors rounded-lg"
           disabled={loading}
         >
           Cancelar
         </button>
         <button
           type="submit"
-          className="px-4 py-2 bg-brand hover:bg-brand/90 text-white transition-colors flex items-center"
+          className="px-4 py-2 bg-brand hover:bg-brand/90 text-white transition-colors flex items-center rounded-lg"
           disabled={loading}
         >
           {loading ? (
