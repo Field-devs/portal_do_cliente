@@ -100,7 +100,7 @@ export default function ProposalFormConfirm({ onCancel, initialData }: Commercia
             <img 
               src={logoUrl}
               alt="Logo" 
-              className="w-32 h-32 mb-6"
+              className="w-48 h-48 mb-6"
             />
             <h1 className="text-4xl font-bold text-brand tracking-wider text-center">
               CONFIRMAÇÃO DE PROPOSTA
