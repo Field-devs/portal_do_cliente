@@ -78,8 +78,7 @@ export default function PlanList() {
 
   const handleEdit = (id: string) => {
     if (activeTab === 'plans') {
-      const selectedPlan = plans.find(plan => plan.id = id);
-      console.log(id)
+      const selectedPlan = plans.find(plan => plan.id === id);
       if (selectedPlan) {
         setPlan(selectedPlan);
         setShowPlanForm(true);
