@@ -276,7 +276,8 @@ function AccountList() {
                 <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                   Data de Criação
                 </th>
-                <th className="px-6 py-4 text-right text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                <th className="px-6 py-4 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  Ações
                 </th>
               </tr>
             </thead>
@@ -333,8 +334,8 @@ function AccountList() {
                       {new Date(user.dt_add).toLocaleDateString('pt-BR')}
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right">
-                    <div className="flex justify-end space-x-2">
+                  <td className="px-6 py-4 whitespace-nowrap text-center">
+                    <div className="flex justify-center space-x-2">
 
                       <ActionsButtons
                         onEdit={handleEdit}
