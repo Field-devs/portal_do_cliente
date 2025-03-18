@@ -71,26 +71,12 @@ export function ModalForm({
       }}
       role="dialog"
       aria-modal="true"
-      aria-labelledby={title ? 'modal-title' : undefined}
+      aria-labelledby={undefined}
     >
       <div
         className={`${modalClass} ${maxWidthClasses[maxWidth]} max-h-[90vh]`}
         onClick={e => e.stopPropagation()}
       >
-        {title && (
-          <div className={headerClass}>
-            <div className={titleWrapperClass}>
-              {icon && (
-                <div className={iconWrapperClass}>
-                  {icon}
-                </div>
-              )}
-              <h2 id="modal-title" className={titleClass}>
-                {title}
-              </h2>
-            </div>
-          </div>
-        )}
         {children}
       </div>
     </div>

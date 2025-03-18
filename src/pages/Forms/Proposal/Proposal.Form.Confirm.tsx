@@ -3,10 +3,10 @@ import { useParams } from 'react-router-dom';
 import {
   FileText,
   Loader2,
-  Save
+  Save,
 } from 'lucide-react';
 
-import { OUTR_BLACK_IMAGE_URL } from '../../../utils/consts';
+import { useTheme } from '../../../components/ThemeProvider';
 import ProposalFormConfirmClient from './Proposal.Form.Confirm.Client';
 
 import { AskDialog } from '../../../components/Dialogs/Dialogs';
@@ -38,6 +38,11 @@ export default function ProposalFormConfirm({ onCancel, initialData }: Commercia
   const [finish, setFinish] = useState(false);
   const [accepted, setAccepted] = useState(false);
   const [notFound, setNotFound] = useState(false);
+  const { theme } = useTheme();
+
+  const logoUrl = theme === 'dark'
+    ? "https://storage.wiseapp360.com/typebot/public/workspaces/clwl6fdyf000511ohlamongyl/typebots/cm683siyl000dm4kxlrec9tb8/results/jlhnjs6i00f52ktsmqp3xncx/blocks/cz78pvc8stcisz1y8sq2khj1/OutrVertical_branco.png"
+    : "https://storage.wiseapp360.com/typebot/public/workspaces/clwl6fdyf000511ohlamongyl/typebots/cm683siyl000dm4kxlrec9tb8/results/uold9kldsvwixo4di4cesi1e/blocks/cz78pvc8stcisz1y8sq2khj1/VerticalBlack.png";
 
   useEffect(() => {
     const fetchProposal = async () => {
@@ -89,28 +94,28 @@ export default function ProposalFormConfirm({ onCancel, initialData }: Commercia
     notFound ? <ProposalFinishError /> :
       <div className="flex justify-center items-center mt-20">
 
-        <form onSubmit={handleSubmit} className="space-y-6 max-w-8xl" >
+        <form onSubmit={handleSubmit} className="space-y-6 max-w-7xl w-full bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm p-8 rounded-2xl border border-gray-200/50 dark:border-gray-700/50 shadow-xl" >
           {/* Header */}
-          <div className="flex flex-col items-center justify-center mb-8">
+          <div className="flex flex-col items-center justify-center mb-12">
             <img 
-              src={OUTR_BLACK_IMAGE_URL} 
+              src={logoUrl}
               alt="Logo" 
-              className="w-24 h-24 mb-4"
+              className="w-32 h-32 mb-6"
             />
-            <h1 className="text-4xl font-bold text-brand tracking-wide text-center">
+            <h1 className="text-4xl font-bold text-brand tracking-wider text-center">
               CONFIRMAÇÃO DE PROPOSTA
             </h1>
           </div>
 
           {/* Informacoes Basicas */}
-          <div className="bg-white backdrop-blur-sm p-10 border border-gray-700/50">
+          <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-10 rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg">
 
             {/* Cabecalho 1 */}
-            <div className={iconGroupClass}>
+            <div className="flex items-center space-x-3 mb-6">
               <div className="bg-blue-400/10 p-3 rounded-xl">
                 <FileText className={iconGroupTitleClass} />
               </div>
-              <h3 className="text-2xl font-medium text-brand">
+              <h3 className="text-2xl font-medium text-gray-900 dark:text-white">
                 Resumo da Proposta
               </h3>
             </div>

@@ -8,10 +8,12 @@ import {
   UserCheck,
   Building2,
   CreditCard,
-  MapPin
+  MapPin,
+  Copy
 } from 'lucide-react';
 import CircularWait from '../../../components/CircularWait';
 import { Proposta } from '../../../Models/Propostas';
+import { formatCEP } from '../../../utils/formatters';
 
 interface ProposalFormConfirmClientProps {
   onSuccess: () => void;
@@ -27,19 +29,66 @@ export default function ProposalFormConfirmClient({ Tipo, onCancel, sender, setS
   const [error, setError] = useState<string | null>(null);
   const [prefix, setPrefix] = useState<string>("");
   const [docType, setDocType] = useState<string>("");
+  const [showCopyButton, setShowCopyButton] = useState(false);
+
+  const fetchAddressData = async (cep: string) => {
+    try {
+      const formattedCEP = cep.replace(/\D/g, '');
+      if (formattedCEP.length !== 8) return;
+
+      const response = await fetch(`https://viacep.com.br/ws/${formattedCEP}/json/`);
+      const data = await response.json();
+
+      if (!data.erro) {
+        const newSender = { ...sender };
+        newSender[GetFieldName("logradouro")] = data.logradouro;
+        newSender[GetFieldName("bairro")] = data.bairro;
+        newSender[GetFieldName("cidade")] = data.localidade;
+        newSender[GetFieldName("uf")] = data.uf;
+        setSender(newSender);
+      }
+    } catch (error) {
+      console.error('Error fetching CEP:', error);
+    }
+  };
 
   useEffect(() => {
     setPrefix(Tipo == "EMP" ? "emp_" : Tipo == "RES" ? "resp_" : "finan_");
     setDocType(Tipo == "EMP" ? "cnpj" : "cpf");
+    setShowCopyButton(Tipo === "FIN");
   }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setSender({ ...sender, [name]: value });
+    
+    // If CEP field changes, fetch address data
+    if (name === GetFieldName("cep")) {
+      const formattedValue = formatCEP(value);
+      setSender({ ...sender, [name]: formattedValue });
+      if (formattedValue.length === 9) { // Format: 00000-000
+        fetchAddressData(formattedValue);
+      }
+    }
   };
 
   const GetFieldName = (name: string) => {
-    return prefix + name;
+    const prefixMap = {
+      'EMP': 'emp_',
+      'RES': 'resp_',
+      'FIN': 'finan_'
+    };
+    return prefixMap[Tipo] + name;
+  };
+
+  const handleCopyData = () => {
+    const newSender = { ...sender };
+    // Copy data from responsible person to financial responsible
+    newSender['finan_cpf'] = sender['resp_cpf'];
+    newSender['finan_nome'] = sender['resp_nome'];
+    newSender['finan_email'] = sender['resp_email'];
+    newSender['finan_fone'] = sender['resp_fone'];
+    setSender(newSender);
   };
 
   const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50 rounded-lg";
@@ -54,26 +103,38 @@ export default function ProposalFormConfirmClient({ Tipo, onCancel, sender, setS
   return (
     <div className={cardClass}>
       {/* Header */}
-      <div className="flex items-center space-x-3 mb-6">
-        <div className="bg-blue-400/10 p-3 rounded-xl">
+      <div className="flex items-center mb-6">
+        <div className="bg-blue-400/10 p-3 rounded-xl mr-4">
           {Tipo === "EMP" ? (
             <Building2 className="h-6 w-6 text-brand dark:text-blue-400" />
           ) : (
             <UserCheck className="h-6 w-6 text-brand dark:text-blue-400" />
           )}
         </div>
-        <h3 className="text-lg font-medium text-gray-900 dark:text-white">
-          {Tipo === "EMP" ? 'Dados da Empresa' : 
-           Tipo === "RES" ? 'Responsável pela Empresa' : 
-           'Responsável Financeiro'}
-        </h3>
+        <div className="flex items-center justify-between flex-1">
+          <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+            {Tipo === "EMP" ? 'Dados da Empresa' : 
+             Tipo === "RES" ? 'Responsável pela Empresa' : 
+             'Responsável Financeiro'}
+          </h3>
+          {showCopyButton && (
+          <button
+            type="button"
+            onClick={handleCopyData}
+            className="flex items-center px-4 py-2 text-sm font-medium bg-brand hover:bg-brand/90 text-white rounded-lg transition-colors shadow-sm"
+          >
+            <Copy className="h-4 w-4 mr-2" />
+            Copiar dados do responsável
+          </button>
+          )}
+        </div>
       </div>
 
       {/* Main Form */}
       <div className="space-y-6">
         {/* Document and Name */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <div>
+          <div className="md:col-span-1">
             <label className={labelClass}>
               {Tipo === "EMP" ? 'CNPJ' : 'CPF'}
             </label>
@@ -143,8 +204,8 @@ export default function ProposalFormConfirmClient({ Tipo, onCancel, sender, setS
         {/* Address Section - Only for Company */}
         {Tipo === "EMP" && (
           <div className="space-y-6">
-            <div className="grid grid-cols-2 md:grid-cols-6 gap-6">
-              <div className="col-span-2 md:col-span-1">
+            <div className="grid grid-cols-12 gap-6">
+              <div className="col-span-3">
                 <label className={labelClass}>CEP</label>
                 <div className="relative">
                   <MapPin className={iconClass} />
@@ -153,12 +214,14 @@ export default function ProposalFormConfirmClient({ Tipo, onCancel, sender, setS
                     name={GetFieldName("cep")}
                     value={sender[GetFieldName("cep")]}
                     onChange={handleInputChange}
+                    maxLength={9}
+                    placeholder="00000-000"
                     className={inputClass}
                   />
                 </div>
               </div>
 
-              <div className="col-span-2 md:col-span-4">
+              <div className="col-span-7">
                 <label className={labelClass}>Logradouro</label>
                 <div className="relative">
                   <MapPin className={iconClass} />
@@ -167,12 +230,13 @@ export default function ProposalFormConfirmClient({ Tipo, onCancel, sender, setS
                     name={GetFieldName("logradouro")}
                     value={sender[GetFieldName("logradouro")]}
                     onChange={handleInputChange}
+                    readOnly
                     className={inputClass}
                   />
                 </div>
               </div>
 
-              <div className="col-span-2 md:col-span-1">
+              <div className="col-span-2">
                 <label className={labelClass}>Número</label>
                 <div className="relative">
                   <MapPin className={iconClass} />
@@ -197,6 +261,7 @@ export default function ProposalFormConfirmClient({ Tipo, onCancel, sender, setS
                     name={GetFieldName("bairro")}
                     value={sender[GetFieldName("bairro")]}
                     onChange={handleInputChange}
+                    readOnly
                     className={inputClass}
                   />
                 </div>
@@ -211,6 +276,7 @@ export default function ProposalFormConfirmClient({ Tipo, onCancel, sender, setS
                     name={GetFieldName("cidade")}
                     value={sender[GetFieldName("cidade")]}
                     onChange={handleInputChange}
+                    readOnly
                     className={inputClass}
                   />
                 </div>
@@ -225,6 +291,7 @@ export default function ProposalFormConfirmClient({ Tipo, onCancel, sender, setS
                     name={GetFieldName("uf")}
                     value={sender[GetFieldName("uf")]}
                     onChange={handleInputChange}
+                    readOnly
                     className={inputClass}
                     maxLength={2}
                   />
