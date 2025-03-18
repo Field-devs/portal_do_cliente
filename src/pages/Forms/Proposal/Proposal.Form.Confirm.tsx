@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import {
   FileText,
-  Loader2,
+  Loader2, 
+  DollarSign,
+  Package,
   Save,
 } from 'lucide-react';
 
@@ -121,7 +123,95 @@ export default function ProposalFormConfirm({ onCancel, initialData }: Commercia
             </div>
 
 
+          {/* Resumo da Proposta */}
+          <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-10 rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div>
+                <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-4">
+                  Plano Selecionado
+                </h3>
+                <div className="space-y-3">
+                  <div>
+                    <span className="text-sm text-gray-500 dark:text-gray-400">Nome do Plano:</span>
+                    <p className="text-lg font-medium text-gray-900 dark:text-white">{proposta.plano_nome}</p>
+                  </div>
+                  <div>
+                    <span className="text-sm text-gray-500 dark:text-gray-400">Caixas de Entrada:</span>
+                    <p className="text-lg font-medium text-gray-900 dark:text-white">{proposta.caixas_entrada_qtde}</p>
+                  </div>
+                  <div>
+                    <span className="text-sm text-gray-500 dark:text-gray-400">Atendentes:</span>
+                    <p className="text-lg font-medium text-gray-900 dark:text-white">{proposta.atendentes_qtde}</p>
+                  </div>
+                  <div>
+                    <span className="text-sm text-gray-500 dark:text-gray-400">Automações:</span>
+                    <p className="text-lg font-medium text-gray-900 dark:text-white">{proposta.automacoes_qtde}</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div>
+                <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-4">
+                  Valores
+                </h3>
+                <div className="space-y-3">
+                  <div>
+                    <span className="text-sm text-gray-500 dark:text-gray-400">Subtotal:</span>
+                    <p className="text-lg font-medium text-gray-900 dark:text-white">
+                      {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(proposta.subtotal)}
+                    </p>
+                  </div>
+                  <div>
+                    <span className="text-sm text-gray-500 dark:text-gray-400">Add-ons:</span>
+                    <p className="text-lg font-medium text-gray-900 dark:text-white">
+                      {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(proposta.total_addons)}
+                    </p>
+                  </div>
+                  <div>
+                    <span className="text-sm text-gray-500 dark:text-gray-400">Desconto:</span>
+                    <p className="text-lg font-medium text-gray-900 dark:text-white">
+                      {proposta.desconto}%
+                    </p>
+                  </div>
+                  <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
+                    <span className="text-sm font-medium text-gray-500 dark:text-gray-400">Total:</span>
+                    <p className="text-2xl font-bold text-brand dark:text-brand-400">
+                      {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(proposta.total)}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+              <div className="flex items-center space-x-2 text-gray-500 dark:text-gray-400">
+                <Package className="h-5 w-5" />
+                <span>Recursos Inclusos:</span>
+              </div>
+              <div className="mt-3 grid grid-cols-2 md:grid-cols-4 gap-4">
+                {proposta.kanban && (
+                  <div className="flex items-center space-x-2 text-gray-700 dark:text-gray-300">
+                    <span className="w-2 h-2 bg-brand rounded-full"></span>
+                    <span>Kanban</span>
+                  </div>
+                )}
+                {proposta.suporte_humano && (
+                  <div className="flex items-center space-x-2 text-gray-700 dark:text-gray-300">
+                    <span className="w-2 h-2 bg-brand rounded-full"></span>
+                    <span>Suporte Humano</span>
+                  </div>
+                )}
+                {proposta.whatsapp_oficial && (
+                  <div className="flex items-center space-x-2 text-gray-700 dark:text-gray-300">
+                    <span className="w-2 h-2 bg-brand rounded-full"></span>
+                    <span>WhatsApp Oficial</span>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
+
+        </div>
     
           <ProposalFormConfirmClient Tipo='EMP' sender={proposta} setSender={setProposta} />
           <ProposalFormConfirmClient Tipo='RES' sender={proposta} setSender={setProposta}  />
