@@ -9,25 +9,46 @@
 
   /* Custom Scrollbar Styles */
   ::-webkit-scrollbar {
-    @apply w-2;
+    @apply w-1.5;
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-light-secondary dark:bg-dark-secondary rounded-md;
+    @apply bg-gray-100/10 dark:bg-gray-800/20 rounded-full;
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-light-border dark:bg-dark-border rounded-md hover:bg-gray-400 dark:hover:bg-gray-500 transition-colors;
+    @apply bg-gray-300/30 dark:bg-gray-600/30 rounded-full hover:bg-gray-400/40 dark:hover:bg-gray-500/40 transition-colors;
   }
 
   /* Firefox Scrollbar */
   * {
     scrollbar-width: thin;
-    scrollbar-color: theme('colors.light.border') theme('colors.light.secondary');
+    scrollbar-color: theme('colors.gray.300/30') theme('colors.gray.100/10');
   }
 
   .dark * {
-    scrollbar-color: theme('colors.dark.border') theme('colors.dark.secondary');
+    scrollbar-color: theme('colors.gray.600/30') theme('colors.gray.800/20');
+  }
+}
+
+/* Remove input arrows/spinners */
+@layer base {
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+
+  /* Remove select element arrow */
+  select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: none;
   }
 }
 
@@ -57,11 +78,11 @@
   }
 
   .input {
-    @apply w-full px-4 py-2 bg-light-secondary dark:bg-dark-secondary border border-light-border dark:border-dark-border rounded-lg text-light-text-primary dark:text-dark-text-primary placeholder-light-text-secondary/50 dark:placeholder-dark-text-secondary/50 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors;
+    @apply w-full px-4 py-2 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-lg shadow-sm;
   }
 
   .select {
-    @apply w-full px-4 py-2 bg-light-secondary dark:bg-dark-secondary border border-light-border dark:border-dark-border rounded-lg text-light-text-primary dark:text-dark-text-primary focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors appearance-none;
+    @apply w-full px-4 py-2 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-white focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-lg shadow-sm appearance-none;
   }
 
   .badge {

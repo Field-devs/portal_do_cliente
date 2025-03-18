@@ -84,7 +84,14 @@ export default function ProposalForm({ id }: FormProps) {
       {step === 1 && <ProposalFormCliente proposta={propostaDTO} setProposta={setPropostaDTO} />}
       {step === 2 && <ProposalFormResume idProposta={idproposta} proposta={propostaDTO} setProposta={setPropostaDTO} />}
       <div className="flex justify-end mt-4 space-x-2">
-        {(step > 0 && step < 2) && <button className="px-4 py-2 border rounded-md hover:bg-gray-100" onClick={handleBack}>Voltar</button>}
+        {(step > 0 && step < 2) && (
+          <button 
+            onClick={handleBack}
+            className="px-4 py-2 bg-gray-100 dark:bg-gray-700/60 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600/40 transition-colors rounded-lg"
+          >
+            Voltar
+          </button>
+        )}
         {step == 0 && <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={handleNext}>Avançar</button>}
         {step == 1 && <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={handleSubmit}>Confirmar Proposta</button>}
         {/* {step == 2 && <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={handleSubmit}>Salvar</button>} */}

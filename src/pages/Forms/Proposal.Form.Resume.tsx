@@ -1,16 +1,22 @@
 import { useState } from "react";
-import { User, Copy, X, CheckCircle } from 'lucide-react';
+import { User, Copy, X, CheckCircle, FileText } from 'lucide-react';
 import { Proposta, PropostaDTO } from "../../Models/Propostas";
 import { formatCurrency } from "../../utils/formatters";
 
-export default function ProposalFormResume({ idProposta, proposta, setProposta }: { idProposta : string, proposta: PropostaDTO, setProposta: (data: PropostaDTO) => void }) {
+export default function ProposalFormResume({ idProposta, proposta, setProposta }: { idProposta: string, proposta: PropostaDTO, setProposta: (data: PropostaDTO) => void }) {
   const [copied, setCopied] = useState(false);
 
+  // Common CSS classes
+  const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50 rounded-lg";
+  const titleClass = "text-2xl font-bold text-light-text-primary dark:text-white mb-6";
+  const labelClass = "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1";
+  const valueClass = "text-lg font-medium text-light-text-primary dark:text-white";
+  const sectionClass = "mt-6 space-y-4";
+  const buttonClass = "px-4 py-2 flex items-center justify-center rounded-lg text-sm font-medium transition-colors";
 
   const copyToClipboard = async () => {
     try {
       const url = window.location.href.replace('/portal/proposals', '') + `/confirmation/${idProposta ?? "0"}`;
-      //const url = window.location.href + `/confirmation/${proposta.user_id ?? "0"}`;
       await navigator.clipboard.writeText(url);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
@@ -19,78 +25,46 @@ export default function ProposalFormResume({ idProposta, proposta, setProposta }
     }
   };
 
-  const cardClass = "bg-white dark:bg-[#1E293B]/70 backdrop-blur-sm p-6 border border-gray-200 dark:border-gray-700/50 shadow-lg";
-  const inputClass = "pl-12 block w-full border border-gray-200 dark:border-gray-700/50 bg-white dark:bg-[#0F172A]/60 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-brand focus:border-transparent transition-colors";
-  const labelClass = "block text-sm font-medium text-gray-700 dark:text-gray-300";
-  const iconClass = "absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400";
-  const buttonClass = "flex items-center justify-center px-4 py-2 text-sm font-medium rounded-md transition-colors";
-
   return (
-    <div className="space-y-4">
-      <div className={cardClass}>
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center space-x-3">
-            <div className="bg-brand-50 dark:bg-blue-400/10 p-3 rounded-xl">
-              <User className="h-6 w-6 text-brand dark:text-blue-400" />
-            </div>
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white">
-              Resumo da Proposta
-            </h3>
-          </div>
+    <div className={cardClass}>
+      <h2 className={titleClass}>Resumo da Proposta</h2>
+
+      <div className={sectionClass}>
+        <div>
+          <label className={labelClass}>Plano Escolhido</label>
+          <p className={valueClass}>{proposta.plano_nome}</p>
         </div>
 
-        <div className="space-y-4">
+        <div>
+          <label className={labelClass}>Valor Total</label>
+          <p className={valueClass}>{formatCurrency(proposta.total)}</p>
+        </div>
 
+        <div>
+          <label className={labelClass}>Add-ons</label>
+          <p className={valueClass}>{formatCurrency(proposta.total_addons)}</p>
+        </div>
 
-          <div className="border-b border-gray-200 dark:border-gray-700/50 pb-4">
-            <h4 className="font-medium text-gray-700 dark:text-gray-300 mb-2">Plano Escolhido</h4>
-            <p className="text-lg font-semibold text-gray-900 dark:text-white">{proposta.plano_nome} </p>
-            <p className="text-sm text-gray-500 dark:text-gray-400">{"ERRO AO LER SUPABASE"}</p>
-          </div>
-
-          <div className="border-b border-gray-200 dark:border-gray-700/50 pb-4">
-            <h4 className="font-medium text-gray-700 dark:text-gray-300 mb-2">Valor</h4>
-            <p className="text-lg font-semibold text-gray-900 dark:text-white">
-              {formatCurrency(proposta.total)}
-            </p>
-          </div>
-
-          <div className="border-b border-gray-200 dark:border-gray-700/50 pb-4">
-            <h4 className="font-medium text-gray-700 dark:text-gray-300 mb-2">Addons</h4>
-            <p className="text-lg font-semibold text-gray-900 dark:text-white">{proposta.total_addons} </p>
-            <p className="text-sm text-gray-500 dark:text-gray-400">{"ERRO AO LER SUPABASE"}</p>
-          </div>
-
-          <div className="border-b border-gray-200 dark:border-gray-700/50 pb-4">
-            <h4 className="font-medium text-gray-700 dark:text-gray-300 mb-2">Valor</h4>
-            <p className="text-lg font-semibold text-gray-900 dark:text-white">
-              {formatCurrency(proposta.total)}
-            </p>
-          </div>
-
-          <div className="flex justify-between items-center pt-4">
-            <button
-              type="button"
-              onClick={copyToClipboard}
-              className={`${buttonClass} ${copied ? 'bg-green-50 text-green-600' : 'bg-gray-50 hover:bg-gray-100 text-gray-700'} dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-300`}
-            >
-              {copied ? (
-                <>
-                  <CheckCircle className="h-4 w-4 mr-2" />
-                  Copiado!
-                </>
-              ) : (
-                <>
-                  <Copy className="h-4 w-4 mr-2" />
-                  Copiar Link
-                </>
-              )}
-            </button>
-          </div>
+        <div className="flex justify-end pt-6">
+          <button
+            type="button"
+            onClick={copyToClipboard}
+            className={`${buttonClass} ${copied ? 'bg-green-50 text-green-600' : 'bg-brand text-white hover:bg-brand/90'}`}
+          >
+            {copied ? (
+              <>
+                <CheckCircle className="h-4 w-4 mr-2" />
+                Copiado!
+              </>
+            ) : (
+              <>
+                <Copy className="h-4 w-4 mr-2" />
+                Copiar Link
+              </>
+            )}
+          </button>
         </div>
       </div>
-
-
     </div>
   );
 }

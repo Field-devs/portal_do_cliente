@@ -1,0 +1,44 @@
+.dialog-popup {
+  @apply bg-light-card dark:bg-gray-800/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50 rounded-lg;
+}
+
+.dialog-title {
+  @apply text-2xl font-bold text-light-text-primary dark:text-white mb-4;
+}
+
+.dialog-content {
+  @apply text-base text-light-text-secondary dark:text-gray-300 mb-6;
+}
+
+.dialog-actions {
+  @apply flex justify-end space-x-3 mt-6;
+}
+
+.dialog-confirm-button {
+  @apply px-4 py-2 bg-brand hover:bg-brand/90 text-white transition-colors rounded-lg;
+}
+
+.dialog-cancel-button {
+  @apply px-4 py-2 bg-light-secondary dark:bg-gray-700/60 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600/40 transition-colors rounded-lg;
+}
+
+/* Override SweetAlert2 icon colors */
+.swal2-icon.swal2-warning {
+  @apply border-yellow-400 text-yellow-400;
+}
+
+.swal2-icon.swal2-error {
+  @apply border-red-400 text-red-400;
+}
+
+.swal2-icon.swal2-success {
+  @apply border-green-400 text-green-400;
+}
+
+.swal2-icon.swal2-info {
+  @apply border-blue-400 text-blue-400;
+}
+
+.swal2-icon.swal2-question {
+  @apply border-brand text-brand;
+}

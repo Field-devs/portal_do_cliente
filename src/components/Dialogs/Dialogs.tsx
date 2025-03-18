@@ -1,5 +1,6 @@
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
+import './dialog.css'
 
 const MySwal = withReactContent(Swal)
 
@@ -11,8 +12,15 @@ export const AskDialog = async (text: string, title: string = "Atenção") => {
     showCancelButton: true,
     confirmButtonText: 'Sim',
     cancelButtonText: 'Não',
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33'
+    customClass: {
+      popup: 'dialog-popup',
+      title: 'dialog-title',
+      htmlContainer: 'dialog-content',
+      confirmButton: 'dialog-confirm-button',
+      cancelButton: 'dialog-cancel-button',
+      actions: 'dialog-actions'
+    },
+    buttonsStyling: false
   });
 }
 
@@ -23,7 +31,14 @@ export const AlertDialog = async (text: string, title: string = "Atenção") => 
     icon: 'warning',
     showCancelButton: false,
     confirmButtonText: 'Ok',
-    confirmButtonColor: '#3085d6'
+    customClass: {
+      popup: 'dialog-popup',
+      title: 'dialog-title', 
+      htmlContainer: 'dialog-content',
+      confirmButton: 'dialog-confirm-button',
+      actions: 'dialog-actions'
+    },
+    buttonsStyling: false
   });
 }
 
@@ -34,7 +49,14 @@ export const SuccessDialog = async (text: string, title: string = "Sucesso") => 
     icon: 'success',
     showCancelButton: false,
     confirmButtonText: 'Ok',
-    confirmButtonColor: '#3085d6'
+    customClass: {
+      popup: 'dialog-popup',
+      title: 'dialog-title',
+      htmlContainer: 'dialog-content', 
+      confirmButton: 'dialog-confirm-button',
+      actions: 'dialog-actions'
+    },
+    buttonsStyling: false
   });
 }
 
@@ -46,7 +68,14 @@ export const ErrorDialog = async (text: string, title: string = "Erro") => {
     icon: 'error',
     showCancelButton: false,
     confirmButtonText: 'Ok',
-    confirmButtonColor: '#3085d6'
+    customClass: {
+      popup: 'dialog-popup',
+      title: 'dialog-title',
+      htmlContainer: 'dialog-content',
+      confirmButton: 'dialog-confirm-button',
+      actions: 'dialog-actions'
+    },
+    buttonsStyling: false
   });
 }
 

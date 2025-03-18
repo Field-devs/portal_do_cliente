@@ -31,6 +31,13 @@ interface CommercialAffiliateFormProps {
   };
 }
 
+const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50 rounded-lg";
+const labelClass = "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1";
+const inputClass = "w-full pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-lg shadow-sm";
+const iconGroupClass = "flex items-center space-x-3 mb-6";
+const iconGroupTitleClass = "h-6 w-6 text-brand dark:text-blue-400";
+const iconInputClass = "absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400";
+
 export default function CommercialAffiliateForm({ onSuccess, onCancel, initialData }: CommercialAffiliateFormProps) {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
@@ -118,14 +125,15 @@ export default function CommercialAffiliateForm({ onSuccess, onCancel, initialDa
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <div className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-6">
       {/* Basic Information */}
-      <div className="bg-[#1E293B]/70 backdrop-blur-sm p-6 border border-gray-700/50">
-        <div className="flex items-center space-x-3 mb-6">
+      <div className={cardClass}>
+        <div className={iconGroupClass}>
           <div className="bg-blue-400/10 p-3 rounded-xl">
-            <UserCheck className="h-6 w-6 text-blue-400" />
+            <UserCheck className={iconGroupTitleClass} />
           </div>
-          <h3 className="text-lg font-medium text-white">
+          <h3 className="text-lg font-medium text-gray-900 dark:text-white">
             Informações do Afiliado
           </h3>
         </div>
@@ -133,17 +141,17 @@ export default function CommercialAffiliateForm({ onSuccess, onCancel, initialDa
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Nome */}
           <div>
-            <label className="block text-sm font-medium text-gray-300">
+            <label className={labelClass}>
               Nome
             </label>
             <div className="mt-1 relative">
-              <User className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <User className={iconInputClass} />
               <input
                 type="text"
                 name="nome"
                 value={formData.nome}
                 onChange={handleInputChange}
-                className="pl-12 block w-full border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
+                className={inputClass}
                 required
               />
             </div>
@@ -151,17 +159,17 @@ export default function CommercialAffiliateForm({ onSuccess, onCancel, initialDa
 
           {/* Email */}
           <div>
-            <label className="block text-sm font-medium text-gray-300">
+            <label className={labelClass}>
               Email
             </label>
             <div className="mt-1 relative">
-              <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <Mail className={iconInputClass} />
               <input
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                className="pl-12 block w-full border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
+                className={inputClass}
                 required
               />
             </div>
@@ -169,18 +177,18 @@ export default function CommercialAffiliateForm({ onSuccess, onCancel, initialDa
 
           {/* Telefone */}
           <div>
-            <label className="block text-sm font-medium text-gray-300">
+            <label className={labelClass}>
               Telefone
             </label>
             <div className="mt-1 relative">
-              <Phone className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <Phone className={iconInputClass} />
               <input
                 type="tel"
                 name="telefone"
                 value={formData.telefone}
                 onChange={handleInputChange}
                 placeholder="(00) 00000-0000"
-                className="pl-12 block w-full border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
+                className={inputClass}
                 required
               />
             </div>
@@ -188,18 +196,18 @@ export default function CommercialAffiliateForm({ onSuccess, onCancel, initialDa
 
           {/* Data de Vencimento */}
           <div>
-            <label className="block text-sm font-medium text-gray-300">
+            <label className={labelClass}>
               Data de Vencimento
             </label>
             <div className="mt-1 relative">
-              <Calendar className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <Calendar className={iconInputClass} />
               <input
                 type="date"
                 name="vencimento"
                 value={formData.vencimento}
                 onChange={handleInputChange}
                 min={new Date().toISOString().split('T')[0]}
-                className="pl-12 block w-full border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
+                className={inputClass}
                 required
               />
             </div>
@@ -208,10 +216,10 @@ export default function CommercialAffiliateForm({ onSuccess, onCancel, initialDa
       </div>
 
       {/* Commission Settings */}
-      <div className="bg-[#1E293B]/70 backdrop-blur-sm p-6 border border-gray-700/50">
-        <div className="flex items-center space-x-3 mb-6">
+      <div className={cardClass}>
+        <div className={iconGroupClass}>
           <div className="bg-blue-400/10 p-3 rounded-xl">
-            <Building2 className="h-6 w-6 text-blue-400" />
+            <Building2 className={iconGroupTitleClass} />
           </div>
           <h3 className="text-lg font-medium text-white">
             Configurações de Comissão
@@ -221,20 +229,20 @@ export default function CommercialAffiliateForm({ onSuccess, onCancel, initialDa
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Desconto */}
           <div>
-            <label className="block text-sm font-medium text-gray-300">
+            <label className={labelClass}>
               Percentual de Desconto
             </label>
             <div className="mt-1 relative">
-              <Percent className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <Percent className={iconInputClass} />
               <input
                 type="number"
                 name="desconto"
                 value={formData.desconto}
                 onChange={handleInputChange}
+                className={inputClass}
                 min="0"
                 max="100"
                 step="0.1"
-                className="pl-12 block w-full border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
                 required
               />
             </div>
@@ -242,20 +250,20 @@ export default function CommercialAffiliateForm({ onSuccess, onCancel, initialDa
 
           {/* Comissão */}
           <div>
-            <label className="block text-sm font-medium text-gray-300">
+            <label className={labelClass}>
               Taxa de Comissão
             </label>
             <div className="mt-1 relative">
-              <Percent className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <Percent className={iconInputClass} />
               <input
                 type="number"
                 name="comissao"
                 value={formData.comissao}
                 onChange={handleInputChange}
+                className={inputClass}
                 min="0"
                 max="100"
                 step="0.1"
-                className="pl-12 block w-full border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
                 required
               />
             </div>
@@ -265,7 +273,7 @@ export default function CommercialAffiliateForm({ onSuccess, onCancel, initialDa
 
       {/* Error Message */}
       {error && (
-        <div className="bg-red-500/10 border border-red-500/20 p-4 flex items-center text-red-400">
+        <div className="bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 p-4 flex items-center text-red-600 dark:text-red-400 rounded-lg">
           <AlertCircle className="h-5 w-5 mr-2 flex-shrink-0" />
           <p className="text-sm">{error}</p>
         </div>
@@ -276,14 +284,14 @@ export default function CommercialAffiliateForm({ onSuccess, onCancel, initialDa
         <button
           type="button"
           onClick={onCancel}
-          className="px-4 py-2 bg-[#0F172A]/60 text-gray-300 hover:bg-[#0F172A]/40 transition-colors"
+          className="px-4 py-2 bg-light-secondary dark:bg-[#0F172A]/60 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-[#0F172A]/40 transition-colors rounded-lg"
           disabled={loading}
         >
           Cancelar
         </button>
         <button
           type="submit"
-          className="px-4 py-2 bg-blue-500/80 hover:bg-blue-600/80 text-white transition-colors flex items-center"
+          className="btn-primary flex items-center rounded-lg"
           disabled={loading}
         >
           {loading ? (
@@ -299,6 +307,7 @@ export default function CommercialAffiliateForm({ onSuccess, onCancel, initialDa
           )}
         </button>
       </div>
-    </form>
+      </form>
+    </div>
   );
 }

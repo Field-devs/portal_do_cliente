@@ -90,12 +90,16 @@ export default function ProposalFormConfirm({ onCancel, initialData }: Commercia
       <div className="flex justify-center items-center mt-20">
 
         <form onSubmit={handleSubmit} className="space-y-6 max-w-8xl" >
-          {/* Cabecalho 1 */}
-          <div className={iconGroupClass}>
-            <img src={OUTR_BLACK_IMAGE_URL} alt="Logo" width="48" height="48" />
-            <h4 className="text-2xl font-medium text-blue-800">
+          {/* Header */}
+          <div className="flex flex-col items-center justify-center mb-8">
+            <img 
+              src={OUTR_BLACK_IMAGE_URL} 
+              alt="Logo" 
+              className="w-24 h-24 mb-4"
+            />
+            <h1 className="text-4xl font-bold text-brand tracking-wide text-center">
               CONFIRMAÇÃO DE PROPOSTA
-            </h4>
+            </h1>
           </div>
 
           {/* Informacoes Basicas */}
@@ -106,7 +110,7 @@ export default function ProposalFormConfirm({ onCancel, initialData }: Commercia
               <div className="bg-blue-400/10 p-3 rounded-xl">
                 <FileText className={iconGroupTitleClass} />
               </div>
-              <h3 className="text-2xl font-medium text-blue-800">
+              <h3 className="text-2xl font-medium text-brand">
                 Resumo da Proposta
               </h3>
             </div>
@@ -128,12 +132,12 @@ export default function ProposalFormConfirm({ onCancel, initialData }: Commercia
                 onChange={() => setAccepted(!accepted)}
                 required
               />
-              <span className="ml-2 text-sm text-black">
+              <span className="ml-2 text-sm text-gray-900 dark:text-gray-100">
                 Eu li e aceito o{" "}
                 <a
                   href="https://storage.wiseapp360.com/typebot/public/workspaces/clwl6fdyf000511ohlamongyl/typebots/cm683siyl000dm4kxlrec9tb8/results/hvstcq9bln1xt3x3pzrip009/blocks/cz78pvc8stcisz1y8sq2khj1/Termo%20de%20Ades%C3%A3o%20Wiseapp%20V1.pdf"
                   target='_blank'
-                  className="text-blue-600 underline"
+                  className="text-brand hover:text-brand/90 dark:text-brand-400 dark:hover:text-brand-400/90 underline"
                 >
                   Termo de Adesão
                 </a>
@@ -147,7 +151,7 @@ export default function ProposalFormConfirm({ onCancel, initialData }: Commercia
             <button
               type="button"
               onClick={onCancel}
-              className="px-4 py-2 bg-[#0F172A]/60 text-black hover:bg-[#0F172A]/40 transition-colors"
+              className="px-4 py-2 bg-gray-100 dark:bg-gray-700/60 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600/40 transition-colors rounded-lg"
               disabled={loading}
             >
               Cancelar
@@ -155,7 +159,7 @@ export default function ProposalFormConfirm({ onCancel, initialData }: Commercia
             <button
               type="button"
               onClick={handleSubmit}
-              className="px-4 py-2 bg-blue-500/80 hover:bg-blue-600/80 text-white transition-colors flex items-center"
+              className="px-4 py-2 bg-brand hover:bg-brand/90 text-white transition-colors flex items-center rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={loading || !accepted}
             >
               {loading ? (

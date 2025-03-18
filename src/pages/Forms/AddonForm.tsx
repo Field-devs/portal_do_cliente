@@ -89,9 +89,9 @@ export default function AddonForm({ onSuccess, onCancel, initialData }: AddonFor
     }
   };
 
-  const cardClass = "bg-white dark:bg-[#1E293B]/70 backdrop-blur-sm p-6 border border-gray-200 dark:border-gray-700/50 shadow-lg";
-  const inputClass = "pl-12 block w-full border border-gray-200 dark:border-gray-700/50 bg-white dark:bg-[#0F172A]/60 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-brand focus:border-transparent transition-colors";
-  const labelClass = "block text-sm font-medium text-gray-700 dark:text-gray-300";
+  const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50 rounded-lg";
+  const inputClass = "w-full pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-lg shadow-sm";
+  const labelClass = "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1";
   const iconClass = "absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400";
 
   return (
@@ -135,7 +135,8 @@ export default function AddonForm({ onSuccess, onCancel, initialData }: AddonFor
             value={formData.descricao}
             onChange={handleInputChange}
             rows={3}
-            className={`${inputClass} pl-4`}
+            className={`${inputClass} pl-4 resize-none`}
+            placeholder="Descrição do add-on"
           />
         </div>
 
@@ -163,7 +164,7 @@ export default function AddonForm({ onSuccess, onCancel, initialData }: AddonFor
 
       {/* Error Message */}
       {error && (
-        <div className="bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 p-4 flex items-center text-red-600 dark:text-red-400">
+        <div className="bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 p-4 flex items-center text-red-600 dark:text-red-400 rounded-lg">
           <AlertCircle className="h-5 w-5 mr-2 flex-shrink-0" />
           <p className="text-sm">{error}</p>
         </div>
@@ -174,7 +175,7 @@ export default function AddonForm({ onSuccess, onCancel, initialData }: AddonFor
         <button
           type="button"
           onClick={onCancel}
-          className="px-4 py-2 bg-gray-100 dark:bg-[#0F172A]/60 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-[#0F172A]/40 transition-colors rounded-lg"
+          className="px-4 py-2 bg-light-secondary dark:bg-[#0F172A]/60 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-[#0F172A]/40 transition-colors rounded-lg"
           disabled={loading}
         >
           Cancelar
@@ -182,7 +183,7 @@ export default function AddonForm({ onSuccess, onCancel, initialData }: AddonFor
         <button
           type="submit"
           onClick={handleSubmit}
-          className="px-4 py-2 bg-brand hover:bg-brand/90 text-white transition-colors flex items-center rounded-lg"
+          className="btn-primary flex items-center rounded-lg"
           disabled={loading}
         >
           {loading ? (

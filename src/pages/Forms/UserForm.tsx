@@ -44,6 +44,11 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
     confirmPassword: ''
   });
 
+  const cardClass = "bg-white dark:bg-[#1E293B]/70 backdrop-blur-sm p-6 border border-gray-200 dark:border-gray-700/50 shadow-lg";
+  const inputClass = "mt-1 block w-full border border-gray-200 dark:border-gray-700/50 bg-white dark:bg-[#0F172A]/60 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-lg shadow-sm";
+  const labelClass = "block text-sm font-medium text-gray-700 dark:text-gray-300";
+  const iconClass = "absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400";
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -160,12 +165,12 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Basic Information */}
-      <div className="bg-[#1E293B]/70 backdrop-blur-sm p-6 border border-gray-700/50">
+      <div className="bg-white dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-gray-200 dark:border-gray-700/50 rounded-lg">
         <div className="flex items-center space-x-3 mb-6">
-          <div className="bg-blue-400/10 p-3 rounded-xl">
-            <User className="h-6 w-6 text-blue-400" />
+          <div className="bg-blue-400/10 p-3 rounded-lg">
+            <User className="h-6 w-6 text-blue-600 dark:text-blue-400" />
           </div>
-          <h3 className="text-lg font-medium text-white">
+          <h3 className="text-lg font-medium text-gray-900 dark:text-white">
             Informações Básicas
           </h3>
         </div>
@@ -245,12 +250,12 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
       </div>
 
       {/* Company Information */}
-      <div className="bg-[#1E293B]/70 backdrop-blur-sm p-6 border border-gray-700/50">
+      <div className="bg-white dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-gray-200 dark:border-gray-700/50 rounded-lg">
         <div className="flex items-center space-x-3 mb-6">
-          <div className="bg-blue-400/10 p-3 rounded-xl">
-            <Building2 className="h-6 w-6 text-blue-400" />
+          <div className="bg-blue-400/10 p-3 rounded-lg">
+            <Building2 className="h-6 w-6 text-blue-600 dark:text-blue-400" />
           </div>
-          <h3 className="text-lg font-medium text-white">
+          <h3 className="text-lg font-medium text-gray-900 dark:text-white">
             Informações da Empresa
           </h3>
         </div>
@@ -294,12 +299,12 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
 
       {/* Password Section (only for new users) */}
       {!initialData && (
-        <div className="bg-[#1E293B]/70 backdrop-blur-sm p-6 border border-gray-700/50">
+        <div className="bg-white dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-gray-200 dark:border-gray-700/50 rounded-lg">
           <div className="flex items-center space-x-3 mb-6">
-            <div className="bg-blue-400/10 p-3 rounded-xl">
-              <Lock className="h-6 w-6 text-blue-400" />
+            <div className="bg-blue-400/10 p-3 rounded-lg">
+              <Lock className="h-6 w-6 text-blue-600 dark:text-blue-400" />
             </div>
-            <h3 className="text-lg font-medium text-white">
+            <h3 className="text-lg font-medium text-gray-900 dark:text-white">
               Senha
             </h3>
           </div>
@@ -344,7 +349,7 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
 
       {/* Error Message */}
       {error && (
-        <div className="bg-red-500/10 border border-red-500/20 p-4 flex items-center text-red-400">
+        <div className="bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 p-4 flex items-center text-red-600 dark:text-red-400 rounded-lg">
           <AlertCircle className="h-5 w-5 mr-2 flex-shrink-0" />
           <p className="text-sm">{error}</p>
         </div>
@@ -355,14 +360,14 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
         <button
           type="button"
           onClick={onCancel}
-          className="px-4 py-2 bg-[#0F172A]/60 text-gray-300 hover:bg-[#0F172A]/40 transition-colors"
+          className="px-4 py-2 bg-gray-100 dark:bg-[#0F172A]/60 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-[#0F172A]/40 transition-colors rounded-lg"
           disabled={loading}
         >
           Cancelar
         </button>
         <button
           type="submit"
-          className="px-4 py-2 bg-blue-500/80 hover:bg-blue-600/80 text-white transition-colors flex items-center"
+          className="px-4 py-2 bg-brand hover:bg-brand/90 text-white transition-colors flex items-center rounded-lg"
           disabled={loading}
         >
           {loading ? (

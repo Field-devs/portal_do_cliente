@@ -163,28 +163,30 @@ export default function ProposalsList() {
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                 className="btn-primary flex items-center px-3"
+                aria-expanded={isMenuOpen}
+                aria-haspopup="true"
               >
                 <MoreVertical className="h-5 w-5" />
               </button>
 
               {isMenuOpen && (
-                <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5">
+                <div className="absolute right-0 mt-2 w-48 rounded-lg shadow-lg bg-white dark:bg-[#1E293B]/90 border border-light-border dark:border-gray-700/50 backdrop-blur-sm z-50">
                   <div className="py-1">
                     <button
                       onClick={() => {/* handle action 1 */ }}
-                      className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                      className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-light-secondary dark:hover:bg-[#0F172A]/40 transition-colors first:rounded-t-lg"
                     >
                       Exportar Propostas
                     </button>
                     <button
                       onClick={() => {/* handle action 2 */ }}
-                      className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                      className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-light-secondary dark:hover:bg-[#0F172A]/40 transition-colors"
                     >
                       Filtros Avançados
                     </button>
                     <button
                       onClick={() => {/* handle action 3 */ }}
-                      className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                      className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-light-secondary dark:hover:bg-[#0F172A]/40 transition-colors last:rounded-b-lg"
                     >
                       Configurações
                     </button>
@@ -304,37 +306,37 @@ export default function ProposalsList() {
         {/* Proposals Table */}
         <div className={`${cardClass} mt-6 overflow-hidden`}>
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-light-border dark:divide-gray-700/50 rounded-lg overflow-hidden">
+            <table className="w-full divide-y divide-light-border dark:divide-gray-700/50 rounded-lg overflow-hidden">
               <thead>
                 <tr className="bg-light-secondary dark:bg-[#0F172A]/60 rounded-t-lg">
                   <th className="px-6 py-2 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                     Data
                   </th>
-                  <th className="px-6 py-2 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-4 py-2 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                     Tipo
                   </th>
-                  <th className="px-6 py-2 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-4 py-2 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                     Cliente
                   </th>
-                  <th className="px-6 py-2 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-4 py-2 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                     Email
                   </th>
-                  <th className="px-6 py-2 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-4 py-2 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                     Fone
                   </th>
-                  <th className="px-6 py-2 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-4 py-2 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                     Validade
                   </th>
-                  <th className="px-6 py-2 text-right text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-4 py-2 text-right text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                     Valor
                   </th>
-                  <th className="px-6 py-2 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-4 py-2 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                     Status
                   </th>
-                  <th className="px-6 py-2 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-4 py-2 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                     Links
                   </th>
-                  <th className="px-6 py-2 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-4 py-2 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                     Ações
                   </th>
                 </tr>
@@ -345,37 +347,37 @@ export default function ProposalsList() {
                     key={proposta.id}
                     className="hover:bg-light-secondary dark:hover:bg-[#0F172A]/40 transition-colors"
                   >
-                    <td className="px-6 py-2 whitespace-nowrap">
+                    <td className="px-4 py-2 whitespace-nowrap">
                       <div className="text-base text-light-text-secondary dark:text-gray-300">
                         {new Date(proposta.dt).toLocaleDateString('pt-BR')}
                       </div>
                     </td>
-                    <td className="px-6 py-2 whitespace-nowrap">
+                    <td className="px-4 py-2 whitespace-nowrap">
                       <div className="text-base text-light-text-secondary dark:text-gray-300">
                         {proposta.perfil_nome}
                       </div>
                     </td>
-                    <td className="px-6 py-2 whitespace-nowrap">
+                    <td className="px-4 py-2 whitespace-nowrap">
                       <div className="text-base font-medium text-light-text-primary dark:text-gray-100">
                         {proposta.emp_nome}
                       </div>
                     </td>
-                    <td className="px-6 py-2 whitespace-nowrap">
+                    <td className="px-4 py-2 whitespace-nowrap">
                       <div className="text-base text-light-text-secondary dark:text-gray-300">
                         {proposta.emp_email}
                       </div>
                     </td>
-                    <td className="px-6 py-2 whitespace-nowrap">
+                    <td className="px-4 py-2 whitespace-nowrap">
                       <div className="text-base text-light-text-secondary dark:text-gray-300">
                         {formatPhone(proposta.emp_fone)}
                       </div>
                     </td>
-                    <td className="px-6 py-2 whitespace-nowrap text-center">
+                    <td className="px-4 py-2 whitespace-nowrap text-center">
                       <div className="text-base text-light-text-secondary dark:text-gray-300">
                         {proposta.validade} {proposta.validade === 1 ? 'Dia' : 'Dias'}
                       </div>
                     </td>
-                    <td className="px-6 py-2 whitespace-nowrap text-right">
+                    <td className="px-4 py-2 whitespace-nowrap text-right">
                       <div className="text-base font-medium text-light-text-primary dark:text-gray-100">
                         {new Intl.NumberFormat('pt-BR', {
                           style: 'currency',
@@ -383,9 +385,9 @@ export default function ProposalsList() {
                         }).format(proposta.total)}
                       </div>
                     </td>
-                    <td className="px-6 py-2 whitespace-nowrap">
+                    <td className="px-4 py-2 whitespace-nowrap">
                       <div className="flex justify-center">
-                        <span className={`px-3 py-1 text-sm font-medium rounded-full w-24 text-center ${proposta.status === 'PE'
+                        <span className={`px-3 py-1 text-sm font-medium rounded-full min-w-[6rem] text-center ${proposta.status === 'PE'
                           ? 'badge-warning'
                           : proposta.status === 'AC'
                             ? 'badge-success'
@@ -395,7 +397,7 @@ export default function ProposalsList() {
                         </span>
                       </div>
                     </td>
-                    <td className="px-6 py-2 whitespace-nowrap">
+                    <td className="px-4 py-2 whitespace-nowrap">
                       <div className="flex justify-center space-x-2">
                         <a href={`/confirmation/${proposta.id}`} target='blank' title="Link de Confirmação">
                           <Link className="h-5 w-5 text-blue-600 dark:text-blue-400" />
@@ -407,7 +409,7 @@ export default function ProposalsList() {
                         )}
                       </div>
                     </td>
-                    <td className="px-6 py-2 whitespace-nowrap">
+                    <td className="px-4 py-2 whitespace-nowrap">
                       <ActionsButtons
                         onEdit={() => handleEdit(proposta.id)}
                         onLocker={() => handleOnLock(proposta.id, proposta.active)}

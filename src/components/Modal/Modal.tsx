@@ -12,6 +12,14 @@ interface ModalProps {
   maxWidth?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | '6xl' | '7xl';
 }
 
+const overlayClass = "fixed inset-0 bg-black/50 dark:bg-black/70 backdrop-blur-sm flex items-center justify-center z-50";
+const modalClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm border border-light-border dark:border-gray-700/50 p-6 w-full mx-4 rounded-lg shadow-lg overflow-y-auto relative";
+const headerClass = "flex items-center justify-between mb-6";
+const titleWrapperClass = "flex items-center space-x-3";
+const iconWrapperClass = "bg-blue-400/10 p-3 rounded-xl";
+const titleClass = "text-lg font-medium text-gray-900 dark:text-white";
+const closeButtonClass = "p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 rounded-lg transition-colors";
+
 export function ModalForm({
   isOpen,
   onClose,
@@ -53,7 +61,7 @@ export function ModalForm({
 
   return (
     <div
-      className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
+      className={overlayClass}
       onMouseDown={async (e) => {
         if (e.target === e.currentTarget) {
           let response = await AskDialog('Deseja realmente fechar o Formulário?', 'Fechar');
@@ -66,20 +74,21 @@ export function ModalForm({
       aria-labelledby={title ? 'modal-title' : undefined}
     >
       <div
-        className={`bg-white backdrop-blur-sm border border-gray-700/50 p-6 w-full mx-4 ${maxWidthClasses[maxWidth]} max-h-[90vh] overflow-y-auto`}
+        className={`${modalClass} ${maxWidthClasses[maxWidth]} max-h-[90vh]`}
         onClick={e => e.stopPropagation()}
       >
         {title && (
-          <div className="flex items-center space-x-1 mb-1">
-            {icon && (
-              <div className="p-3 rounded-xl">
-                {/* {React.createElement(icon, { className: 'h-6 w-6 text-blue-400' })} */}
-                {icon}
-              </div>
-            )}
-            <h2 id="modal-title" className="text-xl font-semibold text-white">
-              {/* {title} */}
-            </h2>
+          <div className={headerClass}>
+            <div className={titleWrapperClass}>
+              {icon && (
+                <div className={iconWrapperClass}>
+                  {icon}
+                </div>
+              )}
+              <h2 id="modal-title" className={titleClass}>
+                {title}
+              </h2>
+            </div>
           </div>
         )}
         {children}

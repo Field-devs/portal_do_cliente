@@ -69,7 +69,7 @@ export default function Portal() {
   return (
     <div className="min-h-screen bg-light-primary dark:bg-dark-primary flex">
       {/* Sidebar Navigation */}
-      <div className={`fixed inset-y-0 left-0 bg-light-card dark:bg-dark-card shadow-lg transition-all duration-300 z-20 flex flex-col border-r border-light-border dark:border-dark-border backdrop-blur-sm ${isExpanded ? 'w-52' : 'w-20'}`}>
+      <div className={`fixed inset-y-0 left-0 bg-light-card dark:bg-dark-card shadow-lg transition-all duration-300 z-20 flex flex-col border-r border-light-border dark:border-dark-border backdrop-blur-sm rounded-tr-2xl rounded-br-2xl ${isExpanded ? 'w-52' : 'w-20'}`}>
         {/* Logo and Toggle */}
         <div className="h-16 flex items-center justify-between px-3 border-b border-light-border dark:border-dark-border">
           <img
@@ -122,14 +122,13 @@ export default function Portal() {
               <NavLink
                 key={item.path}
                 to={item.path}
-
-                className={`flex items-center px-3 py-2 mx-2 text-sm font-medium rounded-lg transition-colors ${isActive
+                title={!isExpanded ? item.name : undefined}
+                className={`flex items-center px-3 py-2 mx-2 text-sm font-medium rounded-lg transition-colors ${isExpanded ? 'justify-start' : 'justify-center'} ${isActive
                   ? 'bg-brand-50 text-brand-600 dark:bg-brand-900/20 dark:text-brand-400'
                   : 'text-gray-600 dark:text-gray-400 hover:bg-brand-50/50 dark:hover:bg-brand-900/10 hover:text-brand-600 dark:hover:text-brand-400'
                   }`}
               >
-
-                <div className="min-w-[2rem] flex justify-center">
+                <div className={isExpanded ? '' : 'min-w-[2rem] flex justify-center'}>
                   <item.icon className="h-5 w-5" />
                 </div>
 
@@ -146,7 +145,7 @@ export default function Portal() {
 
         {/* Footer Actions */}
         <div className="p-3 border-t border-light-border dark:border-dark-border">
-          <div className={`flex ${isExpanded ? 'justify-center items-center space-x-2' : 'flex-col items-center space-y-2'}`}>
+          <div className={`flex ${isExpanded ? 'flex-row justify-center space-x-2' : 'flex-col items-center space-y-2'}`}>
 
             <button
               onClick={toggleTheme}
@@ -156,13 +155,11 @@ export default function Portal() {
               {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
             </button>
 
-            {/* Configuracoes */}
             <button
-              // onClick={toggleTheme}
               className="p-2 rounded-lg text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-light-secondary dark:hover:bg-dark-secondary"
               title={'Configurações do Sistema'}
             >
-              {theme === 'dark' ? <Cog className="h-5 w-5" /> : <Cog className="h-5 w-5" />}
+              <Cog className="h-5 w-5" />
             </button>
 
             <NavLink
