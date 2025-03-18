@@ -33,6 +33,13 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
   const [error, setError] = useState<string | null>(null);
   const [profileList, setProfileList] = useState<string[] | null>([]);
 
+  // Style constants
+  const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50 rounded-lg";
+  const labelClass = "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1";
+  const inputClass = "w-full pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-lg shadow-sm";
+  const iconClass = "absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400";
+  const buttonClass = "px-4 py-2 flex items-center justify-center rounded-lg text-sm font-medium transition-colors";
+
   const [formData, setFormData] = useState({
     firstName: initialData?.nome.split(' ')[0] || '',
     lastName: initialData?.nome.split(' ').slice(1).join(' ') || '',
@@ -44,10 +51,6 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
     confirmPassword: ''
   });
 
-  const cardClass = "bg-white dark:bg-[#1E293B]/70 backdrop-blur-sm p-6 border border-gray-200 dark:border-gray-700/50 shadow-lg";
-  const inputClass = "mt-1 block w-full border border-gray-200 dark:border-gray-700/50 bg-white dark:bg-[#0F172A]/60 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-lg shadow-sm";
-  const labelClass = "block text-sm font-medium text-gray-700 dark:text-gray-300";
-  const iconClass = "absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400";
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -56,7 +59,6 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
       [name]: value
     }));
   };
-
   useEffect(() => {
     const fetchProfiles = async () => {
       const { data, error } = await supabase.from('perfil').select('*');
@@ -165,7 +167,7 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Basic Information */}
-      <div className="bg-white dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-gray-200 dark:border-gray-700/50 rounded-lg">
+      <div className={cardClass}>
         <div className="flex items-center space-x-3 mb-6">
           <div className="bg-blue-400/10 p-3 rounded-lg">
             <User className="h-6 w-6 text-blue-600 dark:text-blue-400" />
@@ -178,47 +180,53 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* First Name */}
           <div>
-            <label className="block text-sm font-medium text-gray-300">
+            <label className={labelClass}>
               Nome
             </label>
-            <input
-              type="text"
-              name="firstName"
-              value={formData.firstName}
-              onChange={handleInputChange}
-              className="mt-1 block w-full border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
-              required
-            />
+            <div className="mt-1 relative">
+              <User className={iconClass} />
+              <input
+                type="text"
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleInputChange}
+                className={inputClass}
+                required
+              />
+            </div>
           </div>
 
           {/* Last Name */}
           <div>
-            <label className="block text-sm font-medium text-gray-300">
+            <label className={labelClass}>
               Sobrenome
             </label>
-            <input
-              type="text"
-              name="lastName"
-              value={formData.lastName}
-              onChange={handleInputChange}
-              className="mt-1 block w-full border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
-              required
-            />
+            <div className="mt-1 relative">
+              <User className={iconClass} />
+              <input
+                type="text"
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleInputChange}
+                className={inputClass}
+                required
+              />
+            </div>
           </div>
 
           {/* Email */}
           <div>
-            <label className="block text-sm font-medium text-gray-300">
+            <label className={labelClass}>
               Email
             </label>
             <div className="mt-1 relative">
-              <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <Mail className={iconClass} />
               <input
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                className="pl-12 block w-full border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
+                className={inputClass}
                 required
               />
             </div>
@@ -226,16 +234,16 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
 
           {/* Profile Type */}
           <div>
-            <label className="block text-sm font-medium text-gray-300">
+            <label className={labelClass}>
               Tipo de Perfil
             </label>
             <div className="mt-1 relative">
-              <Shield className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <Shield className={iconClass} />
               <select
                 name="perfil_id"
                 value={formData.perfil_id}
                 onChange={handleInputChange}
-                className="pl-12 block w-full border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
+                className={inputClass}
                 required
               >
                 {profileList && profileList.map(profile => (
@@ -250,7 +258,7 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
       </div>
 
       {/* Company Information */}
-      <div className="bg-white dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-gray-200 dark:border-gray-700/50 rounded-lg">
+      <div className={cardClass}>
         <div className="flex items-center space-x-3 mb-6">
           <div className="bg-blue-400/10 p-3 rounded-lg">
             <Building2 className="h-6 w-6 text-blue-600 dark:text-blue-400" />
@@ -263,34 +271,34 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Company Name */}
           <div>
-            <label className="block text-sm font-medium text-gray-300">
+            <label className={labelClass}>
               Nome da Empresa
             </label>
             <div className="mt-1 relative">
-              <Building2 className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <Building2 className={iconClass} />
               <input
                 type="text"
                 name="empresa"
                 value={formData.empresa}
                 onChange={handleInputChange}
-                className="pl-12 block w-full border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
+                className={inputClass}
               />
             </div>
           </div>
 
           {/* CNPJ */}
           <div>
-            <label className="block text-sm font-medium text-gray-300">
+            <label className={labelClass}>
               CNPJ
             </label>
             <div className="mt-1 relative">
-              <CreditCard className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <CreditCard className={iconClass} />
               <input
                 type="text"
                 name="cnpj"
                 value={formData.cnpj}
                 onChange={handleInputChange}
-                className="pl-12 block w-full border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
+                className={inputClass}
               />
             </div>
           </div>
@@ -299,7 +307,7 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
 
       {/* Password Section (only for new users) */}
       {!initialData && (
-        <div className="bg-white dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-gray-200 dark:border-gray-700/50 rounded-lg">
+        <div className={cardClass}>
           <div className="flex items-center space-x-3 mb-6">
             <div className="bg-blue-400/10 p-3 rounded-lg">
               <Lock className="h-6 w-6 text-blue-600 dark:text-blue-400" />
@@ -312,34 +320,34 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Password */}
             <div>
-              <label className="block text-sm font-medium text-gray-300">
+              <label className={labelClass}>
                 Senha
               </label>
               <div className="mt-1 relative">
-                <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <Lock className={iconClass} />
                 <input
                   type="password"
                   name="password"
                   value={formData.password}
                   onChange={handleInputChange}
-                  className="pl-12 block w-full border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
+                  className={inputClass}
                 />
               </div>
             </div>
 
             {/* Confirm Password */}
             <div>
-              <label className="block text-sm font-medium text-gray-300">
+              <label className={labelClass}>
                 Confirmar Senha
               </label>
               <div className="mt-1 relative">
-                <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <Lock className={iconClass} />
                 <input
                   type="password"
                   name="confirmPassword"
                   value={formData.confirmPassword}
                   onChange={handleInputChange}
-                  className="pl-12 block w-full border border-gray-700/50 bg-[#0F172A]/60 text-gray-100 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-colors"
+                  className={inputClass}
                 />
               </div>
             </div>
@@ -349,7 +357,7 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
 
       {/* Error Message */}
       {error && (
-        <div className="bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 p-4 flex items-center text-red-600 dark:text-red-400 rounded-lg">
+        <div className="bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 p-4 flex items-center text-red-600 dark:text-red-400 rounded-lg shadow-sm">
           <AlertCircle className="h-5 w-5 mr-2 flex-shrink-0" />
           <p className="text-sm">{error}</p>
         </div>
@@ -360,14 +368,14 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
         <button
           type="button"
           onClick={onCancel}
-          className="px-4 py-2 bg-gray-100 dark:bg-[#0F172A]/60 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-[#0F172A]/40 transition-colors rounded-lg"
+          className={`${buttonClass} bg-gray-100 dark:bg-[#0F172A]/60 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-[#0F172A]/40`}
           disabled={loading}
         >
           Cancelar
         </button>
         <button
           type="submit"
-          className="px-4 py-2 bg-brand hover:bg-brand/90 text-white transition-colors flex items-center rounded-lg"
+          className={`${buttonClass} bg-brand hover:bg-brand/90 text-white`}
           disabled={loading}
         >
           {loading ? (
