@@ -28,14 +28,14 @@ export default function SignatureList() {
   const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'pending' | 'cancelled' | 'suspended'>('all');
   const [dateFilter, setDateFilter] = useState<'all' | 'thisMonth' | 'lastMonth' | 'thisYear'>('all');
 
-  const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50";
+  const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50 rounded-lg";
   const titleClass = "text-4xl font-bold text-light-text-primary dark:text-white";
   const metricTitleClass = "text-lg font-medium text-light-text-primary dark:text-white mb-1";
   const metricValueClass = "text-3xl font-bold text-light-text-primary dark:text-white";
   const metricSubtextClass = "text-sm text-light-text-secondary dark:text-blue-200";
-  const iconContainerClass = "bg-blue-400/10 p-3 rounded-xl";
+  const iconContainerClass = "bg-blue-400/10 p-3 rounded-lg";
   const iconClass = "h-6 w-6 text-blue-600 dark:text-blue-400";
-  const badgeClass = "text-xs font-medium bg-blue-50 dark:bg-blue-400/10 text-blue-600 dark:text-blue-400 px-2 py-1 rounded-full";
+  const badgeClass = "text-xs font-medium bg-blue-50 dark:bg-blue-400/10 text-blue-600 dark:text-blue-400 px-2 py-1 rounded-lg";
 
   const optContract = [
     { key: "AT", label: "Ativo" },
@@ -225,7 +225,7 @@ export default function SignatureList() {
                 placeholder="Buscar por nome, email ou telefone..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-lg"
+                className="w-full pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-lg shadow-sm"
               />
             </div>
           </div>
@@ -235,7 +235,7 @@ export default function SignatureList() {
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value as typeof statusFilter)}
-                className="pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors appearance-none min-w-[200px]"
+                className="pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors appearance-none min-w-[200px] rounded-lg shadow-sm"
               >
                 <option value="all">Todos os Status</option>
                 <option value="active">Ativos</option>
@@ -249,7 +249,7 @@ export default function SignatureList() {
               <select
                 value={dateFilter}
                 onChange={(e) => setDateFilter(e.target.value as typeof dateFilter)}
-                className="pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors appearance-none min-w-[200px]"
+                className="pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors appearance-none min-w-[200px] rounded-lg shadow-sm"
               >
                 <option value="all">Todas as Datas</option>
                 <option value="thisMonth">Este Mês</option>
@@ -262,11 +262,11 @@ export default function SignatureList() {
       </div>
 
       {/* Contracts Table */}
-      <div className={`${cardClass} mt-6`}>
+      <div className={`${cardClass} mt-6 overflow-hidden`}>
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-light-border dark:divide-gray-700/50">
+          <table className="min-w-full divide-y divide-light-border dark:divide-gray-700/50 rounded-lg overflow-hidden">
             <thead>
-              <tr className="bg-light-secondary dark:bg-[#0F172A]/60">
+              <tr className="bg-light-secondary dark:bg-[#0F172A]/60 rounded-t-lg">
                 <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                   Cliente
                 </th>
@@ -323,7 +323,7 @@ export default function SignatureList() {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex justify-center">
                       <ComboFrag
-                        options={optContract}
+                        options={optContract} 
                         value={contract.status}
                         onChange={(value: string) => handleStatusChange(contract.id, value)}
                       />
