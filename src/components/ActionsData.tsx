@@ -11,7 +11,6 @@ interface CrudButtonsProps {
 }
 
 const ActionsButtons: React.FC<CrudButtonsProps> = ({ onCreate, onEdit, onDelete, onLocker, active }) => {
-  console.log(onEdit);
 
   const [activeActual, setActiveActual] = React.useState(active);
   const handleOnLock = async () => {

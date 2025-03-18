@@ -11,6 +11,7 @@ import { Listbox } from '@headlessui/react'
 import { formatCurrency } from "../../utils/formatters";
 import { CalcPercent } from "../../utils/Finan";
 import { Search, Filter, Package } from 'lucide-react';
+import XCloseForm from "../../components/Fragments/XCloseForm";
 
 export default function ProposalFormPlano({ proposta, setProposta }: { proposta: PropostaDTO, setProposta: (data: PropostaDTO) => void }) {
   const { user } = useAuth();
@@ -127,7 +128,8 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
   return (
     loading ? <CircularWait message="Carregando..." small={true} /> :
       <div className={cardClass}>
-        <h2 className={titleClass}>Plano e Add-ons</h2>
+      <XCloseForm onClose={() => { }} />
+      <h2 className={titleClass}>Escolha de Plano e Add-ons</h2>
 
         <div className={sectionClass}>
           <div>

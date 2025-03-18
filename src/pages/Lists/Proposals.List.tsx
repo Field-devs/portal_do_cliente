@@ -125,6 +125,7 @@ export default function ProposalsList() {
   const handleEdit = (row: string) => {
     setPropId(row);
     HandleOpenProposal();
+
   };
 
   const filteredProposals = propostas.filter(() => {
@@ -173,9 +174,11 @@ export default function ProposalsList() {
         isOpen={OpenProposal}
         onClose={() => setOpenProposal(false)}
         title="Nova Proposta"
+        
         maxWidth='2xl'
       >
         <ProposalForm
+          id={propid}
           onCancel={() => setOpenProposal(false)}
         />
       </ModalForm>

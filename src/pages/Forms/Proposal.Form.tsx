@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ProposalFormPlano from "./Proposal.Form.Plano";
 import ProposalFormCliente from "./Proposal.Form.Cliente";
 import FormProps from "../../Models/FormProps";
@@ -11,15 +11,40 @@ import { validateEmail } from "../../utils/Validation";
 
 export default function ProposalForm({ id }: FormProps) {
   const [step, setStep] = useState(0);
-  
-  const [propostaDTO, setPropostaDTO] = useState<PropostaDTO>({ 
-    desconto: 0, total: 0, validade: 15 } as PropostaDTO);
+
+  const [propostaDTO, setPropostaDTO] = useState<PropostaDTO>({
+    desconto: 0, total: 0, validade: 15
+  } as PropostaDTO);
 
   const [idproposta, setIdProposta] = useState();
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
 
-  console.log(propostaDTO);
+  function MapperPropostaDTO(proposta: Proposta) {
+    setPropostaDTO({
+      emp_nome: proposta.emp_nome,
+      emp_email: proposta.emp_email,
+      emp_fone: proposta.emp_fone,
+      validade: proposta.validade,
+      desconto: proposta.desconto,
+    });
+  }
+
+  useEffect(() => {
+    const fetchProposta = async () => {
+      let { data: proposta, error } = await supabase.from('proposta').select('*').eq('id', id).single();
+      proposta = proposta as PropostaDTO;
+      if (error) {
+        ErrorDialog("Erro ao carregar proposta: " + error.message);
+      }
+      if (proposta) {
+        MapperPropostaDTO(proposta);
+        setIdProposta(proposta.id);
+      }
+      console.log(propostaDTO);
+    };
+    fetchProposta();
+  }, [id]);
 
   const handleNext = () => {
     if (validationForm())
@@ -85,7 +110,7 @@ export default function ProposalForm({ id }: FormProps) {
       {step === 2 && <ProposalFormResume idProposta={idproposta} proposta={propostaDTO} setProposta={setPropostaDTO} />}
       <div className="flex justify-end mt-4 space-x-2">
         {(step > 0 && step < 2) && (
-          <button 
+          <button
             onClick={handleBack}
             className="px-4 py-2 bg-gray-100 dark:bg-gray-700/60 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600/40 transition-colors rounded-lg"
           >
