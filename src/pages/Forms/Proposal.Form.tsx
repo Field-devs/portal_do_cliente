@@ -109,11 +109,7 @@ export default function ProposalForm({ id }: FormProps) {
           </button>
         )}
         {step == 0 && <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={handleNext}>Avançar</button>}
-<<<<<<< HEAD
         {step == 1 && <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={handleSubmit}>Enviar proposta</button>}
-=======
-        {step == 1 && <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={handleSubmit}>Enviar Proposta</button>}
->>>>>>> 141fa720cf7a4de2a6efa048e4a51e93678d76b4
         {/* {step == 2 && <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={handleSubmit}>Salvar</button>} */}
       </div>
     </>
