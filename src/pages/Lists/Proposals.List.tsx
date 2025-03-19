@@ -169,7 +169,7 @@ export default function ProposalsList() {
     <>
       <ModalForm
         isOpen={OpenProposal}
-        onClose={() => setOpenProposal(false)}
+        onClose={() => { setPropId(null), setOpenProposal(false) } }
         title="Nova Proposta"
         
         maxWidth='2xl'
