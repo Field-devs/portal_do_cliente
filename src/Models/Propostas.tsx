@@ -50,6 +50,8 @@ interface Proposta {
 
   status : string | 'PE';
 
+  cob_pay_link?: string | null; // uuid
+
 }
 // DTO
 type PropostaDTO = Omit<Proposta, 'id' | 'dt' | 'dt_add' | 'dt_update' | 'user_add' | 'user_update' | 'status'>;
@@ -95,7 +97,8 @@ const getDefaultPropostaDTO = (): PropostaDTO => ({
   validade: 15,
   mail_send: false,
   pay: false,
-  active: true,
+  active: true
+
 });
 
 
