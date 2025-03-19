@@ -6,6 +6,7 @@ import {
   DollarSign,
   Package,
   Save,
+  AlertCircle
 } from 'lucide-react';
 
 import { useTheme } from '../../../components/ThemeProvider';
@@ -39,6 +40,8 @@ export default function ProposalFormConfirm({ onCancel, initialData }: Commercia
   const [proposta, setProposta] = useState<Proposta>({} as Proposta);
   const [finish, setFinish] = useState(false);
   const [accepted, setAccepted] = useState(false);
+  const [formErrors, setFormErrors] = useState<string[]>([]);
+  const [showErrors, setShowErrors] = useState(false);
   const [notFound, setNotFound] = useState(false);
   const { theme } = useTheme();
 
@@ -75,6 +78,17 @@ export default function ProposalFormConfirm({ onCancel, initialData }: Commercia
   const iconGroupTitleClass = "h-6 w-6 text-blue-400";
 
   const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const errors = validateForm();
+    if (errors.length > 0) {
+      setFormErrors(errors);
+      setShowErrors(true);
+      setTimeout(() => {
+        setShowErrors(false);
+      }, 5000); // Hide after 5 seconds
+      return;
+    }
+
     let response = await AskDialog("Deseja realmente confirmar esta proposta? Voce não poderá mais editar esta proposta depois de confirmada.", "Confirmar Proposta", "Sim", "Não");
     setLoading(true);
     await SaveProposal(proposta).then((response) => {
@@ -90,11 +104,56 @@ export default function ProposalFormConfirm({ onCancel, initialData }: Commercia
         
   })};
 
+  const validateForm = (): string[] => {
+    const errors: string[] = [];
+    
+    // Validate Company Data
+    if (!proposta.emp_cnpj) errors.push("CNPJ da empresa é obrigatório");
+    if (!proposta.emp_nome) errors.push("Nome da empresa é obrigatório");
+    if (!proposta.emp_email) errors.push("Email da empresa é obrigatório");
+    if (!proposta.emp_fone) errors.push("Telefone da empresa é obrigatório");
+    if (!proposta.emp_cep) errors.push("CEP da empresa é obrigatório");
+    if (!proposta.emp_logradouro) errors.push("Logradouro da empresa é obrigatório");
+    if (!proposta.emp_numero) errors.push("Número do endereço da empresa é obrigatório");
+    if (!proposta.emp_bairro) errors.push("Bairro da empresa é obrigatório");
+    if (!proposta.emp_cidade) errors.push("Cidade da empresa é obrigatório");
+    if (!proposta.emp_uf) errors.push("UF da empresa é obrigatório");
+
+    // Validate Responsible Person Data
+    if (!proposta.resp_cpf) errors.push("CPF do responsável é obrigatório");
+    if (!proposta.resp_nome) errors.push("Nome do responsável é obrigatório");
+    if (!proposta.resp_email) errors.push("Email do responsável é obrigatório");
+    if (!proposta.resp_fone) errors.push("Telefone do responsável é obrigatório");
+
+    // Validate Financial Responsible Data
+    if (!proposta.fin_cpf) errors.push("CPF do responsável financeiro é obrigatório");
+    if (!proposta.fin_nome) errors.push("Nome do responsável financeiro é obrigatório");
+    if (!proposta.fin_email) errors.push("Email do responsável financeiro é obrigatório");
+    if (!proposta.fin_fone) errors.push("Telefone do responsável financeiro é obrigatório");
+
+    return errors;
+  };
+
   return (
     loading ? <CircularWait messagefull="Confirmando a Proposta..." small={false} /> :
     finish ? <RegistrationSuccess /> :
     notFound ? <ProposalFinishError /> :
       <div className="flex justify-center items-center mt-20">
+        {formErrors.length > 0 && showErrors && (
+          <div className="fixed top-4 right-4 z-50 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-500/30 rounded-lg shadow-lg p-4 max-w-md">
+            <div className="flex items-center mb-2">
+              <AlertCircle className="h-5 w-5 text-red-500 mr-2" />
+              <h3 className="text-red-800 dark:text-red-200 font-medium">
+                Por favor, preencha todos os campos obrigatórios
+              </h3>
+            </div>
+            <ul className="list-disc list-inside text-sm text-red-600 dark:text-red-300 space-y-1">
+              {formErrors.map((error, index) => (
+                <li key={index}>{error}</li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-6 max-w-7xl w-full bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm p-8 rounded-2xl border border-gray-200/50 dark:border-gray-700/50 shadow-xl" >
           {/* Header */}
