@@ -52,7 +52,7 @@ interface Proposta {
 
 }
 
-type PropostaDTO = Omit<Proposta, 'id' | 'user_id' | 'dt' | 'plano_id' | 'plano_nome' | 'dt_add' | 'dt_update' | 'user_add' | 'user_update' | 'status'>;
+type PropostaDTO = Omit<Proposta, 'id' | 'user_id' | 'dt' | 'dt_add' | 'dt_update' | 'user_add' | 'user_update' | 'status'>;
 
 
 export type { Proposta, PropostaDTO };

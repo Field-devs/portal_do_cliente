@@ -24,7 +24,6 @@ export default function ProposalForm({ id }: FormProps) {
     setPropostaDTO({
       emp_nome: proposta.emp_nome,
       emp_email: proposta.emp_email,
-      emp_fone: proposta.emp_fone,
       validade: proposta.validade,
       desconto: proposta.desconto,
     });
