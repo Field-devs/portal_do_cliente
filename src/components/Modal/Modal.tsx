@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useEscapeKey } from '../../hooks/useEscapeKey';
 import { AskDialog } from '../Dialogs/Dialogs';
 import XCloseForm from '../Fragments/XCloseForm';
+import { ChevronDown } from 'lucide-react';
 
 interface ModalProps {
   isOpen: boolean;
@@ -11,6 +12,12 @@ interface ModalProps {
 
 export function ModalForm({ isOpen, onClose, children }: ModalProps) {
   useEscapeKey(onClose);
+  const [showScrollIndicator, setShowScrollIndicator] = useState(true);
+
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const { scrollTop } = e.currentTarget;
+    setShowScrollIndicator(scrollTop < 50);
+  };
 
   useEffect(() => {
     if (isOpen) {
@@ -28,28 +35,31 @@ export function ModalForm({ isOpen, onClose, children }: ModalProps) {
   return (
     <div
       className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
-      onMouseDown={async (e) => {
-        if (e.target === e.currentTarget) {
-          // let response = await AskDialog('Deseja realmente fechar o Formulário?', 'Fechar');
-          // if (response.value === true) onClose();
-          // onClose();
-        }
-      }}
+      onMouseDown={(e) => e.target === e.currentTarget && onClose()}
       role="dialog"
       aria-modal="true"
     >
       <div
-        className="relative w-full max-w-lg bg-white flex flex-col"
-        style={{
-          overflowY: 'auto', // Permite rolagem vertical
-          overflowX: 'hidden', // Impede rolagem horizontal
-          maxHeight: '100vh', // Limita a altura ao tamanho da janela
-        }}
-        onClick={(e) => e.stopPropagation()}
+        className="relative w-full max-w-lg bg-white dark:bg-gray-800 flex flex-col overflow-y-auto scrollbar-none overflow-x-hidden max-h-[90vh] rounded-t-xl rounded-b-lg shadow-xl border border-gray-200 dark:border-gray-700"
+        onClick={(e) => e.stopPropagation()} 
+        onScroll={handleScroll}
       >
-        {/* Botão de Fechar no canto superior direito */}
-        {children}
-        <XCloseForm onClose={onClose} />
+        <div className="relative px-6 pt-6 pb-3 after:content-[''] after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-12 after:h-1 after:bg-gray-300 dark:after:bg-gray-600 after:rounded-full after:opacity-50 after:transition-opacity after:duration-300 hover:after:opacity-0">
+          <div className="space-y-6">
+          {children}
+          <div className="flex justify-end">
+            <XCloseForm onClose={onClose} />
+          </div>
+          </div>
+        </div>
+        {showScrollIndicator && (
+          <div 
+            className="absolute bottom-4 left-1/2 -translate-x-1/2 opacity-40 transition-opacity duration-300 animate-bounce"
+            style={{ animation: 'bounce 1.5s infinite' }}
+          >
+            <ChevronDown className="w-6 h-6 text-gray-600 dark:text-gray-400" />
+          </div>
+        )}
       </div>
     </div>
   );
