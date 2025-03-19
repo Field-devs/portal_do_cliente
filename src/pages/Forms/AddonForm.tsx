@@ -90,18 +90,19 @@ export default function AddonForm({ onSuccess, onCancel, initialData }: AddonFor
   };
 
   const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50 rounded-lg";
-  const inputClass = "w-full pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-lg shadow-sm";
   const labelClass = "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1";
+  const inputClass = "w-full pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-lg shadow-sm";
+  const iconGroupClass = "flex items-center space-x-3 mb-6 bg-light-secondary dark:bg-blue-400/10 p-3 rounded-xl";
+  const iconGroupTitleClass = "h-6 w-6 text-brand dark:text-blue-400";
   const iconClass = "absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400";
+  const buttonClass = "px-4 py-2 flex items-center justify-center rounded-lg text-sm font-medium transition-colors";
 
   return (
     <div className="space-y-6">
       {/* Basic Information */}
-      <div className="bg-[#1E293B]/70 backdrop-blur-sm p-6 border border-gray-700/50 rounded-lg">
-        <div className="flex items-center space-x-3 mb-6">
-          <div className="bg-blue-400/10 p-3 rounded-lg">
-            <Package className="h-6 w-6 text-brand dark:text-blue-400" />
-          </div>
+      <div className="bg-white/80 dark:bg-[#1E293B]/70 backdrop-blur-sm p-6 border border-gray-200 dark:border-gray-700/50 rounded-lg">
+        <div className={iconGroupClass}>
+          <Package className={iconGroupTitleClass} />
           <h3 className="text-lg font-medium text-gray-900 dark:text-white">
             Informações do Add-on
           </h3>
