@@ -78,16 +78,16 @@ export default function ProposalForm({ id }: FormProps) {
       const propostaToInsert = { ...newproposta, user_id: user?.id };
       setPropostaDTO(propostaToInsert); // Atualiza o estado com o objeto modificado
 
-      // const { data: insertData, error: insertError } = await supabase.from("proposta").insert([propostaToInsert]).select("id");
-      // if (insertData) {
-      //   setIdProposta(insertData[0].id);
-      // }
+      const { data: insertData, error: insertError } = await supabase.from("proposta").insert([propostaToInsert]).select("id");
+      if (insertData) {
+        setIdProposta(insertData[0].id);
+      }
 
-      // if (insertError) {
-      //   ErrorDialog("Erro ao salvar proposta: " + insertError.message);
-      //   setLoading(false);
-      //   return;
-      // }
+      if (insertError) {
+        ErrorDialog("Erro ao salvar proposta: " + insertError.message);
+        setLoading(false);
+        return;
+      }
       setPropostaDTO(propostaDTO)
       handleNext();
     }
