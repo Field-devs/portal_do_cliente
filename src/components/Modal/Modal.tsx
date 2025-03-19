@@ -60,10 +60,12 @@ export function ModalForm({ isOpen, onClose, children }: ModalProps) {
         </div>
         {showScrollIndicator && needsScroll && (
           <div 
-            className="absolute bottom-4 left-1/2 -translate-x-1/2 opacity-40 transition-opacity duration-300 animate-bounce"
+            className="absolute bottom-4 left-1/2 -translate-x-1/2 transition-opacity duration-300 animate-bounce"
             style={{ animation: 'bounce 1.5s infinite' }}
           >
-            <ChevronDown className="w-6 h-6 text-gray-600 dark:text-gray-400" />
+            <div className="bg-brand/90 dark:bg-brand/80 p-2 rounded-full shadow-lg">
+              <ChevronDown className="w-5 h-5 text-white" />
+            </div>
           </div>
         )}
       </div>
