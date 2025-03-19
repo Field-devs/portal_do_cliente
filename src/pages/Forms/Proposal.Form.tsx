@@ -9,7 +9,7 @@ import ProposalFormPlano from "./Proposal.Form.Plano";
 import ProposalFormCliente from "./Proposal.Form.Cliente";
 import ProposalFormResume from "./Proposal.Form.Resume";
 
-export default function ProposalForm({ id }: FormProps) {
+export default function ProposalForm({ id, onCancel }: FormProps) {
   const [step, setStep] = useState(0);
 
   const [propostaDTO, setPropostaDTO] = useState<PropostaDTO>(getDefaultPropostaDTO() as PropostaDTO);    
@@ -99,7 +99,14 @@ export default function ProposalForm({ id }: FormProps) {
       {step === 0 && <ProposalFormPlano proposta={propostaDTO} setProposta={setPropostaDTO} />}
       {step === 1 && <ProposalFormCliente proposta={propostaDTO} setProposta={setPropostaDTO} />}
       {step === 2 && <ProposalFormResume proposta={propostaDTO} setProposta={setPropostaDTO} />}
-      <div className="flex justify-end mt-4 space-x-2">
+      <div className="flex justify-between mt-4">
+        <button
+          onClick={onCancel}
+          className="px-4 py-2 bg-gray-100 dark:bg-gray-700/60 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600/40 transition-colors rounded-lg"
+        >
+          Cancelar
+        </button>
+        <div className="flex space-x-2">
         {(step > 0 && step < 2) && (
           <button
             onClick={handleBack}
@@ -110,6 +117,7 @@ export default function ProposalForm({ id }: FormProps) {
         )}
         {step == 0 && <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={handleNext}>Avançar</button>}
         {step == 1 && <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={handleSubmit}>Enviar proposta</button>}
+        </div>
         {/* {step == 2 && <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={handleSubmit}>Salvar</button>} */}
       </div>
     </>

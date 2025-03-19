@@ -37,7 +37,7 @@ export default function ProposalsList() {
 
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'accepted' | 'approved' | 'expired' | 'rejected'>('all');
+  const [statusFilter, setStatusFilter] = useState<string>('all');
   const [dateFilter, setDateFilter] = useState<'year' | 'month' | '15days' | 'day' | 'custom'>('year');
   const [customDateRange, setCustomDateRange] = useState({
     start: '',
@@ -102,24 +102,16 @@ export default function ProposalsList() {
     }
   };
 
-  useEffect(() => {
-    if (searchTerm) {
-      const filtered = propostas.filter((proposta) =>
-        proposta.nome.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-      setPropostas(filtered);
-    } else {
-      fetchData();
-    }
-  }, [searchTerm]);
-
-  useEffect(() => {
-    const filtered = propostas.filter((proposta) => {
-      if (statusFilter === 'all') return true;
-      return proposta.status === statusFilter;
-    });
-    setPropostas(filtered);
-  }, [statusFilter]);
+  const getStatusValue = (filter: string): string => {
+    const statusMap: Record<string, string> = {
+      'pending': 'PE',
+      'accepted': 'AC', 
+      'approved': 'AP',
+      'expired': 'EX',
+      'rejected': 'RC'
+    };
+    return statusMap[filter] || filter;
+  };
 
 
   const HandleOpenProposal = () => {
@@ -153,32 +145,48 @@ export default function ProposalsList() {
   };
 
   const filteredProposals = propostas.filter((proposta) => {
+    // Search filter
+    const matchesSearch = searchTerm === '' || 
+      proposta.emp_nome?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      proposta.emp_email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      proposta.emp_fone?.toLowerCase().includes(searchTerm.toLowerCase());
+
+    // Status filter
+    const matchesStatus = statusFilter === 'all' || 
+      proposta.status === getStatusValue(statusFilter);
+
+    // Date filter
     const now = new Date();
     const oneYearAgo = new Date(now.getFullYear() - 1, now.getMonth(), now.getDate());
     const oneMonthAgo = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
     const fifteenDaysAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 15);
     const oneDayAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
     const propostaDate = new Date(proposta.dt);
+    let matchesDate = true;
   
     switch (dateFilter) {
       case 'year':
-        return propostaDate >= oneYearAgo;
+        matchesDate = propostaDate >= oneYearAgo;
+        break;
       case 'month':
-        return propostaDate >= oneMonthAgo;
+        matchesDate = propostaDate >= oneMonthAgo;
+        break;
       case '15days':
-        return propostaDate >= fifteenDaysAgo;
+        matchesDate = propostaDate >= fifteenDaysAgo;
+        break;
       case 'day':
-        return propostaDate >= oneDayAgo;
+        matchesDate = propostaDate >= oneDayAgo;
+        break;
       case 'custom':
         const startDate = customDateRange.start ? new Date(customDateRange.start) : null;
         const endDate = customDateRange.end ? new Date(customDateRange.end) : null;
         if (startDate && endDate) {
-          return propostaDate >= startDate && propostaDate <= endDate;
+          matchesDate = propostaDate >= startDate && propostaDate <= endDate;
         }
-        return true;
-      default:
-        return true;
+        break;
     }
+
+    return matchesSearch && matchesStatus && matchesDate;
   });
 
   if (loading || planosLoading) {
@@ -352,11 +360,11 @@ export default function ProposalsList() {
                   className="pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors appearance-none min-w-[200px] rounded-lg shadow-sm"
                 >
                   <option value="all">Todos os Status</option>
-                  <option value="pending">Pendentes</option>
-                  <option value="accepted">Aceitas (Aguardando Pagamento)</option>
-                  <option value="approved">Aprovadas (Pagamento Confirmado)</option>
-                  <option value="expired">Expiradas</option>
-                  <option value="rejected">Recusadas</option>
+                  <option value="PE">Pendentes</option>
+                  <option value="AC">Aceitas (Aguardando Pagamento)</option>
+                  <option value="AP">Aprovadas (Pagamento Confirmado)</option>
+                  <option value="EX">Expiradas</option>
+                  <option value="RC">Recusadas</option>
                 </select>
               </div>
               <div className="relative">
