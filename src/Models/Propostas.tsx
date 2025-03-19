@@ -51,8 +51,53 @@ interface Proposta {
   status : string | 'PE';
 
 }
+// DTO
+type PropostaDTO = Omit<Proposta, 'id' | 'dt' | 'dt_add' | 'dt_update' | 'user_add' | 'user_update' | 'status'>;
 
-type PropostaDTO = Omit<Proposta, 'id' | 'user_id' | 'dt' | 'dt_add' | 'dt_update' | 'user_add' | 'user_update' | 'status'>;
+const getDefaultPropostaDTO = (): PropostaDTO => ({
+  perfil_id: "",
+  plano_id: "",
+  plano_nome: "",
+  user_id: "", // uuid
+  
+  emp_cnpj: null,
+  emp_nome: "",
+  emp_email: "",
+  emp_fone: "",
+  emp_cep: null,
+  emp_logradouro: null,
+  emp_bairro: null,
+  emp_cidade: null,
+  emp_uf: null,
+
+  resp_cpf: null,
+  resp_nome: "",
+  resp_email: "",
+  resp_fone: "",
+
+  fina_cpf: null,
+  fina_nome: "",
+  fina_email: "",
+  fina_fone: "",
+
+  caixas_entrada_qtde: 0,
+  atendentes_qtde: 0,
+  automacoes_qtde: 0,
+  kanban: true,
+  suporte_humano: true,
+  whatsapp_oficial: true,
+
+  subtotal: 0,
+  desconto: 0,
+  total_addons: 0,
+  total: 0,
+
+  validade: 15,
+  mail_send: false,
+  pay: false,
+  active: true,
+});
 
 
-export type { Proposta, PropostaDTO };
+export default getDefaultPropostaDTO;
+export type { Proposta, PropostaDTO, getDefaultPropostaDTO };

@@ -1,46 +1,40 @@
 import { useEffect, useState } from "react";
-import ProposalFormPlano from "./Proposal.Form.Plano";
-import ProposalFormCliente from "./Proposal.Form.Cliente";
 import FormProps from "../../Models/FormProps";
-import { Proposta, PropostaDTO } from "../../Models/Propostas";
-import ProposalFormResume from "./Proposal.Form.Resume";
+import getDefaultPropostaDTO, { Proposta, PropostaDTO } from "../../Models/Propostas";
 import { supabase } from "../../lib/supabase";
 import { useAuth } from "../../components/AuthProvider";
 import { AlertDialog, AskDialog, ErrorDialog } from "../../components/Dialogs/Dialogs";
 import { validateEmail } from "../../utils/Validation";
+import ProposalFormPlano from "./Proposal.Form.Plano";
+import ProposalFormCliente from "./Proposal.Form.Cliente";
+import ProposalFormResume from "./Proposal.Form.Resume";
 
 export default function ProposalForm({ id }: FormProps) {
   const [step, setStep] = useState(0);
 
-  const [propostaDTO, setPropostaDTO] = useState<PropostaDTO>({
-    desconto: 0, total: 0, validade: 15
-  } as PropostaDTO);
-
+  const [propostaDTO, setPropostaDTO] = useState<PropostaDTO>(getDefaultPropostaDTO() as PropostaDTO);    
   const [idproposta, setIdProposta] = useState();
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
 
-  function MapperPropostaDTO(proposta: Proposta) {
-    setPropostaDTO({
-      emp_nome: proposta.emp_nome,
-      emp_email: proposta.emp_email,
-      validade: proposta.validade,
-      desconto: proposta.desconto,
-    });
-  }
+  const mapPropostaToDTO = (proposta: Proposta): PropostaDTO => {
+    const { id, dt, dt_add, dt_update, user_add, user_update, status, ...propostaDTO } = proposta;
+    return propostaDTO;
+  };
 
   useEffect(() => {
+    if (!id) return;
     const fetchProposta = async () => {
       let { data: proposta, error } = await supabase.from('proposta').select('*').eq('id', id).single();
-      proposta = proposta as PropostaDTO;
       if (error) {
         ErrorDialog("Erro ao carregar proposta: " + error.message);
       }
       if (proposta) {
-        MapperPropostaDTO(proposta);
         setIdProposta(proposta.id);
+        const propostaDTO = mapPropostaToDTO(proposta); // Mapeia os dados
+        setPropostaDTO(propostaDTO); // Atualiza o estado global
       }
-      console.log(propostaDTO);
+      console.log("Proposta", propostaDTO);
     };
     fetchProposta();
   }, [id]);
@@ -74,7 +68,6 @@ export default function ProposalForm({ id }: FormProps) {
     if (response.value === true) {
       setLoading(true);
       const newproposta = { ...propostaDTO };
-
       delete newproposta.addons; // Remove o campo addons
       delete newproposta.total; // Remove o campo addons
 
@@ -85,19 +78,18 @@ export default function ProposalForm({ id }: FormProps) {
       const propostaToInsert = { ...newproposta, user_id: user?.id };
       setPropostaDTO(propostaToInsert); // Atualiza o estado com o objeto modificado
 
-      const { data: insertData, error: insertError } = await supabase.from("proposta").insert([propostaToInsert]).select("id");
-      if (insertData) {
-        setIdProposta(insertData[0].id);
-      }
+      // const { data: insertData, error: insertError } = await supabase.from("proposta").insert([propostaToInsert]).select("id");
+      // if (insertData) {
+      //   setIdProposta(insertData[0].id);
+      // }
 
-      if (insertError) {
-        ErrorDialog("Erro ao salvar proposta: " + insertError.message);
-        setLoading(false);
-        return;
-      }
+      // if (insertError) {
+      //   ErrorDialog("Erro ao salvar proposta: " + insertError.message);
+      //   setLoading(false);
+      //   return;
+      // }
       setPropostaDTO(propostaDTO)
       handleNext();
-      console.log(propostaDTO);
     }
   };
 
@@ -106,7 +98,7 @@ export default function ProposalForm({ id }: FormProps) {
       {/* {loading == true && <CircularWait message="Carregando..." />} */}
       {step === 0 && <ProposalFormPlano proposta={propostaDTO} setProposta={setPropostaDTO} />}
       {step === 1 && <ProposalFormCliente proposta={propostaDTO} setProposta={setPropostaDTO} />}
-      {step === 2 && <ProposalFormResume idProposta={idproposta} proposta={propostaDTO} setProposta={setPropostaDTO} />}
+      {step === 2 && <ProposalFormResume proposta={propostaDTO} setProposta={setPropostaDTO} />}
       <div className="flex justify-end mt-4 space-x-2">
         {(step > 0 && step < 2) && (
           <button

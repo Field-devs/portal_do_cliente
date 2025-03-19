@@ -128,36 +128,33 @@ export default function ProposalsList() {
 
   };
 
-  const filteredProposals = propostas.filter(() => {
+  const filteredProposals = propostas.filter((proposta) => {
     const now = new Date();
     const oneYearAgo = new Date(now.getFullYear() - 1, now.getMonth(), now.getDate());
     const oneMonthAgo = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
     const fifteenDaysAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 15);
     const oneDayAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
-
-    return propostas.filter(proposta => {
-      const propostaDate = new Date(proposta.dt);
-      
-      switch (dateFilter) {
-        case 'year':
-          return propostaDate >= oneYearAgo;
-        case 'month':
-          return propostaDate >= oneMonthAgo;
-        case '15days':
-          return propostaDate >= fifteenDaysAgo;
-        case 'day':
-          return propostaDate >= oneDayAgo;
-        case 'custom':
-          const startDate = customDateRange.start ? new Date(customDateRange.start) : null;
-          const endDate = customDateRange.end ? new Date(customDateRange.end) : null;
-          if (startDate && endDate) {
-            return propostaDate >= startDate && propostaDate <= endDate;
-          }
-          return true;
-        default:
-          return true;
-      }
-    });
+    const propostaDate = new Date(proposta.dt);
+  
+    switch (dateFilter) {
+      case 'year':
+        return propostaDate >= oneYearAgo;
+      case 'month':
+        return propostaDate >= oneMonthAgo;
+      case '15days':
+        return propostaDate >= fifteenDaysAgo;
+      case 'day':
+        return propostaDate >= oneDayAgo;
+      case 'custom':
+        const startDate = customDateRange.start ? new Date(customDateRange.start) : null;
+        const endDate = customDateRange.end ? new Date(customDateRange.end) : null;
+        if (startDate && endDate) {
+          return propostaDate >= startDate && propostaDate <= endDate;
+        }
+        return true;
+      default:
+        return true;
+    }
   });
 
   if (loading || planosLoading) {

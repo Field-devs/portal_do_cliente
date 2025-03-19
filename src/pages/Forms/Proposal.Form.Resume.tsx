@@ -3,7 +3,7 @@ import { User, Copy, X, CheckCircle, FileText } from 'lucide-react';
 import { Proposta, PropostaDTO } from "../../Models/Propostas";
 import { formatCurrency } from "../../utils/formatters";
 
-export default function ProposalFormResume({ idProposta, proposta, setProposta }: { idProposta: string, proposta: PropostaDTO, setProposta: (data: PropostaDTO) => void }) {
+export default function ProposalFormResume({ id, proposta, setProposta }: { id: string, proposta: PropostaDTO, setProposta: (data: PropostaDTO) => void }) {
   const [copied, setCopied] = useState(false);
 
   // Common CSS classes
@@ -16,7 +16,7 @@ export default function ProposalFormResume({ idProposta, proposta, setProposta }
 
   const copyToClipboard = async () => {
     try {
-      const url = window.location.href.replace('/portal/proposals', '') + `/confirmation/${idProposta ?? "0"}`;
+      const url = window.location.href.replace('/portal/proposals', '') + `/confirmation/${id}`;
       await navigator.clipboard.writeText(url);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);

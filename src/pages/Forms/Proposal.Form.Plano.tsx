@@ -7,13 +7,12 @@ import SwitchFrag from "../../components/Fragments/SwitchFrag";
 import Profile from "../../Models/Perfil";
 import CircularWait from "../../components/CircularWait";
 import { PropostaDTO } from "../../Models/Propostas";
-import { Listbox } from '@headlessui/react'
 import { formatCurrency } from "../../utils/formatters";
 import { CalcPercent } from "../../utils/Finan";
 import { Search, Filter, Package } from 'lucide-react';
 import XCloseForm from "../../components/Fragments/XCloseForm";
 
-export default function ProposalFormPlano({ proposta, setProposta }: { proposta: PropostaDTO, setProposta: (data: PropostaDTO) => void }) {
+export default function ProposalFormPlano({proposta, setProposta }: { proposta: PropostaDTO, setProposta: (data: PropostaDTO) => void }) {
   const { user } = useAuth();
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [selectedprofile, setSelectedProfile] = useState<Profile>();
@@ -45,17 +44,13 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
   };
 
   useEffect(() => {
+    if (loading) setLoading(false);
     if (selectedPlan && selectedprofile) {
       setProposta({
+        ...proposta,
         perfil_id: selectedprofile.id,
         plano_id: selectedPlan.id,
         plano_nome: selectedPlan.nome,
-        desconto: 0,
-        total: 0,
-        subtotal: 0,
-        emp_nome: "EMPRESA TESTE",
-        emp_email: "dixon@gmail.com",
-
         addons: addons.filter(addon => addonQuantities[addon.id] > 0).map(addon => ({
           addon_id: addon.id,
           quantidade: addonQuantities[addon.id]
@@ -128,7 +123,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
   return (
     loading ? <CircularWait message="Carregando..." small={true} /> :
       <div className={cardClass}>
-      <XCloseForm onClose={() => { }} />
+      <XCloseForm onClose={() => { onclose  }} />
       <h2 className={titleClass}>Escolha de Plano e Add-ons</h2>
 
         <div className={sectionClass}>

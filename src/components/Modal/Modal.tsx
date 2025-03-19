@@ -31,8 +31,9 @@ export function ModalForm({ isOpen, onClose, children }: ModalProps) {
       className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
       onMouseDown={async (e) => {
         if (e.target === e.currentTarget) {
-          let response = await AskDialog('Deseja realmente fechar o Formulário?', 'Fechar');
-          if (response.value === true) onClose();
+          //let response = await AskDialog('Deseja realmente fechar o Formulário?', 'Fechar');
+          //if (response.value === true) onClose();
+          // onClose();
         }
       }}
       role="dialog"
@@ -40,6 +41,11 @@ export function ModalForm({ isOpen, onClose, children }: ModalProps) {
     >
       <div
         className="w-full max-w-lg bg-white flex flex-col"
+        style={{
+          overflowY: 'auto', // Permite rolagem vertical
+          overflowX: 'hidden', // Impede rolagem horizontal
+          maxHeight: '100vh', // Limita a altura ao tamanho da janela
+        }}
         onClick={(e) => e.stopPropagation()}
       >
         {children}
