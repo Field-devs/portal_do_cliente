@@ -91,7 +91,7 @@ export default function ProposalsList() {
   useEffect(() => {
     if (searchTerm) {
       const filtered = propostas.filter((proposta) =>
-        proposta.nome.toLowerCase().includes(searchTerm.toLowerCase())
+        proposta.emp_nome.toLowerCase().includes(searchTerm.toLowerCase())
       );
       setPropostas(filtered);
     } else {
@@ -316,6 +316,7 @@ export default function ProposalsList() {
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="w-full pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-lg shadow-sm"
+                  autoComplete="off"
                 />
               </div>
             </div>

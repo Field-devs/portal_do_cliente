@@ -13,7 +13,6 @@ export default function ProposalFormCliente({ proposta, setProposta, onBack }: P
     const { name, value } = e.target;
     setProposta({ ...proposta, [name]: value });
   };
-  console.log("Proposta Cliente", proposta);
   const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50 rounded-lg";
   const titleClass = "text-2xl font-bold text-light-text-primary dark:text-white mb-6";
   const labelClass = "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1";

@@ -24,7 +24,6 @@ export default function ProposalFormResume({ id, proposta, setProposta }: { id: 
       console.error('Failed to copy:', err);
     }
   };
-
   return (
     <div className={cardClass}>
       <h2 className={titleClass}>Resumo da Proposta</h2>

@@ -33,12 +33,10 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
         setIdProposta(proposta.id);
         const propostaDTO = mapPropostaToDTO(proposta); // Mapeia os dados
         setPropostaDTO(propostaDTO); // Atualiza o estado global
-        console.log("PropostaDTO", propostaDTO);
       }
     };
     fetchProposta();
   }, [id]);
-
   const handleNext = () => {
     if (validationForm())
       setStep((prevStep) => prevStep + 1);
@@ -54,10 +52,15 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
         AlertDialog("Todos os campos são obrigatórios");
         return false;
       }
+      if (propostaDTO.total <= 5) {
+        AlertDialog("O Valor da proposta não pode ser menor ou igual a 5");
+        return false;
+      }
       if (validateEmail(propostaDTO.emp_email) === false) {
         AlertDialog("Email inválido");
         return false;
       }
+      console.log("PropostaDTO", propostaDTO);
     }
     return true;
   };
@@ -67,17 +70,9 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
     let response = await AskDialog("Deseja realmente salvar a proposta?", "Salvar Proposta");
     if (response.value === true) {
       setLoading(true);
-      const newproposta = { ...propostaDTO };
-      delete newproposta.addons; // Remove o campo addons
-      delete newproposta.total; // Remove o campo addons
-
-      // Remover o % de desconto
-      if (newproposta.desconto) {
-        newproposta.desconto = parseFloat(newproposta.desconto.toString().replace('%', ''));
-      }
-      const propostaToInsert = { ...newproposta, user_id: user?.id };
-      setPropostaDTO(propostaToInsert); // Atualiza o estado com o objeto modificado
-
+      let desconto = parseFloat(propostaDTO.desconto.toString().replace('%', ''));
+      const propostaToInsert = { ...propostaDTO, desconto : desconto, user_id: user?.id };
+      console.log("Proposta to insert", propostaToInsert);
       const { data: insertData, error: insertError } = await supabase.from("proposta").insert([propostaToInsert]).select("id");
       if (insertData) {
         setIdProposta(insertData[0].id);
