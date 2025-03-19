@@ -13,10 +13,15 @@ interface ModalProps {
 export function ModalForm({ isOpen, onClose, children }: ModalProps) {
   useEscapeKey(onClose);
   const [showScrollIndicator, setShowScrollIndicator] = useState(true);
+  const [needsScroll, setNeedsScroll] = useState(false);
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     const { scrollTop } = e.currentTarget;
     setShowScrollIndicator(scrollTop < 50);
+  };
+
+  const checkIfNeedsScroll = (element: HTMLDivElement) => {
+    setNeedsScroll(element.scrollHeight > element.clientHeight);
   };
 
   useEffect(() => {
@@ -43,6 +48,7 @@ export function ModalForm({ isOpen, onClose, children }: ModalProps) {
         className="relative w-full max-w-lg bg-white dark:bg-gray-800 flex flex-col overflow-y-auto scrollbar-none overflow-x-hidden max-h-[90vh] rounded-t-xl rounded-b-lg shadow-xl border border-gray-200 dark:border-gray-700"
         onClick={(e) => e.stopPropagation()} 
         onScroll={handleScroll}
+        ref={(el) => el && checkIfNeedsScroll(el)}
       >
         <div className="relative px-6 pt-6 pb-3 after:content-[''] after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-12 after:h-1 after:bg-gray-300 dark:after:bg-gray-600 after:rounded-full after:opacity-50 after:transition-opacity after:duration-300 hover:after:opacity-0">
           <div className="space-y-6">
@@ -52,12 +58,14 @@ export function ModalForm({ isOpen, onClose, children }: ModalProps) {
           </div>
           </div>
         </div>
-        {showScrollIndicator && (
+        {showScrollIndicator && needsScroll && (
           <div 
-            className="absolute bottom-4 left-1/2 -translate-x-1/2 opacity-40 transition-opacity duration-300 animate-bounce"
+            className="absolute bottom-4 left-1/2 -translate-x-1/2 transition-opacity duration-300 animate-bounce"
             style={{ animation: 'bounce 1.5s infinite' }}
           >
-            <ChevronDown className="w-6 h-6 text-gray-600 dark:text-gray-400" />
+            <div className="bg-brand/90 dark:bg-brand/80 p-2 rounded-full shadow-lg">
+              <ChevronDown className="w-5 h-5 text-white" />
+            </div>
           </div>
         )}
       </div>

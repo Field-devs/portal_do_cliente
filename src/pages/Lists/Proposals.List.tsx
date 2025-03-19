@@ -3,6 +3,8 @@ import Proposta from '../../Models/Propostas';
 import {
   Plus,
   Search,
+  PhoneCall,
+  AtSign,
   Filter,
   FileText,
   Users,
@@ -35,7 +37,7 @@ export default function ProposalsList() {
 
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'accepted' | 'rejected'>('all');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'accepted' | 'approved' | 'expired' | 'rejected'>('all');
   const [dateFilter, setDateFilter] = useState<'year' | 'month' | '15days' | 'day' | 'custom'>('year');
   const [customDateRange, setCustomDateRange] = useState({
     start: '',
@@ -44,6 +46,7 @@ export default function ProposalsList() {
   const [OpenProposal, setOpenProposal] = useState(false);
   const [active, SetActive] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [copiedItem, setCopiedItem] = useState<{type: 'phone' | 'email', value: string} | null>(null);
 
   const { loading: planosLoading } = usePlanos();
 
@@ -55,6 +58,17 @@ export default function ProposalsList() {
   const iconContainerClass = "bg-blue-400/10 p-3 rounded-lg";
   const iconClass = "h-6 w-6 text-blue-600 dark:text-blue-400";
   const badgeClass = "text-xs font-medium bg-blue-50 dark:bg-blue-400/10 text-blue-600 dark:text-blue-400 px-2 py-1 rounded-lg";
+
+  const getStatusDisplay = (status: string) => {
+    const statusMap: Record<string, { text: string, class: string, fullText: string }> = {
+      'PE': { text: 'PND', class: 'badge-warning', fullText: 'Pendente - Aguardando aceitação do cliente' },
+      'AC': { text: 'ACT', class: 'badge-info', fullText: 'Aceita - Aguardando pagamento' },
+      'AP': { text: 'APR', class: 'badge-success', fullText: 'Aprovada - Pagamento confirmado' },
+      'EX': { text: 'EXP', class: 'badge-error', fullText: 'Expirada - Prazo excedido' },
+      'RC': { text: 'REC', class: 'badge-error', fullText: 'Recusada - Cliente recusou a proposta' }
+    };
+    return statusMap[status] || { text: status, class: '' };
+  };
 
   useEffect(() => {
     fetchData();
@@ -126,6 +140,16 @@ export default function ProposalsList() {
     setPropId(row);
     HandleOpenProposal();
 
+  };
+
+  const handleCopy = async (value: string, type: 'phone' | 'email') => {
+    try {
+      await navigator.clipboard.writeText(value);
+      setCopiedItem({ type, value });
+      setTimeout(() => setCopiedItem(null), 2000);
+    } catch (err) {
+      console.error(`Failed to copy ${type}:`, err);
+    }
   };
 
   const filteredProposals = propostas.filter((proposta) => {
@@ -277,11 +301,11 @@ export default function ProposalsList() {
             </div>
             <h3 className={metricTitleClass}>Propostas Aceitas</h3>
             <p className={metricValueClass}>
-              {propostas.filter(p => p.status === 'AC').length}
+              {propostas.filter(p => p.status === 'AP').length}
             </p>
             <div className="flex items-center mt-2">
               <TrendingUp className="h-4 w-4 mr-1 text-blue-600 dark:text-blue-400" />
-              <span className={metricSubtextClass}>+8.3% vs último mês</span>
+              <span className={metricSubtextClass}>Propostas finalizadas com sucesso</span>
             </div>
           </div>
 
@@ -329,7 +353,9 @@ export default function ProposalsList() {
                 >
                   <option value="all">Todos os Status</option>
                   <option value="pending">Pendentes</option>
-                  <option value="accepted">Aceitas</option>
+                  <option value="accepted">Aceitas (Aguardando Pagamento)</option>
+                  <option value="approved">Aprovadas (Pagamento Confirmado)</option>
+                  <option value="expired">Expiradas</option>
                   <option value="rejected">Recusadas</option>
                 </select>
               </div>
@@ -373,25 +399,25 @@ export default function ProposalsList() {
             <table className="w-full divide-y divide-light-border dark:divide-gray-700/50 rounded-lg overflow-hidden">
               <thead>
                 <tr className="bg-light-secondary dark:bg-[#0F172A]/60 rounded-t-lg">
-                  <th className="px-6 py-2 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-6 py-2 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                     Data
                   </th>
-                  <th className="px-4 py-2 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-4 py-2 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                     Tipo
                   </th>
-                  <th className="px-4 py-2 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-4 py-2 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                     Cliente
                   </th>
-                  <th className="px-4 py-2 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-4 py-2 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                     Email
                   </th>
-                  <th className="px-4 py-2 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-4 py-2 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                     Fone
                   </th>
                   <th className="px-4 py-2 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                     Validade
                   </th>
-                  <th className="px-4 py-2 text-right text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-4 py-2 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                     Valor
                   </th>
                   <th className="px-4 py-2 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
@@ -413,7 +439,16 @@ export default function ProposalsList() {
                   >
                     <td className="px-4 py-2 whitespace-nowrap">
                       <div className="text-base text-light-text-secondary dark:text-gray-300">
-                        {new Date(proposta.dt).toLocaleDateString('pt-BR')}
+                        <span className="group relative">
+                          {new Date(proposta.dt).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })}
+                          <span className="invisible group-hover:visible absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-gray-900 text-white text-xs rounded shadow-lg z-10">
+                            {new Date(proposta.dt).toLocaleDateString('pt-BR', { 
+                              day: '2-digit',
+                              month: '2-digit',
+                              year: 'numeric'
+                            })}
+                          </span>
+                        </span>
                       </div>
                     </td>
                     <td className="px-4 py-2 whitespace-nowrap">
@@ -428,12 +463,38 @@ export default function ProposalsList() {
                     </td>
                     <td className="px-4 py-2 whitespace-nowrap">
                       <div className="text-base text-light-text-secondary dark:text-gray-300">
-                        {proposta.emp_email}
+                        <span className="group relative inline-flex items-center">
+                          <button
+                            onClick={() => proposta.emp_email && handleCopy(proposta.emp_email, 'email')}
+                            className={`hover:text-brand dark:hover:text-brand-400 transition-colors ${!proposta.emp_email && 'opacity-50 cursor-not-allowed'}`}
+                            title={proposta.emp_email ? "Copiar email" : "Email não preenchido"}
+                          >
+                            <AtSign className="h-5 w-5" />
+                          </button>
+                          {proposta.emp_email && (
+                            <span className="invisible group-hover:visible absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-gray-900 text-white text-xs rounded shadow-lg z-10 whitespace-nowrap">
+                              {copiedItem?.type === 'email' && copiedItem.value === proposta.emp_email ? 'Copiado!' : proposta.emp_email}
+                            </span>
+                          )}
+                        </span>
                       </div>
                     </td>
                     <td className="px-4 py-2 whitespace-nowrap">
                       <div className="text-base text-light-text-secondary dark:text-gray-300">
-                        {formatPhone(proposta.emp_fone)}
+                        <span className="group relative inline-flex items-center">
+                          <button
+                            onClick={() => proposta.emp_fone && handleCopy(proposta.emp_fone, 'phone')}
+                            className={`hover:text-brand dark:hover:text-brand-400 transition-colors ${!proposta.emp_fone && 'opacity-50 cursor-not-allowed'}`}
+                            title={proposta.emp_fone ? "Copiar telefone" : "Telefone não preenchido"}
+                          >
+                            <PhoneCall className="h-5 w-5" />
+                          </button>
+                          {proposta.emp_fone && (
+                            <span className="invisible group-hover:visible absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-gray-900 text-white text-xs rounded shadow-lg z-10 whitespace-nowrap">
+                              {copiedItem?.type === 'phone' && copiedItem.value === proposta.emp_fone ? 'Copiado!' : formatPhone(proposta.emp_fone)}
+                            </span>
+                          )}
+                        </span>
                       </div>
                     </td>
                     <td className="px-4 py-2 whitespace-nowrap text-center">
@@ -451,13 +512,23 @@ export default function ProposalsList() {
                     </td>
                     <td className="px-4 py-2 whitespace-nowrap">
                       <div className="flex justify-center">
-                        <span className={`px-3 py-1 text-sm font-medium rounded-full min-w-[6rem] text-center ${proposta.status === 'PE'
-                          ? 'badge-warning'
-                          : proposta.status === 'AC'
-                            ? 'badge-success'
-                            : 'badge-error'
+                        <span className="group relative">
+                          <span className={`px-3 py-1 text-sm font-medium rounded-full min-w-[4rem] text-center ${
+                          proposta.status === 'PE'
+                            ? 'badge-warning'
+                            : proposta.status === 'AP'
+                              ? 'badge-success'
+                              : proposta.status === 'AC'
+                                ? 'badge-info'
+                                : proposta.status === 'EX'
+                                  ? 'badge-error'
+                              : 'badge-error'
                           }`}>
-                          {proposta.status_title}
+                            {getStatusDisplay(proposta.status).text}
+                          </span>
+                          <span className="invisible group-hover:visible absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-gray-900 text-white text-xs rounded shadow-lg z-10 whitespace-nowrap">
+                            {getStatusDisplay(proposta.status).fullText}
+                          </span>
                         </span>
                       </div>
                     </td>
