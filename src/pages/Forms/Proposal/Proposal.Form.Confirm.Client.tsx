@@ -30,6 +30,11 @@ export default function ProposalFormConfirmClient({ Tipo, onCancel, sender, setS
   const [prefix, setPrefix] = useState<string>("");
   const [docType, setDocType] = useState<string>("");
   const [showCopyButton, setShowCopyButton] = useState(false);
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
+
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    setTouched(prev => ({ ...prev, [e.target.name]: true }));
+  };
 
   const fetchAddressData = async (cep: string) => {
     try {
@@ -84,16 +89,16 @@ export default function ProposalFormConfirmClient({ Tipo, onCancel, sender, setS
   const handleCopyData = () => {
     const newSender = { ...sender };
     // Copy data from responsible person to financial responsible
-    newSender['fina_cpf'] = sender['resp_cpf'];
-    newSender['fina_nome'] = sender['resp_nome'];
-    newSender['fina_email'] = sender['resp_email'];
-    newSender['fina_fone'] = sender['resp_fone'];
+    newSender['fin_cpf'] = sender['resp_cpf'];
+    newSender['fin_nome'] = sender['resp_nome'];
+    newSender['fin_email'] = sender['resp_email'];
+    newSender['fin_fone'] = sender['resp_fone'];
     setSender(newSender);
   };
 
   const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50 rounded-lg";
   const labelClass = "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1";
-  const inputClass = "w-full pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-lg shadow-sm";
+  const inputClass = "w-full pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-lg shadow-sm [&:invalid:not(:placeholder-shown):not(:focus)]:border-red-500";
   const iconClass = "absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400";
 
   if (loading) {
@@ -137,6 +142,7 @@ export default function ProposalFormConfirmClient({ Tipo, onCancel, sender, setS
           <div className="md:col-span-1">
             <label className={labelClass}>
               {Tipo === "EMP" ? 'CNPJ' : 'CPF'}
+              <span className="text-red-500 ml-1">*</span>
             </label>
             <div className="relative">
               <CreditCard className={iconClass} />
@@ -146,12 +152,18 @@ export default function ProposalFormConfirmClient({ Tipo, onCancel, sender, setS
                 value={sender[GetFieldName(docType)]}
                 onChange={handleInputChange}
                 className={inputClass}
+                required
+                onBlur={handleBlur}
+                placeholder={Tipo === "EMP" ? "00.000.000/0000-00" : "000.000.000-00"}
               />
             </div>
           </div>
 
           <div className="md:col-span-3">
-            <label className={labelClass}>Nome</label>
+            <label className={labelClass}>
+              Nome
+              <span className="text-red-500 ml-1">*</span>
+            </label>
             <div className="relative">
               {Tipo === "EMP" ? (
                 <Building2 className={iconClass} />
@@ -164,6 +176,9 @@ export default function ProposalFormConfirmClient({ Tipo, onCancel, sender, setS
                 value={sender[GetFieldName("nome")]}
                 onChange={handleInputChange}
                 className={inputClass}
+                required
+                onBlur={handleBlur}
+                placeholder="Nome completo"
               />
             </div>
           </div>
@@ -172,7 +187,10 @@ export default function ProposalFormConfirmClient({ Tipo, onCancel, sender, setS
         {/* Contact Information */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label className={labelClass}>Email</label>
+            <label className={labelClass}>
+              Email
+              <span className="text-red-500 ml-1">*</span>
+            </label>
             <div className="relative">
               <Mail className={iconClass} />
               <input
@@ -181,12 +199,18 @@ export default function ProposalFormConfirmClient({ Tipo, onCancel, sender, setS
                 value={sender[GetFieldName("email")]}
                 onChange={handleInputChange}
                 className={inputClass}
+                required
+                onBlur={handleBlur}
+                placeholder="email@exemplo.com"
               />
             </div>
           </div>
 
           <div>
-            <label className={labelClass}>Telefone</label>
+            <label className={labelClass}>
+              Telefone
+              <span className="text-red-500 ml-1">*</span>
+            </label>
             <div className="relative">
               <Phone className={iconClass} />
               <input
@@ -196,6 +220,8 @@ export default function ProposalFormConfirmClient({ Tipo, onCancel, sender, setS
                 onChange={handleInputChange}
                 placeholder="(00) 00000-0000"
                 className={inputClass}
+                onBlur={handleBlur}
+                required
               />
             </div>
           </div>
@@ -206,7 +232,10 @@ export default function ProposalFormConfirmClient({ Tipo, onCancel, sender, setS
           <div className="space-y-6">
             <div className="grid grid-cols-12 gap-6">
               <div className="col-span-3">
-                <label className={labelClass}>CEP</label>
+                <label className={labelClass}>
+                  CEP
+                  <span className="text-red-500 ml-1">*</span>
+                </label>
                 <div className="relative">
                   <MapPin className={iconClass} />
                   <input
@@ -217,12 +246,17 @@ export default function ProposalFormConfirmClient({ Tipo, onCancel, sender, setS
                     maxLength={9}
                     placeholder="00000-000"
                     className={inputClass}
+                    onBlur={handleBlur}
+                    required
                   />
                 </div>
               </div>
 
               <div className="col-span-7">
-                <label className={labelClass}>Logradouro</label>
+                <label className={labelClass}>
+                  Logradouro
+                  <span className="text-red-500 ml-1">*</span>
+                </label>
                 <div className="relative">
                   <MapPin className={iconClass} />
                   <input
@@ -232,12 +266,18 @@ export default function ProposalFormConfirmClient({ Tipo, onCancel, sender, setS
                     onChange={handleInputChange}
                     readOnly
                     className={inputClass}
+                    required
+                    onBlur={handleBlur}
+                    placeholder="Endereço completo"
                   />
                 </div>
               </div>
 
               <div className="col-span-2">
-                <label className={labelClass}>Número</label>
+                <label className={labelClass}>
+                  Número
+                  <span className="text-red-500 ml-1">*</span>
+                </label>
                 <div className="relative">
                   <MapPin className={iconClass} />
                   <input
@@ -246,6 +286,8 @@ export default function ProposalFormConfirmClient({ Tipo, onCancel, sender, setS
                     value={sender[GetFieldName("numero")]}
                     onChange={handleInputChange}
                     className={inputClass}
+                    onBlur={handleBlur}
+                    required
                   />
                 </div>
               </div>
@@ -253,7 +295,10 @@ export default function ProposalFormConfirmClient({ Tipo, onCancel, sender, setS
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div>
-                <label className={labelClass}>Bairro</label>
+                <label className={labelClass}>
+                  Bairro
+                  <span className="text-red-500 ml-1">*</span>
+                </label>
                 <div className="relative">
                   <MapPin className={iconClass} />
                   <input
@@ -263,12 +308,17 @@ export default function ProposalFormConfirmClient({ Tipo, onCancel, sender, setS
                     onChange={handleInputChange}
                     readOnly
                     className={inputClass}
+                    required
+                    onBlur={handleBlur}
                   />
                 </div>
               </div>
 
               <div>
-                <label className={labelClass}>Cidade</label>
+                <label className={labelClass}>
+                  Cidade
+                  <span className="text-red-500 ml-1">*</span>
+                </label>
                 <div className="relative">
                   <MapPin className={iconClass} />
                   <input
@@ -278,12 +328,17 @@ export default function ProposalFormConfirmClient({ Tipo, onCancel, sender, setS
                     onChange={handleInputChange}
                     readOnly
                     className={inputClass}
+                    required
+                    onBlur={handleBlur}
                   />
                 </div>
               </div>
 
               <div>
-                <label className={labelClass}>UF</label>
+                <label className={labelClass}>
+                  UF
+                  <span className="text-red-500 ml-1">*</span>
+                </label>
                 <div className="relative">
                   <MapPin className={iconClass} />
                   <input
@@ -293,6 +348,8 @@ export default function ProposalFormConfirmClient({ Tipo, onCancel, sender, setS
                     onChange={handleInputChange}
                     readOnly
                     className={inputClass}
+                    required
+                    onBlur={handleBlur}
                     maxLength={2}
                   />
                 </div>
