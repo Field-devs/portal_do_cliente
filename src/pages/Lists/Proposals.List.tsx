@@ -52,9 +52,11 @@ export default function ProposalsList() {
   const metricTitleClass = "text-lg font-medium text-light-text-primary dark:text-white mb-1";
   const metricValueClass = "text-3xl font-bold text-light-text-primary dark:text-white";
   const metricSubtextClass = "text-sm text-light-text-secondary dark:text-blue-200";
-  const iconContainerClass = "bg-blue-400/10 p-3 rounded-lg";
+  const iconContainerClass = "bg-blue-400/10 p-3 rounded-xl";
   const iconClass = "h-6 w-6 text-blue-600 dark:text-blue-400";
   const badgeClass = "text-xs font-medium bg-blue-50 dark:bg-blue-400/10 text-blue-600 dark:text-blue-400 px-2 py-1 rounded-lg";
+  const inputClass = "w-full pl-10 pr-4 py-2 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-lg shadow-sm";
+  const selectClass = "pl-12 pr-4 py-2 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors appearance-none min-w-[200px] rounded-lg shadow-sm";
 
   useEffect(() => {
     fetchData();
@@ -235,13 +237,13 @@ export default function ProposalsList() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {/* Total Proposals */}
           <div className={cardClass}>
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-2">
               <div className={iconContainerClass}>
                 <FileText className={iconClass} />
               </div>
               <span className={badgeClass}>Total</span>
             </div>
-            <h3 className={metricTitleClass}>Total de Propostas</h3>
+            <h3 className="text-base font-medium text-light-text-primary dark:text-white mb-1">Total de Propostas</h3>
             <p className={metricValueClass}>{propostas.length}</p>
             <div className="flex items-center mt-2">
               <TrendingUp className="h-4 w-4 mr-1 text-blue-600 dark:text-blue-400" />
@@ -251,13 +253,13 @@ export default function ProposalsList() {
 
           {/* Pending Proposals */}
           <div className={cardClass}>
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-2">
               <div className={iconContainerClass}>
                 <Clock className={iconClass} />
               </div>
               <span className={badgeClass}>Aguardando</span>
             </div>
-            <h3 className={metricTitleClass}>Propostas Pendentes</h3>
+            <h3 className="text-base font-medium text-light-text-primary dark:text-white mb-1">Propostas Pendentes</h3>
             <p className={metricValueClass}>
               {propostas.filter(p => p.status === 'PE').length}
             </p>
@@ -269,13 +271,13 @@ export default function ProposalsList() {
 
           {/* Accepted Proposals */}
           <div className={cardClass}>
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-2">
               <div className={iconContainerClass}>
                 <CheckCircle className={iconClass} />
               </div>
               <span className={badgeClass}>Aceitas</span>
             </div>
-            <h3 className={metricTitleClass}>Propostas Aceitas</h3>
+            <h3 className="text-base font-medium text-light-text-primary dark:text-white mb-1">Propostas Aceitas</h3>
             <p className={metricValueClass}>
               {propostas.filter(p => p.status === 'AC').length}
             </p>
@@ -287,13 +289,13 @@ export default function ProposalsList() {
 
           {/* Rejected Proposals */}
           <div className={cardClass}>
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-2">
               <div className={iconContainerClass}>
                 <XCircle className={iconClass} />
               </div>
               <span className={badgeClass}>Recusadas</span>
             </div>
-            <h3 className={metricTitleClass}>Propostas Recusadas</h3>
+            <h3 className="text-base font-medium text-light-text-primary dark:text-white mb-1">Propostas Recusadas</h3>
             <p className={metricValueClass}>
               {propostas.filter(p => p.status === 'RC').length}
             </p>
@@ -312,10 +314,10 @@ export default function ProposalsList() {
                 <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                 <input
                   type="text"
-                  placeholder="Buscar por empresa, email ou CNPJ..."
+                  placeholder="Buscar..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-lg shadow-sm"
+                  className={inputClass}
                 />
               </div>
             </div>
@@ -325,7 +327,7 @@ export default function ProposalsList() {
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value as typeof statusFilter)}
-                  className="pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors appearance-none min-w-[200px] rounded-lg shadow-sm"
+                  className={selectClass}
                 >
                   <option value="all">Todos os Status</option>
                   <option value="pending">Pendentes</option>
@@ -338,7 +340,7 @@ export default function ProposalsList() {
                 <select
                   value={dateFilter}
                   onChange={(e) => setDateFilter(e.target.value as typeof dateFilter)}
-                  className="pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors appearance-none min-w-[200px] rounded-lg shadow-sm"
+                  className={selectClass}
                 >
                   <option value="year">Último Ano</option>
                   <option value="month">Último Mês</option>
@@ -353,13 +355,13 @@ export default function ProposalsList() {
                     type="date"
                     value={customDateRange.start}
                     onChange={(e) => setCustomDateRange(prev => ({ ...prev, start: e.target.value }))}
-                    className="pl-4 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-lg shadow-sm"
+                    className={inputClass}
                   />
                   <input
                     type="date"
                     value={customDateRange.end}
                     onChange={(e) => setCustomDateRange(prev => ({ ...prev, end: e.target.value }))}
-                    className="pl-4 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-lg shadow-sm"
+                    className={inputClass}
                   />
                 </div>
               )}
@@ -373,20 +375,14 @@ export default function ProposalsList() {
             <table className="w-full divide-y divide-light-border dark:divide-gray-700/50 rounded-lg overflow-hidden">
               <thead>
                 <tr className="bg-light-secondary dark:bg-[#0F172A]/60 rounded-t-lg">
-                  <th className="px-6 py-2 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                     Data
                   </th>
-                  <th className="px-4 py-2 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
-                    Tipo
-                  </th>
-                  <th className="px-4 py-2 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-4 py-2 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider w-40">
                     Cliente
                   </th>
-                  <th className="px-4 py-2 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-4 py-2 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider w-48">
                     Email
-                  </th>
-                  <th className="px-4 py-2 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
-                    Fone
                   </th>
                   <th className="px-4 py-2 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                     Validade
@@ -416,24 +412,14 @@ export default function ProposalsList() {
                         {new Date(proposta.dt).toLocaleDateString('pt-BR')}
                       </div>
                     </td>
-                    <td className="px-4 py-2 whitespace-nowrap">
-                      <div className="text-base text-light-text-secondary dark:text-gray-300">
-                        {proposta.perfil_nome}
-                      </div>
-                    </td>
-                    <td className="px-4 py-2 whitespace-nowrap">
-                      <div className="text-base font-medium text-light-text-primary dark:text-gray-100">
+                    <td className="px-4 py-2 whitespace-nowrap max-w-[10rem]">
+                      <div className="text-base font-medium text-light-text-primary dark:text-gray-100 truncate">
                         {proposta.emp_nome}
                       </div>
                     </td>
-                    <td className="px-4 py-2 whitespace-nowrap">
-                      <div className="text-base text-light-text-secondary dark:text-gray-300">
+                    <td className="px-4 py-2 whitespace-nowrap max-w-[12rem]">
+                      <div className="text-base text-light-text-secondary dark:text-gray-300 truncate">
                         {proposta.emp_email}
-                      </div>
-                    </td>
-                    <td className="px-4 py-2 whitespace-nowrap">
-                      <div className="text-base text-light-text-secondary dark:text-gray-300">
-                        {formatPhone(proposta.emp_fone)}
                       </div>
                     </td>
                     <td className="px-4 py-2 whitespace-nowrap text-center">
