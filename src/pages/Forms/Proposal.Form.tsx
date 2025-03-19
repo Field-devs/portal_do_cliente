@@ -72,10 +72,19 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
       setLoading(true);
       let desconto = parseFloat(propostaDTO.desconto.toString().replace('%', ''));
       const propostaToInsert = { ...propostaDTO, desconto : desconto, user_id: user?.id };
-      console.log("Proposta to insert", propostaToInsert);
+      let addons = propostaToInsert.addons;
+
       const { data: insertData, error: insertError } = await supabase.from("proposta").insert([propostaToInsert]).select("id");
       if (insertData) {
         setIdProposta(insertData[0].id);
+        if (addons) {
+          const addonsToInsert = addons.map((addon) => ({
+            idproposta: insertData[0].id,
+            idaddon: addon.addon_id,
+            valor: addon.unit,
+          }));
+          await supabase.from("proposta_addon").insert(addonsToInsert);
+        }
       }
 
       if (insertError) {

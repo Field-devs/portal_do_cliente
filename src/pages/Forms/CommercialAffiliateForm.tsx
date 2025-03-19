@@ -167,9 +167,9 @@ export default function CommercialAffiliateForm({ onSuccess, onCancel, initialDa
               <input
                 type="email"
                 name="email"
-                value={formData.email}
-                onChange={handleInputChange}
+                value={formData.cep}
                 className={inputClass}
+                onChange={handleInputChange}
                 required
               />
             </div>

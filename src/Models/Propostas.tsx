@@ -1,3 +1,5 @@
+import PropostaAddon from "./Propostas.Addon";
+
 interface Proposta {
   id?: string; // uuid
   user_id: string; // uuid
@@ -51,6 +53,8 @@ interface Proposta {
   status : string | 'PE';
 
   cob_pay_link?: string | null; // uuid
+
+  addons?: PropostaAddon[]; // Array de addons, referência para a tabela 'plano_addon'
 
 }
 // DTO

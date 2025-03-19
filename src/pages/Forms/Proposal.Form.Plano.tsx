@@ -54,7 +54,7 @@ export default function ProposalFormPlano({proposta, setProposta }: { proposta: 
         total: selectedPlan.valor + totalAddons - proposta.desconto,
         addons: addons.filter(addon => addonQuantities[addon.id] > 0).map(addon => ({
           addon_id: addon.id,
-          quantidade: addonQuantities[addon.id]
+          qtde: addonQuantities[addon.id]
         }))
       });
       calcProposta();
