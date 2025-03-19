@@ -76,7 +76,7 @@ export default function ProposalFormConfirmClient({ Tipo, onCancel, sender, setS
     const prefixMap = {
       'EMP': 'emp_',
       'RES': 'resp_',
-      'FIN': 'finan_'
+      'FIN': 'fin_'
     };
     return prefixMap[Tipo] + name;
   };
@@ -84,10 +84,10 @@ export default function ProposalFormConfirmClient({ Tipo, onCancel, sender, setS
   const handleCopyData = () => {
     const newSender = { ...sender };
     // Copy data from responsible person to financial responsible
-    newSender['finan_cpf'] = sender['resp_cpf'];
-    newSender['finan_nome'] = sender['resp_nome'];
-    newSender['finan_email'] = sender['resp_email'];
-    newSender['finan_fone'] = sender['resp_fone'];
+    newSender['fina_cpf'] = sender['resp_cpf'];
+    newSender['fina_nome'] = sender['resp_nome'];
+    newSender['fina_email'] = sender['resp_email'];
+    newSender['fina_fone'] = sender['resp_fone'];
     setSender(newSender);
   };
 

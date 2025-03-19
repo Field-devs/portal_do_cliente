@@ -21,10 +21,10 @@ interface Proposta {
   resp_email?: string;
   resp_fone?: string;
 
-  fina_cpf?: string | null;
-  fina_nome?: string;
-  fina_email?: string;
-  fina_fone?: string;
+  fin_cpf?: string | null;
+  fin_nome?: string;
+  fin_email?: string;
+  fin_fone?: string;
 
 
   caixas_entrada_qtde: number | 0;
@@ -75,10 +75,10 @@ const getDefaultPropostaDTO = (): PropostaDTO => ({
   resp_email: "",
   resp_fone: "",
 
-  fina_cpf: null,
-  fina_nome: "",
-  fina_email: "",
-  fina_fone: "",
+  fin_cpf: null,
+  fin_nome: "",
+  fin_email: "",
+  fin_fone: "",
 
   caixas_entrada_qtde: 0,
   atendentes_qtde: 0,

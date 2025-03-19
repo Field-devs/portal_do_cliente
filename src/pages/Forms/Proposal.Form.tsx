@@ -33,8 +33,8 @@ export default function ProposalForm({ id }: FormProps) {
         setIdProposta(proposta.id);
         const propostaDTO = mapPropostaToDTO(proposta); // Mapeia os dados
         setPropostaDTO(propostaDTO); // Atualiza o estado global
+        console.log("PropostaDTO", propostaDTO);
       }
-      console.log("Proposta", propostaDTO);
     };
     fetchProposta();
   }, [id]);
