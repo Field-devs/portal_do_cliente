@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useEscapeKey } from '../../hooks/useEscapeKey';
 import { AskDialog } from '../Dialogs/Dialogs';
+import XCloseForm from '../Fragments/XCloseForm';
 
 interface ModalProps {
   isOpen: boolean;
@@ -9,10 +10,8 @@ interface ModalProps {
 }
 
 export function ModalForm({ isOpen, onClose, children }: ModalProps) {
-  // Handle ESC key
   useEscapeKey(onClose);
 
-  // Prevent body scroll when modal is open
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -31,8 +30,8 @@ export function ModalForm({ isOpen, onClose, children }: ModalProps) {
       className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
       onMouseDown={async (e) => {
         if (e.target === e.currentTarget) {
-          //let response = await AskDialog('Deseja realmente fechar o Formulário?', 'Fechar');
-          //if (response.value === true) onClose();
+          // let response = await AskDialog('Deseja realmente fechar o Formulário?', 'Fechar');
+          // if (response.value === true) onClose();
           // onClose();
         }
       }}
@@ -40,7 +39,7 @@ export function ModalForm({ isOpen, onClose, children }: ModalProps) {
       aria-modal="true"
     >
       <div
-        className="w-full max-w-lg bg-white flex flex-col"
+        className="relative w-full max-w-lg bg-white flex flex-col"
         style={{
           overflowY: 'auto', // Permite rolagem vertical
           overflowX: 'hidden', // Impede rolagem horizontal
@@ -48,7 +47,9 @@ export function ModalForm({ isOpen, onClose, children }: ModalProps) {
         }}
         onClick={(e) => e.stopPropagation()}
       >
+        {/* Botão de Fechar no canto superior direito */}
         {children}
+        <XCloseForm onClose={onClose} />
       </div>
     </div>
   );

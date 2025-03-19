@@ -123,7 +123,6 @@ export default function ProposalFormPlano({proposta, setProposta }: { proposta: 
   return (
     loading ? <CircularWait message="Carregando..." small={true} /> :
       <div className={cardClass}>
-      <XCloseForm onClose={() => { onclose  }} />
       <h2 className={titleClass}>Escolha de Plano e Add-ons</h2>
 
         <div className={sectionClass}>

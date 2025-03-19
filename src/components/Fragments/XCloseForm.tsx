@@ -10,7 +10,7 @@ const XCloseForm: React.FC<XCloseFormProps> = ({ onClose }) => {
     <div className="absolute top-2 right-2">
       <button
         onClick={onClose}
-        className="w-8 h-8 flex items-center justify-center rounded-full bg-black hover:bg-gray-500 transition-colors focus:outline-none"
+        className="w-8 h-8 flex items-center justify-center rounded-full bg-blue-600 hover:bg-blue-700 transition-colors focus:outline-none"
       >
         <X className="w-4 h-4 text-white" />
       </button>
