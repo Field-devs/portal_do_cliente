@@ -35,7 +35,7 @@ export default function ProposalFormFinish({id}: { id: string }) {
         <div className="space-y-4 text-gray-600">
           <div className="flex items-center justify-center gap-2 text-blue-600">
             <Mail className="w-5 h-5" />
-            <p>Aguarde instruções no seu email</p>
+            <p>O Cliente receberá instruções no seu E-mail</p>
           </div>
 
           <p>
@@ -64,13 +64,14 @@ export default function ProposalFormFinish({id}: { id: string }) {
           </button>
         </div>
 
-        <div className="space-y-2"></div>
+        {/* <div className="space-y-2"></div>
         <button
           onClick={() => navigate("/")}
           className="w-full py-2 px-4 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
         >
-          Voltar para Home
-        </button>
+          Voltar para lista de propostas
+        </button> */}
+
       </div>
     </div>
   );

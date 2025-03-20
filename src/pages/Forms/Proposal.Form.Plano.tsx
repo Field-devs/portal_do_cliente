@@ -24,7 +24,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
   const [loading, setLoading] = useState(true);
   const [subtotal, setSubtotal] = useState(0);
   const [total, setTotal] = useState(0);
-  
+
   const [viewInactive, setViewInactive] = useState(false);
 
   const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50 rounded-lg";
@@ -71,7 +71,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
     setTotal(newSubtotal - CalcPercent(newSubtotal, parseFloat(desconto)));
   }
 
- 
+
   const fetchData = async () => {
     try {
       var { data } = await supabase.from("plano").select("*").eq("user_id", user?.id);
@@ -154,6 +154,20 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
           </div>
 
           <div>
+            <div className="flex justify-between items-center mb-2">
+              <div className="relative group ml-auto">
+                <div className="flex items-center space-x-4">
+                  <div>
+                  Somente Inativos
+                  </div>
+                  <div>
+                  <SwitchFrag onClick={handleInactive} checked={viewInactive} />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
             <label className={labelClass}>Plano</label>
             <div className="relative">
               <Package className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -180,16 +194,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
           </div>
 
           <div>
-            <div className="flex justify-between items-center mb-2">
-              <label className={labelClass}>Add-ons</label>
-              <div className="relative group">
-                <SwitchFrag onClick={handleInactive} checked={viewInactive} />
-                <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 px-2 py-1 bg-gray-900 text-white text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                  Somente Inativos
-                  <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 w-2 h-2 bg-gray-900 rotate-45"></div>
-                </div>
-              </div>
-            </div>
+            <label className={labelClass}>Add-ons</label>
             <div className="space-y-2">
               {addons.filter(addon => viewInactive && !addon.active).map((addon) => (
                 <div key={addon.id} className="flex justify-between items-center">

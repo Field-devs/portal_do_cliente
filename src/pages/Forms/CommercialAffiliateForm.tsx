@@ -46,9 +46,9 @@ export default function CommercialAffiliateForm({ onSuccess, onCancel, initialDa
   const [formData, setFormData] = useState<Cliente>({
     tipo: 'AF',
     user_id: user?.id || '',
-    email: initialData?.email || 'jose@gmail.com ',
-    nome: initialData?.nome || 'JOSE DA SILVA',
-    fone: initialData?.fone ? formatPhoneNumber(initialData.fone) : '99999999999',
+    emp_email: initialData?.email || 'jose@gmail.com ',
+    emp_nome: initialData?.nome || 'JOSE DA SILVA',
+    emp_fone: initialData?.fone ? formatPhoneNumber(initialData.fone) : '99999999999',
     desconto: initialData?.desconto ?? 5,
     comissao: initialData?.comissao ?? 10,
     vencimento: initialData?.vencimento ? new Date(initialData.vencimento).toISOString().split('T')[0] : '',
