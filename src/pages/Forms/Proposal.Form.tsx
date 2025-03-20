@@ -12,10 +12,11 @@ import ProposalFormResume from "./Proposal.Form.Resume";
 export default function ProposalForm({ id, onCancel }: FormProps) {
   const [step, setStep] = useState(0);
 
-  const [propostaDTO, setPropostaDTO] = useState<PropostaDTO>(getDefaultPropostaDTO() as PropostaDTO);    
+  const [propostaDTO, setPropostaDTO] = useState<PropostaDTO>(getDefaultPropostaDTO() as PropostaDTO);
   const [idproposta, setIdProposta] = useState();
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
+  const [finish, setFinish] = useState(false);
 
   const mapPropostaToDTO = (proposta: Proposta): PropostaDTO => {
     const { id, dt, dt_add, dt_update, user_add, user_update, status, ...propostaDTO } = proposta;
@@ -37,6 +38,8 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
     };
     fetchProposta();
   }, [id]);
+
+
   const handleNext = () => {
     if (validationForm())
       setStep((prevStep) => prevStep + 1);
@@ -60,9 +63,15 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
         AlertDialog("Email inválido");
         return false;
       }
-      console.log("PropostaDTO", propostaDTO);
     }
     return true;
+  };
+
+  const setPropostaToInsert = (proposta: Proposta): PropostaDTO => {
+    let desconto = parseFloat(proposta.desconto.toString().replace('%', ''));
+    const propostaToInsert = { ...proposta, desconto: desconto, user_id: user?.id };
+    let addons = propostaToInsert.addons;
+    return propostaToInsert;
   };
 
   const handleSubmit = async () => {
@@ -70,30 +79,33 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
     let response = await AskDialog("Deseja realmente salvar a proposta?", "Salvar Proposta");
     if (response.value === true) {
       setLoading(true);
-      let desconto = parseFloat(propostaDTO.desconto.toString().replace('%', ''));
-      const propostaToInsert = { ...propostaDTO, desconto : desconto, user_id: user?.id };
-      let addons = propostaToInsert.addons;
 
-      const { data: insertData, error: insertError } = await supabase.from("proposta").insert([propostaToInsert]).select("id");
-      if (insertData) {
-        setIdProposta(insertData[0].id);
-        if (addons) {
-          const addonsToInsert = addons.map((addon) => ({
-            idproposta: insertData[0].id,
-            idaddon: addon.addon_id,
-            valor: addon.unit,
-          }));
-          await supabase.from("proposta_addon").insert(addonsToInsert);
-        }
-      }
+      const propostaToInsert = setPropostaToInsert(propostaDTO);
 
-      if (insertError) {
-        ErrorDialog("Erro ao salvar proposta: " + insertError.message);
-        setLoading(false);
-        return;
-      }
-      setPropostaDTO(propostaDTO)
-      handleNext();
+
+      // const { data: insertData, error: insertError } = await supabase.from("proposta").insert([propostaToInsert]).select("id");
+      // if (insertData) {
+      //   setIdProposta(insertData[0].id);
+      //   if (addons) {
+      //     const addonsToInsert = addons.map((addon) => ({
+      //       idproposta: insertData[0].id,
+      //       idaddon: addon.addon_id,
+      //       valor: addon.unit,
+      //     }));
+      //     await supabase.from("proposta_addon").insert(addonsToInsert);
+      //   }
+      // }
+
+      // if (insertError) {
+      //   ErrorDialog("Erro ao salvar proposta: " + insertError.message);
+      //   setLoading(false);
+      //   return;
+      // }
+
+      setFinish(true);
+      setPropostaDTO(propostaToInsert)
+      if (step < 2)
+        handleNext();
     }
   };
 
@@ -102,28 +114,33 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
       {/* {loading == true && <CircularWait message="Carregando..." />} */}
       {step === 0 && <ProposalFormPlano proposta={propostaDTO} setProposta={setPropostaDTO} />}
       {step === 1 && <ProposalFormCliente proposta={propostaDTO} setProposta={setPropostaDTO} />}
-      {step === 2 && <ProposalFormResume proposta={propostaDTO} setProposta={setPropostaDTO} />}
+      {step === 2 && <ProposalFormResume finish={finish} id={idproposta} proposta={propostaDTO} setProposta={setPropostaDTO} />}
+
       <div className="flex justify-between mt-4">
-        <button
-          onClick={onCancel}
-          className="px-4 py-2 bg-gray-100 dark:bg-gray-700/60 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600/40 transition-colors rounded-lg"
-        >
-          Cancelar
-        </button>
-        <div className="flex space-x-2">
-        {(step > 0 && step < 2) && (
+
+        {finish == false && (
           <button
-            onClick={handleBack}
-            className="px-4 py-2 bg-gray-100 dark:bg-gray-700/60 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600/40 transition-colors rounded-lg"
+            onClick={onCancel}
+            className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
           >
-            Voltar
+            Cancelar
           </button>
         )}
-        {step == 0 && <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={handleNext}>Avançar</button>}
-        {step == 1 && <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={handleSubmit}>Enviar proposta</button>}
-        </div>
-        {/* {step == 2 && <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={handleSubmit}>Salvar</button>} */}
-      </div>
+
+        {finish == false && (
+          <div className="flex space-x-2">
+            {(step > 0 && step <= 2) && <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={handleBack}>Voltar</button>}
+            {step < 2 && <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={handleNext}>Avançar</button>}
+            {step == 2 && <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={handleSubmit}>Salvar proposta</button>}
+          </div>
+        )}
+        {finish && (
+          <div className="flex space-x-2">
+            <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" >Sair</button>
+          </div>
+        )}
+
+      </div >
     </>
   );
 }

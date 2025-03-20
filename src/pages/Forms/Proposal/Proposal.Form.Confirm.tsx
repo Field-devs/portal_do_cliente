@@ -114,7 +114,6 @@ export default function ProposalFormConfirm({ onCancel, initialData }: Commercia
     if (!proposta.emp_fone) errors.push("Telefone da empresa é obrigatório");
     if (!proposta.emp_cep) errors.push("CEP da empresa é obrigatório");
     if (!proposta.emp_logradouro) errors.push("Logradouro da empresa é obrigatório");
-    if (!proposta.emp_numero) errors.push("Número do endereço da empresa é obrigatório");
     if (!proposta.emp_bairro) errors.push("Bairro da empresa é obrigatório");
     if (!proposta.emp_cidade) errors.push("Cidade da empresa é obrigatório");
     if (!proposta.emp_uf) errors.push("UF da empresa é obrigatório");

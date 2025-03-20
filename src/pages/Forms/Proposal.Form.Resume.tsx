@@ -3,7 +3,7 @@ import { User, Copy, X, CheckCircle, FileText } from 'lucide-react';
 import { Proposta, PropostaDTO } from "../../Models/Propostas";
 import { formatCurrency } from "../../utils/formatters";
 
-export default function ProposalFormResume({ id, proposta, setProposta }: { id: string, proposta: PropostaDTO, setProposta: (data: PropostaDTO) => void }) {
+export default function ProposalFormResume({ id, proposta, finish, setProposta }: { id: string, finish : boolean, proposta: PropostaDTO, setProposta: (data: PropostaDTO) => void }) {
   const [copied, setCopied] = useState(false);
 
   // Common CSS classes
@@ -45,24 +45,30 @@ export default function ProposalFormResume({ id, proposta, setProposta }: { id: 
         </div>
 
         <div className="flex justify-end pt-6">
-          <button
-            type="button"
-            onClick={copyToClipboard}
-            className={`${buttonClass} ${copied ? 'bg-green-50 text-green-600' : 'bg-brand text-white hover:bg-brand/90'}`}
-          >
-            {copied ? (
-              <>
-                <CheckCircle className="h-4 w-4 mr-2" />
-                Copiado!
-              </>
-            ) : (
-              <>
-                <Copy className="h-4 w-4 mr-2" />
-                Copiar Link
-              </>
-            )}
-          </button>
+          {finish && (
+            <button
+              type="button"
+              onClick={copyToClipboard}
+              className={`${buttonClass} ${copied ? 'bg-green-50 text-green-600' : 'bg-brand text-white hover:bg-brand/90'}`}
+            >
+              {copied ? (
+                <>
+                  <CheckCircle className="h-4 w-4 mr-2" />
+                  Copiado!
+                </>
+              ) : (
+                <>
+                  <Copy className="h-4 w-4 mr-2" />
+                  Copiar Link
+                </>
+              )}
+            </button>
+          )}
+
+
+
         </div>
+
       </div>
     </div>
   );
