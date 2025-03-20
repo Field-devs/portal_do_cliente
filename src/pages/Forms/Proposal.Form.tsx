@@ -8,6 +8,8 @@ import { validateEmail } from "../../utils/Validation";
 import ProposalFormPlano from "./Proposal.Form.Plano";
 import ProposalFormCliente from "./Proposal.Form.Cliente";
 import ProposalFormResume from "./Proposal.Form.Resume";
+import { TEST_DATA_MODE as TEST_DISABLE_DATA } from "../../utils/consts";
+import { useEscapeKey } from "../../hooks/useEscapeKey";
 
 export default function ProposalForm({ id, onCancel }: FormProps) {
   const [step, setStep] = useState(0);
@@ -49,6 +51,7 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
     setStep((prevStep) => prevStep - 1);
   };
 
+
   const validationForm = () => {
     if (step === 1) {
       if ((!propostaDTO.emp_nome || propostaDTO.emp_nome.trim() === "") && (!propostaDTO.emp_email || propostaDTO.emp_email.trim() === "")) {
@@ -76,38 +79,38 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
 
   const handleSubmit = async () => {
     if (validationForm() === false) return;
-    let response = await AskDialog("Deseja realmente salvar a proposta?", "Salvar Proposta");
-    if (response.value === true) {
-      setLoading(true);
+    // let response = await AskDialog("Deseja realmente salvar a proposta?", "Salvar Proposta");
 
-      const propostaToInsert = setPropostaToInsert(propostaDTO);
+    const propostaToInsert = setPropostaToInsert(propostaDTO);
 
+    if (TEST_DISABLE_DATA === false) {
+      const { data: insertData, error: insertError } = await supabase.from("proposta").insert([propostaToInsert]).select("id");
+      if (insertData) {
+        setIdProposta(insertData[0].id);
 
-      // const { data: insertData, error: insertError } = await supabase.from("proposta").insert([propostaToInsert]).select("id");
-      // if (insertData) {
-      //   setIdProposta(insertData[0].id);
-      //   if (addons) {
-      //     const addonsToInsert = addons.map((addon) => ({
-      //       idproposta: insertData[0].id,
-      //       idaddon: addon.addon_id,
-      //       valor: addon.unit,
-      //     }));
-      //     await supabase.from("proposta_addon").insert(addonsToInsert);
-      //   }
-      // }
+        if (addons) {
+          const addonsToInsert = addons.map((addon) => ({
+            idproposta: insertData[0].id,
+            idaddon: addon.addon_id,
+            valor: addon.unit,
+          }));
+          await supabase.from("proposta_addon").insert(addonsToInsert);
+        }
+      }
 
-      // if (insertError) {
-      //   ErrorDialog("Erro ao salvar proposta: " + insertError.message);
-      //   setLoading(false);
-      //   return;
-      // }
-
-      setFinish(true);
-      setPropostaDTO(propostaToInsert)
-      if (step < 2)
-        handleNext();
+      if (insertError) {
+        ErrorDialog("Erro ao salvar proposta: " + insertError.message);
+        setLoading(false);
+        return;
+      }
     }
+    setFinish(true);
+    setPropostaDTO(propostaToInsert)
+    if (step < 2)
+      handleNext();
   };
+
+
 
   return (
     <>
@@ -131,12 +134,17 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
           <div className="flex space-x-2">
             {(step > 0 && step <= 2) && <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={handleBack}>Voltar</button>}
             {step < 2 && <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={handleNext}>Avançar</button>}
-            {step == 2 && <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={handleSubmit}>Salvar proposta</button>}
+            {step == 2 && <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={handleSubmit}>Enviar Proposta</button>}
+          </div>
+        )}
+
+        {finish && (
+          <div className="flex space-x-2">
           </div>
         )}
         {finish && (
           <div className="flex space-x-2">
-            <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" >Sair</button>
+            <button onClick={onCancel} className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" >Sair</button>
           </div>
         )}
 

@@ -12,7 +12,7 @@ import { CalcPercent } from "../../utils/Finan";
 import { Search, Filter, Package } from 'lucide-react';
 import XCloseForm from "../../components/Fragments/XCloseForm";
 
-export default function ProposalFormPlano({proposta, setProposta }: { proposta: PropostaDTO, setProposta: (data: PropostaDTO) => void }) {
+export default function ProposalFormPlano({ proposta, setProposta }: { proposta: PropostaDTO, setProposta: (data: PropostaDTO) => void }) {
   const { user } = useAuth();
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [selectedprofile, setSelectedProfile] = useState<Profile>();
@@ -124,7 +124,7 @@ export default function ProposalFormPlano({proposta, setProposta }: { proposta: 
   return (
     loading ? <CircularWait message="Carregando..." small={true} /> :
       <div className={cardClass}>
-      <h2 className={titleClass}>Escolha de Plano e Add-ons</h2>
+        <h2 className={titleClass}>Escolha de Plano e Add-ons</h2>
 
         <div className={sectionClass}>
           <div>
@@ -150,19 +150,30 @@ export default function ProposalFormPlano({proposta, setProposta }: { proposta: 
             <label className={labelClass}>Plano</label>
             <div className="relative">
               <Package className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+
               <select
                 value={selectedPlan?.id}
                 onChange={(e) => setSelectedPlan(plans.find(p => p.id === e.target.value))}
                 className={selectClass}
               >
                 <option value="">Selecione um plano</option>
-                {plans.map((plan) => (
+
+                {plans.filter(plan => plan.active == true).map((plan) => (
                   <option key={plan.id} value={plan.id}>
                     {plan.nome}
                   </option>
                 ))}
+
+                {plans.filter(plan => plan.active == viewInactive).map((plan) => (
+                  <option key={plan.id} value={plan.id}>
+                    {plan.nome}
+                  </option>
+                ))}
+
               </select>
+
             </div>
+
           </div>
 
           <div>
@@ -171,7 +182,7 @@ export default function ProposalFormPlano({proposta, setProposta }: { proposta: 
               <div className="relative group">
                 <SwitchFrag onClick={handleInactive} checked={viewInactive} />
                 <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 px-2 py-1 bg-gray-900 text-white text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                  Ver add-ons desativados
+                  Somente Inativos
                   <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 w-2 h-2 bg-gray-900 rotate-45"></div>
                 </div>
               </div>
