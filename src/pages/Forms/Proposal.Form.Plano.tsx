@@ -164,7 +164,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
                   </option>
                 ))}
 
-                {plans.filter(plan => plan.active == viewInactive).map((plan) => (
+                {plans.filter(plan => plan.active == !viewInactive).map((plan) => (
                   <option key={plan.id} value={plan.id}>
                     {plan.nome}
                   </option>
