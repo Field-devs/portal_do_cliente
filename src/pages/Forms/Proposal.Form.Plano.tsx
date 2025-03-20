@@ -158,7 +158,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
               <div className="relative group ml-auto">
                 <div className="flex items-center space-x-4">
                   <div>
-                  Somente Inativos
+                  Ver Inativos
                   </div>
                   <div>
                   <SwitchFrag onClick={handleInactive} checked={viewInactive} />
