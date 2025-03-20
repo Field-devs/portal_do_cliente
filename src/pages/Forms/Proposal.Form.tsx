@@ -10,6 +10,7 @@ import ProposalFormCliente from "./Proposal.Form.Cliente";
 import ProposalFormResume from "./Proposal.Form.Resume";
 import { TEST_DATA_MODE as TEST_DISABLE_DATA } from "../../utils/consts";
 import { useEscapeKey } from "../../hooks/useEscapeKey";
+import ProposalFormFinish from "./Proposal.Form.Finish";
 
 export default function ProposalForm({ id, onCancel }: FormProps) {
   const [step, setStep] = useState(0);
@@ -19,7 +20,7 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [finish, setFinish] = useState(false);
-
+  const [stepLimit] = useState(3);
   const mapPropostaToDTO = (proposta: Proposta): PropostaDTO => {
     const { id, dt, dt_add, dt_update, user_add, user_update, status, ...propostaDTO } = proposta;
     return propostaDTO;
@@ -53,7 +54,7 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
 
 
   const validationForm = () => {
-    if (step === 1) {
+    if (step === 2) {
       if ((!propostaDTO.emp_nome || propostaDTO.emp_nome.trim() === "") && (!propostaDTO.emp_email || propostaDTO.emp_email.trim() === "")) {
         AlertDialog("Todos os campos são obrigatórios");
         return false;
@@ -106,7 +107,7 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
     }
     setFinish(true);
     setPropostaDTO(propostaToInsert)
-    if (step < 2)
+    if (step < stepLimit)
       handleNext();
   };
 
@@ -116,8 +117,9 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
     <>
       {/* {loading == true && <CircularWait message="Carregando..." />} */}
       {step === 0 && <ProposalFormPlano proposta={propostaDTO} setProposta={setPropostaDTO} />}
-      {step === 1 && <ProposalFormCliente proposta={propostaDTO} setProposta={setPropostaDTO} />}
-      {step === 2 && <ProposalFormResume finish={finish} id={idproposta} proposta={propostaDTO} setProposta={setPropostaDTO} />}
+      {step === 1 && <ProposalFormResume finish={finish} id={idproposta} proposta={propostaDTO} setProposta={setPropostaDTO} />}
+      {step === 2 && <ProposalFormCliente proposta={propostaDTO} setProposta={setPropostaDTO} />}
+      {step === stepLimit && <ProposalFormFinish />}
 
       <div className="flex justify-between mt-4">
 
@@ -132,9 +134,9 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
 
         {finish == false && (
           <div className="flex space-x-2">
-            {(step > 0 && step <= 2) && <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={handleBack}>Voltar</button>}
-            {step < 2 && <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={handleNext}>Avançar</button>}
-            {step == 2 && <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={handleSubmit}>Enviar Proposta</button>}
+            {(step > 0 && step < stepLimit) && <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={handleBack}>Voltar</button>}
+            {step < stepLimit - 1 && <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={handleNext}>Avançar</button>}
+            {step == stepLimit - 1 && <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={handleSubmit}>Enviar Proposta</button>}
           </div>
         )}
 

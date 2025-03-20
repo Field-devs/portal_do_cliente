@@ -16,14 +16,16 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
   const { user } = useAuth();
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [selectedprofile, setSelectedProfile] = useState<Profile>();
-  const [viewInactive, setViewInactive] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<Plan>();
   const [plans, setPlans] = useState<Plan[]>([]);
+  const [plansFilter, setPlansFilter] = useState<Plan[]>([]);
   const [addons, setAddons] = useState<PlanAddon[]>([]);
   const [addonQuantities, setAddonQuantities] = useState<Record<number, number>>({});
   const [loading, setLoading] = useState(true);
   const [subtotal, setSubtotal] = useState(0);
   const [total, setTotal] = useState(0);
+  
+  const [viewInactive, setViewInactive] = useState(false);
 
   const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50 rounded-lg";
   const titleClass = "text-2xl font-bold text-gray-900 dark:text-white mb-6";
@@ -69,6 +71,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
     setTotal(newSubtotal - CalcPercent(newSubtotal, parseFloat(desconto)));
   }
 
+ 
   const fetchData = async () => {
     try {
       var { data } = await supabase.from("plano").select("*").eq("user_id", user?.id);
@@ -94,7 +97,6 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
         setSelectedProfile(data[0]);
       }
       setLoading(false);
-
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -104,6 +106,11 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
     setLoading(true);
     fetchData();
   }, []);
+
+  useEffect(() => {
+    setPlansFilter(viewInactive ? plans : plans.filter(plan => plan.active));
+  }, [viewInactive, selectedPlan]);
+
 
   const totalAddons = addons.reduce(
     (sum, addon) => sum + (addonQuantities[addon.id] || 0) * addon.valor, 0
@@ -158,17 +165,13 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
               >
                 <option value="">Selecione um plano</option>
 
-                {plans.filter(plan => plan.active == true).map((plan) => (
+                {plansFilter.map((plan) => (
                   <option key={plan.id} value={plan.id}>
                     {plan.nome}
                   </option>
                 ))}
 
-                {plans.filter(plan => plan.active == !viewInactive).map((plan) => (
-                  <option key={plan.id} value={plan.id}>
-                    {plan.nome}
-                  </option>
-                ))}
+
 
               </select>
 

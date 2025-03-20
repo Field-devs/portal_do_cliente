@@ -64,9 +64,6 @@ export default function ProposalFormResume({ id, proposta, finish, setProposta }
               )}
             </button>
           )}
-
-
-
         </div>
 
       </div>
