@@ -5,14 +5,19 @@ import {
   Building2,
   Users,
   UserCheck,
+  DollarSign,
+  Activity,
   Copy,
   CheckCircle,
   UserPlus,
-  Plus
+  Plus,
+  FileText,
+  TrendingUp,
+  Clock
 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import CommercialAffiliateForm from '../Forms/CommercialAffiliateForm';
-import { formatPhone } from '../../utils/formatters';
+import { formatPhone, formatCurrency } from '../../utils/formatters';
 import { ModalForm } from '../../components/Modal/Modal';
 import ActionsButtons from '../../components/ActionsData';
 import { UpdateSingleField } from '../../utils/supageneric';
@@ -34,9 +39,14 @@ export default function PartnerList() {
   const [showCopyTooltip, setShowCopyTooltip] = useState<string | null>(null);
   const [showAfilate, setShowAfilate] = useState<boolean>(false);
 
-
   const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50 rounded-lg";
   const titleClass = "text-4xl font-bold text-light-text-primary dark:text-white";
+  const metricTitleClass = "text-lg font-medium text-light-text-primary dark:text-white mb-1";
+  const metricValueClass = "text-3xl font-bold text-light-text-primary dark:text-white";
+  const metricSubtextClass = "text-sm text-light-text-secondary dark:text-blue-200";
+  const iconContainerClass = "bg-blue-400/10 p-3 rounded-lg";
+  const iconClass = "h-6 w-6 text-blue-600 dark:text-blue-400";
+  const badgeClass = "text-xs font-medium bg-blue-50 dark:bg-blue-400/10 text-blue-600 dark:text-blue-400 px-2 py-1 rounded-lg";
 
   useEffect(() => {
     fetchClientes();
@@ -98,6 +108,15 @@ export default function PartnerList() {
       setShowAfilate(true);
   };
 
+  // Calculate metrics for each partner type
+  const metrics = {
+    cf: client.filter(p => p.f_perfil_cod === 'CF').length,
+    ava: client.filter(p => p.f_perfil_cod === 'AVA').length,
+    af: client.filter(p => p.f_perfil_cod === 'AF').length,
+    newCf: client.filter(p => p.f_perfil_cod === 'CF' && new Date(p.dt_add) > new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)).length,
+    newAva: client.filter(p => p.f_perfil_cod === 'AVA' && new Date(p.dt_add) > new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)).length,
+    newAf: client.filter(p => p.f_perfil_cod === 'AF' && new Date(p.dt_add) > new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)).length
+  };
 
   const handleOnLock = async (id: string, status: boolean) : Promise<boolean> => {
       UpdateSingleField("cliente", "id", id, "active", !status);
@@ -120,7 +139,7 @@ export default function PartnerList() {
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-8">
-        <h1 className={titleClass}>{title}</h1>
+        <h1 className={titleClass}>Assinaturas</h1>
         {tipo == 'AF' && (
           <button
             onClick={() => handleClickNew()}
@@ -130,6 +149,62 @@ export default function PartnerList() {
             {tipo === 'AF' ? 'Adicionar Afiliado' : 'Adicionar AVA'}
           </button>
         )}
+      </div>
+
+      {/* Metrics Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className={cardClass}>
+          <div className="flex items-center justify-between mb-4">
+            <div className={iconContainerClass}>
+              <Users className={iconClass} />
+            </div>
+            <span className={badgeClass}>Total</span>
+          </div>
+          <h3 className={metricTitleClass}>Total de Clientes</h3>
+          <p className={metricValueClass}>
+            {metrics.cf + metrics.ava + metrics.af}
+          </p>
+          <div className="flex items-center mt-2">
+            <TrendingUp className="h-4 w-4 mr-1 text-blue-600 dark:text-blue-400" />
+            <span className={metricSubtextClass}>
+              +{metrics.newCf + metrics.newAva + metrics.newAf} novos este mês
+            </span>
+          </div>
+        </div>
+
+        <div className={cardClass}>
+          <div className="flex items-center justify-between mb-4">
+            <div className={iconContainerClass}>
+              <DollarSign className={iconClass} />
+            </div>
+            <span className={badgeClass}>Total</span>
+          </div>
+          <h3 className={metricTitleClass}>Receita Mensal</h3>
+          <p className={metricValueClass}>
+            {formatCurrency(client.reduce((acc, curr) => acc + (curr.valor_total || 0), 0))}
+          </p>
+          <div className="flex items-center mt-2">
+            <TrendingUp className="h-4 w-4 mr-1 text-blue-600 dark:text-blue-400" />
+            <span className={metricSubtextClass}>+12% vs mês anterior</span>
+          </div>
+        </div>
+
+        <div className={cardClass}>
+          <div className="flex items-center justify-between mb-4">
+            <div className={iconContainerClass}>
+              <Activity className={iconClass} />
+            </div>
+            <span className={badgeClass}>Total</span>
+          </div>
+          <h3 className={metricTitleClass}>Consumo Total</h3>
+          <p className={metricValueClass}>
+            {client.reduce((acc, curr) => acc + (curr.consumo || 0), 0)} GB
+          </p>
+          <div className="flex items-center mt-2">
+            <TrendingUp className="h-4 w-4 mr-1 text-blue-600 dark:text-blue-400" />
+            <span className={metricSubtextClass}>+8% vs mês anterior</span>
+          </div>
+        </div>
       </div>
 
       {/* Search and Tabs */}
@@ -204,7 +279,7 @@ export default function PartnerList() {
       {/* Content */}
       <div className={`${cardClass} mt-12 overflow-hidden`}>
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-light-border dark:divide-gray-700/50 rounded-lg overflow-hidden">
+          <table className="min-w-full divide-y divide-light-border dark:divide-gray-700/50 rounded-lg overflow-hidden transition-all duration-300">
             <thead>
               <tr className="bg-light-secondary dark:bg-[#0F172A]/60 rounded-t-lg">
                 <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
@@ -230,7 +305,16 @@ export default function PartnerList() {
                   Data de Criação
                 </th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
-                  
+                  Assinatura
+                </th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  Valor
+                </th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  Consumo
+                </th>
+                <th className="px-6 py-4 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  Ações
                 </th>
               </tr>
             </thead>
@@ -242,6 +326,7 @@ export default function PartnerList() {
                 return (
                   <tr
                     key={item.id}
+                    className="transition-all duration-300 animate-fadeIn"
                   >
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-base font-medium text-light-text-primary dark:text-gray-100">
@@ -294,10 +379,34 @@ export default function PartnerList() {
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-base text-light-text-secondary dark:text-gray-300">
+                        {item.plano_nome || '-'}
+                      </div>
+                      <div className="text-sm text-gray-500 dark:text-gray-400">
+                        {item.plano_tipo || '-'}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-base font-medium text-light-text-primary dark:text-gray-100">
+                        {formatCurrency(item.valor_total || 0)}
+                      </div>
+                      <div className="text-sm text-gray-500 dark:text-gray-400">
+                        {item.valor_addons ? `+${formatCurrency(item.valor_addons)} add-ons` : ''}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-base text-light-text-secondary dark:text-gray-300">
+                        {item.consumo ? `${item.consumo} GB` : '-'}
+                      </div>
+                      <div className="text-sm text-gray-500 dark:text-gray-400">
+                        {item.consumo_percent ? `${item.consumo_percent}% do limite` : ''}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
                       
                       <ActionsButtons 
-                        onLocker={async () => handleOnLock(item.id, item.active)} 
-                        onEdit={() => {item.tipo == "AF" ? handleEdit(item) : null}}
+                        onLocker={async () => handleOnLock(item.id, item.active)}
+                        onEdit={item.f_perfil_cod === 'AF' ? () => handleEdit(item) : undefined}
                         active={item.active}
                       />
                     </td>
@@ -315,13 +424,13 @@ export default function PartnerList() {
       <ModalForm
         isOpen={showAfilate}
         onClose={() => setShowAfilate(false)}
-        title="Afiliado"
+        title={editingPartner ? `Editar Afiliado: ${editingPartner.emp_nome}` : 'Novo Afiliado'}
         icon={<>{<UserPlus className="h-5 w-5" />}</>}
         maxWidth="2xl"
       >
 
         <CommercialAffiliateForm
-          // initialData={editingPartner}
+          initialData={editingPartner}
           onSuccess={() => {
             setShowAfilate(false);
             setEditingPartner(null);

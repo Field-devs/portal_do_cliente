@@ -43,13 +43,13 @@ export default function CommercialAffiliateForm({ onSuccess, onCancel, initialDa
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const [formData, setFormData] = useState<Cliente>({
-    user_id: user?.id || '',
-    emp_fone: initialData?.fone ? formatPhoneNumber(initialData.emp_fone) : '99999999999',
-    desconto: initialData?.desconto ?? 5,
-    comissao: initialData?.comissao ?? 10,
-    vencimento: initialData?.vencimento ? new Date(initialData.vencimento).toISOString().split('T')[0] : '',
-    active: initialData?.active ?? true
+  const [formData, setFormData] = useState({
+    emp_nome: initialData?.emp_nome || '',
+    emp_email: initialData?.emp_email || '',
+    emp_fone: initialData?.emp_fone || '',
+    vencimento: initialData?.vencimento || new Date().toISOString().split('T')[0],
+    desconto: initialData?.desconto || 5,
+    comissao: initialData?.comissao || 10
   });
 
   function formatPhoneNumber(phone: number): string {
@@ -67,29 +67,37 @@ export default function CommercialAffiliateForm({ onSuccess, onCancel, initialDa
     setLoading(true);
     setError(null);
     try {
-      const fone = Number(formData.emp_fone.replace(/\D/g, ''));
+      const foneFormatted = formData.emp_fone.toString().replace(/\D/g, '');
       if (initialData) {
         const { error: updateError } = await supabase
           .from('cliente')
           .update({
             emp_email: formData.emp_email,
             emp_nome: formData.emp_nome,
-            emp_fone: fone,
+            emp_fone: foneFormatted,
             desconto: Number(formData.desconto),
             comissao: Number(formData.comissao),
             vencimento: formData.vencimento,
-            active: formData.active
           })
           .eq('id', initialData.id);
 
         if (updateError) throw updateError;
       } else {
-
         const couponCode = generateCouponCode();
-        setFormData(prev => ({ ...prev, cupom: couponCode, perfil_id: 6 }));
         const { error: insertError } = await supabase
           .from('cliente')
-          .insert(formData);
+          .insert([{
+            emp_nome: formData.emp_nome,
+            emp_fone: foneFormatted,
+            emp_email: formData.emp_email,
+            desconto: formData.desconto,
+            comissao: formData.comissao,
+            vencimento: formData.vencimento,
+            cupom: couponCode,
+            user_id: user?.id,
+            active: true,
+            tipo: 'AF'
+          }]);
 
         if (insertError) throw insertError;
       }

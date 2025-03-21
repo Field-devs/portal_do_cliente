@@ -112,8 +112,19 @@ export default function Profile() {
     setSuccess(false);
 
     try {
-      const { error } = await supabase.auth.updateUser({
-        password: passwordData.newPassword
+      // First verify the current password
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: user.email,
+        password: passwordData.currentPassword
+      });
+
+      if (signInError) {
+        throw new Error('Senha atual incorreta');
+      }
+
+      // If current password is correct, update to new password
+      const { error } = await supabase.auth.updateUser({ 
+        password: passwordData.newPassword 
       });
 
       if (error) throw error;
@@ -128,7 +139,7 @@ export default function Profile() {
 
       setTimeout(() => setSuccess(false), 3000);
     } catch (err) {
-      setError('Erro ao atualizar senha. Verifique sua senha atual e tente novamente.');
+      setError(err instanceof Error ? err.message : 'Erro ao atualizar senha. Tente novamente.');
     } finally {
       setLoading(false);
     }
@@ -140,16 +151,16 @@ export default function Profile() {
     setError(null);
     setSuccess(false);
     try {
-      // Atualizar na Tabela de auth.users
+      // Update auth user data
       await updateUser({
         nome: `${formData.firstName} ${formData.lastName}`.trim(),
         email: formData.email,
-        phone: formData.phone || null
-        //cnpj: formData.cnpj || null,
-        //empresa: formData.empresa || null
+        fone: formData.phone || null,
+        cnpj: formData.cnpj || null,
+        empresa: formData.empresa || null
       });
 
-      // Atualizar em Pessoas
+      // Update user profile data
       let PessoaData = {
         nome: `${formData.firstName} ${formData.lastName}`.trim(),
         email: formData.email,
@@ -157,9 +168,10 @@ export default function Profile() {
         cnpj: formData.cnpj || null,
         empresa: formData.empresa || null
       };
-      // Atualiza na base SupaBase
+      // Update in Supabase
       await supabase.from('users')
-      .update(PessoaData).eq('id', user?.id);
+        .update(PessoaData)
+        .eq('id', user?.id);
 
       setSuccess(true);
       setIsEditing(false);
@@ -199,22 +211,16 @@ export default function Profile() {
           <div className="flex flex-col items-center mb-8">
             <div className="relative">
               {selectedPhoto ? (
-                <img
-                  src={selectedPhoto}
-                  alt="Profile"
-                  className="h-24 w-24 rounded-full object-cover border-4 border-white dark:border-gray-700 shadow-lg"
-                />
+                <img 
+                  src={selectedPhoto} 
+                  alt="Profile" 
+                  className="h-24 w-24 rounded-full object-cover border-4 border-white dark:border-gray-700 shadow-lg" 
+                /> 
               ) : (
                 <div className="h-24 w-24 rounded-full bg-brand text-white flex items-center justify-center text-3xl font-bold border-4 border-white dark:border-gray-700 shadow-lg">
                   {user?.nome?.charAt(0) || '?'}
                 </div>
               )}
-              <button
-                onClick={() => setShowPhotoSelector(true)}
-                className="absolute bottom-0 right-0 bg-brand dark:bg-dark-button-edit text-white p-2 rounded-full hover:bg-brand/90 dark:hover:bg-dark-button-editHover transition-colors shadow-lg"
-              >
-                <Camera className="h-4 w-4" />
-              </button>
             </div>
           </div>
 

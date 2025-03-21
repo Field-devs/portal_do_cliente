@@ -208,7 +208,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
             <div className="flex justify-between items-center mb-2">
               <div className="relative group ml-auto">
                 <div className="flex items-center space-x-4">
-                  <div>
+                  <div className="text-gray-600 dark:text-gray-400">
                     Ver Inativos
                   </div>
                   <div>
@@ -231,7 +231,12 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
                 <option value="">Selecione um plano</option>
 
                 {plansFilter.map((plan) => (
-                  <option key={plan.id} value={plan.id}>
+                  <option 
+                    key={plan.id} 
+                    value={plan.id}
+                    disabled={!plan.active}
+                    className={!plan.active ? 'text-gray-400 dark:text-gray-600 bg-gray-100 dark:bg-gray-800 cursor-not-allowed' : ''}
+                  >
                     {plan.nome}
                   </option>
                 ))}
@@ -248,7 +253,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
             <label className={labelClass}>Add-ons</label>
             <div className="space-y-2">
               {addons.filter(addon => viewInactive && !addon.active).map((addon) => (
-                <div key={addon.id} className="flex justify-between items-center">
+                <div key={addon.id} className="flex justify-between items-center p-3 bg-gray-100/50 dark:bg-gray-800/30 rounded-lg text-gray-500 dark:text-gray-400">
                   <span>
                     {addon.nome.replace(/([A-Z])/g, ' $1')} ({formatCurrency(addon.valor)})
                   </span>
@@ -288,14 +293,19 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
             <div className="col-span-2">
               <label className={labelClassCenter}>Validade</label>
               <div className="relative">
+                <div className="relative flex items-center">
                 <input
                   name="validade"
-                  className={inputClassFlat}
+                  className={`${inputClassFlat} pr-12`}
                   value={proposta.validade}
                   onChange={handleChange}
                   type="number"
                   placeholder="30"
                 />
+                <span className="absolute right-3 text-gray-500 dark:text-gray-400 pointer-events-none">
+                  dias
+                </span>
+                </div>
               </div>
             </div>
 
@@ -304,7 +314,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
               <div className="relative">
                 <input
                   name="desconto"
-                  className={inputClassFlat}
+                  className={`${inputClassFlat} ${proposta.cupom_desconto > 0 ? 'border-2 border-brand focus:border-brand ring-brand' : ''}`}
                   value={proposta.cupom}
                   //onChange={handleDiscountChange}
                   onChange={(e) => {
@@ -314,25 +324,6 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
                 />
               </div>
             </div>
-{/* 
-            <div className="col-span-2">
-              {loadCupon ? (
-                <>
-                  <label className={labelClassCenter}>Aplicando...</label>
-                </>
-              ) : (
-                <>
-                  <label className={labelClassCenter}>Cupom</label>
-                  <button
-                    onClick={handleApplyCupon}
-                    className={`w-full h-[calc(3rem)] bg-brand text-white rounded-lg shadow-sm hover:bg-brand-dark transition-colors flex items-center justify-center`}
-                  >
-                    Aplicar
-                  </button>
-                </>
-              )}
-            </div> */}
-
 
           </div>
 

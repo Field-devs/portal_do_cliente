@@ -237,8 +237,7 @@ export default function PlanList() {
               <PlusSquare className="h-5 w-5 mr-2" />
               Add-ons
             </button>
-          </div
-          >
+          </div>
         </div>
       </div>
 
@@ -269,10 +268,16 @@ export default function PlanList() {
               {(activeTab === 'plans' ? filteredPlans : filteredAddons).map((item) => (
                 <tr
                   key={item.id}
-                  className="hover:bg-light-secondary dark:hover:bg-[#0F172A]/40 transition-colors"
+                  className={`hover:bg-light-secondary dark:hover:bg-[#0F172A]/40 transition-colors ${
+                    !item.active ? 'bg-gray-50/50 dark:bg-gray-800/50' : ''
+                  }`}
                 >
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-base font-medium text-light-text-primary dark:text-gray-100">
+                    <div className={`text-base font-medium ${
+                      item.active 
+                        ? 'text-light-text-primary dark:text-gray-100' 
+                        : 'text-gray-500 dark:text-gray-400'
+                    }`}>
                       {item.nome}
                     </div>
                   </td>

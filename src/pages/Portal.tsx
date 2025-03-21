@@ -5,10 +5,10 @@ import { useTheme } from '../components/ThemeProvider';
 import {
   FileText,
   Users,
+  FilePenLine,
   Wallet,
   LogOut,
   Package,
-  FileCheck2,
   Briefcase,
   Moon,
   Sun,
@@ -55,9 +55,8 @@ export default function Portal() {
   const navigation = [
     { id: 1, name: 'Dashboard', icon: BarChart2, path: '/portal', visible: [1] },
     { id: 2, name: 'Propostas', icon: FileText, path: '/portal/proposals', visible: [1, 2, 3, 4] },
-    { id: 3, name: 'Assinaturas', icon: FileCheck2, path: '/portal/signature', visible: [1, 2, 3, 4] },
+    { id: 3, name: 'Assinaturas', icon: FilePenLine, path: '/portal/partners', visible: [1, 2, 3, 4] },
     { id: 4, name: 'Planos/Addons', icon: Package, path: '/portal/plans', visible: [1, 2, 3, 4] },
-    { id: 5, name: 'Contas', icon: Briefcase, path: '/portal/partners', visible: [1, 2, 3, 4] },
     { id: 6, name: 'Usuários', icon: Users, path: '/portal/accounts', visible: [1, 2] },
     { id: 7, name: 'Financeiro', icon: Wallet, path: '/portal/financial', visible: [1, 2, 3, 4, 5] }
   ];
@@ -187,7 +186,6 @@ export default function Portal() {
           <Routes>
             {/* <Route path="/" element={<AdminDashboard />} /> */}
             <Route path="/" element={<PartnerList />} />
-            <Route path="signature" element={<SignatureList />} />
             <Route path="plans" element={<PlanList />} />
             <Route path="proposals" element={<ProposalsList />} />
             <Route path="partners" element={<PartnerList />} />
