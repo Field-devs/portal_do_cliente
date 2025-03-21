@@ -267,7 +267,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
             </div>
 
             <div>
-              <label className={labelClassCenter}>Validade (dias)</label>
+              <label className={labelClassCenter}>Validade</label>
               <div className="relative">
                 <input
                   name="validade"
@@ -303,12 +303,11 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
                 </>
               ) : (
                 <>
-                  <label className={labelClassCenter}>Aplicar Cupom</label>
+                  <label className={labelClassCenter}>Cupom</label>
                   <button
                     onClick={handleApplyCupon}
                     className={`w-full h-[calc(3rem)] bg-brand text-white rounded-lg shadow-sm hover:bg-brand-dark transition-colors flex items-center justify-center`}
                   >
-                    <DollarSign className="h-5 w-5 mr-2" />
                     Aplicar
                   </button>
                 </>
