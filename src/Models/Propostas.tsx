@@ -4,7 +4,7 @@ interface Proposta {
   id?: string; // uuid
   user_id: string; // uuid
   dt: string; // TIMESTAMP (ISO 8601 string)
-  perfil_id: string;
+  perfil_id?: string | null; // uuid
   plano_id: string; // uuid
   plano_nome: string;
 

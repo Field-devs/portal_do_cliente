@@ -10,7 +10,6 @@ import { PropostaDTO } from "../../Models/Propostas";
 import { formatCurrency } from "../../utils/formatters";
 import { CalcPercent } from "../../utils/Finan";
 import { Search, Filter, Package } from 'lucide-react';
-import XCloseForm from "../../components/Fragments/XCloseForm";
 
 export default function ProposalFormPlano({ proposta, setProposta }: { proposta: PropostaDTO, setProposta: (data: PropostaDTO) => void }) {
   const { user } = useAuth();

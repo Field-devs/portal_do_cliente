@@ -2,19 +2,17 @@ interface Cliente {
   id?: string;
   user_id: string;
   perfil_id: number;
-  cnpjcpf?: string;
-  nome: string;
-  fone: string;
-  email: string;
-  cep?: string;
-  nasc?: string;
-  logradouro?: string;
-  numero?: number;
-  bairro?: string;
-  cidade?: string;
-  uf?: string;
-  referencia?: string;
-
+  emp_cnpj?: string;
+  
+  emp_nome: string;
+  emp_fone: string;
+  emp_email: string;
+  emp_cep?: string;
+  emp_logradouro?: string;
+  emp_bairro?: string;
+  emp_cidade?: string;
+  emp_uf?: string;
+  
   fin_cnpjcpf?: string;
   fin_nome: string;
   fin_fone: string;
