@@ -7,7 +7,7 @@ import SwitchFrag from "../../components/Fragments/SwitchFrag";
 import Profile from "../../Models/Perfil";
 import CircularWait from "../../components/CircularWait";
 import { PropostaDTO } from "../../Models/Propostas";
-import { formatCurrency } from "../../utils/formatters";
+import { formatCurrency, formatPercent } from "../../utils/formatters";
 import { CalcPercent } from "../../utils/Finan";
 import { Search, Filter, Package, DollarSign } from 'lucide-react';
 import { ErrorDialog } from "../../components/Dialogs/Dialogs";
@@ -252,7 +252,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
           </div>
 
           <div className="grid grid-cols-7 gap-4 items-center">
-            <div>
+            <div className="col-span-2">
               <label className={labelClassCenter}>Desconto</label>
               <div className="relative">
                 <input
@@ -313,14 +313,6 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
                 </>
               )}
             </div>
-
-            <div>
-              <label className={labelClassCenter}>Desconto do Cupom</label>
-              <div className="flex items-center justify-center h-[calc(3rem)] bg-gray-100 dark:bg-gray-800/50 rounded-lg text-gray-600 dark:text-gray-400">
-                <span className="text-lg font-semibold"> </span>
-                <span className="text-lg font-semibold">{proposta.cupom_desconto}%</span>
-              </div>
-            </div>
           </div>
 
           <div className="mt-6 p-4 bg-gray-100 dark:bg-gray-800/50 rounded-lg">
@@ -334,13 +326,24 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
                 <span>Add-ons:</span>
                 <span>{formatCurrency(totalAddons)}</span>
               </div>
+              <div className="flex justify-between text-gray-600 dark:text-gray-400">
+                <span>Descontos:</span>
+                <span>{formatPercent(proposta.desconto)}</span>
+              </div>
+              <div className="flex justify-between text-gray-600 dark:text-gray-400">
+                <span>Desconto/Cupon:</span>
+                <span>{formatPercent(proposta.desconto)}</span>
+              </div>
+            
               <div className="flex justify-between items-center pt-4 mt-2 border-t border-gray-200 dark:border-gray-700">
-                <span className="text-xl font-semibold text-gray-800 dark:text-gray-200">Total Mensal:</span>
+              <span className="text-xl font-semibold text-gray-800 dark:text-gray-200">Total Mensal:</span>
                 <span className="text-3xl font-bold bg-brand/10 dark:bg-brand/20 text-brand dark:text-brand-400 px-4 py-2 rounded-lg">
                   {formatCurrency(total)}
                 </span>
               </div>
             </div>
+
+
           </div>
         </div>
       </div>
