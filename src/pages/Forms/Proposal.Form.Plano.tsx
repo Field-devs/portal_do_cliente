@@ -80,7 +80,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
 
   const fetchCupom = async (cupom: string) => {
     setLoadCupon(true);
-    var { data } = await supabase.from("v_cliente").select("*").eq("cupom", cupom).eq("f_cupom_valido", true).limit(1);
+    var { data } = await supabase.from("v_cliente").select("desconto").eq("cupom", cupom).eq("f_cupom_valido", true).limit(1);
     if (data) {
       const cliente = data[0];
       if (cliente == null) {
@@ -90,14 +90,15 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
       }
       setProposta({
         ...proposta,
-        cupom_desconto: cliente.desconto
+        cupom_desconto: cliente.desconto / 100
       });
+      
       setLoadCupon(false);
     }
     else 
     {
       setLoadCupon(false);
-      ErrorDialog("Cupom inválido", "O cupom informado não é válido ou já foi utilizado.");
+      ErrorDialog("Erro ao recuperar cupom", "Houve um erro ao recuperar o cupom.");
     }
   }
 
@@ -332,7 +333,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
               </div>
               <div className="flex justify-between text-gray-600 dark:text-gray-400">
                 <span>Desconto/Cupon:</span>
-                <span>{formatPercent(proposta.desconto)}</span>
+                <span>{formatPercent(proposta.cupom_desconto)}</span>
               </div>
             
               <div className="flex justify-between items-center pt-4 mt-2 border-t border-gray-200 dark:border-gray-700">
