@@ -9,7 +9,7 @@ import CircularWait from "../../components/CircularWait";
 import { PropostaDTO } from "../../Models/Propostas";
 import { formatCurrency } from "../../utils/formatters";
 import { CalcPercent } from "../../utils/Finan";
-import { Search, Filter, Package } from 'lucide-react';
+import { Search, Filter, Package, DollarSign } from 'lucide-react';
 
 export default function ProposalFormPlano({ proposta, setProposta }: { proposta: PropostaDTO, setProposta: (data: PropostaDTO) => void }) {
   const { user } = useAuth();
@@ -29,7 +29,9 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
   const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50 rounded-lg";
   const titleClass = "text-2xl font-bold text-gray-900 dark:text-white mb-6";
   const labelClass = "block text-sm font-medium text-gray-800 dark:text-gray-200 mb-1";
-  const inputClass = "w-full pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-lg shadow-sm";
+  const labelClassCenter = "block text-sm font-medium text-gray-800 dark:text-gray-200 mb-1 text-center flex justify-center";
+  const inputClass = "w-full pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-lg shadow-sm text-center";
+  const inputClassFlat = "w-full pl-1 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-lg shadow-sm text-center";
   const selectClass = "w-full pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-lg shadow-sm appearance-none";
   const sectionClass = "mt-6 space-y-4";
 
@@ -88,6 +90,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
         .gt("id", user?.perfil_id)
         .neq("id", 1)
         .neq("id", 2)
+        .neq("id", 6) // Afiliado Comercial
         .neq("id", user?.perfil_id == 3 ? 0 : 4)
         ;
 
@@ -157,10 +160,10 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
               <div className="relative group ml-auto">
                 <div className="flex items-center space-x-4">
                   <div>
-                  Ver Inativos
+                    Ver Inativos
                   </div>
                   <div>
-                  <SwitchFrag onClick={handleInactive} checked={viewInactive} />
+                    <SwitchFrag onClick={handleInactive} checked={viewInactive} />
                   </div>
                 </div>
               </div>
@@ -193,7 +196,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
           </div>
 
           <div>
-            <label className={labelClass}>Add-ons</label>
+            <label className={labelClassCenter}>Add-ons</label>
             <div className="space-y-2">
               {addons.filter(addon => viewInactive && !addon.active).map((addon) => (
                 <div key={addon.id} className="flex justify-between items-center">
@@ -219,9 +222,9 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-5 gap-4 items-center">
             <div>
-              <label className={labelClass}>Desconto</label>
+              <label className={labelClassCenter}>Desconto</label>
               <div className="relative">
                 <input
                   name="desconto"
@@ -232,8 +235,9 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
                 />
               </div>
             </div>
+
             <div>
-              <label className={labelClass}>Validade (dias)</label>
+              <label className={labelClassCenter}>Validade (dias)</label>
               <div className="relative">
                 <input
                   name="validade"
@@ -244,6 +248,35 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
                   placeholder="30"
                 />
               </div>
+            </div>
+
+            <div>
+              <label className={labelClassCenter}>Cupom Promocional</label>
+              <div className="relative">
+                <input
+                  name="desconto"
+                  className={inputClassFlat}
+                   value={proposta.cupom}
+                  //onChange={handleDiscountChange}
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className={labelClassCenter}>Aplicar Cupom</label>
+              <button
+                className={`w-full h-[calc(3rem)] bg-brand text-white rounded-lg shadow-sm hover:bg-brand-dark transition-colors flex items-center justify-center`}
+              >
+                <DollarSign className="h-5 w-5 mr-2" />
+                Aplicar
+              </button>
+            </div>
+
+            <div>
+              <label className={labelClassCenter}>Desconto do Cupom</label>
+                <div className="flex items-center justify-center h-[calc(3rem)] bg-gray-100 dark:bg-gray-800/50 rounded-lg text-gray-600 dark:text-gray-400">
+                <span className="text-lg font-semibold"> </span>
+                </div>
             </div>
           </div>
 

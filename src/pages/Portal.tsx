@@ -186,7 +186,7 @@ export default function Portal() {
         <div className="p-6">
           <Routes>
             {/* <Route path="/" element={<AdminDashboard />} /> */}
-            <Route path="/" element={<AdminDashboard />} />
+            <Route path="/" element={<PartnerList />} />
             <Route path="signature" element={<SignatureList />} />
             <Route path="plans" element={<PlanList />} />
             <Route path="proposals" element={<ProposalsList />} />

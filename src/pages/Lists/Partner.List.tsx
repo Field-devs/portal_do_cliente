@@ -15,26 +15,12 @@ import CommercialAffiliateForm from '../Forms/CommercialAffiliateForm';
 import { formatPhone } from '../../utils/formatters';
 import { ModalForm } from '../../components/Modal/Modal';
 import ActionsButtons from '../../components/ActionsData';
-import AVAForm from '../Forms/AVAForm';
 import { UpdateSingleField } from '../../utils/supageneric';
 import { format } from 'date-fns';
 import CircularWait from '../../components/CircularWait';
+import Cliente from '../../Models/Cliente';
 
 type PartnerType = 'CF' | 'AVA' | 'AF';
-
-interface Partner {
-  id: string;
-  email: string;
-  nome: string;
-  fone: number;
-  desconto: number;
-  comissao: number;
-  cupom: string;
-  vencimento: string;
-  active: boolean;
-  tipo: string;
-  dt_add: string;
-}
 
 export default function PartnerList() {
   const [tipo, setTipo] = useState<PartnerType>('AVA');
@@ -69,9 +55,9 @@ export default function PartnerList() {
     setLoading(true);
     try {
       const { data, error } = await supabase
-        .from('cliente')
+        .from('v_cliente')
         .select('*')
-        .eq('tipo', tipo)
+        .eq('f_perfil_cod', tipo)
         .order('id', { ascending: false });
 
       if (error) throw error;
@@ -97,8 +83,8 @@ export default function PartnerList() {
   const filteredItems =
     client.filter(partner => {
       const matchesSearch =
-        partner.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        partner.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        partner.emp_nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        partner.emp_email.toLowerCase().includes(searchTerm.toLowerCase()) ||
         partner.cupom.toLowerCase().includes(searchTerm.toLowerCase());
 
       const matchesStatus =
@@ -118,7 +104,7 @@ export default function PartnerList() {
       return true;
   };
 
-  function handleEdit(value: Partner): void {
+  function handleEdit(value: Cliente): void {
     setEditingPartner(value);
     setShowAfilate(true);
   }
@@ -259,17 +245,17 @@ export default function PartnerList() {
                   >
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-base font-medium text-light-text-primary dark:text-gray-100">
-                        {item.nome}
+                        {item.emp_nome}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-base text-light-text-secondary dark:text-gray-300">
-                        {item.email}
+                        {item.emp_email}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-base text-light-text-secondary dark:text-gray-300">
-                        {formatPhone(item.fone?.toString())}
+                        {formatPhone(item.emp_fone?.toString())}
                       </div>
                     </td>
                     {tipo === 'AF' && (
@@ -335,7 +321,7 @@ export default function PartnerList() {
       >
 
         <CommercialAffiliateForm
-          initialData={editingPartner}
+          // initialData={editingPartner}
           onSuccess={() => {
             setShowAfilate(false);
             setEditingPartner(null);

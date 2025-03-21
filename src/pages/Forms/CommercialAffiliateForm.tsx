@@ -21,9 +21,9 @@ interface CommercialAffiliateFormProps {
   onCancel: () => void;
   initialData?: {
     id: string;
-    nome: string;
-    email: string;
-    fone: number;
+    emp_nome: string;
+    emp_email: string;
+    emp_fone: number;
     desconto: number;
     comissao: number;
     vencimento: string;
@@ -45,7 +45,7 @@ export default function CommercialAffiliateForm({ onSuccess, onCancel, initialDa
 
   const [formData, setFormData] = useState<Cliente>({
     user_id: user?.id || '',
-    emp_fone: initialData?.fone ? formatPhoneNumber(initialData.fone) : '99999999999',
+    emp_fone: initialData?.fone ? formatPhoneNumber(initialData.emp_fone) : '99999999999',
     desconto: initialData?.desconto ?? 5,
     comissao: initialData?.comissao ?? 10,
     vencimento: initialData?.vencimento ? new Date(initialData.vencimento).toISOString().split('T')[0] : '',
@@ -67,14 +67,14 @@ export default function CommercialAffiliateForm({ onSuccess, onCancel, initialDa
     setLoading(true);
     setError(null);
     try {
-      const fone = Number(formData.fone.replace(/\D/g, ''));
+      const fone = Number(formData.emp_fone.replace(/\D/g, ''));
       if (initialData) {
         const { error: updateError } = await supabase
           .from('cliente')
           .update({
-            email: formData.email,
-            nome: formData.nome,
-            fone: fone,
+            emp_email: formData.emp_email,
+            emp_nome: formData.emp_nome,
+            emp_fone: fone,
             desconto: Number(formData.desconto),
             comissao: Number(formData.comissao),
             vencimento: formData.vencimento,
@@ -86,21 +86,10 @@ export default function CommercialAffiliateForm({ onSuccess, onCancel, initialDa
       } else {
 
         const couponCode = generateCouponCode();
-        
+        setFormData(prev => ({ ...prev, cupom: couponCode, perfil_id: 6 }));
         const { error: insertError } = await supabase
           .from('cliente')
-          .insert([{
-            tipo: 'AF',
-            email: formData.email,
-            nome: formData.nome,
-            fone: fone,
-            desconto: formData.desconto,
-            comissao: formData.comissao,
-            vencimento: formData.vencimento,
-            cupom: couponCode,
-            user_id: user?.id,
-            active: formData.active
-          }]);
+          .insert(formData);
 
         if (insertError) throw insertError;
       }
@@ -145,8 +134,8 @@ export default function CommercialAffiliateForm({ onSuccess, onCancel, initialDa
               <User className={iconInputClass} />
               <input
                 type="text"
-                name="nome"
-                value={formData.nome}
+                name="emp_nome"
+                value={formData.emp_nome}
                 onChange={handleInputChange}
                 className={inputClass}
                 required
@@ -163,8 +152,8 @@ export default function CommercialAffiliateForm({ onSuccess, onCancel, initialDa
               <Mail className={iconInputClass} />
               <input
                 type="email"
-                name="email"
-                value={formData.cep}
+                name="emp_email"
+                value={formData.emp_email}
                 className={inputClass}
                 onChange={handleInputChange}
                 required
@@ -181,8 +170,8 @@ export default function CommercialAffiliateForm({ onSuccess, onCancel, initialDa
               <Phone className={iconInputClass} />
               <input
                 type="tel"
-                name="telefone"
-                value={formData.telefone}
+                name="emp_fone"
+                value={formData.emp_fone}
                 onChange={handleInputChange}
                 placeholder="(00) 00000-0000"
                 className={inputClass}

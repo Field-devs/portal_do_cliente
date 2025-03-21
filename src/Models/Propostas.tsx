@@ -36,6 +36,9 @@ interface Proposta {
   suporte_humano: boolean | true;
   whatsapp_oficial: boolean | true;
 
+  cupom? : string | null; // uuid
+  cupom_desconto : number | 0; // uuid
+
   subtotal: number | 0;
   desconto: number | 0;
   total_addons: number | 0;
@@ -93,6 +96,9 @@ const getDefaultPropostaDTO = (): PropostaDTO => ({
   suporte_humano: true,
   whatsapp_oficial: true,
 
+  cupom : null,
+  cupom_desconto : 0,
+  
   subtotal: 0,
   desconto: 0,
   total_addons: 0,
