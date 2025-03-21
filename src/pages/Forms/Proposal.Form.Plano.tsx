@@ -10,6 +10,7 @@ import { PropostaDTO } from "../../Models/Propostas";
 import { formatCurrency } from "../../utils/formatters";
 import { CalcPercent } from "../../utils/Finan";
 import { Search, Filter, Package, DollarSign } from 'lucide-react';
+import { ErrorDialog } from "../../components/Dialogs/Dialogs";
 
 export default function ProposalFormPlano({ proposta, setProposta }: { proposta: PropostaDTO, setProposta: (data: PropostaDTO) => void }) {
   const { user } = useAuth();
@@ -23,6 +24,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
   const [loading, setLoading] = useState(true);
   const [subtotal, setSubtotal] = useState(0);
   const [total, setTotal] = useState(0);
+  const [loadCupon, setLoadCupon] = useState(false);
 
   const [viewInactive, setViewInactive] = useState(false);
 
@@ -45,6 +47,10 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
     const formattedValue = value.replace(/\D/g, '');
     setProposta({ ...proposta, [name]: formattedValue ? `${formattedValue}%` : '' });
   };
+
+  const handleApplyCupon = async () => {
+    await fetchCupom(proposta.cupom);
+  }
 
   useEffect(() => {
     if (loading) setLoading(false);
@@ -70,6 +76,29 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
     setSubtotal(newSubtotal);
     const desconto = parseFloat(proposta.desconto.toString().replace("%", "") || "0");
     setTotal(newSubtotal - CalcPercent(newSubtotal, parseFloat(desconto)));
+  }
+
+  const fetchCupom = async (cupom: string) => {
+    setLoadCupon(true);
+    var { data } = await supabase.from("v_cliente").select("*").eq("cupom", cupom).eq("f_cupom_valido", true).limit(1);
+    if (data) {
+      const cliente = data[0];
+      if (cliente == null) {
+        setLoadCupon(false);
+        ErrorDialog("Cupom inválido", "O cupom informado não é válido ou já foi utilizado.");
+        return;
+      }
+      setProposta({
+        ...proposta,
+        cupom_desconto: cliente.desconto
+      });
+      setLoadCupon(false);
+    }
+    else 
+    {
+      setLoadCupon(false);
+      ErrorDialog("Cupom inválido", "O cupom informado não é válido ou já foi utilizado.");
+    }
   }
 
 
@@ -222,13 +251,13 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
             </div>
           </div>
 
-          <div className="grid grid-cols-5 gap-4 items-center">
+          <div className="grid grid-cols-7 gap-4 items-center">
             <div>
               <label className={labelClassCenter}>Desconto</label>
               <div className="relative">
                 <input
                   name="desconto"
-                  className={inputClass}
+                  className={inputClassFlat}
                   value={proposta.desconto}
                   onChange={handleDiscountChange}
                   placeholder="0%"
@@ -241,7 +270,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
               <div className="relative">
                 <input
                   name="validade"
-                  className={inputClass}
+                  className={inputClassFlat}
                   value={proposta.validade}
                   onChange={handleChange}
                   type="number"
@@ -250,33 +279,47 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
               </div>
             </div>
 
-            <div>
+            <div className="col-span-2">
               <label className={labelClassCenter}>Cupom Promocional</label>
               <div className="relative">
                 <input
                   name="desconto"
                   className={inputClassFlat}
-                   value={proposta.cupom}
+                  value={proposta.cupom}
                   //onChange={handleDiscountChange}
+                  onChange={(e) => {
+                    const value = e.target.value.slice(0, 20);
+                    setProposta({ ...proposta, cupom: value });
+                  }}
                 />
               </div>
             </div>
 
-            <div>
-              <label className={labelClassCenter}>Aplicar Cupom</label>
-              <button
-                className={`w-full h-[calc(3rem)] bg-brand text-white rounded-lg shadow-sm hover:bg-brand-dark transition-colors flex items-center justify-center`}
-              >
-                <DollarSign className="h-5 w-5 mr-2" />
-                Aplicar
-              </button>
+            <div className="col-span-2">
+              {loadCupon ? (
+                <>
+                  <label className={labelClassCenter}>Aplicando...</label>
+                </>
+              ) : (
+                <>
+                  <label className={labelClassCenter}>Aplicar Cupom</label>
+                  <button
+                    onClick={handleApplyCupon}
+                    className={`w-full h-[calc(3rem)] bg-brand text-white rounded-lg shadow-sm hover:bg-brand-dark transition-colors flex items-center justify-center`}
+                  >
+                    <DollarSign className="h-5 w-5 mr-2" />
+                    Aplicar
+                  </button>
+                </>
+              )}
             </div>
 
             <div>
               <label className={labelClassCenter}>Desconto do Cupom</label>
-                <div className="flex items-center justify-center h-[calc(3rem)] bg-gray-100 dark:bg-gray-800/50 rounded-lg text-gray-600 dark:text-gray-400">
+              <div className="flex items-center justify-center h-[calc(3rem)] bg-gray-100 dark:bg-gray-800/50 rounded-lg text-gray-600 dark:text-gray-400">
                 <span className="text-lg font-semibold"> </span>
-                </div>
+                <span className="text-lg font-semibold">{proposta.cupom_desconto}%</span>
+              </div>
             </div>
           </div>
 
