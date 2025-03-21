@@ -17,7 +17,6 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [selectedprofile, setSelectedProfile] = useState<Profile>();
   const [selectedPlan, setSelectedPlan] = useState<Plan>();
-  const [propostaNew, setPropostaNew] = useState<PropostaDTO>({} as PropostaDTO);
   const [plans, setPlans] = useState<Plan[]>([]);
   const [plansFilter, setPlansFilter] = useState<Plan[]>([]);
 
@@ -27,6 +26,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
   const [loading, setLoading] = useState(true);
   const [subtotal, setSubtotal] = useState(0);
   const [total, setTotal] = useState(0);
+
   const [viewInactive, setViewInactive] = useState(false);
 
   const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50 rounded-lg";
@@ -38,19 +38,19 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
   const sectionClass = "mt-6 space-y-4";
 
 
-  const setPropostaValue = (key: string, value: any): void => {
+  const setFieldValue = (key: string, value: any): void => {
     setProposta({ ...proposta, [key]: value });
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setPropostaValue(name, value);
+    setFieldValue(name, value);
   };
 
   const handleDiscountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     const formattedValue = value.replace(/\D/g, '');
-    setPropostaValue(name, formattedValue ? `${formattedValue}%` : '');
+    setFieldValue(name, formattedValue ? `${formattedValue}%` : '');
   };
 
 
@@ -76,7 +76,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
       ...proposta,
       addons: propostaAddon
     });
-    setPropostaValue("plano_id", selectedPlan.id);
+    setFieldValue("plano_id", selectedPlan.id);
   }
 
   useEffect(() => {
@@ -84,27 +84,14 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
     if (selectedPlan && selectedprofile) {
 
       if (selectedprofile) {
-        setProposta({
-          ...proposta,
-          perfil_id: selectedprofile.id,
-        });
-        setPropostaValue("plano_id", selectedPlan.id);
-        setPropostaValue("perfil_id", selectedprofile.id);
-        let _proposta = proposta;
+        setFieldValue("plano_id", selectedPlan.id);
+        setFieldValue("subtotal", selectedPlan.valor);
+        setFieldValue("perfil_id", selectedprofile.id);
       }
       calcProposta();
     }
   }, [selectedPlan, selectedprofile]);
 
-  function calcProposta() {
-    if (!selectedPlan) return;
-    const newSubtotal = selectedPlan.valor + totalAddons;
-    setSubtotal(newSubtotal);
-    let _desconto = parseFloat(proposta.desconto.toString().replace("%", "") || "0");
-    setProposta({ ...proposta, desconto: _desconto });
-    setTotal(newSubtotal - CalcPercent(newSubtotal, _desconto));
-    fetchAddon();
-  }
 
   const fetchCupom = async (cupom: string) => {
     var { data } = await supabase.from("v_cliente").select("desconto").eq("cupom", cupom).eq("f_cupom_valido", true).limit(1);
@@ -125,7 +112,6 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
     }
 
   }
-
 
   const fetchData = async () => {
     try {
@@ -177,7 +163,6 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
     }
   }, [proposta.cupom]);
 
-
   useEffect(() => {
     setPlansFilter(viewInactive ? plans : plans.filter(plan => plan.active));
   }, [viewInactive, selectedPlan]);
@@ -188,15 +173,24 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
   );
 
   useEffect(() => {
-    setProposta({
-      ...proposta,
-      total: proposta.subtotal + totalAddons - proposta.desconto,
-    });
-    calcProposta();
-  }, [totalAddons, proposta.desconto]);
+    if (!selectedPlan) return;
+    setFieldValue("total", selectedPlan?.valor + totalAddons - proposta.desconto);
+    let _addons = fetchAddon();
+    setFieldValue("total_addons", _addons);
+  }, [total, selectedPlan, totalAddons]);
 
   const handleInactive = async () => {
     setViewInactive(!viewInactive);
+  }
+
+  function calcProposta() {
+    if (!selectedPlan) return;
+    const newSubtotal = selectedPlan.valor + totalAddons;
+    setSubtotal(newSubtotal);
+    let _desconto = parseFloat(proposta.desconto.toString().replace("%", "") || "0");
+    setFieldValue("desconto", 0);
+    setFieldValue("desconto", CalcPercent(newSubtotal, _desconto));
+    fetchAddon(); 
   }
 
   return (
@@ -361,7 +355,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
             <div className="space-y-2">
               <div className="flex justify-between text-gray-600 dark:text-gray-400">
                 <span>Plano Base:</span>
-                <span>{formatCurrency(selectedPlan?.valor || 0)}</span>
+                <span>{formatCurrency(total || 0)}</span>
               </div>
               <div className="flex justify-between text-gray-600 dark:text-gray-400">
                 <span>Add-ons:</span>

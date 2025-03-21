@@ -6,26 +6,25 @@ import { useAuth } from "../../components/AuthProvider";
 import { AlertDialog, AskDialog, ErrorDialog } from "../../components/Dialogs/Dialogs";
 import { validateEmail } from "../../utils/Validation";
 import ProposalFormPlano from "./Proposal.Form.Plano";
-import ProposalFormCliente from "./Proposal.Form.Cliente";
-import ProposalFormResume from "./Proposal.Form.Resume";
 import { TEST_MODE_MOCK as TEST_DISABLE_DATA } from "../../utils/consts";
-import { useEscapeKey } from "../../hooks/useEscapeKey";
-import ProposalFormFinish from "./Proposal.Form.Finish";
 
 export default function ProposalForm({ id, onCancel }: FormProps) {
   const [step, setStep] = useState(0);
-
   const [propostaDTO, setPropostaDTO] = useState<PropostaDTO>(getDefaultPropostaDTO() as PropostaDTO);
+  //const [propostaDTO, setPropostaDTO] = useState<PropostaDTO>({active: true} as PropostaDTO);
+
   const [idproposta, setIdProposta] = useState();
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [finish, setFinish] = useState(false);
   const [stepLimit] = useState(3);
-  const mapPropostaToDTO = (proposta: Proposta): PropostaDTO => {
-    const { id, dt, dt_add, dt_update, user_add, user_update, status, ...propostaDTO } = proposta;
-    return propostaDTO;
-  };
 
+
+  useEffect(() => {
+    setPropostaDTO({...propostaDTO, active: false});
+  }, []);
+
+  
   useEffect(() => {
     if (!id) return;
     const fetchProposta = async () => {
@@ -35,7 +34,6 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
       }
       if (proposta) {
         setIdProposta(proposta.id);
-        const propostaDTO = mapPropostaToDTO(proposta); // Mapeia os dados
         setPropostaDTO(propostaDTO); // Atualiza o estado global
       }
     };
@@ -129,9 +127,9 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
     <>
       {/* {loading == true && <CircularWait message="Carregando..." />} */}
       {step === 0 && <ProposalFormPlano proposta={propostaDTO} setProposta={setPropostaDTO} />}
-      {step === 1 && <ProposalFormResume finish={finish} id={idproposta} proposta={propostaDTO} setProposta={setPropostaDTO} />}
+      {/* {step === 1 && <ProposalFormResume finish={finish} id={idproposta} proposta={propostaDTO} setProposta={setPropostaDTO} />}
       {step === 2 && <ProposalFormCliente proposta={propostaDTO} setProposta={setPropostaDTO} />}
-      {step === stepLimit && <ProposalFormFinish />}
+      {step === stepLimit && <ProposalFormFinish />} */}
 
       <div className="flex justify-between mt-4">
 

@@ -30,14 +30,14 @@ interface Proposta {
 
 
   caixas_entrada_qtde: number | 0;
-  atendentes_qtde: number | 0 ;
+  atendentes_qtde: number | 0;
   automacoes_qtde: number | 0;
   kanban: boolean | true;
   suporte_humano: boolean | true;
   whatsapp_oficial: boolean | true;
 
-  cupom? : string | null; // uuid
-  cupom_desconto : number | 0; // uuid
+  cupom?: string | null; // uuid
+  cupom_desconto: number | 0; // uuid
 
   subtotal: number | 0;
   desconto: number | 0;
@@ -45,30 +45,30 @@ interface Proposta {
   total: number | 0;
 
   validade: number | 15;
-  mail_send: boolean  | false;
-  pay: boolean  | false;
-  active: boolean | true;
+  mail_send: boolean | false;
+  pay: boolean | false;
   dt_add: string; // TIMESTAMP (ISO 8601 string)
   dt_update: string | null; // TIMESTAMP (ISO 8601 string)
   user_add: string | null;
   user_update: string | null;
 
-  status : string | 'PE';
+  status: string | 'PE';
 
   cob_pay_link?: string | null; // uuid
 
-    addons?: PropostaAddon[]; // Array de addons, referência para a tabela 'plano_addon'
+  addons?: PropostaAddon[]; // Array de addons, referência para a tabela 'plano_addon'
+  active: boolean | true;
 
 }
 // DTO
 type PropostaDTO = Omit<Proposta, 'id' | 'dt' | 'dt_add' | 'dt_update' | 'user_add' | 'user_update' | 'status'>;
 
-const getDefaultPropostaDTO = (): PropostaDTO => ({
+let getDefaultPropostaDTO = (): PropostaDTO => ({
   perfil_id: "",
   plano_id: "",
   plano_nome: "",
   user_id: "", // uuid
-  
+
   emp_cnpj: null,
   emp_nome: "",
   emp_email: "",
@@ -96,9 +96,9 @@ const getDefaultPropostaDTO = (): PropostaDTO => ({
   suporte_humano: true,
   whatsapp_oficial: true,
 
-  cupom : null,
-  cupom_desconto : 0,
-  
+  cupom: null,
+  cupom_desconto: 0,
+
   subtotal: 0,
   desconto: 0,
   total_addons: 0,
