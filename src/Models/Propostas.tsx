@@ -57,7 +57,7 @@ interface Proposta {
 
   cob_pay_link?: string | null; // uuid
 
-  addons?: PropostaAddon[]; // Array de addons, referência para a tabela 'plano_addon'
+    addons?: PropostaAddon[]; // Array de addons, referência para a tabela 'plano_addon'
 
 }
 // DTO

@@ -5,7 +5,7 @@ import { formatCurrency } from "../../utils/formatters";
 
 export default function ProposalFormResume({ id, proposta, finish, setProposta }: { id: string, finish : boolean, proposta: PropostaDTO, setProposta: (data: PropostaDTO) => void }) {
   const [copied, setCopied] = useState(false);
-
+  console.log("proposta", proposta);
   // Common CSS classes
   const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50 rounded-lg";
   const titleClass = "text-2xl font-bold text-light-text-primary dark:text-white mb-6";

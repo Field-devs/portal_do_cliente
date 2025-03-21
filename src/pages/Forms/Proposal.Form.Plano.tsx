@@ -9,63 +9,89 @@ import CircularWait from "../../components/CircularWait";
 import { PropostaDTO } from "../../Models/Propostas";
 import { formatCurrency, formatPercent } from "../../utils/formatters";
 import { CalcPercent } from "../../utils/Finan";
-import { Search, Filter, Package, DollarSign } from 'lucide-react';
-import { ErrorDialog } from "../../components/Dialogs/Dialogs";
+import { Filter, Package, DollarSign } from 'lucide-react';
+import PropostaAddon from "../../Models/Propostas.Addon";
 
 export default function ProposalFormPlano({ proposta, setProposta }: { proposta: PropostaDTO, setProposta: (data: PropostaDTO) => void }) {
   const { user } = useAuth();
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [selectedprofile, setSelectedProfile] = useState<Profile>();
   const [selectedPlan, setSelectedPlan] = useState<Plan>();
+  const [propostaNew, setPropostaNew] = useState<PropostaDTO>({} as PropostaDTO);
   const [plans, setPlans] = useState<Plan[]>([]);
   const [plansFilter, setPlansFilter] = useState<Plan[]>([]);
+
   const [addons, setAddons] = useState<PlanAddon[]>([]);
   const [addonQuantities, setAddonQuantities] = useState<Record<number, number>>({});
+
   const [loading, setLoading] = useState(true);
   const [subtotal, setSubtotal] = useState(0);
   const [total, setTotal] = useState(0);
-  const [loadCupon, setLoadCupon] = useState(false);
-
   const [viewInactive, setViewInactive] = useState(false);
 
   const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50 rounded-lg";
   const titleClass = "text-2xl font-bold text-gray-900 dark:text-white mb-6";
   const labelClass = "block text-sm font-medium text-gray-800 dark:text-gray-200 mb-1";
   const labelClassCenter = "block text-sm font-medium text-gray-800 dark:text-gray-200 mb-1 text-center flex justify-center";
-  const inputClass = "w-full pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-lg shadow-sm text-center";
   const inputClassFlat = "w-full pl-1 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-lg shadow-sm text-center";
   const selectClass = "w-full pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-lg shadow-sm appearance-none";
   const sectionClass = "mt-6 space-y-4";
 
+
+  const setPropostaValue = (key: string, value: any): void => {
+    setProposta({ ...proposta, [key]: value });
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setProposta({ ...proposta, [name]: value });
+    setPropostaValue(name, value);
   };
 
   const handleDiscountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     const formattedValue = value.replace(/\D/g, '');
-    setProposta({ ...proposta, [name]: formattedValue ? `${formattedValue}%` : '' });
+    setPropostaValue(name, formattedValue ? `${formattedValue}%` : '');
   };
 
-  const handleApplyCupon = async () => {
-    await fetchCupom(proposta.cupom);
+
+  const fetchAddon = async (): Promise<PropostaAddon[]> => {
+    let filterAddons = addons.filter(addon => addonQuantities[addon.id] > 0);
+    if (filterAddons.length === 0) {
+      setProposta({
+        ...proposta,
+        addons: []
+      });
+      return [];
+    }
+    let propostaAddon: PropostaAddon[] = [];
+    filterAddons.forEach(addon => {
+      propostaAddon.push({
+        addon_id: addon.id,
+        proposta_id: proposta.id,
+        qtde: addonQuantities[addon.id],
+        unit: addon.valor,
+      });
+    });
+    setProposta({
+      ...proposta,
+      addons: propostaAddon
+    });
+    setPropostaValue("plano_id", selectedPlan.id);
   }
 
   useEffect(() => {
     if (loading) setLoading(false);
     if (selectedPlan && selectedprofile) {
-      setProposta({
-        ...proposta,
-        perfil_id: selectedprofile.id,
-        plano_id: selectedPlan.id,
-        plano_nome: selectedPlan.nome,
-        total: selectedPlan.valor + totalAddons - proposta.desconto,
-        addons: addons.filter(addon => addonQuantities[addon.id] > 0).map(addon => ({
-          addon_id: addon.id,
-          qtde: addonQuantities[addon.id]
-        }))
-      });
+
+      if (selectedprofile) {
+        setProposta({
+          ...proposta,
+          perfil_id: selectedprofile.id,
+        });
+        setPropostaValue("plano_id", selectedPlan.id);
+        setPropostaValue("perfil_id", selectedprofile.id);
+        let _proposta = proposta;
+      }
       calcProposta();
     }
   }, [selectedPlan, selectedprofile]);
@@ -74,17 +100,17 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
     if (!selectedPlan) return;
     const newSubtotal = selectedPlan.valor + totalAddons;
     setSubtotal(newSubtotal);
-    const desconto = parseFloat(proposta.desconto.toString().replace("%", "") || "0");
-    setTotal(newSubtotal - CalcPercent(newSubtotal, parseFloat(desconto)));
+    let _desconto = parseFloat(proposta.desconto.toString().replace("%", "") || "0");
+    setProposta({ ...proposta, desconto: _desconto });
+    setTotal(newSubtotal - CalcPercent(newSubtotal, _desconto));
+    fetchAddon();
   }
 
   const fetchCupom = async (cupom: string) => {
-    setLoadCupon(true);
     var { data } = await supabase.from("v_cliente").select("desconto").eq("cupom", cupom).eq("f_cupom_valido", true).limit(1);
     if (data) {
       const cliente = data[0];
       if (cliente == null) {
-        setLoadCupon(false);
         setProposta({
           ...proposta,
           cupom_desconto: 0
@@ -95,14 +121,9 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
         ...proposta,
         cupom_desconto: cliente.desconto / 100
       });
-      
-      setLoadCupon(false);
+
     }
-    else 
-    {
-      setLoadCupon(false);
-      // ErrorDialog("Erro ao recuperar cupom", "Houve um erro ao recuperar o cupom.");
-    }
+
   }
 
 
@@ -144,8 +165,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
 
   useEffect(() => {
     if (proposta.cupom) {
-      if (proposta.cupom.trim().length == 16) 
-      {
+      if (proposta.cupom.trim().length == 16) {
         fetchCupom(proposta.cupom);
       }
       else {
@@ -314,7 +334,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
                 />
               </div>
             </div>
-{/* 
+            {/* 
             <div className="col-span-2">
               {loadCupon ? (
                 <>
@@ -355,9 +375,9 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
                 <span>Cupom:</span>
                 <span>{formatPercent(proposta.cupom_desconto)}</span>
               </div>
-            
+
               <div className="flex justify-between items-center pt-4 mt-2 border-t border-gray-200 dark:border-gray-700">
-              <span className="text-xl font-semibold text-gray-800 dark:text-gray-200">Total Mensal:</span>
+                <span className="text-xl font-semibold text-gray-800 dark:text-gray-200">Total Mensal:</span>
                 <span className="text-3xl font-bold bg-brand/10 dark:bg-brand/20 text-brand dark:text-brand-400 px-4 py-2 rounded-lg">
                   {formatCurrency(total)}
                 </span>

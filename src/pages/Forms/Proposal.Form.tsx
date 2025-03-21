@@ -8,7 +8,7 @@ import { validateEmail } from "../../utils/Validation";
 import ProposalFormPlano from "./Proposal.Form.Plano";
 import ProposalFormCliente from "./Proposal.Form.Cliente";
 import ProposalFormResume from "./Proposal.Form.Resume";
-import { TEST_DATA_MODE as TEST_DISABLE_DATA } from "../../utils/consts";
+import { TEST_MODE_MOCK as TEST_DISABLE_DATA } from "../../utils/consts";
 import { useEscapeKey } from "../../hooks/useEscapeKey";
 import ProposalFormFinish from "./Proposal.Form.Finish";
 
@@ -85,9 +85,21 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
     const propostaToInsert = setPropostaToInsert(propostaDTO);
 
     if (TEST_DISABLE_DATA === false) {
-      const { data: insertData, error: insertError } = await supabase.from("proposta").insert([propostaToInsert]).select("id");
+      // Extrai o addons e Remove o Addons do objeto propostaToInsert
+      let addons = propostaToInsert.addons;
+      delete propostaToInsert.addons; 
+
+      let { data: insertData, error: insertError } = await supabase.from("proposta").insert([propostaToInsert]).select("id");
       if (insertData) {
         setIdProposta(insertData[0].id);
+        // set in addons proposta_id 
+        if (addons) {
+          addons = addons.map((addon) => ({
+            ...addon,
+            proposta_id: insertData[0].id,
+          }));
+        }
+        let { data: insertData, error: insertError } = await supabase.from("proposta").insert([propostaToInsert]).select("id");
 
         if (addons) {
           const addonsToInsert = addons.map((addon) => ({
@@ -95,7 +107,7 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
             idaddon: addon.addon_id,
             valor: addon.unit,
           }));
-          await supabase.from("proposta_addon").insert(addonsToInsert);
+          await supabase.from("proposta_addons").insert(addonsToInsert);
         }
       }
 
