@@ -285,7 +285,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
               </div>
             </div>
 
-            <div>
+            <div className="col-span-2">
               <label className={labelClassCenter}>Validade</label>
               <div className="relative">
                 <input
@@ -352,7 +352,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
                 <span>{formatPercent(proposta.desconto)}</span>
               </div>
               <div className="flex justify-between text-gray-600 dark:text-gray-400">
-                <span>Desconto/Cupon:</span>
+                <span>Cupom:</span>
                 <span>{formatPercent(proposta.cupom_desconto)}</span>
               </div>
             
