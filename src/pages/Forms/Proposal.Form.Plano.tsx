@@ -85,7 +85,10 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
       const cliente = data[0];
       if (cliente == null) {
         setLoadCupon(false);
-        ErrorDialog("Cupom inválido", "O cupom informado não é válido ou já foi utilizado.");
+        setProposta({
+          ...proposta,
+          cupom_desconto: 0
+        });
         return;
       }
       setProposta({
@@ -98,7 +101,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
     else 
     {
       setLoadCupon(false);
-      ErrorDialog("Erro ao recuperar cupom", "Houve um erro ao recuperar o cupom.");
+      // ErrorDialog("Erro ao recuperar cupom", "Houve um erro ao recuperar o cupom.");
     }
   }
 
@@ -138,6 +141,22 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
     setLoading(true);
     fetchData();
   }, []);
+
+  useEffect(() => {
+    if (proposta.cupom) {
+      if (proposta.cupom.trim().length == 16) 
+      {
+        fetchCupom(proposta.cupom);
+      }
+      else {
+        setProposta({
+          ...proposta,
+          cupom_desconto: 0
+        });
+      }
+    }
+  }, [proposta.cupom]);
+
 
   useEffect(() => {
     setPlansFilter(viewInactive ? plans : plans.filter(plan => plan.active));
@@ -226,7 +245,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
           </div>
 
           <div>
-            <label className={labelClassCenter}>Add-ons</label>
+            <label className={labelClass}>Add-ons</label>
             <div className="space-y-2">
               {addons.filter(addon => viewInactive && !addon.active).map((addon) => (
                 <div key={addon.id} className="flex justify-between items-center">
@@ -295,7 +314,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
                 />
               </div>
             </div>
-
+{/* 
             <div className="col-span-2">
               {loadCupon ? (
                 <>
@@ -312,7 +331,9 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
                   </button>
                 </>
               )}
-            </div>
+            </div> */}
+
+
           </div>
 
           <div className="mt-6 p-4 bg-gray-100 dark:bg-gray-800/50 rounded-lg">
