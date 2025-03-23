@@ -27,6 +27,13 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
     setPropostaDTO({...propostaDTO, active: false});
   }, []);
 
+  useEffect(() => {
+    console.clear();
+    console.log("Plano",propostaDTO.plano_id);
+    console.log("Total",propostaDTO.total);
+    console.log("CUPOM / Desconto", propostaDTO.cupom, propostaDTO.cupom_desconto);
+  }, [propostaDTO]);
+
   
   useEffect(() => {
     if (!id) return;
@@ -129,9 +136,9 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
   return (
     <>
       {step === 0 && <ProposalFormPlano proposta={propostaDTO} setProposta={setPropostaDTO} />}
-      {step === 1 && <ProposalFormResume finish={finish} id={idproposta} proposta={propostaDTO} setProposta={setPropostaDTO} />} 
+      {/* {step === 1 && <ProposalFormResume finish={finish} id={idproposta} proposta={propostaDTO} setProposta={setPropostaDTO} />} 
       {step === 2 && <ProposalFormCliente proposta={propostaDTO} setProposta={setPropostaDTO} />}
-      {step === stepLimit && <ProposalFormFinish />}
+      {step === stepLimit && <ProposalFormFinish />} */}
 
       <div className="flex justify-between mt-4">
 

@@ -19,15 +19,10 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
   const [selectedPlan, setSelectedPlan] = useState<Plan>();
   const [plans, setPlans] = useState<Plan[]>([]);
   const [plansFilter, setPlansFilter] = useState<Plan[]>([]);
-
   const [addons, setAddons] = useState<PlanAddon[]>([]);
   const [addonQuantities, setAddonQuantities] = useState<Record<number, number>>({});
-
   const [loading, setLoading] = useState(true);
-  const [subtotal, setSubtotal] = useState(0);
-  const [total, setTotal] = useState(0);
   const [valorDescont, setValorDescont] = useState(0);
-
   const [viewInactive, setViewInactive] = useState(false);
 
   const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50 rounded-lg";
@@ -46,6 +41,13 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFieldValue(name, value);
+
+    // Handle plan selection
+    if (name === "plano_id") {
+      const selected = plans.find(plan => plan.id === Number(value));
+      setSelectedPlan(selected);
+    }
+
   };
 
   const handleDiscountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -185,8 +187,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
     if (!selectedPlan) return;
     const descontoValue = parseFloat(proposta.desconto.toString().replace("%", "")) || 0;
     const newTotal = selectedPlan?.valor + totalAddons - descontoValue;
-    setTotal(newTotal);
-    setFieldValue("total", newTotal);
+    setFieldValue("total", 1000);
     fetchAddon();
   }, [selectedPlan, totalAddons]);
 
@@ -247,8 +248,9 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
               <Package className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
 
               <select
-                value={selectedPlan?.id}
-                onChange={(e) => setSelectedPlan(plans.find(p => p.id === e.target.value))}
+                value={proposta.plano_id}
+                name="plano_id"
+                onChange={handleInputChange}
                 className={selectClass}
               >
                 <option value="">Selecione um plano</option>
@@ -364,7 +366,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
             <div className="space-y-2">
               <div className="flex justify-between text-gray-600 dark:text-gray-400">
                 <span>Plano Base:</span>
-                <span>{formatCurrency(total || 0)}</span>
+                <span>{formatCurrency(proposta.total)}</span>
               </div>
               <div className="flex justify-between text-gray-600 dark:text-gray-400">
                 <span>Add-ons:</span>
@@ -382,7 +384,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
               <div className="flex justify-between items-center pt-4 mt-2 border-t border-gray-200 dark:border-gray-700">
                 <span className="text-xl font-semibold text-gray-800 dark:text-gray-200">Total Mensal:</span>
                 <span className="text-3xl font-bold bg-brand/10 dark:bg-brand/20 text-brand dark:text-brand-400 px-4 py-2 rounded-lg">
-                  {formatCurrency(total)}
+                  {formatCurrency(proposta.total)}
                 </span>
               </div>
             </div>
