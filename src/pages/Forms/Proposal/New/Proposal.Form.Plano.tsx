@@ -34,18 +34,52 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
   const sectionClass = "mt-6 space-y-4";
 
 
-  const setFieldValue = (key: string, value: any): void => {
-    setProposta({ ...proposta, [key]: value });
+  // const setFieldValue = (key: keyof PropostaDTO, value: any): void => {
+  //   setProposta((prevProposta) => {
+  //     if (!(key in prevProposta)) {
+  //       console.warn(`A chave "${key}" não existe em PropostaDTO!`);
+  //       return prevProposta; // Não atualiza se a chave não existir
+  //     }
+
+  //     return {
+  //       ...prevProposta,
+  //       [key]: value,
+  //     };
+  //   });
+  //   console.log("PropostaDTO", proposta);
+  // };
+
+
+  const setCustom = (setter) => {
+    return (key, value) => {
+      setter(prev => ({
+        ...prev,
+        [key]: value
+      }));
+    };
   };
+
+  const setValue = setCustom(setProposta);
+
+    console.clear();
+    console.log("Plano", proposta.plano_id);
+    console.log("Total", proposta.total);
+    console.log("CUPOM / Desconto", proposta.cupom, proposta.cupom_desconto);
+  useEffect(() => {
+  }, [proposta]);
+
+
+
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFieldValue(name, value);
+    setValue(name, value);
 
     // Handle plan selection
     if (name === "plano_id") {
-      const selected = plans.find(plan => plan.id === Number(value));
+      const selected = plans.find(plan => plan.id === value);
       setSelectedPlan(selected);
+      setValue("total", selected?.valor);
     }
 
   };
@@ -53,7 +87,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
   const handleDiscountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     const formattedValue = value.replace(/\D/g, '');
-    setFieldValue(name, formattedValue ? `${formattedValue}%` : '');
+    setValue(name, formattedValue ? `${formattedValue}%` : '');
   };
 
   useEffect(() => {
@@ -83,7 +117,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
       ...proposta,
       addons: propostaAddon
     });
-    setFieldValue("plano_id", selectedPlan.id);
+    setValue("plano_id", selectedPlan.id);
   }
 
   useEffect(() => {
@@ -91,9 +125,9 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
     if (selectedPlan && selectedprofile) {
 
       if (selectedprofile) {
-        setFieldValue("plano_id", selectedPlan.id);
-        setFieldValue("subtotal", selectedPlan.valor);
-        setFieldValue("perfil_id", selectedprofile.id);
+        setValue("plano_id", selectedPlan.id);
+        setValue("subtotal", selectedPlan.valor);
+        setValue("perfil_id", selectedprofile.id);
       }
       calcProposta();
     }
@@ -126,7 +160,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
       if (data && Array.isArray(data) && data.length > 0) {
         setPlans(data);
         setSelectedPlan(data[0]); // Set the first plan as default
-        setFieldValue("plano_id", data[0].id); // Ensure the default plan is reflected in the proposal
+        setValue("plano_id", data[0].id); // Ensure the default plan is reflected in the proposal
       } else {
         console.warn("No plans found for the user.");
       }
@@ -187,7 +221,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
     if (!selectedPlan) return;
     const descontoValue = parseFloat(proposta.desconto.toString().replace("%", "")) || 0;
     const newTotal = selectedPlan?.valor + totalAddons - descontoValue;
-    setFieldValue("total", 1000);
+    setValue("total", 1000);
     fetchAddon();
   }, [selectedPlan, totalAddons]);
 
@@ -200,7 +234,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
     const newSubtotal = selectedPlan.valor + totalAddons;
     let _desconto = parseFloat(proposta.desconto?.toString().replace("%", "") || "0");
     setValorDescont(CalcPercent(newSubtotal, _desconto));
-    fetchAddon(); 
+    fetchAddon();
   }
 
   return (

@@ -13,7 +13,7 @@ import ProposalFormResume from "./Proposal.Form.Resume";
 
 export default function ProposalForm({ id, onCancel }: FormProps) {
   const [step, setStep] = useState(0);
-  const [propostaDTO, setPropostaDTO] = useState<PropostaDTO>(getDefaultPropostaDTO() as PropostaDTO);
+  const [propostaDTO, setPropostaDTO] = useState<PropostaDTO>(getDefaultPropostaDTO());
   //const [propostaDTO, setPropostaDTO] = useState<PropostaDTO>({active: true} as PropostaDTO);
 
   const [idproposta, setIdProposta] = useState();
@@ -27,12 +27,12 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
     setPropostaDTO({...propostaDTO, active: false});
   }, []);
 
-  useEffect(() => {
-    console.clear();
-    console.log("Plano",propostaDTO.plano_id);
-    console.log("Total",propostaDTO.total);
-    console.log("CUPOM / Desconto", propostaDTO.cupom, propostaDTO.cupom_desconto);
-  }, [propostaDTO]);
+  // useEffect(() => {
+  //   console.clear();
+  //   console.log("Plano",propostaDTO.plano_id);
+  //   console.log("Total",propostaDTO.total);
+  //   console.log("CUPOM / Desconto", propostaDTO.cupom, propostaDTO.cupom_desconto);
+  // }, [propostaDTO]);
 
   
   useEffect(() => {
