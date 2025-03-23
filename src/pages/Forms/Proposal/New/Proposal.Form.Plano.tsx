@@ -26,6 +26,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
   const [loading, setLoading] = useState(true);
   const [subtotal, setSubtotal] = useState(0);
   const [total, setTotal] = useState(0);
+  const [valorDescont, setValorDescont] = useState(0);
 
   const [viewInactive, setViewInactive] = useState(false);
 
@@ -42,7 +43,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
     setProposta({ ...proposta, [key]: value });
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFieldValue(name, value);
   };
@@ -53,6 +54,10 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
     setFieldValue(name, formattedValue ? `${formattedValue}%` : '');
   };
 
+  useEffect(() => {
+    setLoading(true);
+    fetchData();
+  }, []);
 
   const fetchAddon = async (): Promise<PropostaAddon[]> => {
     let filterAddons = addons.filter(addon => addonQuantities[addon.id] > 0);
@@ -147,10 +152,6 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
     }
   };
 
-  useEffect(() => {
-    setLoading(true);
-    fetchData();
-  }, []);
 
   useEffect(() => {
     if (proposta.cupom) {
@@ -165,6 +166,11 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
       }
     }
   }, [proposta.cupom]);
+
+  useEffect(() => {
+    calcProposta();
+  }, [proposta.desconto]);
+
 
   useEffect(() => {
     setPlansFilter(viewInactive ? plans : plans.filter(plan => plan.active));
@@ -192,7 +198,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
     if (!selectedPlan) return;
     const newSubtotal = selectedPlan.valor + totalAddons;
     let _desconto = parseFloat(proposta.desconto?.toString().replace("%", "") || "0");
-    setFieldValue("desconto", CalcPercent(newSubtotal, _desconto));
+    setValorDescont(CalcPercent(newSubtotal, _desconto));
     fetchAddon(); 
   }
 
@@ -309,7 +315,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
                   name="validade"
                   className={inputClassFlat}
                   value={proposta.validade}
-                  onChange={handleChange}
+                  onChange={handleInputChange}
                   type="number"
                   placeholder="30"
                 />
@@ -366,7 +372,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
               </div>
               <div className="flex justify-between text-gray-600 dark:text-gray-400">
                 <span>Descontos:</span>
-                <span>{formatPercent(proposta.desconto)}</span>
+                <span>{formatCurrency(valorDescont)}</span>
               </div>
               <div className="flex justify-between text-gray-600 dark:text-gray-400">
                 <span>Cupom:</span>
