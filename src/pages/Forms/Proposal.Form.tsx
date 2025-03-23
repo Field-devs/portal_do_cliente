@@ -7,6 +7,9 @@ import { AlertDialog, AskDialog, ErrorDialog } from "../../components/Dialogs/Di
 import { validateEmail } from "../../utils/Validation";
 import ProposalFormPlano from "./Proposal.Form.Plano";
 import { TEST_MODE_MOCK as TEST_DISABLE_DATA } from "../../utils/consts";
+import ProposalFormCliente from "./Proposal.Form.Cliente";
+import ProposalFormFinish from "./Proposal.Form.Finish";
+import ProposalFormResume from "./Proposal.Form.Resume";
 
 export default function ProposalForm({ id, onCancel }: FormProps) {
   const [step, setStep] = useState(0);
@@ -125,11 +128,10 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
 
   return (
     <>
-      {/* {loading == true && <CircularWait message="Carregando..." />} */}
       {step === 0 && <ProposalFormPlano proposta={propostaDTO} setProposta={setPropostaDTO} />}
-      {/* {step === 1 && <ProposalFormResume finish={finish} id={idproposta} proposta={propostaDTO} setProposta={setPropostaDTO} />}
+      {step === 1 && <ProposalFormResume finish={finish} id={idproposta} proposta={propostaDTO} setProposta={setPropostaDTO} />} 
       {step === 2 && <ProposalFormCliente proposta={propostaDTO} setProposta={setPropostaDTO} />}
-      {step === stepLimit && <ProposalFormFinish />} */}
+      {step === stepLimit && <ProposalFormFinish />}
 
       <div className="flex justify-between mt-4">
 
