@@ -266,7 +266,7 @@ export default function ProposalFormConfirm({ onCancel, initialData }: Commercia
           </div>
 
         </div>
-    
+          {/* Formulariode de sequencias */}
           <ProposalFormConfirmClient Tipo='EMP' sender={proposta} setSender={setProposta} />
           <ProposalFormConfirmClient Tipo='RES' sender={proposta} setSender={setProposta}  />
           <ProposalFormConfirmClient Tipo='FIN' sender={proposta} setSender={setProposta} />
