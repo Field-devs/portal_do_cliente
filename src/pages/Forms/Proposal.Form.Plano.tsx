@@ -116,9 +116,12 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
   const fetchData = async () => {
     try {
       var { data } = await supabase.from("plano").select("*").eq("user_id", user?.id);
-      if (data) {
+      if (data && Array.isArray(data) && data.length > 0) {
         setPlans(data);
-        setSelectedPlan(data[0]);
+        setSelectedPlan(data[0]); // Set the first plan as default
+        setFieldValue("plano_id", data[0].id); // Ensure the default plan is reflected in the proposal
+      } else {
+        console.warn("No plans found for the user.");
       }
 
       var { data } = await supabase.from("plano_addon").select("*").eq("user_id", user?.id);
@@ -174,10 +177,11 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
 
   useEffect(() => {
     if (!selectedPlan) return;
-    setFieldValue("total", selectedPlan?.valor + totalAddons - proposta.desconto);
-    let _addons = fetchAddon();
-    setFieldValue("total_addons", _addons);
-  }, [total, selectedPlan, totalAddons]);
+    const newTotal = selectedPlan?.valor + totalAddons - proposta.desconto;
+    setTotal(newTotal);
+    setFieldValue("total", newTotal);
+    fetchAddon();
+  }, [selectedPlan, totalAddons]);
 
   const handleInactive = async () => {
     setViewInactive(!viewInactive);
