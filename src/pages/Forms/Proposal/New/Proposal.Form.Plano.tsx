@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { supabase } from "../../lib/supabase";
-import Plan from "../../Models/Plan";
-import { useAuth } from "../../components/AuthProvider";
-import PlanAddon from "../../Models/Plan.Addon";
-import SwitchFrag from "../../components/Fragments/SwitchFrag";
-import Profile from "../../Models/Perfil";
-import CircularWait from "../../components/CircularWait";
-import { PropostaDTO } from "../../Models/Propostas";
-import { formatCurrency, formatPercent } from "../../utils/formatters";
-import { CalcPercent } from "../../utils/Finan";
+import { supabase } from "../../../../lib/supabase";
+import Plan from "../../../../Models/Plan";
+import { useAuth } from "../../../../components/AuthProvider";
+import PlanAddon from "../../../../Models/Plan.Addon";
+import SwitchFrag from "../../../../components/Fragments/SwitchFrag";
+import Profile from "../../../../Models/Perfil";
+import CircularWait from "../../../../components/CircularWait";
+import { PropostaDTO } from "../../../../Models/Propostas";
+import { formatCurrency, formatPercent } from "../../../../utils/formatters";
+import { CalcPercent } from "../../../../utils/Finan";
 import { Filter, Package, DollarSign } from 'lucide-react';
-import PropostaAddon from "../../Models/Propostas.Addon";
+import PropostaAddon from "../../../../Models/Propostas.Addon";
 
 export default function ProposalFormPlano({ proposta, setProposta }: { proposta: PropostaDTO, setProposta: (data: PropostaDTO) => void }) {
   const { user } = useAuth();
@@ -177,7 +177,8 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
 
   useEffect(() => {
     if (!selectedPlan) return;
-    const newTotal = selectedPlan?.valor + totalAddons - proposta.desconto;
+    const descontoValue = parseFloat(proposta.desconto.toString().replace("%", "")) || 0;
+    const newTotal = selectedPlan?.valor + totalAddons - descontoValue;
     setTotal(newTotal);
     setFieldValue("total", newTotal);
     fetchAddon();
@@ -190,9 +191,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
   function calcProposta() {
     if (!selectedPlan) return;
     const newSubtotal = selectedPlan.valor + totalAddons;
-    setSubtotal(newSubtotal);
-    let _desconto = parseFloat(proposta.desconto.toString().replace("%", "") || "0");
-    setFieldValue("desconto", 0);
+    let _desconto = parseFloat(proposta.desconto?.toString().replace("%", "") || "0");
     setFieldValue("desconto", CalcPercent(newSubtotal, _desconto));
     fetchAddon(); 
   }

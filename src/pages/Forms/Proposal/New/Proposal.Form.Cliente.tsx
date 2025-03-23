@@ -1,5 +1,5 @@
 import { Mail } from "lucide-react";
-import { Proposta, PropostaDTO } from "../../Models/Propostas";
+import { Proposta, PropostaDTO } from "../../../../Models/Propostas";
 
 interface ProposalFormClienteProps {
   proposta: PropostaDTO;

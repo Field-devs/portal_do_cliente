@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useAuth } from '../../../components/AuthProvider';
+import { useAuth } from '../../../../components/AuthProvider';
 import {
   Mail,
   User,
@@ -11,9 +11,9 @@ import {
   MapPin,
   Copy
 } from 'lucide-react';
-import CircularWait from '../../../components/CircularWait';
-import { Proposta } from '../../../Models/Propostas';
-import { formatCEP } from '../../../utils/formatters';
+import CircularWait from '../../../../components/CircularWait';
+import { Proposta } from '../../../../Models/Propostas';
+import { formatCEP } from '../../../../utils/formatters';
 
 interface ProposalFormConfirmClientProps {
   onSuccess: () => void;

@@ -18,7 +18,7 @@ import {
 import { supabase } from '../../lib/supabase';
 import { usePlanos } from '../../hooks/usePlanos';
 import { ModalForm } from '../../components/Modal/Modal';
-import ProposalForm from '../Forms/Proposal.Form';
+import ProposalForm from '../Forms/Proposal/New/Proposal.Form';
 import ActionsButtons from '../../components/ActionsData';
 import { UpdateSingleField } from '../../utils/supageneric';
 import { useAuth } from '../../components/AuthProvider';

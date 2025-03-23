@@ -7,7 +7,7 @@ import ResetPassword from './pages/Auth/ResetPassword';
 import Portal from './pages/Portal';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { PermissionsProvider } from './Models/PermissionsProvider';
-import ProposalFormConfirm from './pages/Forms/Proposal/Proposal.Form.Confirm';
+import ProposalFormConfirm from './pages/Forms/Proposal/Confirm/Proposal.Form.Confirm';
 
 function App() {
   return (

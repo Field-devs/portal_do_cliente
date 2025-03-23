@@ -9,15 +9,11 @@ import {
   AlertCircle
 } from 'lucide-react';
 
-import { useTheme } from '../../../components/ThemeProvider';
+import { useTheme } from '../../../../components/ThemeProvider';
+import { AskDialog } from '../../../../components/Dialogs/Dialogs';
+import CircularWait from '../../../../components/CircularWait';
+import { Proposta } from '../../../../Models/Propostas';
 import ProposalFormConfirmClient from './Proposal.Form.Confirm.Client';
-
-import { AskDialog } from '../../../components/Dialogs/Dialogs';
-import CircularWait from '../../../components/CircularWait';
-import { GetProposal, SaveProposal } from './Proposal.Form.Confirm.Logical';
-import { Proposta } from '../../../Models/Propostas';
-import RegistrationSuccess from './Proposal.Form.Confirm.Finish';
-import ProposalFinishError from './Proposal.Form.Confirm.Error';
 
 interface CommercialAffiliateFormProps {
   onSuccess: () => void;

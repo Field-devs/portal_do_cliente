@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { User, Copy, X, CheckCircle, FileText } from 'lucide-react';
-import { Proposta, PropostaDTO } from "../../Models/Propostas";
-import { formatCurrency } from "../../utils/formatters";
+import { Proposta, PropostaDTO } from "../../../../Models/Propostas";
+import { formatCurrency } from "../../../../utils/formatters";
 
 export default function ProposalFormResume({ id, proposta, finish, setProposta }: { id: string, finish : boolean, proposta: PropostaDTO, setProposta: (data: PropostaDTO) => void }) {
   const [copied, setCopied] = useState(false);
