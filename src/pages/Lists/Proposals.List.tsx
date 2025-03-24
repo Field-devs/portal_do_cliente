@@ -25,6 +25,7 @@ import { useAuth } from '../../components/AuthProvider';
 import { AlertDialog, ErrorDialog } from '../../components/Dialogs/Dialogs';
 import CircularWait from '../../components/CircularWait';
 import { formatPhone } from '../../utils/formatters';
+import { AUTO_REFRESH } from '../../utils/consts';
 
 export default function ProposalsList() {
   const { user } = useAuth();
@@ -58,8 +59,10 @@ export default function ProposalsList() {
 
   useEffect(() => {
     fetchData();
-    // const intervalId = setInterval(fetchData, 3000); // 60000 milliseconds = 1 minute
-    // return () => clearInterval(intervalId); // Cleanup interval on component unmount
+    if (AUTO_REFRESH) {
+      const intervalId = setInterval(fetchData, 60000); // 60000 milliseconds = 1 minute
+      return () => clearInterval(intervalId); // Cleanup interval on component unmount
+    }
   }, []);
 
   const fetchData = async () => {

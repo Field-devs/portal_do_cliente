@@ -39,13 +39,21 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
     // Carrega a proposta
     const fetchProposta = async () => {
       let { data: proposta, error } = await supabase.from('proposta').select('*').eq('id', id).single();
+      let { data: propostaAddons, error : errorAddon } = await supabase.from('proposta_addons').select('*').eq('proposta_id', id);
+      
       if (error) {
         ErrorDialog("Erro ao carregar proposta: " + error.message);
       }
+
       if (proposta) {
         setIdProposta(proposta.id);
         setPropostaDTO(proposta); // Atualiza o estado global
       }
+
+      if (propostaAddons) {
+        setValue("addons", propostaAddons);
+      }
+
       setStep(0); // Inicia o passo
     };
     fetchProposta();    
@@ -103,8 +111,6 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
         if (insertData) {
 
           if (propostaDTO.addons ) {
-            console.log("Addons", propostaDTO.addons );
-
             setIdProposta(insertData[0].id);
             // proposta_id in all records 
             propostaDTO.addons.forEach((addon) => {

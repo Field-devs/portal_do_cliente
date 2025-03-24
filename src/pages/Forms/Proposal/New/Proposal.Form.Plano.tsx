@@ -11,7 +11,7 @@ import { formatCurrency, formatPercent } from "../../../../utils/formatters";
 import { CalcPercent } from "../../../../utils/Finan";
 import { Filter, Package, DollarSign } from 'lucide-react';
 import PropostaAddon from "../../../../Models/Propostas.Addon";
-import {useCustomSetter} from "../../../../utils/Functions";
+import { useCustomSetter } from "../../../../utils/Functions";
 
 export default function ProposalFormPlano({ proposta, setProposta }: { proposta: PropostaDTO, setProposta: (data: PropostaDTO) => void }) {
   const { user } = useAuth();
@@ -56,13 +56,12 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
   };
 
   function calcProposta() {
-    // if (!selectedPlan) return;
-    let _addons = totalAddons;    
+    let _addons = totalAddons;
     const newSubTotal = proposta.subtotal + totalAddons;
     let _desconto = parseFloat(proposta.desconto?.toString().replace("%", "") || "0");
     let _valorDesconto = CalcPercent(newSubTotal, _desconto);
     setValorDesconto(_valorDesconto);
-    
+
     const newTotal = newSubTotal - _valorDesconto;
 
     setValue("total_addons", _addons);
@@ -70,8 +69,16 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
   }
 
   useEffect(() => {
+
     setLoading(true);
     fetchData();
+    if (proposta.id !== null) {
+      const initialQuantities: Record<number, number> = {};
+      proposta.addons.forEach((addon) => {
+        initialQuantities[addon.addon_id] = addon.qtde;
+        console.log(initialQuantities);
+      });
+    }
   }, []);
 
   useEffect(() => {
@@ -156,10 +163,17 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
       if (data && Array.isArray(data) && data.length > 0) {
         setPlans(data);
         setPlansFilter(plans.filter(plan => plan.active));
+
         //Set First Active
         const firstActivePlan = data.find(plan => plan.active);
         setSelectedPlan(firstActivePlan);
-        setValue("plano_id", firstActivePlan?.id);
+
+        if (proposta.id === null) {
+          setValue("plano_id", firstActivePlan?.id);
+        }
+        else {
+          setValue("plano_id", proposta.plano_id);
+        }
 
       } else {
         console.warn("No plans found for the user.");
@@ -168,6 +182,8 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
       var { data } = await supabase.from("plano_addon").select("*").eq("user_id", user?.id);
       if (data) {
         setAddons(data);
+
+
       }
 
       var { data } = await supabase.from("perfil").select("*")
