@@ -67,16 +67,18 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
       const selected = plans.find(plan => plan.id === value);
       setSelectedPlan(selected);
       setValue("subtotal", selected?.valor);
+      calcProposta();
     }
 
   };
 
   function calcProposta() {
     // if (!selectedPlan) return;
-    // const newSubtotal = selectedPlan.valor + totalAddons;
-    // let _desconto = parseFloat(proposta.desconto?.toString().replace("%", "") || "0");
-    // setValorDescont(CalcPercent(newSubtotal, _desconto));
-    // setValue("total", proposta.subtotal - _desconto + totalAddons);
+    const newSubtotal = proposta.subtotal + totalAddons;
+    let _desconto = parseFloat(proposta.desconto?.toString().replace("%", "") || "0");
+    setValorDescont(CalcPercent(newSubtotal, _desconto));
+
+    setValue("total", newSubtotal - valorDescont);
     // fetchAddon();
   }
 
