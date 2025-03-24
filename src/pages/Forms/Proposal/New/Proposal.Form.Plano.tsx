@@ -11,6 +11,7 @@ import { formatCurrency, formatPercent } from "../../../../utils/formatters";
 import { CalcPercent } from "../../../../utils/Finan";
 import { Filter, Package, DollarSign } from 'lucide-react';
 import PropostaAddon from "../../../../Models/Propostas.Addon";
+import {useCustomSetter} from "../../../../utils/Functions";
 
 export default function ProposalFormPlano({ proposta, setProposta }: { proposta: PropostaDTO, setProposta: (data: PropostaDTO) => void }) {
   const { user } = useAuth();
@@ -33,16 +34,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
   const selectClass = "w-full pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-lg shadow-sm appearance-none";
   const sectionClass = "mt-6 space-y-4";
 
-  const setCustom = (setter) => {
-    return (key, value) => {
-      setter(prev => ({
-        ...prev,
-        [key]: value
-      }));
-    };
-  };
-
-  const setValue = setCustom(setProposta);
+  const setValue = useCustomSetter(setProposta);
 
   const totalAddons = addons.reduce(
     (sum, addon) => sum + (addonQuantities[addon.id] || 0) * addon.valor, 0

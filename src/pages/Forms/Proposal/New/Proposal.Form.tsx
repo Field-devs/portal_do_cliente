@@ -10,37 +10,31 @@ import { TEST_MODE_MOCK as TEST_DISABLE_DATA } from "../../../../utils/consts";
 import ProposalFormCliente from "./Proposal.Form.Cliente";
 import ProposalFormFinish from "./Proposal.Form.Finish";
 import ProposalFormResume from "./Proposal.Form.Resume";
+import { useCustomSetter, removeNode, onlyNumber } from "../../../../utils/Functions";
 
 export default function ProposalForm({ id, onCancel }: FormProps) {
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(-1);
   const [propostaDTO, setPropostaDTO] = useState<PropostaDTO>(getDefaultPropostaDTO());
-  //const [propostaDTO, setPropostaDTO] = useState<PropostaDTO>({active: true} as PropostaDTO);
-
+  
   const [idproposta, setIdProposta] = useState();
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [finish, setFinish] = useState(false);
   const [stepLimit] = useState(3);
 
+  const setValue = useCustomSetter(setPropostaDTO)
 
   useEffect(() => {
-    setPropostaDTO({ ...propostaDTO, active: false });
-  }, []);
+    setValue("active", true)
+    setValue("user_id", user?.id)
+    setValue("emp_nome", "DIXON S MARINHO");
+    setValue("emp_email", "dixonsm@gmail.com");
 
-
-  useEffect(() => {
-    console.clear();
-    console.log("Plano", propostaDTO.plano_id);
-    console.log("SubTotal", propostaDTO.subtotal);
-    console.log("Addons", propostaDTO.total_addons);
-    console.log("Total", propostaDTO.total);
-    console.log("CUPOM / Desconto", propostaDTO.cupom, propostaDTO.cupom_desconto)
-  }, [propostaDTO]);
-
-
-
-  useEffect(() => {
-    if (!id) return;
+    if (!id) {
+      setStep(0); // Inicia o passo
+      return;
+    }
+    // Carrega a proposta
     const fetchProposta = async () => {
       let { data: proposta, error } = await supabase.from('proposta').select('*').eq('id', id).single();
       if (error) {
@@ -48,12 +42,27 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
       }
       if (proposta) {
         setIdProposta(proposta.id);
-        setPropostaDTO(propostaDTO); // Atualiza o estado global
+        setPropostaDTO(proposta); // Atualiza o estado global
+        console.log("Carregando proposta", propostaDTO);
       }
+      setStep(0); // Inicia o passo
     };
-    fetchProposta();
-  }, [id]);
+    fetchProposta();    
 
+  }, []);
+
+
+
+
+
+  useEffect(() => {
+    // console.clear();
+    // console.log("Plano", propostaDTO.plano_id);
+    // console.log("SubTotal", propostaDTO.subtotal);
+    // console.log("Addons", propostaDTO.total_addons);
+    // console.log("Total", propostaDTO.total);
+    // console.log("CUPOM / Desconto", propostaDTO.cupom, propostaDTO.cupom_desconto)
+  }, [propostaDTO]);
 
   const handleNext = () => {
     if (validationForm())
@@ -66,7 +75,12 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
 
 
   const validationForm = () => {
+    if (step === 1) {
+      let _percent = onlyNumber(propostaDTO.desconto);
+      setValue("desconto", _percent);
+    }
     if (step === 2) {
+
       if ((!propostaDTO.emp_nome || propostaDTO.emp_nome.trim() === "") && (!propostaDTO.emp_email || propostaDTO.emp_email.trim() === "")) {
         AlertDialog("Todos os campos são obrigatórios");
         return false;
@@ -83,39 +97,68 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
     return true;
   };
 
-  const setPropostaToInsert = (proposta: Proposta): PropostaDTO => {
-    let desconto = parseFloat(proposta.desconto.toString().replace('%', ''));
-    const propostaToInsert = { ...proposta, desconto: desconto, user_id: user?.id };
-    let addons = propostaToInsert.addons;
-    return propostaToInsert;
+  const setPropostaToInsert = (proposta: PropostaDTO): PropostaDTO => {
+    let _proposta = removeNode(proposta, ["total", "total_addons", "desconto_valor", "cupom_desconto_valor"]);
+    if (proposta.id === null) {
+      _proposta = removeNode(_proposta, ["id"]);
+    }
+    return _proposta;
   };
 
   const handleSubmit = async () => {
     if (validationForm() === false) return;
-    // let response = await AskDialog("Deseja realmente salvar a proposta?", "Salvar Proposta");
-
+    // Seta o usuario
     const propostaToInsert = setPropostaToInsert(propostaDTO);
 
     if (TEST_DISABLE_DATA === false) {
       // Extrai o addons e Remove o Addons do objeto propostaToInsert
       let addons = propostaToInsert.addons;
       delete propostaToInsert.addons;
-
-      let { data: insertData, error: insertError } = await supabase.from("proposta").insert([propostaToInsert]).select("id");
-      if (insertData) {
-        setIdProposta(insertData[0].id);
-        // set in addons proposta_id 
-        if (addons) {
-          addons = addons.map((addon) => ({
-            ...addon,
-            proposta_id: insertData[0].id,
-          }));
-        }
+      console.log("Proposta", propostaToInsert.id );
+      if (propostaToInsert.id === undefined) {
         let { data: insertData, error: insertError } = await supabase.from("proposta").insert([propostaToInsert]).select("id");
+        if (insertData) {
 
+          setIdProposta(insertData[0].id);
+          // set in addons proposta_id 
+          if (addons) {
+            addons = addons.map((addon) => ({
+              ...addon,
+              proposta_id: insertData[0].id,
+            }));
+          }
+
+          if (addons) {
+            const addonsToInsert = addons.map((addon) => ({
+              idproposta: insertData[0].id,
+              idaddon: addon.addon_id,
+              valor: addon.unit,
+            }));
+            await supabase.from("proposta_addons").insert(addonsToInsert);
+          }
+        }
+
+        if (insertError) {
+          ErrorDialog("Erro ao salvar proposta: " + insertError.message);
+          setLoading(false);
+          return;
+        }
+      }
+      else 
+      {
+        // Atualiza a proposta
+        let { data: updateData, error: updateError } = await supabase.from("proposta").update(propostaToInsert).eq("id", propostaToInsert.id).select("id");
+        if (updateError) {
+          ErrorDialog("Erro ao atualizar proposta: " + updateError.message);
+          setLoading(false);
+          return;
+        }
+        // Remove os addons antigos
+        await supabase.from("proposta_addons").delete().eq("proposta_id", propostaToInsert.id);
+        // Adiciona os novos addons
         if (addons) {
           const addonsToInsert = addons.map((addon) => ({
-            idproposta: insertData[0].id,
+            idproposta: propostaToInsert.id,
             idaddon: addon.addon_id,
             valor: addon.unit,
           }));
@@ -123,11 +166,7 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
         }
       }
 
-      if (insertError) {
-        ErrorDialog("Erro ao salvar proposta: " + insertError.message);
-        setLoading(false);
-        return;
-      }
+
     }
     setFinish(true);
     setPropostaDTO(propostaToInsert)
@@ -140,9 +179,9 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
   return (
     <>
       {step === 0 && <ProposalFormPlano proposta={propostaDTO} setProposta={setPropostaDTO} />}
-      {step === 1 && <ProposalFormResume finish={finish} id={idproposta} proposta={propostaDTO} setProposta={setPropostaDTO} />} 
+      {step === 1 && <ProposalFormResume finish={finish} id={idproposta} proposta={propostaDTO} setProposta={setPropostaDTO} />}
       {step === 2 && <ProposalFormCliente proposta={propostaDTO} setProposta={setPropostaDTO} />}
-      {/* {step === stepLimit && <ProposalFormFinish />} */}
+      {step === stepLimit && <ProposalFormFinish id={idproposta} />}
 
       <div className="flex justify-between mt-4">
 

@@ -122,9 +122,9 @@ export default function ProposalsList() {
 
 
   const handleEdit = (row: string) => {
+    console.log("Editando proposta", row);
     setPropId(row);
     HandleOpenProposal();
-
   };
 
   const filteredProposals = propostas.filter((proposta) => {

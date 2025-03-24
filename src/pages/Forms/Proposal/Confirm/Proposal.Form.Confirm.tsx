@@ -14,6 +14,7 @@ import { AskDialog } from '../../../../components/Dialogs/Dialogs';
 import CircularWait from '../../../../components/CircularWait';
 import { Proposta } from '../../../../Models/Propostas';
 import ProposalFormConfirmClient from './Proposal.Form.Confirm.Client';
+import { GetProposal } from './Proposal.Form.Confirm.Logical';
 
 interface CommercialAffiliateFormProps {
   onSuccess: () => void;
@@ -40,6 +41,8 @@ export default function ProposalFormConfirm({ onCancel, initialData }: Commercia
   const [showErrors, setShowErrors] = useState(false);
   const [notFound, setNotFound] = useState(false);
   const { theme } = useTheme();
+
+  console.log("Proposta", id);
 
   const logoUrl = theme === 'dark'
     ? "https://storage.wiseapp360.com/typebot/public/workspaces/clwl6fdyf000511ohlamongyl/typebots/cm683siyl000dm4kxlrec9tb8/results/jlhnjs6i00f52ktsmqp3xncx/blocks/cz78pvc8stcisz1y8sq2khj1/OutrVertical_branco.png"

@@ -38,6 +38,7 @@ interface Proposta {
 
   cupom?: string | null; // uuid
   cupom_desconto: number | 0; // uuid
+  cupom_desconto_valor: number | 0; // uuid
 
   subtotal: number | 0;
   desconto: number | 0;
@@ -61,9 +62,10 @@ interface Proposta {
 
 }
 // DTO
-type PropostaDTO = Omit<Proposta, 'id' | 'dt' | 'dt_add' | 'dt_update' | 'user_add' | 'user_update' | 'status'>;
+type PropostaDTO = Omit<Proposta | 'dt' | 'dt_add' | 'dt_update' | 'user_add' | 'user_update' | 'status'>;
 
 let getDefaultPropostaDTO = (): PropostaDTO => ({
+  id: null,
   perfil_id: "",
   plano_id: "",
   plano_nome: "",
