@@ -11,10 +11,12 @@ import ProposalFormCliente from "./Proposal.Form.Cliente";
 import ProposalFormFinish from "./Proposal.Form.Finish";
 import ProposalFormResume from "./Proposal.Form.Resume";
 import { useCustomSetter, removeNode, onlyNumber } from "../../../../utils/Functions";
+import PropostaAddon from "../../../../Models/Propostas.Addon";
 
 export default function ProposalForm({ id, onCancel }: FormProps) {
   const [step, setStep] = useState(-1);
   const [propostaDTO, setPropostaDTO] = useState<PropostaDTO>(getDefaultPropostaDTO());
+  const [addons, setAddons] = useState<PropostaAddon[]>();
   
   const [idproposta, setIdProposta] = useState();
   const { user } = useAuth();
@@ -43,26 +45,11 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
       if (proposta) {
         setIdProposta(proposta.id);
         setPropostaDTO(proposta); // Atualiza o estado global
-        console.log("Carregando proposta", propostaDTO);
       }
       setStep(0); // Inicia o passo
     };
     fetchProposta();    
-
   }, []);
-
-
-
-
-
-  useEffect(() => {
-    // console.clear();
-    // console.log("Plano", propostaDTO.plano_id);
-    // console.log("SubTotal", propostaDTO.subtotal);
-    // console.log("Addons", propostaDTO.total_addons);
-    // console.log("Total", propostaDTO.total);
-    // console.log("CUPOM / Desconto", propostaDTO.cupom, propostaDTO.cupom_desconto)
-  }, [propostaDTO]);
 
   const handleNext = () => {
     if (validationForm())
@@ -80,7 +67,6 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
       setValue("desconto", _percent);
     }
     if (step === 2) {
-
       if ((!propostaDTO.emp_nome || propostaDTO.emp_nome.trim() === "") && (!propostaDTO.emp_email || propostaDTO.emp_email.trim() === "")) {
         AlertDialog("Todos os campos são obrigatórios");
         return false;
@@ -98,7 +84,7 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
   };
 
   const setPropostaToInsert = (proposta: PropostaDTO): PropostaDTO => {
-    let _proposta = removeNode(proposta, ["total", "total_addons", "desconto_valor", "cupom_desconto_valor"]);
+    let _proposta = removeNode(proposta, ["addons", "total", "total_addons", "desconto_valor", "cupom_desconto_valor"]);
     if (proposta.id === null) {
       _proposta = removeNode(_proposta, ["id"]);
     }
@@ -111,30 +97,21 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
     const propostaToInsert = setPropostaToInsert(propostaDTO);
 
     if (TEST_DISABLE_DATA === false) {
-      // Extrai o addons e Remove o Addons do objeto propostaToInsert
-      let addons = propostaToInsert.addons;
-      delete propostaToInsert.addons;
-      console.log("Proposta", propostaToInsert.id );
+      
       if (propostaToInsert.id === undefined) {
         let { data: insertData, error: insertError } = await supabase.from("proposta").insert([propostaToInsert]).select("id");
         if (insertData) {
 
-          setIdProposta(insertData[0].id);
-          // set in addons proposta_id 
-          if (addons) {
-            addons = addons.map((addon) => ({
-              ...addon,
-              proposta_id: insertData[0].id,
-            }));
-          }
+          if (propostaDTO.addons ) {
+            console.log("Addons", propostaDTO.addons );
 
-          if (addons) {
-            const addonsToInsert = addons.map((addon) => ({
-              idproposta: insertData[0].id,
-              idaddon: addon.addon_id,
-              valor: addon.unit,
-            }));
-            await supabase.from("proposta_addons").insert(addonsToInsert);
+            setIdProposta(insertData[0].id);
+            // proposta_id in all records 
+            propostaDTO.addons.forEach((addon) => {
+              addon.proposta_id = insertData[0].id;
+            });
+        
+            await supabase.from("proposta_addons").insert(propostaDTO.addons);
           }
         }
 
@@ -157,6 +134,7 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
         await supabase.from("proposta_addons").delete().eq("proposta_id", propostaToInsert.id);
         // Adiciona os novos addons
         if (addons) {
+
           const addonsToInsert = addons.map((addon) => ({
             idproposta: propostaToInsert.id,
             idaddon: addon.addon_id,

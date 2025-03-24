@@ -24,7 +24,6 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
   const [addonQuantities, setAddonQuantities] = useState<Record<number, number>>({});
   const [loading, setLoading] = useState(true);
   const [valorDesconto, setValorDesconto] = useState(0);
-  const [valorTotal, setValortotal] = useState(0);
   const [viewInactive, setViewInactive] = useState(false);
 
   const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50 rounded-lg";
@@ -76,6 +75,17 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
   }, []);
 
   useEffect(() => {
+    // id e quantidade
+    const newAddons = Object.entries(addonQuantities).map(([id, quantity]) => ({
+      addon_id: id,
+      qtde: quantity,
+      unit: 0,
+    })) as PropostaAddon[];
+    setValue("addons", newAddons);
+  }, [addonQuantities]);
+
+
+  useEffect(() => {
     if (selectedPlan) {
       setValue("plano_id", selectedPlan.id);
       setValue("subtotal", selectedPlan.valor);
@@ -122,30 +132,6 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
   }, [plans, viewInactive]);
 
 
-  const fetchAddon = async (): Promise<PropostaAddon[]> => {
-    let filterAddons = addons.filter(addon => addonQuantities[addon.id] > 0);
-    if (filterAddons.length === 0) {
-      setProposta({
-        ...proposta,
-        addons: []
-      });
-      return [];
-    }
-    let propostaAddon: PropostaAddon[] = [];
-    filterAddons.forEach(addon => {
-      propostaAddon.push({
-        addon_id: addon.id,
-        proposta_id: proposta.id,
-        qtde: addonQuantities[addon.id],
-        unit: addon.valor,
-      });
-    });
-    setProposta({
-      ...proposta,
-      addons: propostaAddon
-    });
-  }
-
   const fetchCupom = async (cupom: string) => {
     var { data } = await supabase.from("v_cliente").select("desconto").eq("cupom", cupom).eq("f_cupom_valido", true).limit(1);
     if (data) {
@@ -161,9 +147,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
         ...proposta,
         cupom_desconto: cliente.desconto / 100
       });
-
     }
-
   }
 
   const fetchData = async () => {
