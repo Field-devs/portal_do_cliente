@@ -43,8 +43,6 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
   };
 
   const setValue = setCustom(setProposta);
-    
-;
 
   const totalAddons = addons.reduce(
     (sum, addon) => sum + (addonQuantities[addon.id] || 0) * addon.valor, 0
@@ -67,10 +65,12 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
 
   function calcProposta() {
     // if (!selectedPlan) return;
+    let _addons = totalAddons;    
     const newSubtotal = proposta.subtotal + totalAddons;
     let _desconto = parseFloat(proposta.desconto?.toString().replace("%", "") || "0");
     setValorDescont(CalcPercent(newSubtotal, _desconto));
 
+    setValue("total_addons", _addons);
     setValue("total", newSubtotal - valorDescont);
     // fetchAddon();
   }
@@ -364,7 +364,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
               </div>
               <div className="flex justify-between text-gray-600 dark:text-gray-400">
                 <span>Add-ons:</span>
-                <span>{formatCurrency(totalAddons)}</span>
+                <span>{formatCurrency(proposta.total_addons)}</span>
               </div>
               <div className="flex justify-between text-gray-600 dark:text-gray-400">
                 <span>Descontos:</span>
