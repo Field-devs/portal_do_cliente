@@ -44,14 +44,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
 
   const setValue = setCustom(setProposta);
     
-    console.clear();
-    console.log("Plano", proposta.plano_id);
-    console.log("SubTotal", proposta.subtotal);
-    console.log("Total", proposta.total);
-    console.log("CUPOM / Desconto", proposta.cupom, proposta.cupom_desconto);
-
-  useEffect(() => {
-  }, [proposta]);
+;
 
   const totalAddons = addons.reduce(
     (sum, addon) => sum + (addonQuantities[addon.id] || 0) * addon.valor, 0

@@ -24,17 +24,20 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
 
 
   useEffect(() => {
-    setPropostaDTO({...propostaDTO, active: false});
+    setPropostaDTO({ ...propostaDTO, active: false });
   }, []);
 
-  // useEffect(() => {
-  //   console.clear();
-  //   console.log("Plano",propostaDTO.plano_id);
-  //   console.log("Total",propostaDTO.total);
-  //   console.log("CUPOM / Desconto", propostaDTO.cupom, propostaDTO.cupom_desconto);
-  // }, [propostaDTO]);
 
-  
+  useEffect(() => {
+    console.clear();
+    console.log("Plano", propostaDTO.plano_id);
+    console.log("SubTotal", propostaDTO.subtotal);
+    console.log("Total", propostaDTO.total);
+    console.log("CUPOM / Desconto", propostaDTO.cupom, propostaDTO.cupom_desconto)
+  }, [propostaDTO]);
+
+
+
   useEffect(() => {
     if (!id) return;
     const fetchProposta = async () => {
@@ -95,7 +98,7 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
     if (TEST_DISABLE_DATA === false) {
       // Extrai o addons e Remove o Addons do objeto propostaToInsert
       let addons = propostaToInsert.addons;
-      delete propostaToInsert.addons; 
+      delete propostaToInsert.addons;
 
       let { data: insertData, error: insertError } = await supabase.from("proposta").insert([propostaToInsert]).select("id");
       if (insertData) {
