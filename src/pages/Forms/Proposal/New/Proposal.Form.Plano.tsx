@@ -23,7 +23,8 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
   const [addons, setAddons] = useState<PlanAddon[]>([]);
   const [addonQuantities, setAddonQuantities] = useState<Record<number, number>>({});
   const [loading, setLoading] = useState(true);
-  const [valorDescont, setValorDescont] = useState(0);
+  const [valorDesconto, setValorDesconto] = useState(0);
+  const [valorTotal, setValortotal] = useState(0);
   const [viewInactive, setViewInactive] = useState(false);
 
   const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50 rounded-lg";
@@ -58,13 +59,15 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
   function calcProposta() {
     // if (!selectedPlan) return;
     let _addons = totalAddons;    
-    const newSubtotal = proposta.subtotal + totalAddons;
+    const newSubTotal = proposta.subtotal + totalAddons;
     let _desconto = parseFloat(proposta.desconto?.toString().replace("%", "") || "0");
-    setValorDescont(CalcPercent(newSubtotal, _desconto));
+    let _valorDesconto = CalcPercent(newSubTotal, _desconto);
+    setValorDesconto(_valorDesconto);
+    
+    const newTotal = newSubTotal + _valorDesconto;
 
     setValue("total_addons", _addons);
-    setValue("total", newSubtotal - valorDescont);
-    // fetchAddon();
+    setValue("total", newTotal);
   }
 
   useEffect(() => {
@@ -82,7 +85,11 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
 
   useEffect(() => {
     calcProposta();
-  }, [proposta.desconto, proposta.cupom_desconto, totalAddons]);
+  }, [proposta.cupom_desconto, totalAddons]);
+
+  useEffect(() => {
+    calcProposta();
+  }, [proposta.desconto]);
 
   useEffect(() => {
     if (selectedprofile) {
@@ -360,7 +367,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
               </div>
               <div className="flex justify-between text-gray-600 dark:text-gray-400">
                 <span>Descontos:</span>
-                <span>{formatCurrency(valorDescont)}</span>
+                <span>{formatCurrency(valorDesconto)}</span>
               </div>
               <div className="flex justify-between text-gray-600 dark:text-gray-400">
                 <span>Cupom:</span>
