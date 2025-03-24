@@ -14,7 +14,7 @@ import { AskDialog } from '../../../../components/Dialogs/Dialogs';
 import CircularWait from '../../../../components/CircularWait';
 import { Proposta } from '../../../../Models/Propostas';
 import ProposalFormConfirmClient from './Proposal.Form.Confirm.Client';
-import { GetProposal } from './Proposal.Form.Confirm.Logical';
+import { GetProposal, SaveProposal } from './Proposal.Form.Confirm.Logical';
 
 interface CommercialAffiliateFormProps {
   onSuccess: () => void;

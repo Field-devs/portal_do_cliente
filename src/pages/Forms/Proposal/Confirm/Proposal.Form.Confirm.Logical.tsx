@@ -15,6 +15,7 @@ async function GetProposal(id: string): Promise<Proposta | undefined> {
   return undefined;
 }
 
+
 // Save 
 async function SaveProposal(proposta: Proposta) {
   const proposMap: Proposta = {
@@ -60,6 +61,12 @@ async function SaveProposal(proposta: Proposta) {
     status:"AC" // Aceita
   };
   
+  // Remove os campos que não devem ser atualizados
+  delete proposMap.id;
+  delete proposMap.addons;
+  delete proposMap.total;
+
+
   const { data, error } = await supabase
     .from('proposta')
     .update(proposMap)
