@@ -58,9 +58,8 @@ export default function ProposalsList() {
 
   useEffect(() => {
     fetchData();
-    const intervalId = setInterval(fetchData, 3000); // 60000 milliseconds = 1 minute
-
-    return () => clearInterval(intervalId); // Cleanup interval on component unmount
+    // const intervalId = setInterval(fetchData, 3000); // 60000 milliseconds = 1 minute
+    // return () => clearInterval(intervalId); // Cleanup interval on component unmount
   }, []);
 
   const fetchData = async () => {

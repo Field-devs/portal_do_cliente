@@ -33,23 +33,6 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
   const selectClass = "w-full pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-lg shadow-sm appearance-none";
   const sectionClass = "mt-6 space-y-4";
 
-
-  // const setFieldValue = (key: keyof PropostaDTO, value: any): void => {
-  //   setProposta((prevProposta) => {
-  //     if (!(key in prevProposta)) {
-  //       console.warn(`A chave "${key}" não existe em PropostaDTO!`);
-  //       return prevProposta; // Não atualiza se a chave não existir
-  //     }
-
-  //     return {
-  //       ...prevProposta,
-  //       [key]: value,
-  //     };
-  //   });
-  //   console.log("PropostaDTO", proposta);
-  // };
-
-
   const setCustom = (setter) => {
     return (key, value) => {
       setter(prev => ({
@@ -60,15 +43,19 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
   };
 
   const setValue = setCustom(setProposta);
-
+    
     console.clear();
     console.log("Plano", proposta.plano_id);
+    console.log("SubTotal", proposta.subtotal);
     console.log("Total", proposta.total);
     console.log("CUPOM / Desconto", proposta.cupom, proposta.cupom_desconto);
+
   useEffect(() => {
   }, [proposta]);
 
-
+  const totalAddons = addons.reduce(
+    (sum, addon) => sum + (addonQuantities[addon.id] || 0) * addon.valor, 0
+  );
 
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -79,21 +66,67 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
     if (name === "plano_id") {
       const selected = plans.find(plan => plan.id === value);
       setSelectedPlan(selected);
-      setValue("total", selected?.valor);
+      setValue("subtotal", selected?.valor);
     }
 
   };
 
-  const handleDiscountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    const formattedValue = value.replace(/\D/g, '');
-    setValue(name, formattedValue ? `${formattedValue}%` : '');
-  };
+  function calcProposta() {
+    // if (!selectedPlan) return;
+    // const newSubtotal = selectedPlan.valor + totalAddons;
+    // let _desconto = parseFloat(proposta.desconto?.toString().replace("%", "") || "0");
+    // setValorDescont(CalcPercent(newSubtotal, _desconto));
+    // setValue("total", proposta.subtotal - _desconto + totalAddons);
+    // fetchAddon();
+  }
 
   useEffect(() => {
     setLoading(true);
     fetchData();
   }, []);
+
+  useEffect(() => {
+    if (selectedPlan) {
+      setValue("plano_id", selectedPlan.id);
+      setValue("subtotal", selectedPlan.valor);
+      calcProposta();
+    }
+  }, [selectedPlan]);
+
+  useEffect(() => {
+    calcProposta();
+  }, [proposta.desconto, proposta.cupom_desconto, totalAddons]);
+
+  useEffect(() => {
+    if (selectedprofile) {
+      setValue("perfil_id", selectedprofile.id);
+      calcProposta();
+    }
+  }, [selectedprofile]);
+
+  useEffect(() => {
+    if (proposta.cupom) {
+      if (proposta.cupom.trim().length == 16) {
+        fetchCupom(proposta.cupom);
+      }
+      else {
+        setProposta({
+          ...proposta,
+          cupom_desconto: 0
+        });
+      }
+    }
+  }, [proposta.cupom]);
+
+  useEffect(() => {
+    calcProposta();
+  }, [proposta.desconto]);
+
+
+  useEffect(() => {
+    setPlansFilter(viewInactive ? plans : plans.filter(plan => plan.active === true));
+  }, [plans, viewInactive]);
+
 
   const fetchAddon = async (): Promise<PropostaAddon[]> => {
     let filterAddons = addons.filter(addon => addonQuantities[addon.id] > 0);
@@ -117,22 +150,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
       ...proposta,
       addons: propostaAddon
     });
-    setValue("plano_id", selectedPlan.id);
   }
-
-  useEffect(() => {
-    if (loading) setLoading(false);
-    if (selectedPlan && selectedprofile) {
-
-      if (selectedprofile) {
-        setValue("plano_id", selectedPlan.id);
-        setValue("subtotal", selectedPlan.valor);
-        setValue("perfil_id", selectedprofile.id);
-      }
-      calcProposta();
-    }
-  }, [selectedPlan, selectedprofile]);
-
 
   const fetchCupom = async (cupom: string) => {
     var { data } = await supabase.from("v_cliente").select("desconto").eq("cupom", cupom).eq("f_cupom_valido", true).limit(1);
@@ -159,8 +177,12 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
       var { data } = await supabase.from("plano").select("*").eq("user_id", user?.id);
       if (data && Array.isArray(data) && data.length > 0) {
         setPlans(data);
-        setSelectedPlan(data[0]); // Set the first plan as default
-        setValue("plano_id", data[0].id); // Ensure the default plan is reflected in the proposal
+        setPlansFilter(plans.filter(plan => plan.active));
+        //Set First Active
+        const firstActivePlan = data.find(plan => plan.active);
+        setSelectedPlan(firstActivePlan);
+        setValue("plano_id", firstActivePlan?.id);
+
       } else {
         console.warn("No plans found for the user.");
       }
@@ -188,53 +210,14 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
     }
   };
 
-
-  useEffect(() => {
-    if (proposta.cupom) {
-      if (proposta.cupom.trim().length == 16) {
-        fetchCupom(proposta.cupom);
-      }
-      else {
-        setProposta({
-          ...proposta,
-          cupom_desconto: 0
-        });
-      }
-    }
-  }, [proposta.cupom]);
-
-  useEffect(() => {
-    calcProposta();
-  }, [proposta.desconto]);
-
-
-  useEffect(() => {
-    setPlansFilter(viewInactive ? plans : plans.filter(plan => plan.active));
-  }, [viewInactive, selectedPlan]);
-
-
-  const totalAddons = addons.reduce(
-    (sum, addon) => sum + (addonQuantities[addon.id] || 0) * addon.valor, 0
-  );
-
-  useEffect(() => {
-    if (!selectedPlan) return;
-    const descontoValue = parseFloat(proposta.desconto.toString().replace("%", "")) || 0;
-    const newTotal = selectedPlan?.valor + totalAddons - descontoValue;
-    setValue("total", 1000);
-    fetchAddon();
-  }, [selectedPlan, totalAddons]);
+  const handleDiscountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    const formattedValue = value.replace(/\D/g, '');
+    setValue(name, formattedValue ? `${formattedValue}%` : '');
+  };
 
   const handleInactive = async () => {
     setViewInactive(!viewInactive);
-  }
-
-  function calcProposta() {
-    if (!selectedPlan) return;
-    const newSubtotal = selectedPlan.valor + totalAddons;
-    let _desconto = parseFloat(proposta.desconto?.toString().replace("%", "") || "0");
-    setValorDescont(CalcPercent(newSubtotal, _desconto));
-    fetchAddon();
   }
 
   return (
@@ -249,7 +232,8 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
               <Package className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
               <select
                 value={selectedprofile?.id}
-                onChange={(e) => setSelectedProfile(profiles.find(p => p.id === e.target.value))}
+                // onChange={(e) => setSelectedProfile(profiles.find(p => p.id === e.target.value))}
+                onChange={handleInputChange}
                 className={selectClass}
               >
                 <option value="">Selecione um tipo de cliente</option>
@@ -373,25 +357,6 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
                 />
               </div>
             </div>
-            {/* 
-            <div className="col-span-2">
-              {loadCupon ? (
-                <>
-                  <label className={labelClassCenter}>Aplicando...</label>
-                </>
-              ) : (
-                <>
-                  <label className={labelClassCenter}>Cupom</label>
-                  <button
-                    onClick={handleApplyCupon}
-                    className={`w-full h-[calc(3rem)] bg-brand text-white rounded-lg shadow-sm hover:bg-brand-dark transition-colors flex items-center justify-center`}
-                  >
-                    Aplicar
-                  </button>
-                </>
-              )}
-            </div> */}
-
 
           </div>
 
@@ -400,7 +365,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
             <div className="space-y-2">
               <div className="flex justify-between text-gray-600 dark:text-gray-400">
                 <span>Plano Base:</span>
-                <span>{formatCurrency(proposta.total)}</span>
+                <span>{formatCurrency(proposta.subtotal)}</span>
               </div>
               <div className="flex justify-between text-gray-600 dark:text-gray-400">
                 <span>Add-ons:</span>
