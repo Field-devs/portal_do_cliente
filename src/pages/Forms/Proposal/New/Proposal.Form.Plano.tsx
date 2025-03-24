@@ -64,7 +64,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
     let _valorDesconto = CalcPercent(newSubTotal, _desconto);
     setValorDesconto(_valorDesconto);
     
-    const newTotal = newSubTotal + _valorDesconto;
+    const newTotal = newSubTotal - _valorDesconto;
 
     setValue("total_addons", _addons);
     setValue("total", newTotal);
