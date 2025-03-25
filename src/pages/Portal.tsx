@@ -185,8 +185,8 @@ export default function Portal() {
       <div className={`flex-1 transition-all duration-300 ${isExpanded ? 'ml-52' : 'ml-20'}`}>
         <div className="p-6">
           <Routes>
-            {/* <Route path="/" element={<AdminDashboard />} /> */}
-            <Route path="/" element={<ProposalsList />} />
+            {/* <Route path="/" element={<ProposalsList />} /> */}
+            <Route path="/" element={<AdminDashboard />} />
             <Route path="signature" element={<SignatureList />} />
             <Route path="plans" element={<PlanList />} />
             <Route path="proposals" element={<ProposalsList />} />
