@@ -159,7 +159,7 @@ export default function PartnerList() {
               Clientes Finais
             </button>
 
-            {IsAva && (
+            {IsAva == false && (
               <>
                 <button
                   onClick={() => setTipo('AVA')}
