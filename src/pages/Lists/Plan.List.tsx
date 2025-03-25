@@ -19,11 +19,13 @@ import AddonForm from '../Forms/AddonForm';
 import ActionsButtons from '../../components/ActionsData';
 import { UpdateSingleField } from '../../utils/supageneric';
 import CircularWait from '../../components/CircularWait';
+import { UserRoles } from '../../utils/consts';
 
 type ContentType = 'plans' | 'addons';
 
 export default function PlanList() {
   const { user } = useAuth();
+
   const [plans, setPlans] = useState<Plan[]>([]);
   const [plan, setPlan] = useState<Plan | null>(null);
   const [addons, setAddons] = useState<PlanAddon[]>([]);
@@ -35,16 +37,22 @@ export default function PlanList() {
   const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive'>('all');
   const [showPlanForm, setShowPlanForm] = useState(false);
   const [showAddonForm, setShowAddonForm] = useState(false);
+  const [IsAdmin, setIsAdmin] = useState(false);
+
+
 
   const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50 rounded-lg";
   const titleClass = "text-4xl font-bold text-light-text-primary dark:text-white";
   const tabClass = (active: boolean) => `flex items-center px-4 py-2 rounded-lg transition-colors ${active
-      ? 'bg-brand-50 text-brand-600 dark:bg-brand-900/20 dark:text-brand-400'
-      : 'text-gray-600 dark:text-gray-400 hover:bg-brand-50/50 dark:hover:bg-brand-900/10 hover:text-brand-600 dark:hover:text-brand-400'
+    ? 'bg-brand-50 text-brand-600 dark:bg-brand-900/20 dark:text-brand-400'
+    : 'text-gray-600 dark:text-gray-400 hover:bg-brand-50/50 dark:hover:bg-brand-900/10 hover:text-brand-600 dark:hover:text-brand-400'
     }`;
+
 
   useEffect(() => {
     fetchData();
+    let IASMIN = user?.perfil_cod === UserRoles.SUPERADMIN || user?.perfil_cod === UserRoles.SUPERAVA ? true : false;
+    setIsAdmin(IASMIN);   
   }, []);
 
   const fetchData = async () => {
@@ -56,7 +64,7 @@ export default function PlanList() {
         .eq('user_id', user?.id)
         .order('dt_add', { ascending: false });
 
-        if (plansError) throw plansError;
+      if (plansError) throw plansError;
 
       const { data: addonsData, error: addonsError } = await supabase
         .from('plano_addon')
@@ -116,7 +124,7 @@ export default function PlanList() {
     setShowAddonForm(false);
   };
 
-  const handleOnLock = async (id: string, status: boolean) : Promise<boolean> => {
+  const handleOnLock = async (id: string, status: boolean): Promise<boolean> => {
     if (activeTab === 'plans') {
       await UpdateSingleField("plano", "id", id, "active", !status);
     } else if (activeTab === 'addons') {
@@ -127,16 +135,16 @@ export default function PlanList() {
 
   const filteredPlans = plans.filter(plan =>
     plan.nome.toLowerCase().includes(searchTerm.toLowerCase()) &&
-    (statusFilter === 'all' || 
-    (statusFilter === 'active' && plan.active) || 
-    (statusFilter === 'inactive' && !plan.active))
+    (statusFilter === 'all' ||
+      (statusFilter === 'active' && plan.active) ||
+      (statusFilter === 'inactive' && !plan.active))
   );
 
   const filteredAddons = addons.filter(addon =>
     addon.nome.toLowerCase().includes(searchTerm.toLowerCase()) &&
-    (statusFilter === 'all' || 
-    (statusFilter === 'active' && addon.active) || 
-    (statusFilter === 'inactive' && !addon.active))
+    (statusFilter === 'all' ||
+      (statusFilter === 'active' && addon.active) ||
+      (statusFilter === 'inactive' && !addon.active))
   );
 
   if (loading) {
@@ -150,16 +158,22 @@ export default function PlanList() {
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-8">
-        <h1 className={titleClass}>{activeTab == "plans" ? "Lista de Planos" : "Lista de Addons" }</h1>
+        <h1 className={titleClass}>{activeTab == "plans" ? "Lista de Planos" : "Lista de Addons"}</h1>
         <div className="flex space-x-3">
-          <button
-            // onClick={() =>  setShowPlanForm(true)}
-            onClick={() => handleNewClick()}
-            className="btn-primary flex items-center rounded-lg"
-          >
-            <Plus className="h-5 w-5 mr-2" />
-            {activeTab == "plans" ? "Novo Plano" : "Novo Add-on"}
-          </button>
+          {IsAdmin == true && (
+            <>
+              <button
+                // onClick={() =>  setShowPlanForm(true)}
+                onClick={() => handleNewClick()}
+                className="btn-primary flex items-center rounded-lg"
+              >
+
+                <Plus className="h-5 w-5 mr-2" />
+                {activeTab === "plans" ? "Novo Plano" : "Novo Add-on"}
+              </button>
+            </>
+          )}
+
         </div>
       </div>
 
@@ -261,7 +275,6 @@ export default function PlanList() {
                   Data de Criação
                 </th>
                 <th className="px-6 py-4 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider w-[50px]">
-                  Ações
                 </th>
               </tr>
             </thead>
@@ -303,16 +316,22 @@ export default function PlanList() {
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right">
-                    <div className="flex justify-end space-x-2">
-                      <ActionsButtons 
+
+                    {IsAdmin && (
+                      <div className="flex justify-end space-x-2">
+                      <ActionsButtons
                         onEdit={() => handleEdit(item.id)}
                         onLocker={async () => handleOnLock(item.id, item.active)}
                         active={item.active}
                       />
-                    </div>
+                      </div>
+                    )}
+
+
+
                   </td>
 
-                  
+
                 </tr>
               ))}
             </tbody>
