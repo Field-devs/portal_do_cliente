@@ -40,7 +40,7 @@ export default function Profile() {
     firstName: user?.nome?.split(' ')[0] || '',
     lastName: user?.nome?.split(' ').slice(1).join(' ') || '',
     email: user?.email || '',
-    phone: user?.fone || '',
+    fone: user?.fone || '',
     cnpj: user?.cnpj || '',
     empresa: user?.empresa || ''
   });
@@ -144,16 +144,16 @@ export default function Profile() {
       await updateUser({
         nome: `${formData.firstName} ${formData.lastName}`.trim(),
         email: formData.email,
-        phone: formData.phone || null
-        //cnpj: formData.cnpj || null,
-        //empresa: formData.empresa || null
+        fone: formData.fone || null,
+        cnpj: formData.cnpj || null,
+        empresa: formData.empresa || null
       });
 
       // Atualizar em Pessoas
       let PessoaData = {
         nome: `${formData.firstName} ${formData.lastName}`.trim(),
         email: formData.email,
-        fone: formData.phone || null,
+        fone: formData.fone || null,
         cnpj: formData.cnpj || null,
         empresa: formData.empresa || null
       };
@@ -195,8 +195,9 @@ export default function Profile() {
         </div>
 
         <div className="p-6">
+
           {/* Profile Photo Section */}
-          <div className="flex flex-col items-center mb-8">
+          {/* <div className="flex flex-col items-center mb-8">
             <div className="relative">
               {selectedPhoto ? (
                 <img
@@ -210,13 +211,13 @@ export default function Profile() {
                 </div>
               )}
               <button
-                onClick={() => setShowPhotoSelector(true)}
+                // onClick={() => setShowPhotoSelector(true)}
                 className="absolute bottom-0 right-0 bg-brand dark:bg-dark-button-edit text-white p-2 rounded-full hover:bg-brand/90 dark:hover:bg-dark-button-editHover transition-colors shadow-lg"
               >
                 <Camera className="h-4 w-4" />
               </button>
             </div>
-          </div>
+          </div> */}
 
           {/* Photo Selector Modal */}
           {showPhotoSelector && (
@@ -319,6 +320,7 @@ export default function Profile() {
                       value={formData.email}
                       onChange={handleInputChange}
                       className={inputClasses}
+                      maxLength={100}
                     />
                   ) : (
                     <span className={readOnlyClasses}>{formData.email}</span>
@@ -333,14 +335,15 @@ export default function Profile() {
                   {isEditing ? (
                     <input
                       type="tel"
-                      name="phone"
-                      value={formData.phone}
+                      name="fone"
+                      value={formData.fone}
                       onChange={handleInputChange}
                       className={inputClasses}
+                      maxLength={20}
                     />
                   ) : (
                     <span className={readOnlyClasses}>
-                      {formData.phone || '-'}
+                      {formData.fone || '-'}
                     </span>
                   )}
                 </div>
@@ -357,6 +360,7 @@ export default function Profile() {
                       value={formData.cnpj}
                       onChange={handleInputChange}
                       className={inputClasses}
+                      maxLength={14}
                     />
                   ) : (
                     <span className={readOnlyClasses}>
@@ -377,6 +381,7 @@ export default function Profile() {
                       value={formData.empresa}
                       onChange={handleInputChange}
                       className={inputClasses}
+                      maxLength={20}
                     />
                   ) : (
                     <span className={readOnlyClasses}>

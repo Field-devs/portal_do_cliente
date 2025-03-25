@@ -68,7 +68,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signOut = async () => {
     try {
-      if ((await AskDialog('Deseja realmente sair da Aplicação ?', 'Sair')).isConfirmed) {
+      if ((await AskDialog('Deseja realmente sair ?', 'Sair')).isConfirmed) {
         localStorage.removeItem('user');
         setUser(null);
         setProfile(null);
