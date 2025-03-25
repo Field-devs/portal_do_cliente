@@ -51,7 +51,7 @@ export default function PlanList() {
 
   useEffect(() => {
     fetchData();
-    let IASMIN = user?.perfil_cod === UserRoles.SUPERADMIN || user?.perfil_cod === UserRoles.SUPERAVA ? true : false;
+    let IASMIN = user?.perfil_cod === UserRoles.SUPER_ADMIN || user?.perfil_cod === UserRoles.AVA_ADMIN ? true : false;
     setIsAdmin(IASMIN);   
   }, []);
 

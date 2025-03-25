@@ -19,10 +19,13 @@ import { UpdateSingleField } from '../../utils/supageneric';
 import { format } from 'date-fns';
 import CircularWait from '../../components/CircularWait';
 import Cliente from '../../Models/Cliente';
+import { UserRoles } from '../../utils/consts';
+import { useAuth } from '../../components/AuthProvider';
 
 type PartnerType = 'CF' | 'AVA' | 'AF';
 
 export default function PartnerList() {
+  const { user } = useAuth();
   const [tipo, setTipo] = useState<PartnerType>('AVA');
   const [title, setTitle] = useState('Cliente Final');
   const [client, setClient] = useState<Partner[]>([]);
@@ -33,10 +36,18 @@ export default function PartnerList() {
   const [editingPartner, setEditingPartner] = useState<Partner | null>(null);
   const [showCopyTooltip, setShowCopyTooltip] = useState<string | null>(null);
   const [showAfilate, setShowAfilate] = useState<boolean>(false);
+  const [IsAdmin, setIsAdmin] = useState(false);
 
 
   const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50 rounded-lg";
   const titleClass = "text-4xl font-bold text-light-text-primary dark:text-white";
+
+  useEffect(() => {
+    let IASMIN = user?.perfil_cod === UserRoles.SUPER_ADMIN || user?.perfil_cod === UserRoles.ADMIN ? true : false;
+    setIsAdmin(IASMIN);   
+  }, []);
+
+
 
   useEffect(() => {
     fetchClientes();
@@ -121,7 +132,7 @@ export default function PartnerList() {
     <div className="p-6">
       <div className="flex justify-between items-center mb-8">
         <h1 className={titleClass}>{title}</h1>
-        {tipo == 'AF' && (
+        {tipo == 'AF' && IsAdmin && (
           <button
             onClick={() => handleClickNew()}
             className="flex items-center px-4 py-2 bg-brand hover:bg-brand/90 text-white transition-colors rounded-lg"
