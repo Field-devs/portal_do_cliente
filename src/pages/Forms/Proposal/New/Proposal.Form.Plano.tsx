@@ -16,8 +16,8 @@ import { useCustomSetter } from "../../../../utils/Functions";
 export default function ProposalFormPlano({ proposta, setProposta }: { proposta: PropostaDTO, setProposta: (data: PropostaDTO) => void }) {
   const { user } = useAuth();
   const [profiles, setProfiles] = useState<Profile[]>([]);
-  const [selectedprofile, setSelectedProfile] = useState<Profile>();
-  const [selectedPlan, setSelectedPlan] = useState<Plan>();
+  const [selectedprofile, setSelectedProfile] = useState<Profile | null>(null);
+  const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
   const [plans, setPlans] = useState<Plan[]>([]);
   const [plansFilter, setPlansFilter] = useState<Plan[]>([]);
   const [addons, setAddons] = useState<PlanAddon[]>([]);
@@ -111,7 +111,6 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
   useEffect(() => {
     if (selectedprofile) {
       setValue("perfil_id", selectedprofile.id);
-      calcProposta();
     }
   }, [selectedprofile]);
 
@@ -163,18 +162,8 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
       if (data && Array.isArray(data) && data.length > 0) {
         setPlans(data);
         setPlansFilter(plans.filter(plan => plan.active));
-
-        //Set First Active
-        const firstActivePlan = data.find(plan => plan.active);
-        setSelectedPlan(firstActivePlan);
-
-        if (proposta.id === null) {
-          setValue("plano_id", firstActivePlan?.id);
-        }
-        else {
-          setValue("plano_id", proposta.plano_id);
-        }
-
+        // Don't set initial plan
+        setSelectedPlan(null);
       } else {
         console.warn("No plans found for the user.");
       }
@@ -196,7 +185,8 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
 
       if (data) {
         setProfiles(data);
-        setSelectedProfile(data[0]);
+        // Don't set initial profile
+        setSelectedProfile(null);
       }
       setLoading(false);
     } catch (error) {
@@ -224,15 +214,16 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
             <label className={labelClass}>Tipo de Cliente</label>
             <div className="relative">
               <Package className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-              <select
-                value={selectedprofile?.id}
-                // onChange={(e) => setSelectedProfile(profiles.find(p => p.id === e.target.value))}
+              <select 
+                name="perfil_id"
+                value={proposta.perfil_id || ""}
                 onChange={handleInputChange}
-                className={selectClass}
-              >
+                className="w-full pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-lg shadow-sm"
+                required
+              > 
                 <option value="">Selecione um tipo de cliente</option>
                 {profiles.map((profile) => (
-                  <option key={profile.id} value={profile.id}>
+                  <option key={profile.id} value={profile.id} className="py-2">
                     {profile.nome}
                   </option>
                 ))}
@@ -260,10 +251,11 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
               <Package className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
 
               <select
-                value={proposta.plano_id}
+                value={proposta.plano_id || ""}
                 name="plano_id"
                 onChange={handleInputChange}
                 className={selectClass}
+                required
               >
                 <option value="">Selecione um plano</option>
 
