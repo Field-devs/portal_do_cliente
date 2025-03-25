@@ -116,7 +116,6 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
             propostaDTO.addons.forEach((addon) => {
               addon.proposta_id = insertData[0].id;
             });
-        
             await supabase.from("proposta_addons").insert(propostaDTO.addons);
           }
         }
@@ -138,16 +137,13 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
         }
         // Remove os addons antigos
         await supabase.from("proposta_addons").delete().eq("proposta_id", propostaToInsert.id);
-        // Adiciona os novos addons
-        if (addons) {
 
-          const addonsToInsert = addons.map((addon) => ({
-            idproposta: propostaToInsert.id,
-            idaddon: addon.addon_id,
-            valor: addon.unit,
-          }));
-          await supabase.from("proposta_addons").insert(addonsToInsert);
+        // Adiciona os novos addons
+        if (propostaDTO.addons.length > 0) {
+          console.log("ADDONS", propostaDTO.addons);
+          await supabase.from("proposta_addons").insert(propostaDTO.addons);
         }
+        
       }
 
 

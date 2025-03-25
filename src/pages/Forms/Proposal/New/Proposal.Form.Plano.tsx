@@ -62,7 +62,6 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
 
       setValue("subtotal", selected?.valor);
 
-
       calcProposta();
     }
 
@@ -89,8 +88,8 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
       const initialQuantities: Record<number, number> = {};
       proposta.addons.forEach((addon) => {
         initialQuantities[addon.addon_id] = addon.qtde;
-        console.log(initialQuantities);
       });
+      setAddonQuantities(initialQuantities);
     }
   }, []);
 
@@ -299,16 +298,20 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
               ))}
               {addons.filter(addon => addon.active).map((addon) => (
                 <div key={addon.id} className="flex justify-between items-center p-3 bg-gray-100 dark:bg-gray-800/50 rounded-lg">
+
                   <span className="text-gray-800 dark:text-gray-200">{addon.nome.replace(/([A-Z])/g, ' $1')} ({formatCurrency(addon.valor)})</span>
                   <input
                     type="number"
                     className="w-20 text-center bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded text-gray-900 dark:text-gray-100"
-                    value={addonQuantities[addon.id] || 0}
+                    value={addonQuantities[addon.id as number] || 0}
+                    placeholder="Enter quantity"
+                    title={`Quantity for ${addon.nome}`}
                     onChange={(e) => setAddonQuantities({
                       ...addonQuantities,
-                      [addon.id]: Number(e.target.value)
+                      [addon.id as number]: Number(e.target.value)
                     })}
                   />
+                  
                 </div>
               ))}
             </div>
