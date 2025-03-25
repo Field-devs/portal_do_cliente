@@ -36,15 +36,15 @@ export default function PartnerList() {
   const [editingPartner, setEditingPartner] = useState<Partner | null>(null);
   const [showCopyTooltip, setShowCopyTooltip] = useState<string | null>(null);
   const [showAfilate, setShowAfilate] = useState<boolean>(false);
-  const [IsAdmin, setIsAdmin] = useState(false);
+  const [IsAva, setIsAva] = useState(false);
 
 
   const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50 rounded-lg";
   const titleClass = "text-4xl font-bold text-light-text-primary dark:text-white";
 
   useEffect(() => {
-    let IASMIN = user?.perfil_cod === UserRoles.SUPER_ADMIN || user?.perfil_cod === UserRoles.ADMIN ? true : false;
-    setIsAdmin(IASMIN);   
+    let ISAVA = user?.perfil_cod === UserRoles.AVA || user?.perfil_cod === UserRoles.AVA_ADMIN ? true : false;
+    setIsAva(ISAVA);
   }, []);
 
 
@@ -106,13 +106,13 @@ export default function PartnerList() {
     });
 
   const handleClickNew = () => {
-      setShowAfilate(true);
+    setShowAfilate(true);
   };
 
 
-  const handleOnLock = async (id: string, status: boolean) : Promise<boolean> => {
-      UpdateSingleField("cliente", "id", id, "active", !status);
-      return true;
+  const handleOnLock = async (id: string, status: boolean): Promise<boolean> => {
+    UpdateSingleField("cliente", "id", id, "active", !status);
+    return true;
   };
 
   function handleEdit(value: Cliente): void {
@@ -132,7 +132,7 @@ export default function PartnerList() {
     <div className="p-6">
       <div className="flex justify-between items-center mb-8">
         <h1 className={titleClass}>{title}</h1>
-        {tipo == 'AF' && IsAdmin && (
+        {tipo == 'AF' && IsAva == false && (
           <button
             onClick={() => handleClickNew()}
             className="flex items-center px-4 py-2 bg-brand hover:bg-brand/90 text-white transition-colors rounded-lg"
@@ -150,7 +150,7 @@ export default function PartnerList() {
           <div className="flex space-x-4">
             <button
               onClick={() => setTipo('CF')}
-              className={`flex items-center px-4 py-2 rounded-lg transition-colors ${tipo === 'CF' 
+              className={`flex items-center px-4 py-2 rounded-lg transition-colors ${tipo === 'CF'
                 ? 'bg-brand-50 text-brand-600 dark:bg-brand-900/20 dark:text-brand-400'
                 : 'text-gray-600 dark:text-gray-400 hover:bg-brand-50/50 dark:hover:bg-brand-900/10 hover:text-brand-600 dark:hover:text-brand-400'
                 }`}
@@ -158,26 +158,34 @@ export default function PartnerList() {
               <Users className="h-5 w-5 mr-2" />
               Clientes Finais
             </button>
-            <button
-              onClick={() => setTipo('AVA')}
-              className={`flex items-center px-4 py-2 rounded-lg transition-colors ${tipo === 'AVA'
-                ? 'bg-brand-50 text-brand-600 dark:bg-brand-900/20 dark:text-brand-400'
-                : 'text-gray-600 dark:text-gray-400 hover:bg-brand-50/50 dark:hover:bg-brand-900/10 hover:text-brand-600 dark:hover:text-brand-400'
-                }`}
-            >
-              <Building2 className="h-5 w-5 mr-2" />
-              AVAs
-            </button>
-            <button
-              onClick={() => setTipo('AF')}
-              className={`flex items-center px-4 py-2 rounded-lg transition-colors ${tipo === 'AF'
-                ? 'bg-brand-50 text-brand-600 dark:bg-brand-900/20 dark:text-brand-400'
-                : 'text-gray-600 dark:text-gray-400 hover:bg-brand-50/50 dark:hover:bg-brand-900/10 hover:text-brand-600 dark:hover:text-brand-400'
-                }`}
-            >
-              <UserCheck className="h-5 w-5 mr-2" />
-              Afiliados Comerciais
-            </button>
+
+            {IsAva && (
+              <>
+                <button
+                  onClick={() => setTipo('AVA')}
+                  className={`flex items-center px-4 py-2 rounded-lg transition-colors ${tipo === 'AVA'
+                    ? 'bg-brand-50 text-brand-600 dark:bg-brand-900/20 dark:text-brand-400'
+                    : 'text-gray-600 dark:text-gray-400 hover:bg-brand-50/50 dark:hover:bg-brand-900/10 hover:text-brand-600 dark:hover:text-brand-400'
+                    }`}
+                >
+                  <Building2 className="h-5 w-5 mr-2" />
+                  AVAs
+                </button>
+                <button
+                  onClick={() => setTipo('AF')}
+                  className={`flex items-center px-4 py-2 rounded-lg transition-colors ${tipo === 'AF'
+                    ? 'bg-brand-50 text-brand-600 dark:bg-brand-900/20 dark:text-brand-400'
+                    : 'text-gray-600 dark:text-gray-400 hover:bg-brand-50/50 dark:hover:bg-brand-900/10 hover:text-brand-600 dark:hover:text-brand-400'
+                    }`}
+                >
+                  <UserCheck className="h-5 w-5 mr-2" />
+                  Afiliados Comerciais
+                </button>
+              </>
+            )}
+
+
+
           </div>
 
           {/* Search and Filter */}
@@ -241,7 +249,7 @@ export default function PartnerList() {
                   Data de Criação
                 </th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
-                  
+
                 </th>
               </tr>
             </thead>
@@ -301,14 +309,14 @@ export default function PartnerList() {
                     )}
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-base text-light-text-secondary dark:text-gray-300">
-                        {format(new Date(item?.dt_add), 'dd/MM/yyyy')} 
+                        {format(new Date(item?.dt_add), 'dd/MM/yyyy')}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      
-                      <ActionsButtons 
-                        onLocker={async () => handleOnLock(item.id, item.active)} 
-                        onEdit={() => {item.tipo == "AF" ? handleEdit(item) : null}}
+
+                      <ActionsButtons
+                        onLocker={async () => handleOnLock(item.id, item.active)}
+                        onEdit={() => { item.tipo == "AF" ? handleEdit(item) : null }}
                         active={item.active}
                       />
                     </td>
