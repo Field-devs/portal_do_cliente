@@ -50,6 +50,8 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
       const selected = plans.find(plan => plan.id === value);
       setSelectedPlan(selected);
       setValue("subtotal", selected?.valor);
+      
+      setValue("plano_nome", selected?.nome);
       setValue("caixas_entrada_qtde", selected?.caixas_entrada);
       setValue("atendentes_qtde", selected?.atendentes);
       setValue("automacoes_qtde", selected?.automacoes);
