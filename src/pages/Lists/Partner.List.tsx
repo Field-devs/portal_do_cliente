@@ -26,7 +26,7 @@ type PartnerType = 'CF' | 'AVA' | 'AF';
 
 export default function PartnerList() {
   const { user } = useAuth();
-  const [tipo, setTipo] = useState<PartnerType>('AVA');
+  const [tipo, setTipo] = useState<PartnerType>('CF');
   const [title, setTitle] = useState('Cliente Final');
   const [client, setClient] = useState<Partner[]>([]);
 

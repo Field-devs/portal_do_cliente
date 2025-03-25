@@ -50,6 +50,17 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
       const selected = plans.find(plan => plan.id === value);
       setSelectedPlan(selected);
       setValue("subtotal", selected?.valor);
+      setValue("caixas_entrada_qtde", selected?.caixas_entrada);
+      setValue("atendentes_qtde", selected?.atendentes);
+      setValue("automacoes_qtde", selected?.automacoes);
+
+      setValue("kanban", selected?.kanban);
+      setValue("suporte_humano", selected?.suporte_humano);
+      setValue("whatsapp_oficial", selected?.whatsapp_oficial);
+
+      setValue("subtotal", selected?.valor);
+
+
       calcProposta();
     }
 
@@ -180,6 +191,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
         .neq("id", 1)
         .neq("id", 2)
         .neq("id", 6) // Afiliado Comercial
+        // .neq("id", user?.perfil_id == 3 ? 0 : 4)
         .neq("id", user?.perfil_id == 3 ? 0 : 4)
         ;
 
