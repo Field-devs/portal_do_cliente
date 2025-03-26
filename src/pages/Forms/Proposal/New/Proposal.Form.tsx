@@ -72,12 +72,12 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
 
   const ValidateMail = async () => {
     // Verifica se o usuario existe pelo email
-    let { data: userData, error } = await supabase.from("users").select("*").eq("email", propostaDTO.emp_email).single();
+    let { data: userData, error } = await supabase.from("users").select("*").eq("email", propostaDTO.emp_email);
     if (error) {
       ErrorDialog("Erro ao verificar usuario: " + error.message);
       return false;
     }
-    if (userData) {
+    if (userData?.length > 0) {
       AlertDialog("Usuario já existe, favor utilizar outro email");
       return false;
     }
