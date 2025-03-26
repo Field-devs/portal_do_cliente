@@ -10,7 +10,8 @@ import {
   Lock,
   Building2,
   CreditCard,
-  Shield
+  Shield,
+  Phone
 } from 'lucide-react';
 import { set } from 'date-fns';
 import { AlertDialog, ErrorDialog } from '../../components/Dialogs/Dialogs';
@@ -23,6 +24,7 @@ interface UserFormProps {
     nome: string;
     email: string;
     empresa?: string;
+    fone:string;
     cnpj?: string;
     perfil_id: number;
   };
@@ -46,6 +48,8 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
     lastName: initialData?.nome.split(' ').slice(1).join(' ') || '',
     email: initialData?.email || '',
     empresa: initialData?.empresa || '',
+    fone: initialData?.fone|| '',
+
     cnpj: initialData?.cnpj || '',
     perfil_id: initialData?.perfil_id || 5,
     password: '',
@@ -70,6 +74,7 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
         setProfileList(data);
       }
     };
+    console.log('initialData', initialData?.perfil_id);
     fetchProfiles();
   }, []);
 
@@ -138,6 +143,7 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
         nome: `${formData.firstName} ${formData.lastName}`.trim(),
         email: formData.email,
         empresa:  `${formData.firstName} ${formData.lastName}`.trim(),
+        fone: formData.fone,
         cnpj: null,
         perfil_id: formData.perfil_id,
         active: true
@@ -246,6 +252,24 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
                 type="email"
                 name="email"
                 value={formData.email}
+                onChange={handleInputChange}
+                className={inputClass}
+                required
+              />
+            </div>
+          </div>
+
+          {/* Fone */}
+          <div>
+            <label className={labelClass}>
+              Fone
+            </label>
+            <div className="mt-1 relative">
+              <Phone className={iconClass} />
+              <input
+                type="fone"
+                name="fone"
+                value={formData.fone}
                 onChange={handleInputChange}
                 className={inputClass}
                 required
