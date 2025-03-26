@@ -45,6 +45,7 @@ export default function ProposalsList() {
   const [OpenProposal, setOpenProposal] = useState(false);
   const [active, SetActive] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  
 
   const { loading: planosLoading } = usePlanos();
 
