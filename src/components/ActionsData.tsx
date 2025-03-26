@@ -18,10 +18,6 @@ const ActionsButtons: React.FC<CrudButtonsProps> = ({ onCreate, onEdit, onDelete
     setActiveActual(resultChecked);
   }
   
-  useEffect(() => {
-    console.log("onEdit", onEdit)
-  }, []);
-  
 
   const handleEdit = () => {
     onEdit();

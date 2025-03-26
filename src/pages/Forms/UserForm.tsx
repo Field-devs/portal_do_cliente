@@ -63,6 +63,7 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
       ...prev,
       [name]: value
     }));
+    console.log('formData', formData);
   };
 
   useEffect(() => {
@@ -75,7 +76,6 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
         setProfileList(data);
       }
     };
-    console.log('initialData', initialData?.perfil_id);
     fetchProfiles();
   }, []);
 
@@ -275,11 +275,11 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
 
           {/* Profile Type */}
           <div>
-            <label className={labelClass}>
-              Tipo de Perfil
-            </label>
             <div className="mt-1 relative">
               <Shield className={iconClass} />
+              <label htmlFor="perfil_id" className={labelClass}>
+                Tipo de Perfil
+              </label>
               <select
                 name="perfil_id"
                 value={formData.perfil_id}
@@ -288,7 +288,7 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
                 required
               >
                 {profileList && profileList.map(profile => (
-                  <option key={profile.id} value={profile.nome}>
+                  <option key={profile.id} value={profile.id}>
                     {profile.nome}
                   </option>
                 ))}
