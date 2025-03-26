@@ -42,10 +42,14 @@ export default function CommercialAffiliateForm({ onSuccess, onCancel, initialDa
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  
+  console.log('Initial Data:', initialData);
 
   const [formData, setFormData] = useState<Cliente>({
     user_id: user?.id || '',
-    emp_fone: initialData?.fone ? formatPhoneNumber(initialData.emp_fone) : '99999999999',
+    emp_nome: initialData?.emp_nome ? initialData.emp_nome : '',
+    emp_email: initialData?.emp_email ? initialData.emp_email : '',
+    emp_fone: initialData?.emp_fone ? formatPhoneNumber(initialData.emp_fone) : '99999999999',
     desconto: initialData?.desconto ?? 5,
     comissao: initialData?.comissao ?? 10,
     vencimento: initialData?.vencimento ? new Date(initialData.vencimento).toISOString().split('T')[0] : '',

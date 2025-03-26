@@ -1,3 +1,4 @@
+import { ProposalStatus } from "../utils/consts";
 import PropostaAddon from "./Propostas.Addon";
 
 interface Proposta {
@@ -53,7 +54,7 @@ interface Proposta {
   user_add: string | null;
   user_update: string | null;
 
-  status: string | 'PE';
+  status: ProposalStatus;
 
   cob_pay_link?: string | null; // uuid
 

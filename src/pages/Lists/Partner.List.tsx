@@ -22,11 +22,9 @@ import Cliente from '../../Models/Cliente';
 import { UserRoles } from '../../utils/consts';
 import { useAuth } from '../../components/AuthProvider';
 
-type PartnerType = 'CF' | 'AVA' | 'AF';
-
 export default function PartnerList() {
   const { user } = useAuth();
-  const [tipo, setTipo] = useState<PartnerType>('CF');
+  const [tipo, setTipo] = useState<UserRoles>(UserRoles.CLIENTE_FINAL);
   const [title, setTitle] = useState('Cliente Final');
   const [client, setClient] = useState<Partner[]>([]);
 
@@ -53,11 +51,11 @@ export default function PartnerList() {
     fetchClientes();
 
     setTitle('');
-    if (tipo === 'CF') {
+    if (tipo === UserRoles.CLIENTE_FINAL) {
       setTitle('Clientes Finais');
-    } else if (tipo === 'AVA') {
+    } else if (tipo === UserRoles.AVA) {
       setTitle('AVA');
-    } else if (tipo === 'AF') {
+    } else if (tipo === UserRoles.AFILIADO_COMERCIAL) {
       setTitle('Afiliados');
     }
   }, [tipo]);
@@ -132,13 +130,13 @@ export default function PartnerList() {
     <div className="p-6">
       <div className="flex justify-between items-center mb-8">
         <h1 className={titleClass}>{title}</h1>
-        {tipo == 'AF' && IsAva == false && (
+        {tipo == UserRoles.AFILIADO_COMERCIAL && IsAva == false && (
           <button
             onClick={() => handleClickNew()}
             className="flex items-center px-4 py-2 bg-brand hover:bg-brand/90 text-white transition-colors rounded-lg"
           >
             <Plus className="h-5 w-5 mr-2" />
-            {tipo === 'AF' ? 'Adicionar Afiliado' : 'Adicionar AVA'}
+            {tipo === UserRoles.AFILIADO_COMERCIAL ? 'Adicionar Afiliado' : 'Adicionar AVA'}
           </button>
         )}
       </div>
@@ -149,7 +147,7 @@ export default function PartnerList() {
           {/* Tabs */}
           <div className="flex space-x-4">
             <button
-              onClick={() => setTipo('CF')}
+              onClick={() => setTipo(UserRoles.CLIENTE_FINAL)}
               className={`flex items-center px-4 py-2 rounded-lg transition-colors ${tipo === 'CF'
                 ? 'bg-brand-50 text-brand-600 dark:bg-brand-900/20 dark:text-brand-400'
                 : 'text-gray-600 dark:text-gray-400 hover:bg-brand-50/50 dark:hover:bg-brand-900/10 hover:text-brand-600 dark:hover:text-brand-400'
@@ -162,7 +160,7 @@ export default function PartnerList() {
             {IsAva == false && (
               <>
                 <button
-                  onClick={() => setTipo('AVA')}
+                  onClick={() => setTipo(UserRoles.AVA)}
                   className={`flex items-center px-4 py-2 rounded-lg transition-colors ${tipo === 'AVA'
                     ? 'bg-brand-50 text-brand-600 dark:bg-brand-900/20 dark:text-brand-400'
                     : 'text-gray-600 dark:text-gray-400 hover:bg-brand-50/50 dark:hover:bg-brand-900/10 hover:text-brand-600 dark:hover:text-brand-400'
@@ -172,7 +170,7 @@ export default function PartnerList() {
                   AVAs
                 </button>
                 <button
-                  onClick={() => setTipo('AF')}
+                  onClick={() => setTipo(UserRoles.AFILIADO_COMERCIAL)}
                   className={`flex items-center px-4 py-2 rounded-lg transition-colors ${tipo === 'AF'
                     ? 'bg-brand-50 text-brand-600 dark:bg-brand-900/20 dark:text-brand-400'
                     : 'text-gray-600 dark:text-gray-400 hover:bg-brand-50/50 dark:hover:bg-brand-900/10 hover:text-brand-600 dark:hover:text-brand-400'
@@ -235,7 +233,7 @@ export default function PartnerList() {
                 <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                   Telefone
                 </th>
-                {tipo === 'AF' && (
+                {tipo === UserRoles.AFILIADO_COMERCIAL && (
                   <>
                     <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                       Cupom
@@ -277,7 +275,7 @@ export default function PartnerList() {
                         {formatPhone(item.emp_fone?.toString())}
                       </div>
                     </td>
-                    {tipo === 'AF' && (
+                    {tipo === UserRoles.AFILIADO_COMERCIAL && (
                       <>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="relative">
@@ -316,7 +314,8 @@ export default function PartnerList() {
 
                       <ActionsButtons
                         onLocker={async () => handleOnLock(item.id, item.active)}
-                        onEdit={() => { item.tipo == "AF" ? handleEdit(item) : null }}
+                        // onEdit={() => { item.tipo == UserRoles.AFILIADO_COMERCIAL? handleEdit(item) : null }}
+                        onEdit={() => handleEdit(item)}
                         active={item.active}
                       />
                     </td>
@@ -334,13 +333,12 @@ export default function PartnerList() {
       <ModalForm
         isOpen={showAfilate}
         onClose={() => setShowAfilate(false)}
-        title="Afiliado"
         icon={<>{<UserPlus className="h-5 w-5" />}</>}
         maxWidth="2xl"
       >
 
         <CommercialAffiliateForm
-          // initialData={editingPartner}
+          initialData={editingPartner}
           onSuccess={() => {
             setShowAfilate(false);
             setEditingPartner(null);

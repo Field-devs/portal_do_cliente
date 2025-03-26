@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Plus, Edit, Trash2 } from 'lucide-react';
 import SwitchFrag from './Fragments/SwitchFrag';
 
@@ -17,6 +17,11 @@ const ActionsButtons: React.FC<CrudButtonsProps> = ({ onCreate, onEdit, onDelete
     const resultChecked = await onLocker();
     setActiveActual(resultChecked);
   }
+  
+  useEffect(() => {
+    console.log("onEdit", onEdit)
+  }, []);
+  
 
   const handleEdit = () => {
     onEdit();
@@ -38,7 +43,7 @@ const ActionsButtons: React.FC<CrudButtonsProps> = ({ onCreate, onEdit, onDelete
           >
             <Plus className="mr-2" />
           </button>
-        )
+        ) 
       }
 
 

@@ -25,7 +25,7 @@ import { useAuth } from '../../components/AuthProvider';
 import { AlertDialog, ErrorDialog } from '../../components/Dialogs/Dialogs';
 import CircularWait from '../../components/CircularWait';
 import { formatPhone } from '../../utils/formatters';
-import { AUTO_REFRESH } from '../../utils/consts';
+import { AUTO_REFRESH, ProposalStatus } from '../../utils/consts';
 
 export default function ProposalsList() {
   const { user } = useAuth();
@@ -125,7 +125,6 @@ export default function ProposalsList() {
 
 
   const handleEdit = (row: string) => {
-    console.log("Editando proposta", row);
     setPropId(row);
     HandleOpenProposal();
   };
@@ -419,7 +418,7 @@ export default function ProposalsList() {
                     </td>
                     <td className="px-4 py-2 whitespace-nowrap">
                       <div className="text-base text-light-text-secondary dark:text-gray-300">
-                        {proposta.perfil_nome}
+                        {proposta.f_pefil_nome}
                       </div>
                     </td>
                     <td className="px-4 py-2 whitespace-nowrap">
@@ -452,9 +451,9 @@ export default function ProposalsList() {
                     </td>
                     <td className="px-4 py-2 whitespace-nowrap">
                       <div className="flex justify-center">
-                        <span className={`px-3 py-1 text-sm font-medium rounded-full min-w-[6rem] text-center ${proposta.status === 'PE'
+                        <span className={`px-3 py-1 text-sm font-medium rounded-full min-w-[6rem] text-center ${proposta.status === ProposalStatus.PENDING
                           ? 'badge-warning'
-                          : proposta.status === 'AC'
+                          : proposta.status === ProposalStatus.APPROVED_ACCEPT
                             ? 'badge-success'
                             : 'badge-error'
                           }`}>
@@ -464,13 +463,13 @@ export default function ProposalsList() {
                     </td>
                     <td className="px-4 py-2 whitespace-nowrap">
                       <div className="flex justify-center space-x-2">
-                        {proposta.status === 'PE' && proposta.active && (
+                        {proposta.status === ProposalStatus.PENDING && proposta.active && (
                           <a href={`/confirmation/${proposta.id}`} target='blank' title="Link de Confirmação">
                             <Link className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                           </a>
                         )}
 
-                        {proposta.status === 'AC' && proposta.active && (
+                        {proposta.status === ProposalStatus.APPROVED_ACCEPT && proposta.active && (
                           <a href={`${proposta.cob_pay_link}`} target='blank' title="Link de Pagamento">
                             <CreditCard className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                           </a>
@@ -479,9 +478,10 @@ export default function ProposalsList() {
                     </td>
                     <td className="px-4 py-2 whitespace-nowrap">
                       <ActionsButtons
-                        onEdit={() => handleEdit(proposta.id)}
-                        onLocker={() => handleOnLock(proposta.id, proposta.active)}
-                        active={proposta.active}
+                      // onEdit={proposta.status === ProposalStatus.APPROVED_ACCEPT ? undefined : () => { handleEdit(proposta.id) }}
+                      onEdit={() => { handleEdit(proposta.id) }}
+                      onLocker={() => handleOnLock(proposta.id, proposta.active)}
+                      active={proposta.active}
                       />
                     </td>
                   </tr>
