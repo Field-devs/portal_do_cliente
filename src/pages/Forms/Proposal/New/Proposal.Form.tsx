@@ -28,10 +28,10 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
   const setValueAddons = useCustomSetter(setAddons)
 
   useEffect(() => {
-    setValueProposal("active", true)
-    setValueProposal("user_id", user?.id)
-    setValueProposal("emp_nome", "DIXON S MARINHO");
-    setValueProposal("emp_email", "dixonsm@gmail.com");
+    // setValueProposal("active", true)
+    // setValueProposal("user_id", user?.id)
+    // setValueProposal("emp_nome", "DIXON S MARINHO");
+    // setValueProposal("emp_email", "dixonsm@gmail.com");
 
     if (!id) {
       setStep(0); // Inicia o passo
