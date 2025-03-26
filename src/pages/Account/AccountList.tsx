@@ -132,6 +132,7 @@ function AccountList() {
             email: editingUser.email || '',
             empresa: editingUser.empresa || '',
             cnpj: editingUser.cnpj || '',
+            fone: editingUser.fone || '',
             perfil_id: editingUser.perfil_id
           } : undefined}
           onSuccess={() => {

@@ -63,7 +63,6 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
       ...prev,
       [name]: value
     }));
-    console.log('formData', formData);
   };
 
   useEffect(() => {
@@ -77,6 +76,7 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
       }
     };
     fetchProfiles();
+    console.log('initialData', initialData);
   }, []);
 
   const validateForm = () => {
