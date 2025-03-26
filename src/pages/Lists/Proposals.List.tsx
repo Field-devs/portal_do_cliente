@@ -129,6 +129,11 @@ export default function ProposalsList() {
     HandleOpenProposal();
   };
 
+  const handleStatusChange = async (id: string, status: string) => {
+    let response = await UpdateSingleField("proposta", "id", id, "status", status);
+    return response;
+  };
+
   const filteredProposals = propostas.filter((proposta) => {
     const now = new Date();
     const oneYearAgo = new Date(now.getFullYear() - 1, now.getMonth(), now.getDate());
@@ -451,14 +456,22 @@ export default function ProposalsList() {
                     </td>
                     <td className="px-4 py-2 whitespace-nowrap">
                       <div className="flex justify-center">
-                        <span className={`px-3 py-1 text-sm font-medium rounded-full min-w-[6rem] text-center ${proposta.status === ProposalStatus.PENDING
-                          ? 'badge-warning'
-                          : proposta.status === ProposalStatus.APPROVED_ACCEPT
-                            ? 'badge-success'
-                            : 'badge-error'
-                          }`}>
-                          {proposta.status_title}
-                        </span>
+                        {proposta.status === ProposalStatus.APPROVED || proposta.status === ProposalStatus.PENDING ? (
+                          <span className="px-3 py-1 text-sm font-medium rounded-full min-w-[6rem] text-center badge-success">
+                            {proposta.status_title}
+                          </span>
+                        ) : (
+                          <select
+                            value={proposta.status}
+                            onChange={(e) => handleStatusChange(proposta.id, e.target.value)}
+                            className="px-3 py-1 text-sm font-medium rounded-full min-w-[6rem] text-center bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100"
+                          >
+                            <option value={ProposalStatus.ACCEPT}>Aceita</option>
+                            {/* <option value={ProposalStatus.PENDING}>Pendente</option> */}
+                            <option value={ProposalStatus.APPROVED}>Aprovada</option>
+                            <option value={ProposalStatus.REJECTED}>Rejeitada</option>
+                          </select>
+                        )}
                       </div>
                     </td>
                     <td className="px-4 py-2 whitespace-nowrap">
@@ -469,7 +482,7 @@ export default function ProposalsList() {
                           </a>
                         )}
 
-                        {proposta.status === ProposalStatus.APPROVED_ACCEPT && proposta.active  && proposta.cob_pay_link && (
+                        {proposta.status === ProposalStatus.ACCEPT && proposta.active  && proposta.cob_pay_link && (
                           <a href={`${proposta.cob_pay_link}`} target='blank' title="Link de Pagamento">
                             <CreditCard className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                           </a>
@@ -478,7 +491,7 @@ export default function ProposalsList() {
                     </td>
                     <td className="px-4 py-2 whitespace-nowrap">
                       <ActionsButtons
-                      onEdit={proposta.status === ProposalStatus.APPROVED_ACCEPT ? undefined : () => { handleEdit(proposta.id) }}
+                      onEdit={proposta.status === ProposalStatus.APPROVED ? undefined : () => { handleEdit(proposta.id) }}
                       onLocker={() => handleOnLock(proposta.id, proposta.active)}
                       active={proposta.active}
                       />

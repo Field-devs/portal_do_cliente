@@ -14,7 +14,8 @@ export enum UserRoles {
 
 export enum ProposalStatus {
     PENDING = "PE",
-    APPROVED_ACCEPT = "AC",
+    ACCEPT = "AC",
+    APPROVED = "AP",
     REJECTED = "RC",
     CANCELLED = "EX",
 }
