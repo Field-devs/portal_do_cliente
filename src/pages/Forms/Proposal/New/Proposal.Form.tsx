@@ -70,7 +70,22 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
   };
 
 
-  const validationForm = () => {
+  const ValidateMail = async () => {
+    // Verifica se o usuario existe pelo email
+    let { data: userData, error } = await supabase.from("users").select("*").eq("email", propostaDTO.emp_email).single();
+    if (error) {
+      ErrorDialog("Erro ao verificar usuario: " + error.message);
+      return false;
+    }
+    if (userData) {
+      AlertDialog("Usuario já existe, favor utilizar outro email");
+      return false;
+    }
+    return true;
+  }
+
+  const validationForm = async () => {
+    // Planos
     if (step === 0) {
       if (propostaDTO.perfil_id === null || propostaDTO.plano_id === "") {
         AlertDialog("Selecione um Tipo de Cliente");
@@ -81,15 +96,21 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
         return false;
       }
     }    
+    // Resumo
     else if (step === 1) {
       let _percent = onlyNumber(propostaDTO.desconto);
       setValueProposal("desconto", _percent);
     }
+    // Cliente
     else if (step === 2) {
       if ((!propostaDTO.emp_nome || propostaDTO.emp_nome.trim() === "") && (!propostaDTO.emp_email || propostaDTO.emp_email.trim() === "")) {
         AlertDialog("Todos os campos são obrigatórios");
         return false;
       }
+      // Verifica se o usuario existe pelo email
+      let response = await ValidateMail();
+      if (response === false) return false;
+
       if (propostaDTO.total <= 5) {
         AlertDialog("O Valor da proposta não pode ser menor ou igual a 5");
         return false;
@@ -111,7 +132,8 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
   };
 
   const handleSubmit = async () => {
-    if (validationForm() === false) return;
+    let response = await validationForm();
+    if (response === false) return;
     // Seta o usuario
     const propostaToInsert = setPropostaToInsert(propostaDTO);
 
