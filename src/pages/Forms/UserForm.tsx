@@ -275,17 +275,18 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
 
           {/* Profile Type */}
           <div>
+            <label htmlFor="perfil_id" className={labelClass}>
+              Tipo de Perfil
+            </label>
             <div className="mt-1 relative">
-              <Shield className={iconClass} />
-              <label htmlFor="perfil_id" className={labelClass}>
-                Tipo de Perfil
-              </label>
+              <Shield className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
               <select
                 name="perfil_id"
                 value={formData.perfil_id}
                 onChange={handleInputChange}
                 className={inputClass}
                 required
+                id="perfil_id"
               >
                 {profileList && profileList.map(profile => (
                   <option key={profile.id} value={profile.id}>
