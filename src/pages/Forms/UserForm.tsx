@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { set } from 'date-fns';
 import { AlertDialog, ErrorDialog } from '../../components/Dialogs/Dialogs';
+import Profile from '../../Models/Perfil';
 
 interface UserFormProps {
   onSuccess: () => void;
@@ -34,7 +35,7 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [profileList, setProfileList] = useState<string[] | null>([]);
+  const [profileList, setProfileList] = useState<Profile[]>([]);
 
   // Style constants
   const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50 rounded-lg";
@@ -51,11 +52,10 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
     fone: initialData?.fone|| '',
 
     cnpj: initialData?.cnpj || '',
-    perfil_id: initialData?.perfil_id || 5,
+    perfil_id: initialData?.perfil_id || 1,
     password: '',
     confirmPassword: ''
   });
-
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -64,6 +64,7 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
       [name]: value
     }));
   };
+
   useEffect(() => {
     const fetchProfiles = async () => {
       const { data, error } = await supabase.from('perfil').select('*');
@@ -106,11 +107,6 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
         return false;
       }
 
-      // const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
-      // if (!passwordRegex.test(formData.password)) {
-      //   setError('A senha deve ter no mínimo 8 caracteres, incluindo letras, números e caracteres especiais');
-      //   return false;
-      // }
     }
 
     return true;
