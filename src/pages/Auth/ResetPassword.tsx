@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
-import { Lock, AlertCircle, Loader2, Eye, EyeOff } from 'lucide-react';
+import { Lock, AlertCircle, Loader2, Eye, EyeOff, KeyRound } from 'lucide-react';
 
 export default function ResetPassword() {
   const [password, setPassword] = useState('');
@@ -44,11 +44,9 @@ export default function ResetPassword() {
   return (
     <div className="min-h-screen bg-light-primary dark:bg-dark-primary flex flex-col justify-center py-12 sm:px-6 lg:px-8 transition-colors">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <img
-          src="https://storage.wiseapp360.com/typebot/public/workspaces/clwl6fdyf000511ohlamongyl/typebots/cm683siyl000dm4kxlrec9tb8/results/vu9uzur9vcwl0dloosghraen/blocks/flm69ulnpr4b67h01xj47t14/White - 512x512.svg"
-          alt="OUTR.ONE"
-          className="mx-auto h-16 w-auto"
-        />
+        <div className="flex justify-center mb-6">
+          <KeyRound className="h-24 w-24 text-yellow-500" />
+        </div>
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-white">
           Redefinir Senha
         </h2>

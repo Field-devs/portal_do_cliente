@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
-import { Mail, ArrowLeft, AlertCircle, Loader2, CheckCircle } from 'lucide-react';
+import { Mail, ArrowLeft, AlertCircle, Loader2, CheckCircle, KeyRound } from 'lucide-react';
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState('');
@@ -33,19 +33,9 @@ export default function ForgotPassword() {
   return (
     <div className="min-h-screen bg-light-primary dark:bg-dark-primary flex flex-col justify-center py-12 sm:px-6 lg:px-8 transition-colors">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <Link
-          to="/login"
-          className="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 mb-8"
-        >
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Voltar para o login
-        </Link>
-
-        <img
-          src="https://storage.wiseapp360.com/typebot/public/workspaces/clwl6fdyf000511ohlamongyl/typebots/cm683siyl000dm4kxlrec9tb8/results/vu9uzur9vcwl0dloosghraen/blocks/flm69ulnpr4b67h01xj47t14/White - 512x512.svg"
-          alt="OUTR.ONE"
-          className="mx-auto h-16 w-auto"
-        />
+        <div className="flex justify-center mb-6">
+          <KeyRound className="h-24 w-24 text-yellow-500" />
+        </div>
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-white">
           Recuperar Senha
         </h2>

@@ -28,10 +28,8 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
   const setValueAddons = useCustomSetter(setAddons)
 
   useEffect(() => {
-    // setValueProposal("active", true)
-    // setValueProposal("user_id", user?.id)
-    // setValueProposal("emp_nome", "DIXON S MARINHO");
-    // setValueProposal("emp_email", "dixonsm@gmail.com");
+    setValueProposal("active", true)
+    setValueProposal("user_id", user?.id)
 
     if (!id) {
       setStep(0); // Inicia o passo
@@ -60,8 +58,9 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
     fetchProposta();
   }, []);
 
-  const handleNext = () => {
-    if (validationForm())
+  const handleNext = async() => {
+    let response = await validationForm();
+    if ( response === false) return;
       setStep((prevStep) => prevStep + 1);
   };
 
@@ -140,6 +139,7 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
     if (TEST_DISABLE_DATA === false) {
 
       if (propostaToInsert.id === undefined) {
+        console.log("Criando nova proposta", propostaToInsert);
         let { data: insertData, error: insertError } = await supabase.from("proposta").insert([propostaToInsert]).select("id");
         if (insertData) {
 
