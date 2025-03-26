@@ -257,53 +257,7 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
         </div>
       </div>
 
-      {/* Company Information */}
-      <div className={cardClass}>
-        <div className="flex items-center space-x-3 mb-6">
-          <div className="bg-blue-400/10 p-3 rounded-lg">
-            <Building2 className="h-6 w-6 text-blue-600 dark:text-blue-400" />
-          </div>
-          <h3 className="text-lg font-medium text-gray-900 dark:text-white">
-            Informações da Empresa
-          </h3>
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Company Name */}
-          <div>
-            <label className={labelClass}>
-              Nome da Empresa
-            </label>
-            <div className="mt-1 relative">
-              <Building2 className={iconClass} />
-              <input
-                type="text"
-                name="empresa"
-                value={formData.empresa}
-                onChange={handleInputChange}
-                className={inputClass}
-              />
-            </div>
-          </div>
-
-          {/* CNPJ */}
-          <div>
-            <label className={labelClass}>
-              CNPJ
-            </label>
-            <div className="mt-1 relative">
-              <CreditCard className={iconClass} />
-              <input
-                type="text"
-                name="cnpj"
-                value={formData.cnpj}
-                onChange={handleInputChange}
-                className={inputClass}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
 
       {/* Password Section (only for new users) */}
       {!initialData && (
