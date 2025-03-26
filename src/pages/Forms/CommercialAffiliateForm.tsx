@@ -45,8 +45,17 @@ export default function CommercialAffiliateForm({ onSuccess, onCancel, initialDa
   
   console.log('Initial Data:', initialData);
 
+  const generateCouponCode = () => {
+    const prefix = 'AFF';
+    const timestamp = Date.now().toString(36).toUpperCase();
+    const random = Math.random().toString(36).substring(2, 5).toUpperCase();
+    return `${prefix}-${timestamp}-${random}`;
+  };
+
   const [formData, setFormData] = useState<Cliente>({
     user_id: user?.id || '',
+    perfil_id: 6,
+    cupom: generateCouponCode(),
     emp_nome: initialData?.emp_nome ? initialData.emp_nome : '',
     emp_email: initialData?.emp_email ? initialData.emp_email : '',
     emp_fone: initialData?.emp_fone ? formatPhoneNumber(initialData.emp_fone) : '99999999999',
@@ -89,8 +98,8 @@ export default function CommercialAffiliateForm({ onSuccess, onCancel, initialDa
         if (updateError) throw updateError;
       } else {
 
-        const couponCode = generateCouponCode();
-        setFormData(prev => ({ ...prev, cupom: couponCode, perfil_id: 6 }));
+        // const couponCode = generateCouponCode();
+        //setFormData(prev => ({ ...prev, cupom: couponCode, perfil_id: 6 }));
         const { error: insertError } = await supabase
           .from('cliente')
           .insert(formData);
@@ -107,12 +116,7 @@ export default function CommercialAffiliateForm({ onSuccess, onCancel, initialDa
     }
   };
 
-  const generateCouponCode = () => {
-    const prefix = 'AFF';
-    const timestamp = Date.now().toString(36).toUpperCase();
-    const random = Math.random().toString(36).substring(2, 5).toUpperCase();
-    return `${prefix}-${timestamp}-${random}`;
-  };
+
 
   return (
     <div className="space-y-6">

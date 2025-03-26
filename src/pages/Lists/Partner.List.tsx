@@ -104,6 +104,7 @@ export default function PartnerList() {
     });
 
   const handleClickNew = () => {
+    setEditingPartner(null);
     setShowAfilate(true);
   };
 
