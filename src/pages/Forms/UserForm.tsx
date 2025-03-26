@@ -13,6 +13,7 @@ import {
   Shield
 } from 'lucide-react';
 import { set } from 'date-fns';
+import { AlertDialog, ErrorDialog } from '../../components/Dialogs/Dialogs';
 
 interface UserFormProps {
   onSuccess: () => void;
@@ -110,6 +111,21 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
     return true;
   };
 
+  const ValidateMail = async () => {
+    // Verifica se o usuario existe pelo email
+    let { data: userData, error } = await supabase.from("users").select("*").eq("email", formData.email);
+    if (error) {
+      ErrorDialog("Erro ao verificar usuario: " + error.message);
+      return false;
+    }
+    if (userData?.length > 0) {
+      AlertDialog("Usuario já existe, favor utilizar outro email");
+      return false;
+    }
+    return true;
+  }
+
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm() || !user?.id) return;
@@ -121,8 +137,8 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
       const userData = {
         nome: `${formData.firstName} ${formData.lastName}`.trim(),
         email: formData.email,
-        empresa: formData.empresa || null,
-        cnpj: formData.cnpj || null,
+        empresa:  `${formData.firstName} ${formData.lastName}`.trim(),
+        cnpj: null,
         perfil_id: formData.perfil_id,
         active: true
       };
@@ -135,6 +151,11 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
 
         if (error) throw error;
       } else {
+
+        let response = await ValidateMail();
+        if (!response) return;
+
+
         // Create auth user first
         const { data: authData, error: authError } = await supabase.auth.signUp({
           email: formData.email,
@@ -347,4 +368,8 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
       </div>
     </form>
   );
+}
+
+function ErrodDialog(arg0: string) {
+  throw new Error('Function not implemented.');
 }
