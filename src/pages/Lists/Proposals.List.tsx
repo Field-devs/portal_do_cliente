@@ -25,7 +25,7 @@ import { useAuth } from '../../components/AuthProvider';
 import { AlertDialog, ErrorDialog } from '../../components/Dialogs/Dialogs';
 import CircularWait from '../../components/CircularWait';
 import { formatPhone } from '../../utils/formatters';
-import { AUTO_REFRESH, ProposalStatus } from '../../utils/consts';
+import { AUTO_REFRESH, AUTO_REFRESH_SECOUNDS, ProposalStatus } from '../../utils/consts';
 
 export default function ProposalsList() {
   const { user } = useAuth();
@@ -60,7 +60,7 @@ export default function ProposalsList() {
   useEffect(() => {
     fetchData();
     if (AUTO_REFRESH) {
-      const intervalId = setInterval(fetchData, 60000); // 60000 milliseconds = 1 minute
+      const intervalId = setInterval(fetchData, AUTO_REFRESH_SECOUNDS); // 60000 milliseconds = 1 minute
       return () => clearInterval(intervalId); // Cleanup interval on component unmount
     }
   }, []);
@@ -469,7 +469,7 @@ export default function ProposalsList() {
                           </a>
                         )}
 
-                        {proposta.status === ProposalStatus.APPROVED_ACCEPT && proposta.active && (
+                        {proposta.status === ProposalStatus.APPROVED_ACCEPT && proposta.active  && proposta.cob_pay_link && (
                           <a href={`${proposta.cob_pay_link}`} target='blank' title="Link de Pagamento">
                             <CreditCard className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                           </a>
@@ -478,8 +478,7 @@ export default function ProposalsList() {
                     </td>
                     <td className="px-4 py-2 whitespace-nowrap">
                       <ActionsButtons
-                      // onEdit={proposta.status === ProposalStatus.APPROVED_ACCEPT ? undefined : () => { handleEdit(proposta.id) }}
-                      onEdit={() => { handleEdit(proposta.id) }}
+                      onEdit={proposta.status === ProposalStatus.APPROVED_ACCEPT ? undefined : () => { handleEdit(proposta.id) }}
                       onLocker={() => handleOnLock(proposta.id, proposta.active)}
                       active={proposta.active}
                       />

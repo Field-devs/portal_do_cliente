@@ -71,11 +71,21 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
 
 
   const validationForm = () => {
-    if (step === 1) {
+    if (step === 0) {
+      if (propostaDTO.perfil_id === null || propostaDTO.plano_id === "") {
+        AlertDialog("Selecione um Tipo de Cliente");
+        return false;
+      }
+      if (propostaDTO.plano_id === null || propostaDTO.plano_id === "") {
+        AlertDialog("Selecione um Plano");
+        return false;
+      }
+    }    
+    else if (step === 1) {
       let _percent = onlyNumber(propostaDTO.desconto);
       setValueProposal("desconto", _percent);
     }
-    if (step === 2) {
+    else if (step === 2) {
       if ((!propostaDTO.emp_nome || propostaDTO.emp_nome.trim() === "") && (!propostaDTO.emp_email || propostaDTO.emp_email.trim() === "")) {
         AlertDialog("Todos os campos são obrigatórios");
         return false;
