@@ -69,9 +69,10 @@ export default function ProposalFormConfirmClient({ Tipo, onCancel, sender, setS
     
     // If CEP field changes, fetch address data
     if (name === GetFieldName("cep")) {
-      const formattedValue = formatCEP(value);
+      //const formattedValue = formatCEP(value);
+      const formattedValue = value;
       setSender({ ...sender, [name]: formattedValue });
-      if (formattedValue.length === 9) { // Format: 00000-000
+      if (formattedValue.length === 8) { // Format: 00000-000
         fetchAddressData(formattedValue);
       }
     }
@@ -243,8 +244,8 @@ export default function ProposalFormConfirmClient({ Tipo, onCancel, sender, setS
                     name={GetFieldName("cep")}
                     value={sender[GetFieldName("cep")]}
                     onChange={handleInputChange}
-                    maxLength={9}
-                    placeholder="00000-000"
+                    maxLength={9} 
+                    placeholder="00000000"
                     className={inputClass}
                     onBlur={handleBlur}
                     required

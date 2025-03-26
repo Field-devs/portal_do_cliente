@@ -17,20 +17,21 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
   const [step, setStep] = useState(-1);
   const [propostaDTO, setPropostaDTO] = useState<PropostaDTO>(getDefaultPropostaDTO());
   const [addons, setAddons] = useState<PropostaAddon[]>();
-  
+
   const [idproposta, setIdProposta] = useState();
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [finish, setFinish] = useState(false);
   const [stepLimit] = useState(3);
 
-  const setValue = useCustomSetter(setPropostaDTO)
+  const setValueProposal = useCustomSetter(setPropostaDTO)
+  const setValueAddons = useCustomSetter(setAddons)
 
   useEffect(() => {
-    setValue("active", true)
-    setValue("user_id", user?.id)
-    setValue("emp_nome", "DIXON S MARINHO");
-    setValue("emp_email", "dixonsm@gmail.com");
+    setValueProposal("active", true)
+    setValueProposal("user_id", user?.id)
+    setValueProposal("emp_nome", "DIXON S MARINHO");
+    setValueProposal("emp_email", "dixonsm@gmail.com");
 
     if (!id) {
       setStep(0); // Inicia o passo
@@ -39,8 +40,8 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
     // Carrega a proposta
     const fetchProposta = async () => {
       let { data: proposta, error } = await supabase.from('proposta').select('*').eq('id', id).single();
-      let { data: propostaAddons, error : errorAddon } = await supabase.from('proposta_addons').select('*').eq('proposta_id', id);
-      
+      let { data: propostaAddons, error: errorAddon } = await supabase.from('proposta_addons').select('*').eq('proposta_id', id);
+
       if (error) {
         ErrorDialog("Erro ao carregar proposta: " + error.message);
       }
@@ -51,12 +52,12 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
       }
 
       if (propostaAddons) {
-        setValue("addons", propostaAddons);
+        setValueProposal("addons", propostaAddons);
       }
 
       setStep(0); // Inicia o passo
     };
-    fetchProposta();    
+    fetchProposta();
   }, []);
 
   const handleNext = () => {
@@ -72,7 +73,7 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
   const validationForm = () => {
     if (step === 1) {
       let _percent = onlyNumber(propostaDTO.desconto);
-      setValue("desconto", _percent);
+      setValueProposal("desconto", _percent);
     }
     if (step === 2) {
       if ((!propostaDTO.emp_nome || propostaDTO.emp_nome.trim() === "") && (!propostaDTO.emp_email || propostaDTO.emp_email.trim() === "")) {
@@ -105,12 +106,12 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
     const propostaToInsert = setPropostaToInsert(propostaDTO);
 
     if (TEST_DISABLE_DATA === false) {
-      
+
       if (propostaToInsert.id === undefined) {
         let { data: insertData, error: insertError } = await supabase.from("proposta").insert([propostaToInsert]).select("id");
         if (insertData) {
 
-          if (propostaDTO.addons ) {
+          if (propostaDTO.addons) {
             setIdProposta(insertData[0].id);
             // proposta_id in all records 
             propostaDTO.addons.forEach((addon) => {
@@ -126,8 +127,7 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
           return;
         }
       }
-      else 
-      {
+      else {
         // Atualiza a proposta
         let { data: updateData, error: updateError } = await supabase.from("proposta").update(propostaToInsert).eq("id", propostaToInsert.id).select("id");
         if (updateError) {
@@ -135,18 +135,21 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
           setLoading(false);
           return;
         }
-        // Remove os addons antigos
-        await supabase.from("proposta_addons").delete().eq("proposta_id", propostaToInsert.id);
+        else {
+          // Remove os addons antigos
+          await supabase.from("proposta_addons").delete().eq("proposta_id", propostaToInsert.id);
 
-        // Adiciona os novos addons
-        if (propostaDTO.addons.length > 0) {
-          console.log("ADDONS", propostaDTO.addons);
-          await supabase.from("proposta_addons").insert(propostaDTO.addons);
+          // Adiciona os novos addons
+          if (propostaDTO.addons.length > 0) {
+
+            // proposta_id in all records 
+            propostaDTO.addons.forEach((addon) => {
+              addon.proposta_id = updateData[0].id;
+            });
+            await supabase.from("proposta_addons").insert(propostaDTO.addons);
+          }
         }
-        
       }
-
-
     }
     setFinish(true);
     setPropostaDTO(propostaToInsert)

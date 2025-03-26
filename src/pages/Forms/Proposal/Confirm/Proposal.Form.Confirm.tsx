@@ -15,6 +15,8 @@ import CircularWait from '../../../../components/CircularWait';
 import { Proposta } from '../../../../Models/Propostas';
 import ProposalFormConfirmClient from './Proposal.Form.Confirm.Client';
 import { GetProposal, SaveProposal } from './Proposal.Form.Confirm.Logical';
+import ProposalFinishError from './Proposal.Form.Confirm.Error';
+import RegistrationSuccess from './Proposal.Form.Confirm.Finish';
 
 interface CommercialAffiliateFormProps {
   onSuccess: () => void;
