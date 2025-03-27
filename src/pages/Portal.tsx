@@ -72,7 +72,7 @@ export default function Portal() {
   return (
     <div className="min-h-screen bg-light-primary dark:bg-dark-primary flex">
       {/* Sidebar Navigation */}
-      <div className={`fixed inset-y-0 left-0 bg-light-card/80 dark:bg-dark-card/80 shadow-lg transition-all duration-300 z-20 flex flex-col backdrop-blur-sm rounded-tr-2xl rounded-br-2xl ${isExpanded ? 'w-52' : 'w-20'}`}>
+      <div className={`fixed inset-y-0 left-0 bg-white dark:bg-[#1E293B] transition-all duration-300 z-20 flex flex-col rounded-tr-2xl rounded-br-2xl border border-light-border dark:border-gray-700/50 ${isExpanded ? 'w-52' : 'w-20'}`}>
         {/* Logo and Toggle */}
         <div className="h-16 flex items-center justify-between px-3">
           <img
@@ -82,7 +82,7 @@ export default function Portal() {
           />
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="p-2 rounded-lg text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-light-secondary dark:hover:bg-dark-secondary"
+            className="p-2 rounded-lg text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800/50"
             title={isExpanded ? "Recolher menu" : "Expandir menu"}
           >
             {isExpanded ? <ChevronLeft className="h-5 w-5" /> : <ChevronRight className="h-5 w-5" />}
@@ -127,9 +127,9 @@ export default function Portal() {
                 key={item.path}
                 to={item.path}
                 title={!isExpanded ? item.name : undefined}
-                className={`flex items-center px-3 py-2 mx-2 text-sm font-medium rounded-lg transition-colors ${isExpanded ? 'justify-start' : 'justify-center'} ${isActive
+                className={`flex items-center px-3 py-2 mx-2 text-sm font-medium rounded-lg transition-colors ${isExpanded ? 'justify-start' : 'justify-center'} ${isActive 
                   ? 'bg-brand-50 text-brand-600 dark:bg-brand-900/20 dark:text-brand-400'
-                  : 'text-gray-600 dark:text-gray-400 hover:bg-brand-50/50 dark:hover:bg-brand-900/10 hover:text-brand-600 dark:hover:text-brand-400'
+                  : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800/50 hover:text-brand-600 dark:hover:text-brand-400'
                   }`}
               >
                 <div className={isExpanded ? '' : 'min-w-[2rem] flex justify-center'}>

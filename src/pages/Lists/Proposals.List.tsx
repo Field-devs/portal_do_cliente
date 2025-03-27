@@ -49,7 +49,7 @@ export default function ProposalsList() {
 
   const { loading: planosLoading } = usePlanos();
 
-  const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50 rounded-lg";
+  const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 border border-light-border dark:border-gray-700/50 rounded-lg";
   const titleClass = "text-4xl font-bold text-light-text-primary dark:text-white";
   const metricTitleClass = "text-lg font-medium text-light-text-primary dark:text-white mb-1";
   const metricValueClass = "text-3xl font-bold text-light-text-primary dark:text-white";

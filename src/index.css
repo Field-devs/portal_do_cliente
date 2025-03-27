@@ -132,11 +132,11 @@ select option:focus {
   }
 
   .input {
-    @apply w-full px-4 py-2 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-lg shadow-sm;
+    @apply w-full px-4 py-2 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-lg;
   }
 
   .select {
-    @apply w-full px-4 py-2 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-white focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-lg shadow-sm appearance-none;
+    @apply w-full px-4 py-2 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-white focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-lg appearance-none;
   }
 
   .badge {

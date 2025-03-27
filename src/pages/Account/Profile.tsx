@@ -179,7 +179,7 @@ export default function Profile() {
 
   return (
     <div className="p-6">
-      <div className="max-w-2xl mx-auto bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm rounded-xl shadow-lg border border-light-border dark:border-gray-700/50">
+      <div className="max-w-2xl mx-auto bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm rounded-xl border border-light-border dark:border-gray-700/50">
         <div className="p-6 mb-4">
           <div className="flex justify-between items-center">
             <h2 className="text-3xl font-bold text-light-text-primary dark:text-white">Perfil</h2>
