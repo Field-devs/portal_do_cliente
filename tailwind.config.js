@@ -4,6 +4,22 @@ export default {
   darkMode: 'class',
   theme: {
     extend: {
+      boxShadow: {
+        'lg': '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)',
+        'DEFAULT': '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)',
+        'md': '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
+        'sm': '0 1px 2px 0 rgb(0 0 0 / 0.05)',
+        'xl': '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)',
+        '2xl': '0 25px 50px -12px rgb(0 0 0 / 0.25)',
+        'inner': 'inset 0 2px 4px 0 rgb(0 0 0 / 0.05)',
+        'dark-lg': '0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.4)',
+        'dark': '0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px -1px rgba(0, 0, 0, 0.4)',
+        'dark-md': '0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.4)',
+        'dark-sm': '0 1px 2px 0 rgba(0, 0, 0, 0.4)',
+        'dark-xl': '0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.4)',
+        'dark-2xl': '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
+        'dark-inner': 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.2)'
+      },
       colors: {
         brand: {
           DEFAULT: '#1E3A8A',
@@ -34,7 +50,7 @@ export default {
           primary: '#0A0F1D',
           secondary: '#151E2C',
           accent: '#2563EB',
-          card: 'rgba(17, 24, 39, 0.95)',
+          card: 'rgba(17, 24, 39, 0.85)',
           border: 'rgba(75, 85, 99, 0.6)',
           text: {
             primary: '#FFFFFF',

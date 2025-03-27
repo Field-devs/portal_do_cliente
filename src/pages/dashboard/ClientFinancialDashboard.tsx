@@ -5,18 +5,19 @@ import {
   Download,
   RefreshCw,
   CreditCard,
-  PieChart,
   BarChart2,
   ExternalLink,
   Clock
 } from 'lucide-react';
 import {
-  PieChart as RechartsPieChart,
-  Pie,
-  Cell,
+  BarChart,
+  Bar,
   ResponsiveContainer,
   Legend,
-  Tooltip
+  Tooltip,
+  CartesianGrid,
+  XAxis,
+  YAxis
 } from 'recharts';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../components/AuthProvider';
@@ -54,7 +55,6 @@ export default function ClientFinancialDashboard() {
   const [refreshing, setRefreshing] = useState(false);
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [financialData, setFinancialData] = useState<FinancialData | null>(null);
-  const [chartType, setChartType] = useState<'pie' | 'bar'>('pie');
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
 
   const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50 rounded-lg";
@@ -62,9 +62,9 @@ export default function ClientFinancialDashboard() {
   const metricTitleClass = "text-lg font-medium text-light-text-primary dark:text-white mb-1";
   const metricValueClass = "text-3xl font-bold text-light-text-primary dark:text-white";
   const metricSubtextClass = "text-sm text-light-text-secondary dark:text-blue-200";
-  const iconContainerClass = "bg-blue-400/10 p-3 rounded-lg";
+  const iconContainerClass = "bg-blue-400/10 p-3 rounded-full";
   const iconClass = "h-6 w-6 text-blue-600 dark:text-blue-400";
-  const badgeClass = "text-xs font-medium bg-blue-50 dark:bg-blue-400/10 text-blue-600 dark:text-blue-400 px-2 py-1 rounded-lg";
+  const badgeClass = "text-xs font-medium bg-blue-50 dark:bg-blue-400/10 text-blue-600 dark:text-blue-400 px-3 py-1.5 rounded-full";
 
   const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#6366F1', '#EC4899'];
 
@@ -111,6 +111,21 @@ export default function ClientFinancialDashboard() {
     .filter(inv => inv.status === 'overdue')
     .reduce((sum, inv) => sum + inv.valor, 0);
 
+  const getStatusBadgeStyles = (status: string) => {
+    switch (status.toLowerCase()) {
+      case 'paid':
+        return 'bg-emerald-50 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/30';
+      case 'pending':
+        return 'bg-amber-50 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-500/30';
+      case 'cancelled':
+        return 'bg-rose-50 dark:bg-rose-500/20 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-500/30';
+      case 'suspenso':
+        return 'bg-purple-50 dark:bg-purple-500/20 text-purple-600 dark:text-purple-400 border border-purple-200 dark:border-purple-500/30';
+      default:
+        return 'bg-slate-50 dark:bg-slate-500/20 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-500/30';
+    }
+  };
+
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'paid':
@@ -152,29 +167,7 @@ export default function ClientFinancialDashboard() {
           >
             <RefreshCw className={`h-5 w-5 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
             Atualizar
-          </button>
-          <div className="flex rounded-lg overflow-hidden border border-light-border dark:border-gray-700/50">
-            <button
-              onClick={() => setChartType('pie')}
-              className={`px-4 py-2 text-sm font-medium ${
-                chartType === 'pie'
-                  ? 'bg-brand text-white'
-                  : 'bg-light-secondary dark:bg-[#1E293B]/60 text-gray-700 dark:text-gray-300'
-              }`}
-            >
-              <PieChart className="h-5 w-5" />
-            </button>
-            <button
-              onClick={() => setChartType('bar')}
-              className={`px-4 py-2 text-sm font-medium ${
-                chartType === 'bar'
-                  ? 'bg-brand text-white'
-                  : 'bg-light-secondary dark:bg-[#1E293B]/60 text-gray-700 dark:text-gray-300'
-              }`}
-            >
-              <BarChart2 className="h-5 w-5" />
-            </button>
-          </div>
+          </button>          
         </div>
       </div>
 
@@ -219,40 +212,67 @@ export default function ClientFinancialDashboard() {
 
       {/* Cost Breakdown Chart */}
       <div className={`${cardClass} mb-8`}>
-        <h3 className={metricTitleClass}>Composição dos Custos</h3>
+        <div className="flex flex-col space-y-4">
+          <div className="flex justify-between items-center">
+          <h3 className={metricTitleClass}>Composição dos Custos</h3>
+          <div className="flex items-center space-x-3">
+            <div className="p-1 bg-light-secondary dark:bg-[#0F172A]/60 rounded-lg flex">
+              {['Plano Base', 'Add-ons'].map((item, index) => (
+                <div
+                  key={item}
+                  className="flex items-center px-3 py-1.5 rounded-md transition-colors hover:bg-white/10 cursor-pointer"
+                  title={item}
+                >
+                  <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: COLORS[index] }}></span>
+                  <span className="ml-2 text-xs font-medium text-gray-600 dark:text-gray-300">{item}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+        </div>
         <div className="h-[400px]">
           <ResponsiveContainer width="100%" height="100%">
-            <RechartsPieChart>
-              <Pie
-                data={chartData}
-                dataKey="value"
-                nameKey="name"
-                cx="50%"
-                cy="50%"
-                outerRadius={150}
-                label={({ name, value }) => `${name}: ${formatCurrency(value)}`}
-              >
-                {chartData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                ))}
-              </Pie>
+            <BarChart data={chartData}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#1E293B" opacity={0.1} />
+              <XAxis 
+                dataKey="name" 
+                stroke="#64748B"
+                angle={-45}
+                textAnchor="end"
+                height={80}
+                tick={{ fontSize: 12 }}
+              />
+              <YAxis
+                stroke="#64748B"
+                tickFormatter={(value) => formatCurrency(value)}
+                tick={{ fontSize: 12 }}
+              />
               <Tooltip
                 formatter={(value: number) => formatCurrency(value)}
                 contentStyle={{
-                  backgroundColor: '#1E293B',
+                  backgroundColor: '#0F172A',
                   border: 'none',
                   borderRadius: '0.5rem',
                   color: '#F1F5F9'
                 }}
+                cursor={{ fill: 'rgba(255, 255, 255, 0.05)' }}
               />
               <Legend />
-            </RechartsPieChart>
+              <Bar
+                dataKey="value"
+                fill="#3B82F6"
+                name="Valor"
+                radius={[6, 6, 0, 0]}
+                maxBarSize={50}
+              />
+            </BarChart>
           </ResponsiveContainer>
         </div>
       </div>
 
       {/* Invoices Table */}
-      <div className={cardClass}>
+      <div className={`${cardClass} overflow-hidden`}>
         <div className="flex justify-between items-center mb-6">
           <h3 className={metricTitleClass}>Faturas</h3>
           {lastUpdate && (
@@ -262,9 +282,9 @@ export default function ClientFinancialDashboard() {
           )}
         </div>
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-light-border dark:divide-gray-700/50">
+          <table className="min-w-full divide-y divide-light-border dark:divide-gray-700/50 rounded-lg overflow-hidden">
             <thead>
-              <tr className="bg-light-secondary dark:bg-[#0F172A]/60">
+              <tr className="bg-light-secondary dark:bg-[#0F172A]/60 rounded-t-lg">
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                   Vencimento
                 </th>

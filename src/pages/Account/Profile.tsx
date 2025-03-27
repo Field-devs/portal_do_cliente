@@ -179,14 +179,14 @@ export default function Profile() {
 
   return (
     <div className="p-6">
-      <div className="max-w-2xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow">
-        <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+      <div className="max-w-2xl mx-auto bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm rounded-xl shadow-lg border border-light-border dark:border-gray-700/50">
+        <div className="p-6 mb-4">
           <div className="flex justify-between items-center">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Perfil</h2>
+            <h2 className="text-3xl font-bold text-light-text-primary dark:text-white">Perfil</h2>
             {!isEditing && (
               <button
                 onClick={() => setIsEditing(true)}
-                className="flex items-center px-4 py-2 text-sm bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-100 rounded-md transition-colors"
+                className="flex items-center px-4 py-2 text-sm bg-brand/10 hover:bg-brand/20 text-brand dark:text-brand-400 rounded-lg transition-colors"
               >
                 <Edit2 className="h-4 w-4 mr-2" />
                 Editar Perfil
@@ -195,9 +195,9 @@ export default function Profile() {
           </div>
         </div>
 
-        <div className="p-6">
+        <div className="px-6 pb-6">
           {/* Profile Photo */}
-          <div className="mb-8">
+          <div className="mb-10">
             <PhotoUpload
               currentPhotoUrl={user?.foto}
               onPhotoChange={async (url) => {
@@ -296,9 +296,9 @@ export default function Profile() {
 
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Contact Information */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
               <div>
-                <label className={labelClasses}>Nome</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Nome</label>
                 <div className="flex items-center">
                   <User className="h-5 w-5 text-gray-400 mr-2" />
                   {isEditing ? (
@@ -308,7 +308,7 @@ export default function Profile() {
                         name="firstName"
                         value={formData.firstName}
                         onChange={handleInputChange}
-                        className={inputClasses}
+                        className="w-full px-4 py-2.5 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent transition-colors"
                         placeholder="Nome"
                       />
                       <input
@@ -316,12 +316,12 @@ export default function Profile() {
                         name="lastName"
                         value={formData.lastName}
                         onChange={handleInputChange}
-                        className={inputClasses}
+                        className="w-full px-4 py-2.5 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent transition-colors"
                         placeholder="Sobrenome"
                       />
                     </div>
                   ) : (
-                    <span className={readOnlyClasses}>
+                    <span className="text-lg text-light-text-primary dark:text-white">
                       {`${formData.firstName} ${formData.lastName}`}
                     </span>
                   )}
@@ -329,7 +329,7 @@ export default function Profile() {
               </div>
 
               <div>
-                <label className={labelClasses}>Email</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email</label>
                 <div className="flex items-center">
                   <Mail className="h-5 w-5 text-gray-400 mr-2" />
                   {isEditing ? (
@@ -338,17 +338,17 @@ export default function Profile() {
                       name="email"
                       value={formData.email}
                       onChange={handleInputChange}
-                      className={inputClasses}
+                      className="w-full px-4 py-2.5 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent transition-colors"
                       maxLength={100}
                     />
                   ) : (
-                    <span className={readOnlyClasses}>{formData.email}</span>
+                    <span className="text-lg text-light-text-primary dark:text-white">{formData.email}</span>
                   )}
                 </div>
               </div>
 
               <div>
-                <label className={labelClasses}>Telefone</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Telefone</label>
                 <div className="flex items-center">
                   <Phone className="h-5 w-5 text-gray-400 mr-2" />
                   {isEditing ? (
@@ -357,11 +357,11 @@ export default function Profile() {
                       name="fone"
                       value={formData.fone}
                       onChange={handleInputChange}
-                      className={inputClasses}
+                      className="w-full px-4 py-2.5 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent transition-colors"
                       maxLength={20}
                     />
                   ) : (
-                    <span className={readOnlyClasses}>
+                    <span className="text-lg text-light-text-primary dark:text-white">
                       {formData.fone || '-'}
                     </span>
                   )}
@@ -369,7 +369,7 @@ export default function Profile() {
               </div>
 
               <div>
-                <label className={labelClasses}>CNPJ</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">CNPJ</label>
                 <div className="flex items-center">
                   <CreditCard className="h-5 w-5 text-gray-400 mr-2" />
                   {isEditing ? (
@@ -378,11 +378,11 @@ export default function Profile() {
                       name="cnpj"
                       value={formData.cnpj}
                       onChange={handleInputChange}
-                      className={inputClasses}
+                      className="w-full px-4 py-2.5 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent transition-colors"
                       maxLength={14}
                     />
                   ) : (
-                    <span className={readOnlyClasses}>
+                    <span className="text-lg text-light-text-primary dark:text-white">
                       {formData.cnpj || '-'}
                     </span>
                   )}
@@ -390,7 +390,7 @@ export default function Profile() {
               </div>
 
               <div>
-                <label className={labelClasses}>Empresa</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Empresa</label>
                 <div className="flex items-center">
                   <Building2 className="h-5 w-5 text-gray-400 mr-2" />
                   {isEditing ? (
@@ -399,11 +399,11 @@ export default function Profile() {
                       name="empresa"
                       value={formData.empresa}
                       onChange={handleInputChange}
-                      className={inputClasses}
+                      className="w-full px-4 py-2.5 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent transition-colors"
                       maxLength={20}
                     />
                   ) : (
-                    <span className={readOnlyClasses}>
+                    <span className="text-lg text-light-text-primary dark:text-white">
                       {formData.empresa || '-'}
                     </span>
                   )}
@@ -413,27 +413,30 @@ export default function Profile() {
 
             {/* Action Buttons */}
             {isEditing && (
-              <div className="flex justify-end space-x-3">
+              <div className="flex justify-end space-x-3 pt-6 border-t border-light-border/30 dark:border-gray-700/30">
                 <button
                   type="button"
                   onClick={() => setIsEditing(false)}
-                  className="px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
+                  className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-light-secondary dark:bg-[#0F172A]/60 hover:bg-gray-200 dark:hover:bg-[#0F172A]/40 rounded-lg transition-colors"
                   disabled={loading}
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-brand text-white rounded-md hover:bg-brand/90 flex items-center"
+                  className="px-4 py-2 bg-brand text-white rounded-lg hover:bg-brand/90 flex items-center transition-colors"
                   disabled={loading}
                 >
                   {loading ? (
                     <>
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      <Loader2 className="h-5 w-5 mr-2 animate-spin" />
                       Salvando...
                     </>
                   ) : (
-                    'Salvar Alterações'
+                    <>
+                      <Save className="h-5 w-5 mr-2" />
+                      Salvar Alterações
+                    </>
                   )}
                 </button>
               </div>

@@ -2,6 +2,36 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  .dark .shadow-card {
+    @apply shadow-dark-lg;
+  }
+  
+  .dark .shadow-sm {
+    @apply shadow-dark-sm;
+  }
+  
+  .dark .shadow-md {
+    @apply shadow-dark-md;
+  }
+  
+  .dark .shadow-lg {
+    @apply shadow-dark-lg;
+  }
+  
+  .dark .shadow-xl {
+    @apply shadow-dark-xl;
+  }
+  
+  .dark .shadow-2xl {
+    @apply shadow-dark-2xl;
+  }
+  
+  .dark .shadow-inner {
+    @apply shadow-dark-inner;
+  }
+}
+
 @layer base {
   body {
     @apply antialiased;

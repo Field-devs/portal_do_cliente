@@ -63,14 +63,14 @@ export default function FinancialDashBoard() {
   const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'paid' | 'overdue'>('all');
   const [dateFilter, setDateFilter] = useState<'all' | 'thisMonth' | 'lastMonth' | 'thisYear'>('all');
 
-  const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50 rounded-lg";
+  const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50 rounded-2xl";
   const titleClass = "text-4xl font-bold text-light-text-primary dark:text-white";
   const metricTitleClass = "text-lg font-medium text-light-text-primary dark:text-white mb-1";
   const metricValueClass = "text-3xl font-bold text-light-text-primary dark:text-white";
   const metricSubtextClass = "text-sm text-light-text-secondary dark:text-blue-200";
-  const iconContainerClass = "bg-blue-400/10 p-3 rounded-lg";
+  const iconContainerClass = "bg-blue-400/10 p-3 rounded-full";
   const iconClass = "h-6 w-6 text-blue-600 dark:text-blue-400";
-  const badgeClass = "text-xs font-medium bg-blue-50 dark:bg-blue-400/10 text-blue-600 dark:text-blue-400 px-2 py-1 rounded-lg";
+  const badgeClass = "text-xs font-medium bg-blue-50 dark:bg-blue-400/10 text-blue-600 dark:text-blue-400 px-3 py-1.5 rounded-full";
 
   useEffect(() => {
     fetchFinancialData();
@@ -281,12 +281,6 @@ export default function FinancialDashBoard() {
       <div className={cardClass}>
         <div className="flex items-center justify-between mb-6">
           <h3 className={metricTitleClass}>Receita x Projeção</h3>
-          <div className="flex items-center space-x-2">
-            <span className="w-3 h-3 rounded-full bg-blue-500"></span>
-            <span className="text-sm text-light-text-secondary dark:text-gray-300">Realizado</span>
-            <span className="w-3 h-3 rounded-full bg-blue-200"></span>
-            <span className="text-sm text-light-text-secondary dark:text-gray-300">Projetado</span>
-          </div>
         </div>
         <div className="h-80">
           <ResponsiveContainer width="100%" height="100%">
@@ -317,8 +311,8 @@ export default function FinancialDashBoard() {
                   color: '#F1F5F9'
                 }}
               />
-              <Bar dataKey="revenue" name="Receita" fill="#3B82F6" radius={[4, 4, 0, 0]} />
-              <Bar dataKey="projected" name="Projeção" fill="#93C5FD" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="revenue" fill="#3B82F6" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="projected" fill="#93C5FD" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -332,10 +326,10 @@ export default function FinancialDashBoard() {
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
               <input
                 type="text"
-                placeholder="Buscar por cliente ou número da fatura..."
+                placeholder="Buscar por empresa, email ou CNPJ..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-lg shadow-sm"
+                className="w-full pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-full shadow-sm"
               />
             </div>
           </div>
@@ -345,7 +339,7 @@ export default function FinancialDashBoard() {
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value as typeof statusFilter)}
-                className="pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors appearance-none min-w-[200px] rounded-lg shadow-sm"
+                className="pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors appearance-none min-w-[200px] rounded-full shadow-sm"
               >
                 <option value="all">Todos os Status</option>
                 <option value="pending">Pendentes</option>
@@ -358,7 +352,7 @@ export default function FinancialDashBoard() {
               <select
                 value={dateFilter}
                 onChange={(e) => setDateFilter(e.target.value as typeof dateFilter)}
-                className="pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors appearance-none min-w-[200px] rounded-lg shadow-sm"
+                className="pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors appearance-none min-w-[200px] rounded-full shadow-sm"
               >
                 <option value="all">Todas as Datas</option>
                 <option value="thisMonth">Este Mês</option>
@@ -373,9 +367,9 @@ export default function FinancialDashBoard() {
       {/* Invoices Table */}
       <div className={`${cardClass} mt-6 overflow-hidden`}>
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-light-border dark:divide-gray-700/50 rounded-lg overflow-hidden">
+          <table className="min-w-full divide-y divide-light-border dark:divide-gray-700/50 rounded-2xl overflow-hidden">
             <thead>
-              <tr className="bg-light-secondary dark:bg-[#0F172A]/60 rounded-t-lg">
+              <tr className="bg-light-secondary dark:bg-[#0F172A]/60 rounded-t-2xl">
                 <th className="px-6 py-4 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                   Fatura
                 </th>
