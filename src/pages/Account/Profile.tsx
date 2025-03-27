@@ -25,6 +25,7 @@ const DEFAULT_AVATARS = [
   'https://storage.wiseapp360.com/typebot/public/workspaces/clwl6fdyf000511ohlamongyl/typebots/cm683siyl000dm4kxlrec9tb8/results/lfixyv779fwk3y09zpdx096y/blocks/flm69ulnpr4b67h01xj47t14/Gemini_Generated_Image_e9z11me9z11me9z1_resultado.png',
   'https://storage.wiseapp360.com/typebot/public/workspaces/clwl6fdyf000511ohlamongyl/typebots/cm683siyl000dm4kxlrec9tb8/results/iv734529009a3ha4si1pmnqz/blocks/flm69ulnpr4b67h01xj47t14/Gemini_Generated_Image_rmjurvrmjurvrmju_resultado.png'
 ];
+import PhotoUpload from '../../components/PhotoUpload';
 
 export default function Profile() {
   const { user, updateUser } = useAuth();
@@ -195,6 +196,24 @@ export default function Profile() {
         </div>
 
         <div className="p-6">
+          {/* Profile Photo */}
+          <div className="mb-8">
+            <PhotoUpload
+              currentPhotoUrl={user?.foto}
+              onPhotoChange={async (url) => {
+                try {
+                  await updateUser({ ...user, foto: url });
+                  setSuccess(true);
+                  setTimeout(() => setSuccess(false), 3000);
+                } catch (err) {
+                  console.error('Error updating profile photo:', err);
+                  setError('Erro ao atualizar foto de perfil');
+                }
+              }}
+              userId={user?.id}
+            />
+          </div>
+
 
           {/* Profile Photo Section */}
           {/* <div className="flex flex-col items-center mb-8">

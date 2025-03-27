@@ -12,6 +12,13 @@ export enum UserRoles {
     CLIENTE_FINAL = "CF",
 }
 
+export const FONT_OPTIONS = [
+  { value: 'Inter', label: 'Inter' },
+  { value: 'Roboto', label: 'Roboto' },
+  { value: 'Open Sans', label: 'Open Sans' },
+  { value: 'Montserrat', label: 'Montserrat' }
+];
+
 export enum ProposalStatus {
     PENDING = "PE",
     ACCEPT = "AC",

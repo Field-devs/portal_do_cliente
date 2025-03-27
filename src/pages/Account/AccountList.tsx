@@ -112,10 +112,10 @@ function AccountList() {
         <h1 className={titleClass}>Usuários</h1>
         <button
           onClick={() => setShowUserForm(true)}
-          className="btn-primary flex items-center"
+          className="btn-primary flex items-center rounded-lg"
         >
           <Plus className="h-5 w-5 mr-2" />
-          Nova Conta
+          Novo Usuário
         </button>
       </div>
 

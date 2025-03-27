@@ -31,15 +31,15 @@ export default {
           }
         },
         dark: {
-          primary: '#0F172A',
-          secondary: '#1E293B',
-          accent: '#3B82F6',
-          card: 'rgba(30, 41, 59, 0.9)',
-          border: 'rgba(51, 65, 85, 0.5)',
+          primary: '#0A0F1D',
+          secondary: '#151E2C',
+          accent: '#2563EB',
+          card: 'rgba(17, 24, 39, 0.95)',
+          border: 'rgba(75, 85, 99, 0.6)',
           text: {
-            primary: '#F8FAFC',
-            secondary: '#CBD5E1',
-            accent: '#60A5FA'
+            primary: '#FFFFFF',
+            secondary: '#E2E8F0',
+            accent: '#3B82F6'
           }
         },
         status: {
@@ -50,9 +50,9 @@ export default {
               border: '#BBF7D0'
             },
             dark: {
-              bg: 'rgba(22, 163, 74, 0.2)',
-              text: '#4ADE80',
-              border: 'rgba(22, 163, 74, 0.3)'
+              bg: 'rgba(22, 163, 74, 0.25)',
+              text: '#34D399',
+              border: 'rgba(22, 163, 74, 0.4)'
             }
           },
           warning: {
@@ -62,9 +62,9 @@ export default {
               border: '#FEF08A'
             },
             dark: {
-              bg: 'rgba(234, 179, 8, 0.2)',
-              text: '#FACC15',
-              border: 'rgba(234, 179, 8, 0.3)'
+              bg: 'rgba(234, 179, 8, 0.25)',
+              text: '#FBBF24',
+              border: 'rgba(234, 179, 8, 0.4)'
             }
           },
           error: {
@@ -74,9 +74,9 @@ export default {
               border: '#FECACA'
             },
             dark: {
-              bg: 'rgba(220, 38, 38, 0.2)',
-              text: '#F87171',
-              border: 'rgba(220, 38, 38, 0.3)'
+              bg: 'rgba(220, 38, 38, 0.25)',
+              text: '#EF4444',
+              border: 'rgba(220, 38, 38, 0.4)'
             }
           },
           info: {
@@ -86,9 +86,9 @@ export default {
               border: '#BAE6FD'
             },
             dark: {
-              bg: 'rgba(14, 165, 233, 0.2)',
-              text: '#38BDF8',
-              border: 'rgba(14, 165, 233, 0.3)'
+              bg: 'rgba(14, 165, 233, 0.25)',
+              text: '#0EA5E9',
+              border: 'rgba(14, 165, 233, 0.4)'
             }
           }
         }

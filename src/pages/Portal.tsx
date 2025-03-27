@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Routes, Route, NavLink, useLocation } from 'react-router-dom';
 import { useAuth } from '../components/AuthProvider';
+import { UserRoles } from '../utils/consts';
 import { useTheme } from '../components/ThemeProvider';
 import {
   FileText,
@@ -19,6 +20,8 @@ import {
   Cog
 } from 'lucide-react';
 import AdminDashboard from './dashboard/AdminDashboard';
+import ClientDashboard from './dashboard/ClientDashboard';
+import ClientFinancialDashboard from './dashboard/ClientFinancialDashboard';
 import ProposalsList from './Lists/Proposals.List';
 import PartnerList from './Lists/Partner.List';
 import AccountList from './Account/AccountList';
@@ -27,6 +30,7 @@ import PlanList from './Lists/Plan.List';
 import Profile from './Account/Profile';
 import SignatureList from './Lists/Signature.List';
 import ProposalFormConfirm from './Forms/Proposal/Proposal.Form.Confirm';
+import AdminSettings from './Settings/AdminSettings';
 
 const getRoleBadgeStyles = (role: string | null) => {
   switch (role) {
@@ -53,9 +57,8 @@ export default function Portal() {
   const [isExpanded, setIsExpanded] = useState(true);
 
   const navigation = [
-    { id: 1, name: 'Dashboard', icon: BarChart2, path: '/portal', visible: [1] },
+    { id: 1, name: 'Dashboard', icon: BarChart2, path: '/portal', visible: [1, 5] },
     { id: 2, name: 'Propostas', icon: FileText, path: '/portal/proposals', visible: [1, 2, 3, 4] },
-    { id: 3, name: 'Assinaturas', icon: FileCheck2, path: '/portal/signature', visible: [1, 2, 3, 4] },
     { id: 4, name: 'Planos/Addons', icon: Package, path: '/portal/plans', visible: [1, 2, 3, 4] },
     { id: 5, name: 'Contas', icon: Briefcase, path: '/portal/partners', visible: [1, 2, 3, 4] },
     { id: 6, name: 'Usuários', icon: Users, path: '/portal/accounts', visible: [1, 2] },
@@ -77,12 +80,13 @@ export default function Portal() {
             alt="OUTR.ONE"
             className={`transition-all duration-300 ${isExpanded ? 'h-8 w-auto' : 'h-8 w-8 object-cover'}`}
           />
-          <button
-            onClick={() => setIsExpanded(!isExpanded)}
-            className="p-1.5 rounded-lg text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-light-secondary dark:hover:bg-dark-secondary"
+          <NavLink
+            to="/portal/settings"
+            className="p-2 rounded-lg text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-light-secondary dark:hover:bg-dark-secondary"
+            title="Configurações do Sistema"
           >
             {isExpanded ? <ChevronLeft className="h-5 w-5" /> : <ChevronRight className="h-5 w-5" />}
-          </button>
+          </NavLink>
         </div>
 
         {/* User Profile */}
@@ -155,12 +159,19 @@ export default function Portal() {
               {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
             </button>
 
-            <button
-              className="p-2 rounded-lg text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-light-secondary dark:hover:bg-dark-secondary"
-              title={'Configurações do Sistema'}
-            >
-              <Cog className="h-5 w-5" />
-            </button>
+            {user?.perfil_cod !== UserRoles.CLIENTE_FINAL && (
+              <NavLink
+                to="/portal/settings"
+                className={({ isActive }) => `p-2 rounded-lg transition-colors ${
+                  isActive
+                    ? 'bg-brand-50 text-brand-600 dark:bg-brand-900/20 dark:text-brand-400'
+                    : 'text-gray-600 dark:text-gray-400 hover:bg-light-secondary dark:hover:bg-dark-secondary hover:text-gray-900 dark:hover:text-gray-200'
+                }`}
+                title="Configurações do Sistema"
+              >
+                <Cog className="h-5 w-5" />
+              </NavLink>
+            )}
 
             <NavLink
               to="/portal/profile"
@@ -185,15 +196,14 @@ export default function Portal() {
       <div className={`flex-1 transition-all duration-300 ${isExpanded ? 'ml-52' : 'ml-20'}`}>
         <div className="p-6">
           <Routes>
-            {/* <Route path="/" element={<ProposalsList />} /> */}
-            <Route path="/" element={<AdminDashboard />} />
-            <Route path="signature" element={<SignatureList />} />
+            <Route path="/" element={user?.perfil_cod === 'CF' ? <ClientDashboard /> : <AdminDashboard />} />
             <Route path="plans" element={<PlanList />} />
             <Route path="proposals" element={<ProposalsList />} />
             <Route path="partners" element={<PartnerList />} />
             <Route path="accounts" element={<AccountList />} />
-            <Route path="financial" element={<FinancialDashBoard />} />
+            <Route path="financial" element={user?.perfil_cod === 'CF' ? <ClientFinancialDashboard /> : <FinancialDashBoard />} />
             <Route path="profile" element={<Profile />} />
+            <Route path="settings" element={<AdminSettings />} />
           </Routes>
         </div>
       </div>
