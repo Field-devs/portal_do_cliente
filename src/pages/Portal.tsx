@@ -3,7 +3,7 @@ import { Routes, Route, NavLink, useLocation } from 'react-router-dom';
 import { useAuth } from '../components/AuthProvider';
 import { UserRoles } from '../utils/consts';
 import { useTheme } from '../components/ThemeProvider';
-import '../Styles/animations.css';
+import '../Styles/animations.css'; // Certifique-se de que o CSS está importado
 import {
   FileText,
   Users,
@@ -32,6 +32,7 @@ import Profile from './Account/Profile';
 import SignatureList from './Lists/Signature.List';
 import ProposalFormConfirm from './Forms/Proposal/Proposal.Form.Confirm';
 import AdminSettings from './Settings/AdminSettings';
+
 const getRoleBadgeStyles = (role: string | null) => {
   switch (role) {
     case 'super_admin':
@@ -54,7 +55,8 @@ export default function Portal() {
   const { theme, toggleTheme } = useTheme();
   const location = useLocation();
   const [isExpanded, setIsExpanded] = useState(true);
-  
+  const [isLogoLoaded, setIsLogoLoaded] = useState(false);
+
   const navigation = [
     { id: 1, name: 'Dashboard', icon: BarChart2, path: '/portal', visible: [1, 5] },
     { id: 2, name: 'Propostas', icon: FileText, path: '/portal/proposals', visible: [1, 2, 3, 4] },
@@ -77,7 +79,10 @@ export default function Portal() {
           <img
             src={logoUrl}
             alt="OUTR.ONE"
-            className={`transition-all duration-300 ${isExpanded ? 'h-8 w-auto' : 'h-8 w-8 object-cover'}`}
+            className={`transition-all duration-500 transform ${
+              isLogoLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
+            } ${isExpanded ? 'h-8 w-auto' : 'h-8 w-8 object-cover'}`}
+            onLoad={() => setIsLogoLoaded(true)}
           />
           <button
             onClick={() => setIsExpanded(!isExpanded)}

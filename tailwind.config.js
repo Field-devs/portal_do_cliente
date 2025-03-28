@@ -117,6 +117,70 @@ export default {
         'xl': '1.25rem',
         '2xl': '1.5rem',
         'full': '9999px'
+      },
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' }
+        },
+        dotBounce1: {
+          '0%, 80%, 100%': { 
+            transform: 'translateY(0)',
+            opacity: '0.6'
+          },
+          '40%': { 
+            transform: 'translateY(-8px)',
+            opacity: '1'
+          }
+        },
+        dotBounce2: {
+          '0%, 20%, 100%': { 
+            transform: 'translateY(0)',
+            opacity: '0.6'
+          },
+          '60%': { 
+            transform: 'translateY(-8px)',
+            opacity: '1'
+          }
+        },
+        dotBounce3: {
+          '0%, 40%, 100%': { 
+            transform: 'translateY(0)',
+            opacity: '0.6'
+          },
+          '80%': { 
+            transform: 'translateY(-8px)',
+            opacity: '1'
+          }
+        },
+        modalSlideIn: {
+          '0%': { 
+            opacity: '0',
+            transform: 'scale(0.95) translateY(-10px)' 
+          },
+          '100%': { 
+            opacity: '1',
+            transform: 'scale(1) translateY(0)' 
+          }
+        },
+        logoFadeIn: {
+          '0%': {
+            opacity: '0',
+            transform: 'scale(0.95) rotate(-10deg)'
+          },
+          '100%': {
+            opacity: '1', 
+            transform: 'scale(1) rotate(0)'
+          }
+        }
+      },
+      animation: {
+        fadeIn: 'fadeIn 0.3s ease-out',
+        dotBounce1: 'dotBounce1 1.4s infinite ease-in-out',
+        dotBounce2: 'dotBounce2 1.4s infinite ease-in-out',
+        dotBounce3: 'dotBounce3 1.4s infinite ease-in-out',
+        modalSlideIn: 'modalSlideIn 0.3s ease-out',
+        logoFadeIn: 'logoFadeIn 0.5s ease-out'
       }
     },
   },

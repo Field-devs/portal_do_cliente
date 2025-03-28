@@ -91,6 +91,15 @@ body {
   .dark * {
     scrollbar-color: theme('colors.gray.600/50') theme('colors.gray.800/20');
   }
+
+  /* Hide scrollbar arrows */
+  ::-webkit-scrollbar-button {
+    display: none;
+  }
+
+  * {
+    scrollbar-arrow-color: transparent;
+  }
 }
 
 /* Dropdown Select Styles */
@@ -128,6 +137,17 @@ select option:focus {
 
   input[type="number"] {
     -moz-appearance: textfield;
+  }
+
+  /* Hide scrollbar arrows in modern browsers */
+  ::-webkit-scrollbar-button {
+    display: none;
+  }
+
+  /* Hide scrollbar arrows in Firefox */
+  * {
+    scrollbar-width: thin;
+    scrollbar-arrow-color: transparent;
   }
 
   /* Remove select element arrow */
@@ -190,4 +210,30 @@ select option:focus {
   .badge-info {
     @apply bg-status-info-light-bg dark:bg-status-info-dark-bg text-status-info-light-text dark:text-status-info-dark-text border border-status-info-light-border dark:border-status-info-dark-border;
   }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes logoFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) rotate(-5deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(0);
+  }
+}
+
+.logo-animation {
+  animation: logoFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }

@@ -239,15 +239,25 @@ function AccountList() {
 
       <div className={`${cardClass} mt-6 overflow-hidden fade-in`}>
         <div className="relative">
-          <div className="absolute right-0 top-1/2 -translate-y-1/2 w-12 h-12 bg-gradient-to-l from-gray-100/80 dark:from-gray-800/80 to-transparent pointer-events-none flex items-center justify-end pr-2 transition-opacity duration-300 ease-in-out opacity-100 z-10">
+          <div id="scroll-indicator" className="absolute right-0 top-1/2 -translate-y-1/2 w-12 h-12 bg-gradient-to-l from-gray-100/80 dark:from-gray-800/80 to-transparent pointer-events-none flex items-center justify-end pr-2 transition-opacity duration-300 ease-in-out opacity-0 z-10">
             <ChevronRight className="h-5 w-5 text-gray-400 dark:text-gray-500 animate-pulse" />
           </div>
           <div className="overflow-x-auto" onScroll={(e) => {
             const target = e.currentTarget;
             const indicator = target.previousElementSibling as HTMLElement;
             if (indicator) {
-              const scrollPercentage = (target.scrollLeft + target.clientWidth) / target.scrollWidth;
-              indicator.style.opacity = scrollPercentage >= 0.95 ? '0' : '1';
+              // Only show indicator if content is scrollable
+              if (target.scrollWidth > target.clientWidth) {
+                const scrollPercentage = (target.scrollLeft + target.clientWidth) / target.scrollWidth;
+                indicator.style.opacity = scrollPercentage >= 0.95 ? '0' : '1';
+              }
+            }
+          }} ref={(el) => {
+            if (el) {
+              const indicator = el.previousElementSibling as HTMLElement;
+              if (indicator) {
+                indicator.style.opacity = el.scrollWidth > el.clientWidth ? '1' : '0';
+              }
             }
           }}>
           <table className="min-w-full divide-y divide-light-border dark:divide-gray-700/50 rounded-lg overflow-hidden">
