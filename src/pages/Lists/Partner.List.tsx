@@ -13,6 +13,7 @@ import {
 import { supabase } from '../../lib/supabase';
 import CommercialAffiliateForm from '../Forms/CommercialAffiliateForm';
 import { formatPhone } from '../../utils/formatters';
+import SearchFilter from '../../components/SearchFilter';
 import { ModalForm } from '../../components/Modal/Modal';
 import ActionsButtons from '../../components/ActionsData';
 import { UpdateSingleField } from '../../utils/supageneric';
@@ -21,6 +22,7 @@ import CircularWait from '../../components/CircularWait';
 import Cliente from '../../Models/Cliente';
 import { UserRoles } from '../../utils/consts';
 import { useAuth } from '../../components/AuthProvider';
+import '../../Styles/animations.css';
 
 export default function PartnerList() {
   const { user } = useAuth();
@@ -130,7 +132,7 @@ export default function PartnerList() {
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-8">
-        <h1 className={titleClass}>{title}</h1>
+        <h1 className={`${titleClass} title-fade-in`}>{title}</h1>
         {tipo == UserRoles.AFILIADO_COMERCIAL && IsAva == false && (
           <button
             onClick={() => handleClickNew()}
@@ -149,9 +151,9 @@ export default function PartnerList() {
           <div className="flex space-x-4">
             <button
               onClick={() => setTipo(UserRoles.CLIENTE_FINAL)}
-              className={`flex items-center px-4 py-2 rounded-lg transition-colors ${tipo === 'CF'
-                ? 'bg-brand-50 text-brand-600 dark:bg-brand-900/20 dark:text-brand-400'
-                : 'text-gray-600 dark:text-gray-400 hover:bg-brand-50/50 dark:hover:bg-brand-900/10 hover:text-brand-600 dark:hover:text-brand-400'
+              className={`flex items-center px-4 py-2 rounded-lg transition-colors ${tipo === UserRoles.CLIENTE_FINAL
+                ? 'bg-brand text-white'
+                : 'text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-[#0F172A]/40'
                 }`}
             >
               <Users className="h-5 w-5 mr-2" />
@@ -162,9 +164,9 @@ export default function PartnerList() {
               <>
                 <button
                   onClick={() => setTipo(UserRoles.AVA)}
-                  className={`flex items-center px-4 py-2 rounded-lg transition-colors ${tipo === 'AVA'
-                    ? 'bg-brand-50 text-brand-600 dark:bg-brand-900/20 dark:text-brand-400'
-                    : 'text-gray-600 dark:text-gray-400 hover:bg-brand-50/50 dark:hover:bg-brand-900/10 hover:text-brand-600 dark:hover:text-brand-400'
+                  className={`flex items-center px-4 py-2 rounded-lg transition-colors ${tipo === UserRoles.AVA
+                    ? 'bg-brand text-white'
+                    : 'text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-[#0F172A]/40'
                     }`}
                 >
                   <Building2 className="h-5 w-5 mr-2" />
@@ -172,9 +174,9 @@ export default function PartnerList() {
                 </button>
                 <button
                   onClick={() => setTipo(UserRoles.AFILIADO_COMERCIAL)}
-                  className={`flex items-center px-4 py-2 rounded-lg transition-colors ${tipo === 'AF'
-                    ? 'bg-brand-50 text-brand-600 dark:bg-brand-900/20 dark:text-brand-400'
-                    : 'text-gray-600 dark:text-gray-400 hover:bg-brand-50/50 dark:hover:bg-brand-900/10 hover:text-brand-600 dark:hover:text-brand-400'
+                  className={`flex items-center px-4 py-2 rounded-lg transition-colors ${tipo === UserRoles.AFILIADO_COMERCIAL
+                    ? 'bg-brand text-white'
+                    : 'text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-[#0F172A]/40'
                     }`}
                 >
                   <UserCheck className="h-5 w-5 mr-2" />
@@ -189,38 +191,24 @@ export default function PartnerList() {
 
           {/* Search and Filter */}
           <div className="flex flex-col md:flex-row gap-4">
-            <div className="flex-1">
-              <div className="relative">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                <input
-                  type="text"
-                  placeholder="Buscar por nome, email ou telefone..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-lg shadow-sm"
-                />
-              </div>
-            </div>
-            <div className="flex items-center space-x-4">
-              <div className="relative">
-                <Filter className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                <select
-                  value={statusFilter}
-                  onChange={(e) => setStatusFilter(e.target.value as 'all' | 'active' | 'inactive')}
-                  className="pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors appearance-none min-w-[200px] rounded-lg shadow-sm"
-                >
-                  <option value="all">Todos os Status</option>
-                  <option value="active">Ativos</option>
-                  <option value="inactive">Inativos</option>
-                </select>
-              </div>
-            </div>
+            <SearchFilter
+              searchPlaceholder="Buscar por nome, email ou telefone..."
+              searchValue={searchTerm}
+              onSearchChange={setSearchTerm}
+              filterOptions={[
+                { value: 'all', label: 'Todos os Status' },
+                { value: 'active', label: 'Ativos' },
+                { value: 'inactive', label: 'Inativos' }
+              ]}
+              filterValue={statusFilter}
+              onFilterChange={(value) => setStatusFilter(value as 'all' | 'active' | 'inactive')}
+            />
           </div>
         </div>
       </div>
 
       {/* Content */}
-      <div className={`${cardClass} mt-12 overflow-hidden`}>
+      <div className={`${cardClass} mt-12 overflow-hidden fade-in`} key={tipo}>
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-light-border dark:divide-gray-700/50 rounded-lg overflow-hidden">
             <thead>

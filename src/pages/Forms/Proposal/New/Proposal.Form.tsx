@@ -12,6 +12,7 @@ import ProposalFormFinish from "./Proposal.Form.Finish";
 import ProposalFormResume from "./Proposal.Form.Resume";
 import { useCustomSetter, removeNode, onlyNumber } from "../../../../utils/Functions";
 import PropostaAddon from "../../../../Models/Propostas.Addon";
+import '../../../../Styles/animations.css';
 
 export default function ProposalForm({ id, onCancel }: FormProps) {
   const [step, setStep] = useState(-1);
@@ -193,9 +194,11 @@ export default function ProposalForm({ id, onCancel }: FormProps) {
 
   return (
     <>
-      {step === 0 && <ProposalFormPlano proposta={propostaDTO} setProposta={setPropostaDTO} />}
-      {step === 1 && <ProposalFormResume finish={finish} id={idproposta} proposta={propostaDTO} setProposta={setPropostaDTO} />}
-      {step === 2 && <ProposalFormCliente proposta={propostaDTO} setProposta={setPropostaDTO} />}
+      <div className="fade-in">
+        {step === 0 && <ProposalFormPlano proposta={propostaDTO} setProposta={setPropostaDTO} />}
+        {step === 1 && <ProposalFormResume finish={finish} id={idproposta} proposta={propostaDTO} setProposta={setPropostaDTO} />}
+        {step === 2 && <ProposalFormCliente proposta={propostaDTO} setProposta={setPropostaDTO} />}
+      </div>
       {step === stepLimit && <ProposalFormFinish id={idproposta} />}
 
       <div className="flex justify-between mt-4">

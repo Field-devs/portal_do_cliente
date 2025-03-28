@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../../components/AuthProvider';
 import { supabase } from '../../lib/supabase';
 import { ModalForm } from '../../components/Modal/Modal';
+import SearchFilter from '../../components/SearchFilter';
 import UserForm from '../Forms/UserForm';
 import {
   Search,
@@ -19,6 +20,7 @@ import ActionsButtons from '../../components/ActionsData';
 import { UpdateSingleField } from '../../utils/supageneric';
 import { User } from '../../Models/Uses';
 import CircularWait from '../../components/CircularWait';
+import '../../Styles/animations.css';
 
 function AccountList() {
   const [users, setUsers] = useState<User[]>([]);
@@ -109,7 +111,7 @@ function AccountList() {
 
     <div className="p-6">
       <div className="flex justify-between items-center mb-8">
-        <h1 className={titleClass}>Usuários</h1>
+        <h1 className={`${titleClass} title-fade-in`}>Usuários</h1>
         <button
           onClick={() => setShowUserForm(true)}
           className="btn-primary flex items-center rounded-lg"
@@ -143,7 +145,7 @@ function AccountList() {
         />
       </ModalForm>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 fade-in">
         {/* Total Users */}
         <div className={cardClass}>
           <div className="flex items-center justify-between mb-4">
@@ -220,53 +222,21 @@ function AccountList() {
       </div>
 
       <div className={cardClass}>
-        <div className="flex flex-col md:flex-row gap-4">
-          <div className="flex-1">
-            <div className="relative">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Buscar por nome, email ou CNPJ..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-lg shadow-sm"
-              />
-            </div>
-          </div>
-          <div className="flex items-center space-x-4">
-            <div className="relative">
-              <Shield className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-              <select
-                value={roleFilter}
-                onChange={(e) => setRoleFilter(e.target.value === 'all' ? 'all' : Number(e.target.value))}
-                className="pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors appearance-none min-w-[200px] rounded-lg shadow-sm"
-              >
-                <option value="all">Todos os Perfis</option>
-                <option value="1">Super Admin</option>
-                <option value="2">Admin</option>
-                <option value="3">AVA Admin</option>
-                <option value="4">AVA</option>
-                <option value="5">Cliente</option>
-                <option value="6">Afiliado</option>
-              </select>
-            </div>
-            <div className="relative">
-              <Filter className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-              <select
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value as 'all' | 'active' | 'inactive')}
-                className="pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors appearance-none min-w-[200px] rounded-lg shadow-sm"
-              >
-                <option value="all">Todos os Status</option>
-                <option value="active">Ativos</option>
-                <option value="inactive">Inativos</option>
-              </select>
-            </div>
-          </div>
-        </div>
+        <SearchFilter
+          searchPlaceholder="Buscar por nome, email ou CNPJ..."
+          searchValue={searchTerm}
+          onSearchChange={setSearchTerm}
+          filterOptions={[
+            { value: 'all', label: 'Todos os Status' },
+            { value: 'active', label: 'Ativos' },
+            { value: 'inactive', label: 'Inativos' }
+          ]}
+          filterValue={statusFilter}
+          onFilterChange={(value) => setStatusFilter(value as 'all' | 'active' | 'inactive')}
+        />
       </div>
 
-      <div className={`${cardClass} mt-6 overflow-hidden`}>
+      <div className={`${cardClass} mt-6 overflow-hidden fade-in`}>
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-light-border dark:divide-gray-700/50 rounded-lg overflow-hidden">
             <thead>

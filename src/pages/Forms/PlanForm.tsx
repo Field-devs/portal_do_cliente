@@ -14,6 +14,7 @@ import {
   Package,
   FileText
 } from 'lucide-react';
+import '../../Styles/animations.css';
 
 interface PlanFormProps {
   onSuccess: () => void;
@@ -112,7 +113,7 @@ export default function PlanForm({ onSuccess, onCancel, initialData }: PlanFormP
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-6 fade-in">
       {/* Basic Information */}
       <div className={cardClass}>
         <div className={iconGroupClass}>

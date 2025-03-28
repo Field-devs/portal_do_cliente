@@ -25,6 +25,7 @@ import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../components/AuthProvider';
 import CircularWait from '../../components/CircularWait';
 import { formatCurrency } from '../../utils/formatters';
+import '../../Styles/animations.css';
 
 interface ConsumptionData {
   date: string;
@@ -144,7 +145,7 @@ export default function ClientDashboard() {
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-8">
-        <h1 className={titleClass}>Meu Dashboard</h1>
+        <h1 className={`${titleClass} title-fade-in`}>Meu Dashboard</h1>
         <div className="flex space-x-4">
           <div className="flex rounded-lg overflow-hidden border border-light-border dark:border-gray-700/50">
             <button
@@ -194,7 +195,7 @@ export default function ClientDashboard() {
       </div>
 
       {/* Metrics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 fade-in">
         {/* Inboxes */}
         <div className={cardClass}>
           <div className="flex items-center justify-between mb-4">
@@ -281,7 +282,7 @@ export default function ClientDashboard() {
       </div>
 
       {/* Consumption Chart */}
-      <div className={`${cardClass} h-[500px]`}>
+      <div className={`${cardClass} h-[500px] fade-in`}>
         <div className="flex flex-col space-y-4">
           <div className="flex justify-between items-center">
             <h3 className={metricTitleClass}>

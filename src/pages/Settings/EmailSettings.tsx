@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../components/AuthProvider';
+import '../../Styles/animations.css';
 
 interface EmailTemplate {
   id: string;
@@ -139,7 +140,7 @@ export default function EmailSettings() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 fade-in">
       {/* SMTP Settings */}
       <div className={cardClass}>
         <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">

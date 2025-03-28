@@ -2,6 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Theme Transition */
+:root {
+  --theme-transition-duration: 0.3s;
+}
+
+body {
+  transition: background-color var(--theme-transition-duration) ease-in-out;
+}
+
+* {
+  transition: background-color var(--theme-transition-duration) ease-in-out,
+              border-color var(--theme-transition-duration) ease-in-out,
+              color var(--theme-transition-duration) ease-in-out;
+}
+
 @layer utilities {
   .dark .shadow-card {
     @apply shadow-dark-lg;

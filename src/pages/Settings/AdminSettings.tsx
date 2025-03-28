@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../components/AuthProvider';
+import '../../Styles/animations.css';
 import CircularWait from '../../components/CircularWait';
 import { UserRoles } from '../../utils/consts';
 import EmailSettings from './EmailSettings';
@@ -129,12 +130,12 @@ export default function AdminSettings() {
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-8">
-        <h1 className={titleClass}>Configurações</h1>
+        <h1 className={`${titleClass} title-fade-in`}>Configurações</h1>
       </div>
 
       <div className="flex space-x-6">
         {/* Sidebar Navigation */}
-        <div className="w-64 flex-shrink-0">
+        <div className="w-64 flex-shrink-0 fade-in">
           <div className={cardClass}>
             <nav className="space-y-1">
               {tabs.map((tab) => {
@@ -156,7 +157,7 @@ export default function AdminSettings() {
         </div>
 
         {/* Main Content */}
-        <div className="flex-1">
+        <div className="flex-1 fade-in">
           {ActiveComponent && (
             <ActiveComponent />
           )}

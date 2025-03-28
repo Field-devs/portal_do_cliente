@@ -158,7 +158,7 @@ export default function ClientFinancialDashboard() {
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-8">
-        <h1 className={titleClass}>Financeiro</h1>
+        <h1 className={`${titleClass} title-fade-in`}>Financeiro</h1>
         <div className="flex space-x-4">
           <button
             onClick={fetchData}

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../../components/AuthProvider';
 import { supabase } from '../../lib/supabase';
 import { AlertCircle, Loader2, Save, DollarSign, Package, FileText } from 'lucide-react';
+import '../../Styles/animations.css';
 
 interface AddonFormProps {
   onSuccess: () => void;
@@ -98,7 +99,7 @@ export default function AddonForm({ onSuccess, onCancel, initialData }: AddonFor
   const buttonClass = "px-4 py-2 flex items-center justify-center rounded-lg text-sm font-medium transition-colors";
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 fade-in">
       {/* Basic Information */}
       <div className="bg-white/80 dark:bg-[#1E293B]/70 backdrop-blur-sm p-6 border border-gray-200 dark:border-gray-700/50 rounded-lg">
         <div className={iconGroupClass}>

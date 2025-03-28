@@ -3,6 +3,7 @@ import { Routes, Route, NavLink, useLocation } from 'react-router-dom';
 import { useAuth } from '../components/AuthProvider';
 import { UserRoles } from '../utils/consts';
 import { useTheme } from '../components/ThemeProvider';
+import '../Styles/animations.css';
 import {
   FileText,
   Users,
@@ -196,14 +197,14 @@ export default function Portal() {
       <div className={`flex-1 transition-all duration-300 ${isExpanded ? 'ml-52' : 'ml-20'}`}>
         <div className="p-6">
           <Routes>
-            <Route path="/" element={user?.perfil_cod === 'CF' ? <ClientDashboard /> : <AdminDashboard />} />
-            <Route path="plans" element={<PlanList />} />
-            <Route path="proposals" element={<ProposalsList />} />
-            <Route path="partners" element={<PartnerList />} />
-            <Route path="accounts" element={<AccountList />} />
-            <Route path="financial" element={user?.perfil_cod === 'CF' ? <ClientFinancialDashboard /> : <FinancialDashBoard />} />
-            <Route path="profile" element={<Profile />} />
-            <Route path="settings" element={<AdminSettings />} />
+            <Route path="/" element={<div className="title-fade-in">{user?.perfil_cod === 'CF' ? <ClientDashboard /> : <AdminDashboard />}</div>} />
+            <Route path="plans" element={<div className="title-fade-in"><PlanList /></div>} />
+            <Route path="proposals" element={<div className="title-fade-in"><ProposalsList /></div>} />
+            <Route path="partners" element={<div className="title-fade-in"><PartnerList /></div>} />
+            <Route path="accounts" element={<div className="title-fade-in"><AccountList /></div>} />
+            <Route path="financial" element={<div className="title-fade-in">{user?.perfil_cod === 'CF' ? <ClientFinancialDashboard /> : <FinancialDashBoard />}</div>} />
+            <Route path="profile" element={<div className="title-fade-in"><Profile /></div>} />
+            <Route path="settings" element={<div className="title-fade-in"><AdminSettings /></div>} />
           </Routes>
         </div>
       </div>

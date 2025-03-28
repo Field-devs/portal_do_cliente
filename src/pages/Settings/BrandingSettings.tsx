@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../components/AuthProvider';
+import '../../Styles/animations.css';
 
 interface BrandingSettings {
   primary_color: string;
@@ -145,7 +146,7 @@ export default function BrandingSettings() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 fade-in">
       {/* Color Settings */}
       <div className={cardClass}>
         <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">

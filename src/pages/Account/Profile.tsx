@@ -26,6 +26,7 @@ const DEFAULT_AVATARS = [
   'https://storage.wiseapp360.com/typebot/public/workspaces/clwl6fdyf000511ohlamongyl/typebots/cm683siyl000dm4kxlrec9tb8/results/iv734529009a3ha4si1pmnqz/blocks/flm69ulnpr4b67h01xj47t14/Gemini_Generated_Image_rmjurvrmjurvrmju_resultado.png'
 ];
 import PhotoUpload from '../../components/PhotoUpload';
+import '../../Styles/animations.css';
 
 export default function Profile() {
   const { user, updateUser } = useAuth();
@@ -180,7 +181,7 @@ export default function Profile() {
   return (
     <div className="p-6">
       <div className="max-w-2xl mx-auto bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm rounded-xl border border-light-border dark:border-gray-700/50">
-        <div className="p-6 mb-4">
+        <div className="p-6 mb-4 fade-in">
           <div className="flex justify-between items-center">
             <h2 className="text-3xl font-bold text-light-text-primary dark:text-white">Perfil</h2>
             {!isEditing && (
@@ -195,7 +196,7 @@ export default function Profile() {
           </div>
         </div>
 
-        <div className="px-6 pb-6">
+        <div className="px-6 pb-6 fade-in">
           {/* Profile Photo */}
           <div className="mb-10">
             <PhotoUpload

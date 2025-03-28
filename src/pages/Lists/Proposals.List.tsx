@@ -18,14 +18,16 @@ import {
 import { supabase } from '../../lib/supabase';
 import { usePlanos } from '../../hooks/usePlanos';
 import { ModalForm } from '../../components/Modal/Modal';
+import SearchFilter from '../../components/SearchFilter';
+import { formatPhone } from '../../utils/formatters';
 import ProposalForm from '../Forms/Proposal/New/Proposal.Form';
 import ActionsButtons from '../../components/ActionsData';
 import { UpdateSingleField } from '../../utils/supageneric';
 import { useAuth } from '../../components/AuthProvider';
 import { AlertDialog, ErrorDialog } from '../../components/Dialogs/Dialogs';
-import CircularWait from '../../components/CircularWait';
-import { formatPhone } from '../../utils/formatters';
 import { AUTO_REFRESH, AUTO_REFRESH_SECOUNDS, ProposalStatus } from '../../utils/consts';
+import CircularWait from '../../components/CircularWait';
+import '../../Styles/animations.css';
 
 export default function ProposalsList() {
   const { user } = useAuth();
@@ -187,7 +189,7 @@ export default function ProposalsList() {
 
       <div className="p-6">
         <div className="flex justify-between items-center mb-8">
-          <h1 className={titleClass}>Propostas</h1>
+          <h1 className={`${titleClass} title-fade-in`}>Propostas</h1>
 
           <div className="flex gap-2 items-center">
             <button
@@ -237,7 +239,7 @@ export default function ProposalsList() {
         </div>
 
         {/* Metrics Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 fade-in">
           {/* Total Proposals */}
           <div className={cardClass}>
             <div className="flex items-center justify-between mb-4">
@@ -311,70 +313,23 @@ export default function ProposalsList() {
 
         {/* Search and Filter Bar */}
         <div className={cardClass}>
-          <div className="flex flex-col md:flex-row gap-4">
-            <div className="flex-1">
-              <div className="relative">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                <input
-                  type="text"
-                  placeholder="Buscar por empresa, email ou CNPJ..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-lg shadow-sm"
-                  autoComplete="off"
-                />
-              </div>
-            </div>
-            <div className="flex items-center space-x-4">
-              <div className="relative">
-                <Filter className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                <select
-                  value={statusFilter}
-                  onChange={(e) => setStatusFilter(e.target.value as typeof statusFilter)}
-                  className="pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors appearance-none min-w-[200px] rounded-lg shadow-sm"
-                >
-                  <option value="all">Todos os Status</option>
-                  <option value="pending">Pendentes</option>
-                  <option value="accepted">Aceitas</option>
-                  <option value="rejected">Recusadas</option>
-                </select>
-              </div>
-              <div className="relative">
-                <Calendar className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                <select
-                  value={dateFilter}
-                  onChange={(e) => setDateFilter(e.target.value as typeof dateFilter)}
-                  className="pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors appearance-none min-w-[200px] rounded-lg shadow-sm"
-                >
-                  <option value="year">Último Ano</option>
-                  <option value="month">Último Mês</option>
-                  <option value="15days">Últimos 15 Dias</option>
-                  <option value="day">Último Dia</option>
-                  <option value="custom">Personalizado</option>
-                </select>
-              </div>
-              {dateFilter === 'custom' && (
-                <div className="flex space-x-2">
-                  <input
-                    type="date"
-                    value={customDateRange.start}
-                    onChange={(e) => setCustomDateRange(prev => ({ ...prev, start: e.target.value }))}
-                    className="pl-4 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-lg shadow-sm"
-                  />
-                  <input
-                    type="date"
-                    value={customDateRange.end}
-                    onChange={(e) => setCustomDateRange(prev => ({ ...prev, end: e.target.value }))}
-                    className="pl-4 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-lg shadow-sm"
-                  />
-                </div>
-              )}
-            </div>
-          </div>
+          <SearchFilter
+            searchPlaceholder="Buscar por empresa, email ou CNPJ..."
+            searchValue={searchTerm}
+            onSearchChange={setSearchTerm}
+            filterOptions={[
+              { value: 'all', label: 'Todos os Status' },
+              { value: 'pending', label: 'Pendentes' },
+              { value: 'accepted', label: 'Aceitas' },
+              { value: 'rejected', label: 'Recusadas' }
+            ]}
+            filterValue={statusFilter}
+            onFilterChange={(value) => setStatusFilter(value as typeof statusFilter)}
+          />
         </div>
 
         {/* Proposals Table */}
-        <div className={`${cardClass} mt-6 overflow-hidden`}>
+        <div className={`${cardClass} mt-6 overflow-hidden fade-in`}>
           <div className="overflow-x-auto">
             <table className="w-full divide-y divide-light-border dark:divide-gray-700/50 rounded-lg overflow-hidden">
               <thead>
@@ -439,7 +394,7 @@ export default function ProposalsList() {
                     </td>
                     <td className="px-4 py-2 whitespace-nowrap">
                       <div className="text-base text-light-text-secondary dark:text-gray-300">
-                        {formatPhone(proposta.emp_fone)}
+                        {formatPhone(proposta.emp_fone?.toString())}
                       </div>
                     </td>
                     <td className="px-4 py-2 whitespace-nowrap text-center">

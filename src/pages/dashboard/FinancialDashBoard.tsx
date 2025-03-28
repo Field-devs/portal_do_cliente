@@ -12,6 +12,8 @@ import {
   Download
 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
+import '../../Styles/animations.css';
+import SearchFilter from '../../components/SearchFilter';
 import {
   LineChart,
   Line,
@@ -183,7 +185,7 @@ export default function FinancialDashBoard() {
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-8">
-        <h1 className={titleClass}>Financeiro</h1>
+        <h1 className={`${titleClass} title-fade-in`}>Financeiro</h1>
         <button
           onClick={() => {}}
           className="btn-primary flex items-center rounded-lg"
@@ -194,7 +196,7 @@ export default function FinancialDashBoard() {
       </div>
 
       {/* Metrics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 fade-in">
         {/* Total Receivables */}
         <div className={cardClass}>
           <div className="flex items-center justify-between mb-4">
@@ -278,7 +280,7 @@ export default function FinancialDashBoard() {
       </div>
 
       {/* Revenue Chart */}
-      <div className={cardClass}>
+      <div className={`${cardClass} mb-8 fade-in`}>
         <div className="flex items-center justify-between mb-6">
           <h3 className={metricTitleClass}>Receita x Projeção</h3>
         </div>
@@ -319,53 +321,24 @@ export default function FinancialDashBoard() {
       </div>
 
       {/* Search and Filter Bar */}
-      <div className={`${cardClass} mt-6`}>
-        <div className="flex flex-col md:flex-row gap-4">
-          <div className="flex-1">
-            <div className="relative">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Buscar por empresa, email ou CNPJ..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-full shadow-sm"
-              />
-            </div>
-          </div>
-          <div className="flex items-center space-x-4">
-            <div className="relative">
-              <Filter className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-              <select
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value as typeof statusFilter)}
-                className="pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors appearance-none min-w-[200px] rounded-full shadow-sm"
-              >
-                <option value="all">Todos os Status</option>
-                <option value="pending">Pendentes</option>
-                <option value="paid">Pagas</option>
-                <option value="overdue">Em Atraso</option>
-              </select>
-            </div>
-            <div className="relative">
-              <Calendar className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-              <select
-                value={dateFilter}
-                onChange={(e) => setDateFilter(e.target.value as typeof dateFilter)}
-                className="pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors appearance-none min-w-[200px] rounded-full shadow-sm"
-              >
-                <option value="all">Todas as Datas</option>
-                <option value="thisMonth">Este Mês</option>
-                <option value="lastMonth">Mês Passado</option>
-                <option value="thisYear">Este Ano</option>
-              </select>
-            </div>
-          </div>
-        </div>
+      <div className={cardClass}>
+        <SearchFilter
+          searchPlaceholder="Buscar por empresa, email ou CNPJ..."
+          searchValue={searchTerm}
+          onSearchChange={setSearchTerm}
+          filterOptions={[
+            { value: 'all', label: 'Todos os Status' },
+            { value: 'pending', label: 'Pendentes' },
+            { value: 'paid', label: 'Pagas' },
+            { value: 'overdue', label: 'Em Atraso' }
+          ]}
+          filterValue={statusFilter}
+          onFilterChange={(value) => setStatusFilter(value as typeof statusFilter)}
+        />
       </div>
 
       {/* Invoices Table */}
-      <div className={`${cardClass} mt-6 overflow-hidden`}>
+      <div className={`${cardClass} mt-6 overflow-hidden fade-in`}>
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-light-border dark:divide-gray-700/50 rounded-2xl overflow-hidden">
             <thead>

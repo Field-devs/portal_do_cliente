@@ -16,6 +16,7 @@ import {
 import { set } from 'date-fns';
 import { AlertDialog, ErrorDialog } from '../../components/Dialogs/Dialogs';
 import Profile from '../../Models/Perfil';
+import '../../Styles/animations.css';
 
 interface UserFormProps {
   onSuccess: () => void;
@@ -188,7 +189,7 @@ export default function UserForm({ onSuccess, onCancel, initialData }: UserFormP
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-6 fade-in">
       {/* Basic Information */}
       <div className={cardClass}>
         <div className="flex items-center space-x-3 mb-6">

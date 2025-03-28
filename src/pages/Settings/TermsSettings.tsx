@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../components/AuthProvider';
+import '../../Styles/animations.css';
 
 interface TermsVersion {
   id: string;
@@ -112,7 +113,7 @@ export default function TermsSettings() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 fade-in">
       {/* Current Terms */}
       <div className={cardClass}>
         <div className="flex justify-between items-center mb-6">

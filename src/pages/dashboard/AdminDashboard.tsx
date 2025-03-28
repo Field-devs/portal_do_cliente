@@ -21,6 +21,7 @@ import {
 import { supabase } from '../../lib/supabase';
 import { useEffect, useState } from 'react';
 import CircularWait from '../../components/CircularWait';
+import '../../Styles/animations.css';
 
 interface IDashboardData {
   totalProp: number;
@@ -87,11 +88,11 @@ export default function AdminDashboard() {
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-8">
-        <h1 className={titleClass}>Dashboard</h1>
+        <h1 className={`${titleClass} title-fade-in`}>Dashboard</h1>
       </div>
 
       {/* Metrics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 fade-in">
         {/* Total Proposals */}
         <div className={cardClass}>
           <div className="flex items-center justify-between mb-4">
@@ -160,7 +161,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 fade-in">
         {/* Revenue Chart */}
         <div className={cardClass}>
           <div className="flex items-center justify-between mb-6">
