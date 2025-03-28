@@ -1,16 +1,19 @@
 import { createClient } from '@supabase/supabase-js';
 import { Database } from './database.types';
 import { User } from '../Models/Uses';
-//const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-//const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-const supabaseUrl = "https://vgxuxmfcjylbikovlctc.supabase.co";
-const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZneHV4bWZjanlsYmlrb3ZsY3RjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzk3MzkwNzYsImV4cCI6MjA1NTMxNTA3Nn0.ql8nd7YGcyA2xoAT-GZpqM04y9FIzfubl7VZriApZzE";
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || "https://vgxuxmfcjylbikovlctc.supabase.co";
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZneHV4bWZjanlsYmlrb3ZsY3RjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzk3MzkwNzYsImV4cCI6MjA1NTMxNTA3Nn0.ql8nd7YGcyA2xoAT-GZpqM04y9FIzfubl7VZriApZzE";
 
 if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error('Missing Supabase environment variables');
 }
 
-export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey);
+export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    autoRefreshToken: true,
+    persistSession: true
+  }
+});
 
 export type UserRole = 'super_admin' | 'admin' | 'ava_admin' | 'ava' | 'client';
 

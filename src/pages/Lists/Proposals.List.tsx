@@ -13,7 +13,8 @@ import {
   MoreVertical,
   Link,
   CreditCard,
-  Calendar
+  Calendar,
+  ChevronRight
 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { usePlanos } from '../../hooks/usePlanos';
@@ -330,8 +331,19 @@ export default function ProposalsList() {
 
         {/* Proposals Table */}
         <div className={`${cardClass} mt-6 overflow-hidden fade-in`}>
-          <div className="overflow-x-auto">
-            <table className="w-full divide-y divide-light-border dark:divide-gray-700/50 rounded-lg overflow-hidden">
+          <div className="relative">
+            <div className="absolute right-0 top-1/2 -translate-y-1/2 w-12 h-12 bg-gradient-to-l from-gray-100/80 dark:from-gray-800/80 to-transparent pointer-events-none flex items-center justify-end pr-2 transition-opacity duration-300 ease-in-out opacity-100 z-10">
+              <ChevronRight className="h-5 w-5 text-gray-400 dark:text-gray-500 animate-pulse" />
+            </div>
+            <div className="overflow-x-auto" onScroll={(e) => {
+              const target = e.currentTarget;
+              const indicator = target.previousElementSibling as HTMLElement;
+              if (indicator) {
+                const scrollPercentage = (target.scrollLeft + target.clientWidth) / target.scrollWidth;
+                indicator.style.opacity = scrollPercentage >= 0.95 ? '0' : '1';
+              }
+            }}>
+            <table className="min-w-full divide-y divide-light-border dark:divide-gray-700/50 rounded-lg overflow-hidden">
               <thead>
                 <tr className="bg-light-secondary dark:bg-[#0F172A]/60 rounded-t-lg">
                   <th className="px-6 py-2 text-left text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
@@ -466,6 +478,7 @@ export default function ProposalsList() {
                 ))}
               </tbody>
             </table>
+            </div>
           </div>
         </div>
       </div>

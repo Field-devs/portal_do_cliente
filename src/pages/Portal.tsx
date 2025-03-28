@@ -32,7 +32,6 @@ import Profile from './Account/Profile';
 import SignatureList from './Lists/Signature.List';
 import ProposalFormConfirm from './Forms/Proposal/Proposal.Form.Confirm';
 import AdminSettings from './Settings/AdminSettings';
-
 const getRoleBadgeStyles = (role: string | null) => {
   switch (role) {
     case 'super_admin':
@@ -50,13 +49,12 @@ const getRoleBadgeStyles = (role: string | null) => {
   }
 };
 
-
 export default function Portal() {
   const { user, profile: role, signOut } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const location = useLocation();
   const [isExpanded, setIsExpanded] = useState(true);
-
+  
   const navigation = [
     { id: 1, name: 'Dashboard', icon: BarChart2, path: '/portal', visible: [1, 5] },
     { id: 2, name: 'Propostas', icon: FileText, path: '/portal/proposals', visible: [1, 2, 3, 4] },
@@ -71,9 +69,9 @@ export default function Portal() {
     : "https://storage.wiseapp360.com/typebot/public/workspaces/clwl6fdyf000511ohlamongyl/typebots/cm683siyl000dm4kxlrec9tb8/results/jctueeexledouxj5ys19vnq9/blocks/cz78pvc8stcisz1y8sq2khj1/VerticalBlack.png";
 
   return (
-    <div className="min-h-screen bg-light-primary dark:bg-dark-primary flex">
+    <div className="min-h-screen bg-light-primary dark:bg-dark-primary p-4 overflow-hidden">
       {/* Sidebar Navigation */}
-      <div className={`fixed inset-y-0 left-0 bg-white dark:bg-[#1E293B] transition-all duration-300 z-20 flex flex-col rounded-tr-2xl rounded-br-2xl border border-light-border dark:border-gray-700/50 ${isExpanded ? 'w-52' : 'w-20'}`}>
+      <div className={`fixed top-4 left-4 bottom-4 bg-white/95 dark:bg-[#1E293B]/95 backdrop-blur-sm transition-all duration-300 z-20 flex flex-col rounded-l-2xl ${isExpanded ? 'w-52' : 'w-20'}`}>
         {/* Logo and Toggle */}
         <div className="h-16 flex items-center justify-between px-3">
           <img
@@ -118,7 +116,7 @@ export default function Portal() {
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 overflow-y-auto py-4">
+        <nav className="flex-1 overflow-y-auto py-4 px-2 scrollbar scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent rounded-lg">
           {navigation.map((item) => {
             const isActive = location.pathname === item.path;
             if (item.visible && !item.visible.includes(user?.perfil_id)) return null;
@@ -194,8 +192,11 @@ export default function Portal() {
       </div>
 
       {/* Main Content Area */}
-      <div className={`flex-1 transition-all duration-300 ${isExpanded ? 'ml-52' : 'ml-20'}`}>
-        <div className="p-6">
+      <div 
+        className={`fixed top-4 right-4 bottom-4 transition-all duration-300 bg-white/95 dark:bg-[#1E293B]/95 backdrop-blur-sm rounded-r-2xl ${isExpanded ? 'left-56' : 'left-24'}`}
+      >
+        <div className="absolute inset-0 overflow-y-auto scrollbar scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent">
+          <div className="p-6 min-h-full pr-2 pl-8">
           <Routes>
             <Route path="/" element={<div className="title-fade-in">{user?.perfil_cod === 'CF' ? <ClientDashboard /> : <AdminDashboard />}</div>} />
             <Route path="plans" element={<div className="title-fade-in"><PlanList /></div>} />
@@ -206,6 +207,7 @@ export default function Portal() {
             <Route path="profile" element={<div className="title-fade-in"><Profile /></div>} />
             <Route path="settings" element={<div className="title-fade-in"><AdminSettings /></div>} />
           </Routes>
+          </div>
         </div>
       </div>
     </div>

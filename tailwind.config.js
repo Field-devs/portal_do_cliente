@@ -121,6 +121,12 @@ export default {
     },
   },
   plugins: [
-    require('tailwind-scrollbar')({ nocompatible: true })
+    require('tailwind-scrollbar')({
+      nocompatible: true,
+      themePreferences: {
+        scrollbarWidth: '4px',
+        scrollbarRadius: '0.5rem'
+      }
+    })
   ]
 };
