@@ -55,13 +55,13 @@ export function ModalForm({ isOpen, onClose, children }: ModalProps) {
         onScroll={handleScroll}
         ref={(el) => el && checkIfNeedsScroll(el)}
       >
-        <div className="relative px-6 pt-6 pb-3 after:content-[''] after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-12 after:h-[2px] after:bg-gray-200 dark:after:bg-gray-700 after:rounded-full after:opacity-30 after:transition-opacity after:duration-300 hover:after:opacity-0">
+        <div className="px-6 pt-6 pb-3 after:content-[''] after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-12 after:h-[2px] after:bg-gray-200 dark:after:bg-gray-700 after:rounded-full after:opacity-30 after:transition-opacity after:duration-300 hover:after:opacity-0">
           <div className="space-y-6">
           {children}
-          <div className="flex justify-end">
-            <XCloseForm onClose={onClose} />
           </div>
-          </div>
+        </div>
+        <div className="absolute top-6 right-6">
+          <XCloseForm onClose={onClose} />
         </div>
         {showScrollIndicator && needsScroll && (
           <div 

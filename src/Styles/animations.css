@@ -1,7 +1,7 @@
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
@@ -10,13 +10,14 @@
 }
 
 .fade-in {
-  animation: fadeIn 0.3s ease-out forwards;
+  animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  will-change: transform, opacity;
 }
 
 @keyframes slideInFromTop {
   from {
     opacity: 0;
-    transform: translateY(-20px);
+    transform: translateY(-30px);
   }
   to {
     opacity: 1;
@@ -25,7 +26,8 @@
 }
 
 .title-fade-in {
-  animation: slideInFromTop 0.4s ease-out forwards;
+  animation: slideInFromTop 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  will-change: transform, opacity;
 }
 
 /* Theme transition animations */
@@ -34,13 +36,15 @@
               border-color 0.3s ease-in-out,
               color 0.3s ease-in-out,
               opacity 0.3s ease-in-out,
-              transform 0.3s ease-in-out,
-              box-shadow 0.3s ease-in-out !important;
+              transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  will-change: transform, opacity, background-color;
 }
 
 /* Smooth transition for theme toggle button */
 .theme-toggle-btn {
-  transition: all 0.3s ease-in-out;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
 }
 
 .theme-toggle-btn:hover {

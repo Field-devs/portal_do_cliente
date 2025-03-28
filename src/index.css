@@ -2,19 +2,36 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Smooth Scrolling */
+:root {
+  scroll-behavior: smooth;
+}
+
+/* Performance Optimizations */
+body * {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  perspective: 1000px;
+}
+
 /* Theme Transition */
 :root {
   --theme-transition-duration: 0.3s;
 }
 
 body {
-  transition: background-color var(--theme-transition-duration) ease-in-out;
+  transition: background-color var(--theme-transition-duration) cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: background-color;
 }
 
 * {
-  transition: background-color var(--theme-transition-duration) ease-in-out,
-              border-color var(--theme-transition-duration) ease-in-out,
-              color var(--theme-transition-duration) ease-in-out;
+  transition: background-color var(--theme-transition-duration) cubic-bezier(0.4, 0, 0.2, 1),
+              border-color var(--theme-transition-duration) cubic-bezier(0.4, 0, 0.2, 1),
+              color var(--theme-transition-duration) cubic-bezier(0.4, 0, 0.2, 1),
+              transform var(--theme-transition-duration) cubic-bezier(0.4, 0, 0.2, 1),
+              opacity var(--theme-transition-duration) cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @layer utilities {
@@ -54,25 +71,25 @@ body {
 
   /* Custom Scrollbar Styles */
   ::-webkit-scrollbar {
-    @apply w-1.5;
+    @apply w-2;
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-gray-100/10 dark:bg-gray-800/20 rounded-full;
+    @apply bg-gray-100/10 dark:bg-gray-800/20 rounded-full backdrop-blur-sm;
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-gray-300/30 dark:bg-gray-600/30 rounded-full hover:bg-gray-400/40 dark:hover:bg-gray-500/40 transition-colors;
+    @apply bg-gray-300/30 dark:bg-gray-600/30 rounded-full hover:bg-gray-400/40 dark:hover:bg-gray-500/40 transition-all duration-150 ease-out;
   }
 
   /* Firefox Scrollbar */
   * {
     scrollbar-width: thin;
-    scrollbar-color: theme('colors.gray.300/30') theme('colors.gray.100/10');
+    scrollbar-color: theme('colors.gray.300/50') theme('colors.gray.100/20');
   }
 
   .dark * {
-    scrollbar-color: theme('colors.gray.600/30') theme('colors.gray.800/20');
+    scrollbar-color: theme('colors.gray.600/50') theme('colors.gray.800/20');
   }
 }
 
