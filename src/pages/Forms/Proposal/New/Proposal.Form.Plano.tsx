@@ -9,7 +9,7 @@ import CircularWait from "../../../../components/CircularWait";
 import { PropostaDTO } from "../../../../Models/Propostas";
 import { formatCurrency, formatPercent } from "../../../../utils/formatters";
 import { CalcPercent } from "../../../../utils/Finan";
-import { Filter, Package, DollarSign } from 'lucide-react';
+import { Filter, Package, DollarSign, Ban } from 'lucide-react';
 import PropostaAddon from "../../../../Models/Propostas.Addon";
 import { useCustomSetter } from "../../../../utils/Functions";
 
@@ -248,7 +248,7 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
             <div className="flex justify-between items-center mb-2">
               <div className="relative group ml-auto">
                 <div className="flex items-center space-x-4">
-                  <div>
+                  <div className="text-gray-700 dark:text-gray-200">
                     Ver Inativos
                   </div>
                   <div>
@@ -271,15 +271,16 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
                 required
               >
                 <option value="">Selecione um plano</option>
-
                 {plansFilter.map((plan) => (
-                  <option key={plan.id} value={plan.id}>
+                  <option 
+                    key={plan.id} 
+                    value={plan.id}
+                    disabled={viewInactive && !plan.active}
+                    className={viewInactive && !plan.active ? "text-gray-400 dark:text-gray-600 bg-gray-100 dark:bg-gray-800 cursor-not-allowed" : ""}
+                  >
                     {plan.nome}
                   </option>
                 ))}
-
-
-
               </select>
 
             </div>
@@ -290,10 +291,11 @@ export default function ProposalFormPlano({ proposta, setProposta }: { proposta:
             <label className={labelClass}>Add-ons</label>
             <div className="space-y-2">
               {addons.filter(addon => viewInactive && !addon.active).map((addon) => (
-                <div key={addon.id} className="flex justify-between items-center">
-                  <span>
+                <div key={addon.id} className="flex justify-between items-center p-3 bg-gray-100/50 dark:bg-gray-800/20 rounded-lg">
+                  <div className="flex items-center text-gray-400 dark:text-gray-500 text-xs">
+                    <Ban className="h-5 w-5 mr-2" />
                     {addon.nome.replace(/([A-Z])/g, ' $1')} ({formatCurrency(addon.valor)})
-                  </span>
+                  </div>
                 </div>
               ))}
               {addons.filter(addon => addon.active).map((addon) => (

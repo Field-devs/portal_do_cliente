@@ -67,6 +67,7 @@ body {
 @layer base {
   body {
     @apply antialiased;
+    @apply bg-light-primary dark:bg-dark-primary;
   }
 
   /* Custom Scrollbar Styles */
@@ -75,17 +76,17 @@ body {
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-gray-100/10 dark:bg-gray-800/20 rounded-full backdrop-blur-sm;
+    @apply bg-gray-100/20 dark:bg-gray-800/20 rounded-full backdrop-blur-sm;
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-gray-300/30 dark:bg-gray-600/30 rounded-full hover:bg-gray-400/40 dark:hover:bg-gray-500/40 transition-all duration-150 ease-out;
+    @apply bg-gray-300/50 dark:bg-gray-600/30 rounded-full hover:bg-gray-400/60 dark:hover:bg-gray-500/40 transition-all duration-150 ease-out;
   }
 
   /* Firefox Scrollbar */
   * {
     scrollbar-width: thin;
-    scrollbar-color: theme('colors.gray.300/50') theme('colors.gray.100/20');
+    scrollbar-color: theme('colors.gray.400/50') theme('colors.gray.100/20');
   }
 
   .dark * {
@@ -105,12 +106,15 @@ body {
 /* Dropdown Select Styles */
 select {
   @apply cursor-pointer relative z-50;
-  position: relative;
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23334155' stroke-linecap='round' stroke-linejoin='round' stroke-width='2.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
   background-position: right 0.5rem center;
   background-repeat: no-repeat;
-  background-size: 1.5em 1.5em;
+  background-size: 1.2em 1.2em;
   padding-right: 2.5rem;
+}
+
+.dark select {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23CBD5E1' stroke-linecap='round' stroke-linejoin='round' stroke-width='2.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
 }
 
 select option {
@@ -122,9 +126,8 @@ select:focus option:checked {
   @apply bg-brand text-white;
 }
 
-select option:hover,
-select option:focus {
-  @apply bg-brand/10 dark:bg-brand/20;
+select:hover {
+  @apply bg-gray-50 dark:bg-gray-800/50;
 }
 
 /* Remove input arrows/spinners */

@@ -239,8 +239,7 @@ export default function PlanList() {
               <PlusSquare className="h-5 w-5 mr-2" />
               Add-ons
             </button>
-          </div
-          >
+          </div>
         </div>
       </div>
 

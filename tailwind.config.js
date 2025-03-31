@@ -23,11 +23,11 @@ export default {
       colors: {
         brand: {
           DEFAULT: '#1E3A8A',
-          50: '#EFF6FF',
-          100: '#DBEAFE',
-          200: '#BFDBFE',
-          300: '#93C5FD',
-          400: '#60A5FA',
+          50: '#F8FAFC', 
+          100: '#F1F5F9',
+          200: '#E2E8F0',
+          300: '#CBD5E1',
+          400: '#94A3B8',
           500: '#1E3A8A',
           600: '#1E40AF',
           700: '#1E3A8A',
@@ -35,11 +35,11 @@ export default {
           900: '#172554'
         },
         light: {
-          primary: '#F8FAFC',
-          secondary: '#F1F5F9',
+          primary: '#FFFFFF',
+          secondary: '#F8FAFC',
           accent: '#1E3A8A',
           card: '#FFFFFF',
-          border: '#E2E8F0',
+          border: '#F1F5F9',
           text: {
             primary: '#1E293B',
             secondary: '#475569',
@@ -61,9 +61,9 @@ export default {
         status: {
           success: {
             light: {
-              bg: '#F0FDF4',
-              text: '#166534',
-              border: '#BBF7D0'
+              bg: '#ECFDF5',
+              text: '#047857',
+              border: '#A7F3D0'
             },
             dark: {
               bg: 'rgba(22, 163, 74, 0.25)',
@@ -73,9 +73,9 @@ export default {
           },
           warning: {
             light: {
-              bg: '#FEFCE8',
-              text: '#854D0E',
-              border: '#FEF08A'
+              bg: '#FFFBEB',
+              text: '#B45309',
+              border: '#FDE68A'
             },
             dark: {
               bg: 'rgba(234, 179, 8, 0.25)',
@@ -85,9 +85,9 @@ export default {
           },
           error: {
             light: {
-              bg: '#FEF2F2',
-              text: '#991B1B',
-              border: '#FECACA'
+              bg: '#FEF2F2', 
+              text: '#B91C1C',
+              border: '#FCA5A5'
             },
             dark: {
               bg: 'rgba(220, 38, 38, 0.25)',
@@ -97,9 +97,9 @@ export default {
           },
           info: {
             light: {
-              bg: '#F0F9FF',
-              text: '#075985',
-              border: '#BAE6FD'
+              bg: '#EFF6FF',
+              text: '#1D4ED8',
+              border: '#93C5FD'
             },
             dark: {
               bg: 'rgba(14, 165, 233, 0.25)',

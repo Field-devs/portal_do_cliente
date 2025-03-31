@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
-import Proposta from '../../Models/Propostas';
 import {
   Plus,
   Search,
   Filter,
+  Mail,
+  Phone,
   FileText,
   Users,
   TrendingUp,
@@ -48,6 +49,7 @@ export default function ProposalsList() {
   const [OpenProposal, setOpenProposal] = useState(false);
   const [active, SetActive] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [copiedField, setCopiedField] = useState<string | null>(null);
   
 
   const { loading: planosLoading } = usePlanos();
@@ -97,7 +99,10 @@ export default function ProposalsList() {
   useEffect(() => {
     if (searchTerm) {
       const filtered = propostas.filter((proposta) =>
-        proposta.emp_nome.toLowerCase().includes(searchTerm.toLowerCase())
+        proposta.emp_nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        proposta.emp_email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (proposta.emp_fone && proposta.emp_fone.toString().includes(searchTerm)) ||
+        formatPhone(proposta.emp_fone?.toString()).includes(searchTerm)
       );
       setPropostas(filtered);
     } else {
@@ -136,6 +141,16 @@ export default function ProposalsList() {
   const handleStatusChange = async (id: string, status: string) => {
     let response = await UpdateSingleField("proposta", "id", id, "status", status);
     return response;
+  };
+
+  const handleCopyToClipboard = async (text: string, field: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedField(field);
+      setTimeout(() => setCopiedField(null), 2000);
+    } catch (err) {
+      console.error('Failed to copy:', err);
+    }
   };
 
   const filteredProposals = propostas.filter((proposta) => {
@@ -315,7 +330,7 @@ export default function ProposalsList() {
         {/* Search and Filter Bar */}
         <div className={cardClass}>
           <SearchFilter
-            searchPlaceholder="Buscar por empresa, email ou CNPJ..."
+            searchPlaceholder="Buscar por empresa, email ou telefone..."
             searchValue={searchTerm}
             onSearchChange={setSearchTerm}
             filterOptions={[
@@ -385,7 +400,7 @@ export default function ProposalsList() {
                   <th className="px-4 py-2 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                     Links
                   </th>
-                  <th className="px-4 py-2 text-center text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-4 py-2 text-right text-sm font-semibold text-light-text-primary dark:text-gray-300 uppercase tracking-wider">
                     Ações
                   </th>
                 </tr>
@@ -413,12 +428,42 @@ export default function ProposalsList() {
                     </td>
                     <td className="px-4 py-2 whitespace-nowrap">
                       <div className="text-base text-light-text-secondary dark:text-gray-300">
-                        {proposta.emp_email}
+                        <button
+                          onClick={() => handleCopyToClipboard(proposta.emp_email, `email-${proposta.id}`)}
+                          className="relative group flex items-center hover:text-brand dark:hover:text-brand-400 transition-colors"
+                          title="Clique para copiar"
+                        >
+                          <Mail className="h-5 w-5 mr-2" />
+                          {copiedField === `email-${proposta.id}` ? (
+                            <span className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 text-xs rounded shadow-lg whitespace-nowrap border border-green-200 dark:border-green-800/30">
+                              Copiado!
+                            </span>
+                          ) : (
+                            <span className="opacity-0 group-hover:opacity-100 absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-gray-800 text-white text-xs rounded shadow-lg whitespace-nowrap">
+                              {proposta.emp_email}
+                            </span>
+                          )}
+                        </button>
                       </div>
                     </td>
                     <td className="px-4 py-2 whitespace-nowrap">
                       <div className="text-base text-light-text-secondary dark:text-gray-300">
-                        {formatPhone(proposta.emp_fone?.toString())}
+                        <button
+                          onClick={() => handleCopyToClipboard(formatPhone(proposta.emp_fone?.toString()), `phone-${proposta.id}`)}
+                          className="relative group flex items-center hover:text-brand dark:hover:text-brand-400 transition-colors"
+                          title="Clique para copiar"
+                        >
+                          <Phone className="h-5 w-5 mr-2" />
+                          {copiedField === `phone-${proposta.id}` ? (
+                            <span className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 text-xs rounded shadow-lg whitespace-nowrap border border-green-200 dark:border-green-800/30">
+                              Copiado!
+                            </span>
+                          ) : (
+                            <span className="opacity-0 group-hover:opacity-100 absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-gray-800 text-white text-xs rounded shadow-lg whitespace-nowrap">
+                              {formatPhone(proposta.emp_fone?.toString())}
+                            </span>
+                          )}
+                        </button>
                       </div>
                     </td>
                     <td className="px-4 py-2 whitespace-nowrap text-center">
@@ -437,7 +482,7 @@ export default function ProposalsList() {
                     <td className="px-4 py-2 whitespace-nowrap">
                       <div className="flex justify-center">
                         {proposta.status === ProposalStatus.APPROVED || proposta.status === ProposalStatus.PENDING ? (
-                          <span className={`px-3 py-1 text-sm font-medium rounded-full min-w-[6rem] text-center ${
+                          <span className={`px-3 py-1 text-sm font-medium rounded-full w-24 text-center ${
                             proposta.status === ProposalStatus.APPROVED 
                               ? 'bg-green-50 dark:bg-green-500/20 text-green-600 dark:text-green-400 border border-green-200 dark:border-green-500/30'
                               : 'bg-yellow-50 dark:bg-yellow-500/20 text-yellow-600 dark:text-yellow-400 border border-yellow-200 dark:border-yellow-500/30'
@@ -448,18 +493,25 @@ export default function ProposalsList() {
                           <select
                             value={proposta.status}
                             onChange={(e) => handleStatusChange(proposta.id, e.target.value)}
-                            className={`px-3 py-1 text-sm font-medium rounded-full min-w-[6rem] text-center ${
+                            className={`px-4 py-2 text-sm font-medium rounded-lg w-44 transition-all duration-300 ${
                               proposta.status === ProposalStatus.ACCEPT
                                 ? 'bg-blue-50 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-500/30'
                                 : proposta.status === ProposalStatus.REJECTED
                                 ? 'bg-red-50 dark:bg-red-500/20 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-500/30'
                                 : 'bg-gray-50 dark:bg-gray-500/20 text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-500/30'
-                            }`} style={{ textAlign: 'center', textAlignLast: 'center' }}
+                            } hover:bg-opacity-90 dark:hover:bg-opacity-30 cursor-pointer appearance-none`}
+                            style={{
+                              textAlign: 'left',
+                              backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236B7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
+                              backgroundPosition: 'right 0.75rem center',
+                              backgroundRepeat: 'no-repeat',
+                              backgroundSize: '1.25em 1.25em',
+                              paddingRight: '2.5rem'
+                            }}
                           >
-                            <option value={ProposalStatus.ACCEPT} style={{ textAlign: 'center' }}>Aceita</option>
-                            {/* <option value={ProposalStatus.PENDING} style={{ textAlign: 'center' }}>Pendente</option> */}
-                            <option value={ProposalStatus.APPROVED} style={{ textAlign: 'center' }}>Aprovada</option>
-                            <option value={ProposalStatus.REJECTED} style={{ textAlign: 'center' }}>Rejeitada</option>
+                            <option value={ProposalStatus.ACCEPT} className="py-2 px-3">PGTO. PENDENTE</option>
+                            <option value={ProposalStatus.APPROVED} className="py-2 px-3">PAGO</option>
+                            <option value={ProposalStatus.REJECTED} className="py-2 px-3">CANCELADO</option>
                           </select>
                         )}
                       </div>
@@ -481,9 +533,10 @@ export default function ProposalsList() {
                     </td>
                     <td className="px-4 py-2 whitespace-nowrap">
                       <ActionsButtons
-                      onEdit={proposta.status === ProposalStatus.APPROVED ? undefined : () => { handleEdit(proposta.id) }}
-                      onLocker={() => handleOnLock(proposta.id, proposta.active)}
-                      active={proposta.active}
+                        className="flex justify-end"
+                        onEdit={proposta.status === ProposalStatus.APPROVED ? undefined : () => { handleEdit(proposta.id) }}
+                        onLocker={() => handleOnLock(proposta.id, proposta.active)}
+                        active={proposta.active}
                       />
                     </td>
                   </tr>

@@ -31,12 +31,12 @@ interface CommercialAffiliateFormProps {
   };
 }
 
-const cardClass = "bg-light-card dark:bg-[#1E293B]/90 backdrop-blur-sm p-6 shadow-lg border border-light-border dark:border-gray-700/50 rounded-lg";
-const labelClass = "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1";
-const inputClass = "w-full pl-12 pr-4 py-3 bg-light-secondary dark:bg-[#0F172A]/60 border border-light-border dark:border-gray-700/50 text-light-text-primary dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-lg shadow-sm";
-const iconGroupClass = "flex items-center space-x-3 mb-6";
+const cardClass = "bg-[#1E293B] p-6 rounded-xl";
+const labelClass = "block text-sm font-medium text-gray-300 mb-2";
+const inputClass = "w-full pl-10 pr-4 py-2.5 bg-[#0F172A] border border-gray-700/50 text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-colors rounded-lg";
+const iconClass = "absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400";
 const iconGroupTitleClass = "h-6 w-6 text-brand dark:text-blue-400";
-const iconInputClass = "absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400";
+const buttonClass = "px-6 py-2.5 flex items-center justify-center rounded-lg text-sm font-medium transition-colors";
 
 export default function CommercialAffiliateForm({ onSuccess, onCancel, initialData }: CommercialAffiliateFormProps) {
   const { user } = useAuth();
@@ -97,9 +97,6 @@ export default function CommercialAffiliateForm({ onSuccess, onCancel, initialDa
 
         if (updateError) throw updateError;
       } else {
-
-        // const couponCode = generateCouponCode();
-        //setFormData(prev => ({ ...prev, cupom: couponCode, perfil_id: 6 }));
         const { error: insertError } = await supabase
           .from('cliente')
           .insert(formData);
@@ -116,14 +113,11 @@ export default function CommercialAffiliateForm({ onSuccess, onCancel, initialDa
     }
   };
 
-
-
   return (
-    <div className="space-y-6">
-      <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-6 fade-in">
       {/* Basic Information */}
-      <div className={cardClass}>
-        <div className={iconGroupClass}>
+      <div className="space-y-6">
+        <div className="flex items-center space-x-3 mb-6">
           <div className="bg-blue-400/10 p-3 rounded-xl">
             <UserCheck className={iconGroupTitleClass} />
           </div>
@@ -138,8 +132,8 @@ export default function CommercialAffiliateForm({ onSuccess, onCancel, initialDa
             <label className={labelClass}>
               Nome
             </label>
-            <div className="mt-1 relative">
-              <User className={iconInputClass} />
+            <div className="relative">
+              <User className={iconClass} />
               <input
                 type="text"
                 name="emp_nome"
@@ -156,8 +150,8 @@ export default function CommercialAffiliateForm({ onSuccess, onCancel, initialDa
             <label className={labelClass}>
               Email
             </label>
-            <div className="mt-1 relative">
-              <Mail className={iconInputClass} />
+            <div className="relative">
+              <Mail className={iconClass} />
               <input
                 type="email"
                 name="emp_email"
@@ -174,8 +168,8 @@ export default function CommercialAffiliateForm({ onSuccess, onCancel, initialDa
             <label className={labelClass}>
               Telefone
             </label>
-            <div className="mt-1 relative">
-              <Phone className={iconInputClass} />
+            <div className="relative">
+              <Phone className={iconClass} />
               <input
                 type="tel"
                 name="emp_fone"
@@ -193,8 +187,8 @@ export default function CommercialAffiliateForm({ onSuccess, onCancel, initialDa
             <label className={labelClass}>
               Data de Vencimento
             </label>
-            <div className="mt-1 relative">
-              <Calendar className={iconInputClass} />
+            <div className="relative">
+              <Calendar className={iconClass} />
               <input
                 type="date"
                 name="vencimento"
@@ -210,8 +204,8 @@ export default function CommercialAffiliateForm({ onSuccess, onCancel, initialDa
       </div>
 
       {/* Commission Settings */}
-      <div className={cardClass}>
-        <div className={iconGroupClass}>
+      <div className="mt-8">
+        <div className="flex items-center space-x-3 mb-6">
           <div className="bg-blue-400/10 p-3 rounded-xl">
             <Building2 className={iconGroupTitleClass} />
           </div>
@@ -226,8 +220,8 @@ export default function CommercialAffiliateForm({ onSuccess, onCancel, initialDa
             <label className={labelClass}>
               Percentual de Desconto
             </label>
-            <div className="mt-1 relative">
-              <Percent className={iconInputClass} />
+            <div className="relative">
+              <Percent className={iconClass} />
               <input
                 type="number"
                 name="desconto"
@@ -247,8 +241,8 @@ export default function CommercialAffiliateForm({ onSuccess, onCancel, initialDa
             <label className={labelClass}>
               Taxa de Comissão
             </label>
-            <div className="mt-1 relative">
-              <Percent className={iconInputClass} />
+            <div className="relative">
+              <Percent className={iconClass} />
               <input
                 type="number"
                 name="comissao"
@@ -267,8 +261,8 @@ export default function CommercialAffiliateForm({ onSuccess, onCancel, initialDa
 
       {/* Error Message */}
       {error && (
-        <div className="bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 p-4 flex items-center text-red-600 dark:text-red-400 rounded-lg">
-          <AlertCircle className="h-5 w-5 mr-2 flex-shrink-0" />
+        <div className="bg-red-500/10 border border-red-500/20 p-4 rounded-lg flex items-center text-red-400">
+          <AlertCircle className="h-5 w-5 mr-2" />
           <p className="text-sm">{error}</p>
         </div>
       )}
@@ -278,14 +272,14 @@ export default function CommercialAffiliateForm({ onSuccess, onCancel, initialDa
         <button
           type="button"
           onClick={onCancel}
-          className="px-4 py-2 bg-light-secondary dark:bg-[#0F172A]/60 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-[#0F172A]/40 transition-colors rounded-lg"
+          className="px-6 py-2.5 bg-[#0F172A] text-gray-300 hover:bg-[#0F172A]/80 transition-colors rounded-lg"
           disabled={loading}
         >
           Cancelar
         </button>
         <button
           type="submit"
-          className="btn-primary flex items-center rounded-lg"
+          className="px-6 py-2.5 bg-brand text-white hover:bg-brand/90 transition-colors rounded-lg flex items-center"
           disabled={loading}
         >
           {loading ? (
@@ -301,7 +295,6 @@ export default function CommercialAffiliateForm({ onSuccess, onCancel, initialDa
           )}
         </button>
       </div>
-      </form>
-    </div>
+    </form>
   );
 }
